@@ -5,7 +5,7 @@ class RankingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-          child: Text("ReviewPage")
+          child: Text("Review Page")
       ),
     );
   }
