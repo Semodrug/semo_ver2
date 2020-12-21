@@ -16,7 +16,7 @@ class IYMYApp extends StatelessWidget {
     return MaterialApp(
         title: 'IYMY',
         home: HomePage(),
-        initialRoute: '/manage',
+        initialRoute: '/bottom_bar',
         routes : {
           // TODO
           // Add route
@@ -24,6 +24,7 @@ class IYMYApp extends StatelessWidget {
           '/home': (context) => HomePage(),
           '/camera': (context) => CameraPage(),
           '/ranking': (context) => RankingPage(),
+          '/bottom_bar': (context) => BottomBar(),
         },
         theme: ThemeData(
           // TODO
