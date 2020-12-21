@@ -4,12 +4,12 @@ import 'camera/camera.dart';
 import 'home/home.dart';
 import 'ranking/ranking.dart';
 
-class ManagePage extends StatefulWidget {
+class BottomBar extends StatefulWidget {
   @override
-  _ManagePageState createState() => _ManagePageState();
+  _BottomBarState createState() => _BottomBarState();
 }
 
-class _ManagePageState extends State<ManagePage> {
+class _BottomBarState extends State<BottomBar> {
   int _selectedIndex = 0;
 
   final List<Widget> _widgetOptions = [

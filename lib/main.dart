@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'camera/camera.dart';
 import 'home/home.dart';
 import 'login/login.dart';
-import 'manage_page.dart';
+import 'bottom_bar.dart';
 import 'ranking/ranking.dart';
 
 void main() {
@@ -20,7 +20,6 @@ class IYMYApp extends StatelessWidget {
         routes : {
           // TODO
           // Add route
-          '/manage': (context) => ManagePage(),
           '/login': (context) => LoginPage(),
           '/home': (context) => HomePage(),
           '/camera': (context) => CameraPage(),
