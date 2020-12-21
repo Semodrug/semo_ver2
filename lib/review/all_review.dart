@@ -39,8 +39,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'file:///C:/Users/21700/AndroidStudioProjects/pill_project_app/lib/pages/WriteReview.dart';
 import 'review_page.dart';
+import 'write_review.dart';
 
 
 class AllReview extends StatefulWidget {
