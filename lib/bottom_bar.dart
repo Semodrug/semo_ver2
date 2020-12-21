@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'camera/camera.dart';
 import 'home/home.dart';
 import 'ranking/ranking.dart';
+import 'review/ReviewPage.dart';
 
 class BottomBar extends StatefulWidget {
   @override
@@ -10,12 +11,13 @@ class BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<BottomBar> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 3;
 
   final List<Widget> _widgetOptions = [
     HomePage(),
     CameraPage(),
-    RankingPage()
+    RankingPage(),
+    ReviewPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -37,6 +39,7 @@ class _BottomBarState extends State<BottomBar> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+          type : BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem> [
             BottomNavigationBarItem(
                 icon: Icon(Icons.home),
@@ -49,6 +52,10 @@ class _BottomBarState extends State<BottomBar> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_today),
                 label: 'ranking'
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.create),
+                label: 'review'
             ),
           ],
           currentIndex: _selectedIndex,
