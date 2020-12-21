@@ -9,17 +9,6 @@ class ManagePage extends StatefulWidget {
   _ManagePageState createState() => _ManagePageState();
 }
 
-/*class _ManagePageState extends State<ManagePage> {
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}*/
-
-
 class _ManagePageState extends State<ManagePage> {
   int _selectedIndex = 0;
 
@@ -66,7 +55,6 @@ class _ManagePageState extends State<ManagePage> {
 //          selectedItemColor: Theme.of(context).bottomAppBarColor,
           onTap: _onItemTapped
       ),
-
     );
   }
 }
