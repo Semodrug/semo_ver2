@@ -6,7 +6,6 @@ import 'bottom_bar.dart';
 import 'ranking/ranking.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -14,14 +13,13 @@ Future<void> main() async {
 }
 
 class IYMYApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'IYMY',
         home: HomePage(),
-        initialRoute: '/bottom_bar',
-        routes : {
+        initialRoute: '/login',
+        routes: {
           // TODO
           // Add route
           '/login': (context) => LoginPage(),
@@ -31,9 +29,8 @@ class IYMYApp extends StatelessWidget {
           '/bottom_bar': (context) => BottomBar(),
         },
         theme: ThemeData(
-          // TODO
-          // Add Theme Data
-        )
-    );
+            // TODO
+            // Add Theme Data
+            ));
   }
 }

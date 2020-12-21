@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:semo_ver2/home/home.dart';
+import 'package:semo_ver2/bottom_bar.dart';
 
 final fireInstance = Firestore.instance;
 
@@ -224,7 +224,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      HomePage()));
+                                                      BottomBar()));
                                         })),
                               ),
                             ],
