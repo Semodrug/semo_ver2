@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-
 import 'camera/camera.dart';
 import 'home/home.dart';
 import 'login/login.dart';
 import 'bottom_bar.dart';
 import 'ranking/ranking.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(IYMYApp());
 }
 
