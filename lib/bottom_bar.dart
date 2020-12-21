@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'camera/camera.dart';
 import 'home/home.dart';
 import 'ranking/ranking.dart';
-import 'review/ReviewPage.dart';
+import 'review/review_page.dart';
 
 class BottomBar extends StatefulWidget {
   @override

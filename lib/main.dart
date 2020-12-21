@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'camera/camera.dart';
 import 'home/home.dart';
 import 'login/login.dart';
