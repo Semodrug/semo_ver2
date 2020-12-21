@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-//카테고리로 가기 원래는 홈화면 가기
-//import 'package:category_list/page/category.dart';
-//import 'package:category_list/page/home.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:semo_ver2/home/home.dart';
 
 final fireInstance = Firestore.instance;
 
@@ -226,9 +223,8 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => null
-                                                  // HomeDrugPage()
-                                                  ));
+                                                  builder: (context) =>
+                                                      HomePage()));
                                         })),
                               ),
                             ],
