@@ -61,3 +61,8 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+
+# self
+pubspec.lock
+Dart_Packages.xml
+Dart_SDK.xml
