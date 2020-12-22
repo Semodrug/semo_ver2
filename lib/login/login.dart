@@ -63,7 +63,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
       key: _formKey,
       child: Padding(
         // left, right : 16, top: 60
-        padding: const EdgeInsets.fromLTRB(16, 60, 16, 0),
+        padding: const EdgeInsets.fromLTRB(20, 60, 20, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -80,14 +80,17 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
             ),
             TextFormField(
               controller: _emailController,
+              cursorColor: Colors.teal[400],
               decoration: const InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                labelText: '아이디',
-                labelStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.teal),
+                ),
+                labelText: '이메일',
+                labelStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
               ),
               validator: (String value) {
                 if (value.isEmpty) {
-                  return '아이디를 입력해주세요';
+                  return '이메일을 입력해주세요';
                 }
                 return null;
               },
@@ -97,10 +100,13 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
             ),
             TextFormField(
               controller: _passwordController,
+              cursorColor: Colors.teal[400],
               decoration: const InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.teal),
+                ),
                 labelText: '비밀번호',
-                labelStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
+                labelStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
               ),
               validator: (String value) {
                 if (value.isEmpty) {

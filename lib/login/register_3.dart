@@ -93,14 +93,33 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.teal[200],
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          centerTitle: true,
           title: Text(
             '회원가입',
             style: TextStyle(
-                color: Colors.black, letterSpacing: 2.0, fontSize: 18),
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
           ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          elevation: 1.0,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[
+                  Color(0xFFE9FFFB),
+                  Color(0xFFE9FFFB),
+                  Color(0xFFFFFFFF),
+                ])),
+          ),
         ),
         backgroundColor: Colors.white,
         body: Builder(builder: (context) {
@@ -198,34 +217,39 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: 80.0,
+                                height: 50.0,
                               ),
-                              Center(
-                                child: ButtonTheme(
-                                    minWidth: 400.0,
-                                    height: 40.0,
-                                    child: FlatButton(
-                                        color: Colors.teal[400],
-                                        child: Text(
-                                          '이약모약 시작하기',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14.0),
-                                        ),
-                                        onPressed: () {
-                                          createRecode(
-                                            {
-                                              'isPregnant': isPregnant[1],
-                                              'disease_list': disease_list,
-                                            },
-                                          );
-/* 여기에 랭킹 페이지 넣기! */
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      BottomBar()));
-                                        })),
+                              Container(
+                                alignment: Alignment.center,
+                                child: SizedBox(
+                                  width: 400.0,
+                                  height: 45.0,
+                                  //padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                  //alignment: Alignment.center,
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      createRecode(
+                                        {
+                                          'isPregnant': isPregnant[1],
+                                          'disease_list': disease_list,
+                                        },
+                                      );
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BottomBar()));
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(10.0)),
+                                    child: const Text(
+                                      '이약모약 시작하기',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    color: Colors.teal[400],
+                                  ),
+                                ),
                               ),
                             ],
                           )))

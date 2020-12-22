@@ -28,6 +28,8 @@ void createRecode(Map<String, dynamic> data) async {
 }
 
 class RegisterSecondPage extends StatefulWidget {
+  final String title = '회원가입';
+
   @override
   _RegisterSecondPageState createState() => _RegisterSecondPageState();
 }
@@ -35,6 +37,7 @@ class RegisterSecondPage extends StatefulWidget {
 class _RegisterSecondPageState extends State<RegisterSecondPage> {
   List<bool> isSelected = List.generate(2, (_) => false);
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController birthController = TextEditingController();
@@ -43,17 +46,32 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(
-            '회원가입',
-            style: TextStyle(
-                color: Colors.black, letterSpacing: 2.0, fontSize: 18),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.teal[200],
+            ),
+            onPressed: () => Navigator.pop(context),
           ),
           centerTitle: true,
-          backgroundColor: Colors.white,
-          elevation: 1.0,
-          leading: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[400],
+          title: Text(
+            widget.title,
+            style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
+          ),
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[
+                  Color(0xFFE9FFFB),
+                  Color(0xFFE9FFFB),
+                  Color(0xFFFFFFFF),
+                ])),
           ),
         ),
         backgroundColor: Colors.white,
@@ -63,167 +81,167 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
               FocusScope.of(context).unfocus();
             },
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      '이제 곧 회원가입이\n완료됩니다:D',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                    child: Form(
-                        child: Theme(
-                            data: ThemeData(
-                              primaryColor: Colors.teal[400],
-                              inputDecorationTheme: InputDecorationTheme(
-                                  labelStyle: TextStyle(
-                                color: Colors.teal[400],
-                                fontSize: 18.0,
-                              )),
+              child: Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        child: Text('이제 곧 회원가입이 \n완료됩니다 :)',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: nameController,
+                        cursorColor: Colors.teal[400],
+                        decoration: InputDecoration(
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.teal),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  controller: nameController,
-                                  decoration: InputDecoration(
-                                      labelText: '이름', hintText: '홍길동'),
-                                  keyboardType: TextInputType.text,
-//                                  validator: (String value) {
-//                                    if (value.isEmpty) return "이름을 입력하세요.";
-//                                    return null;
-//                                  },
-                                ),
-                                SizedBox(
-                                  height: 20.0,
-                                ),
-                                Text('성별',
-                                    style: TextStyle(
-                                        color: Colors.teal[400],
-                                        fontSize: 18.0)),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                ToggleButtons(
-                                  constraints: BoxConstraints(
-                                    minWidth: 40,
-                                    minHeight: 20,
-                                  ),
-                                  children: [Text('남'), Text('여')],
-                                  //selectedColor: Colors.teal[400],
-                                  //fillColor: Colors.teal[100],
-                                  onPressed: (int index) {
-                                    setState(() {
-                                      for (int buttonIndex = 0;
-                                          buttonIndex < isSelected.length;
-                                          buttonIndex++) {
-                                        if (buttonIndex == index) {
-                                          isSelected[buttonIndex] = true;
-                                        } else {
-                                          isSelected[buttonIndex] = false;
-                                        }
-                                      }
-                                    });
-                                  },
-                                  isSelected: isSelected,
-                                ),
-//                              SizedBox(
-//                                height: 20.0,
-//                              ),
-                                TextFormField(
-                                  controller: birthController,
-                                  decoration: InputDecoration(
-                                      labelText: '생년월일',
-                                      hintText: '2020.01.01'),
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [birthMaskFormatter],
-//                                  validator: (String value) {
-//                                    if (value.isEmpty) return "생년월일을 입력하세요.";
-//                                    return null;
-//                                  },
-                                ),
-                                SizedBox(
-                                  height: 20.0,
-                                ),
-                                TextFormField(
-                                  controller: phoneController,
-                                  decoration: InputDecoration(
-                                      labelText: '전화번호',
-                                      hintText: '010-1234-5678'),
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [phoneMaskFormatter],
-//                                  validator: (String value) {
-//                                    if (value.isEmpty) return "전화번호를 입력하세요.";
-//                                    return null;
-//                                  },
-                                ),
-                                SizedBox(
-                                  height: 40.0,
-                                ),
-                                Center(
-                                  child: ButtonTheme(
-                                      minWidth: 400.0,
-                                      height: 40.0,
-                                      //buttonColor: Colors.teal[400],
-                                      child: FlatButton(
-                                        color: Colors.teal[400],
-                                        child: Text(
-                                          '다음',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14.0),
-                                        ),
-                                        onPressed: () {
-                                          if (phoneMaskFormatter
-                                                      .getUnmaskedText()
-                                                      .length !=
-                                                  11 ||
-                                              birthMaskFormatter
-                                                      .getUnmaskedText()
-                                                      .length !=
-                                                  8)
-                                            showSnackBar(context);
-                                          else {
-                                            if (isSelected[0] = true)
-                                              createRecode(
-                                                {
-                                                  'name': nameController.text,
-                                                  'sex': 'male',
-                                                  'phone': phoneController.text,
-                                                  'birth': birthController.text
-                                                },
-                                              );
-                                            else
-                                              createRecode(
-                                                {
-                                                  'name': nameController.text,
-                                                  'sex': 'female',
-                                                  'phone': phoneController.text,
-                                                  'birth': birthController.text
-                                                },
-                                              );
+                            labelText: '이름',
+                            labelStyle:
+                                TextStyle(color: Colors.grey, fontSize: 16.0)),
+                        keyboardType: TextInputType.text,
+                        validator: (String value) {
+                          if (value.isEmpty) return "이름을 입력하세요.";
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      Text('성별',
+                          style: TextStyle(color: Colors.grey, fontSize: 16.0)),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      ToggleButtons(
+                        constraints: BoxConstraints(
+                          minWidth: 40,
+                          minHeight: 20,
+                        ),
+                        children: [Text('남'), Text('여')],
+                        //selectedColor: Colors.teal[400],
+                        //fillColor: Colors.teal[100],
+                        onPressed: (int index) {
+                          setState(() {
+                            for (int buttonIndex = 0;
+                                buttonIndex < isSelected.length;
+                                buttonIndex++) {
+                              if (buttonIndex == index) {
+                                isSelected[buttonIndex] = true;
+                              } else {
+                                isSelected[buttonIndex] = false;
+                              }
+                            }
+                          });
+                        },
+                        isSelected: isSelected,
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      TextFormField(
+                        controller: birthController,
+                        cursorColor: Colors.teal[400],
+                        decoration: InputDecoration(
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.teal),
+                            ),
+                            labelText: '생년월일',
+                            labelStyle:
+                                TextStyle(color: Colors.grey, fontSize: 16.0)),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [birthMaskFormatter],
+                        validator: (String value) {
+                          if (value.isEmpty) return "생년월일을 입력하세요.";
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      TextFormField(
+                        controller: phoneController,
+                        cursorColor: Colors.teal[400],
+                        decoration: InputDecoration(
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.teal),
+                            ),
+                            labelText: '전화번호',
+                            labelStyle:
+                                TextStyle(color: Colors.grey, fontSize: 16.0)),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [phoneMaskFormatter],
+                        validator: (String value) {
+                          if (value.isEmpty) return "전화번호를 입력하세요.";
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 50.0),
+                      Container(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 400.0,
+                          height: 45.0,
+                          //padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          //alignment: Alignment.center,
+                          child: RaisedButton(
+                            onPressed: () async {
+                              if (phoneMaskFormatter.getUnmaskedText().length !=
+                                      11 ||
+                                  birthMaskFormatter.getUnmaskedText().length !=
+                                      8)
+                                showSnackBar(context);
+                              else {
+                                if (isSelected[0] = true)
+                                  createRecode(
+                                    {
+                                      'name': nameController.text,
+                                      'sex': 'male',
+                                      'phone': phoneController.text,
+                                      'birth': birthController.text
+                                    },
+                                  );
+                                else
+                                  createRecode(
+                                    {
+                                      'name': nameController.text,
+                                      'sex': 'female',
+                                      'phone': phoneController.text,
+                                      'birth': birthController.text
+                                    },
+                                  );
 
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        RegisterThirdPage()));
-                                          }
-                                        },
-                                      )),
-                                ),
-                              ],
-                            ))),
-                  )
-                ],
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            RegisterThirdPage()));
+                              }
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(10.0)),
+                            child: const Text(
+                              '확인',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            color: Colors.teal[400],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
+//
             ),
           );
         }));
