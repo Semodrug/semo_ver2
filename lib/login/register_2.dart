@@ -6,8 +6,11 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import 'register_3.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
 final fireInstance = FirebaseFirestore.instance;
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final User user = _auth.currentUser;
+final uid = user.uid;
 
 var phoneMaskFormatter = new MaskTextInputFormatter(
     mask: '###-####-####', filter: {"#": RegExp(r'[0-9]')});
@@ -18,10 +21,7 @@ var birthMaskFormatter = new MaskTextInputFormatter(
 //print(maskFormatter.getUnmaskedText()); // -> 01234567890
 
 void createRecode(Map<String, dynamic> data) async {
-  User user = await _auth.currentUser;
-
-  //user.uid;
-  await fireInstance.collection('users').document('1').setData(data);
+  await fireInstance.collection('users').doc(uid).set(data);
 
 //  DocumentReference ref = await fireInstance.collection('privacy').add(data);
 //  print(ref.documentID);

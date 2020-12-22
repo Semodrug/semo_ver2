@@ -2,14 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:semo_ver2/bottom_bar.dart';
 
-final fireInstance = Firestore.instance;
+final fireInstance = FirebaseFirestore.instance;
+
+final FirebaseAuth auth = FirebaseAuth.instance;
+final User user = FirebaseAuth.instance.currentUser;
+final uid = user.uid;
 
 void createRecode(Map<String, dynamic> data) async {
-  await fireInstance.collection('users').document('1').updateData(data);
-
-  // await fireInstance.collection('user_info').document('1').updateData(data);
+  await fireInstance.collection('users').doc(uid).update(data);
 
 //  DocumentReference ref = await
 //  //fireInstance.collection('privacy').add(data);
