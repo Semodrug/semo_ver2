@@ -1,13 +1,14 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:semo_ver2/login/register_1.dart';
 
-import '../home/home.dart';
-import 'register_1.dart';
+// TODO: find id, passwd page
+// TODO: kakao login
+// TODO: theme style
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-// final GoogleSignIn _googleSignIn = GoogleSignIn();
+final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,67 +19,20 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        /* leading ==> 로그인 페이지 뛰어 넘을 수 있게 만들어놓은 버튼 */
-        leading: IconButton(
-          icon: Icon(Icons.android),
-          color: Colors.white,
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage() //
-                    //CategoryMenu()
-                    ));
-
-            //Navigator.pushNamed(context, '/HomeDrug');
-          },
-        ),
-        centerTitle: true,
-        //title: Text(widget.title),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: <Color>[
-                Colors.teal[100],
-                //Colors.teal[50],
-                Colors.teal[200]
-              ])),
-        ), //gradation
-        actions: <Widget>[
-          Builder(builder: (BuildContext context) {
-            return FlatButton(
-              child: const Text('Log out'),
-              textColor: Theme.of(context).buttonColor,
-              onPressed: () async {
-                final User user = await _auth.currentUser;
-                if (user == null) {
-                  Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text('No one has signed in.'),
-                  ));
-                  return;
-                }
-                _signOut();
-                final String uid = user.uid;
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(uid + ' has successfully signed out.'),
-                ));
-              },
-            );
-          })
-        ],
-      ),
       body: Builder(builder: (BuildContext context) {
         return ListView(
           scrollDirection: Axis.vertical,
           children: <Widget>[
             _EmailPasswordForm(),
-            //_EmailLinkSignInSection(),
-            //_AnonymouslySignInSection(),
-            //_GoogleSignInSection(),
-            // _PhoneSignInSection(Scaffold.of(context)),
-            // _OtherProvidersSignInSection(),
+            _GoogleSignInSection(),
+            /* 로그인 뛰어넘기 */
+            IconButton(
+              icon: Icon(Icons.skip_next),
+              color: Colors.redAccent,
+              onPressed: () {
+                Navigator.pushNamed(context, '/bottom_bar');
+              },
+            ),
           ],
         );
       }),
@@ -102,124 +56,127 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   final TextEditingController _passwordController = TextEditingController();
   bool _success;
   String _userEmail;
+
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            child: const Text(
-              '이약모약',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-          ),
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              labelText: '아이디',
-              labelStyle: TextStyle(color: Colors.grey, fontSize: 14.0),
-            ),
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _passwordController,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              labelText: '비밀번호',
-              labelStyle: TextStyle(color: Colors.grey, fontSize: 14.0),
-            ),
-            validator: (String value) {
-              if (value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 30.0),
-          SizedBox(
-            //padding: const EdgeInsets.symmetric(vertical: 16.0),
-            //alignment: Alignment.center,
-            width: 350.0,
-            height: 45.0,
-            child: RaisedButton(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              onPressed: () async {
-                if (_formKey.currentState.validate()) {
-                  _signInWithEmailAndPassword();
-                }
-              },
-              shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(10.0)),
+      child: Padding(
+        // left, right : 16, top: 60
+        padding: const EdgeInsets.fromLTRB(16, 60, 16, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
               child: const Text(
-                '로그인',
-                style: TextStyle(color: Colors.white),
+                '이약모약',
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
-              color: Colors.teal[400],
+              padding: const EdgeInsets.all(16),
+              alignment: Alignment.center,
             ),
-          ),
-          /*new SizedBox(
-            width: 200.0,
-            height: 100.0,
-            child: new RaisedButton(
-              child: const Text('로그인', style: TextStyle(color: Colors.white),),
-              color: Colors.teal[400],
-              onPressed: (){},
+            SizedBox(
+              height: 20,
             ),
-          ),*/
-          Container(
-            child: FlatButton(
-              child: Text(
-                '아이디/비밀번호 찾기',
-                style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontSize: 13.0,
-                    color: Colors.grey[400]),
+            TextFormField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                labelText: '아이디',
+                labelStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
               ),
-              onPressed: () {}, //아이디 비밀번호 찾기 페이지로 이동
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return '아이디를 입력해주세요';
+                }
+                return null;
+              },
             ),
-          ),
-          Container(
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(
-                '혹시 이약모약 사용이 처음이신가요?',
-                style: TextStyle(fontSize: 12.0, color: Colors.grey[400]),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              controller: _passwordController,
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                labelText: '비밀번호',
+                labelStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
               ),
-              FlatButton(
-                onPressed: () =>
-                    _pushPage(context, RegisterFirstPage()), //register page로 이동
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return '비밀번호를 입력해주세요';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 50.0),
+            SizedBox(
+              //padding: const EdgeInsets.symmetric(vertical: 16.0),
+              //alignment: Alignment.center,
+              width: 400.0,
+              height: 45.0,
+              child: RaisedButton(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
+                    _signInWithEmailAndPassword();
+                  }
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(10.0)),
+                child: const Text(
+                  '로그인',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.teal[400],
+              ),
+            ),
+            Container(
+              child: FlatButton(
                 child: Text(
-                  '회원가입',
+                  '아이디/비밀번호 찾기',
                   style: TextStyle(
                       decoration: TextDecoration.underline,
-                      fontSize: 12.0,
-                      color: Colors.black),
+                      fontSize: 13.0,
+                      color: Colors.grey[400]),
                 ),
+                onPressed: () {}, //아이디 비밀번호 찾기 페이지로 이동
               ),
-            ]),
-          ),
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              _success == null
-                  ? ''
-                  : (_success
-                      ? 'Successfully signed in ' + _userEmail
-                      : 'Sign in failed'),
-              style: TextStyle(color: Colors.red),
             ),
-          )
-        ],
+            Container(
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(
+                  '혹시 이약모약 사용이 처음이신가요?',
+                  style: TextStyle(fontSize: 12.0, color: Colors.grey[400]),
+                ),
+                FlatButton(
+                  onPressed: () => _pushPage(
+                      context, RegisterFirstPage()), //register page로 이동
+                  child: Text(
+                    '회원가입',
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 12.0,
+                        color: Colors.black),
+                  ),
+                ),
+              ]),
+            ),
+            // Container(
+            //   alignment: Alignment.center,
+            //   padding: const EdgeInsets.symmetric(horizontal: 16),
+            //   child: Text(
+            //     _success == null
+            //         ? ''
+            //         : (_success
+            //             ? 'Successfully signed in ' + _userEmail
+            //             : 'Sign in failed'),
+            //     style: TextStyle(color: Colors.red),
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }
@@ -237,7 +194,6 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
     super.dispose();
   }
 
-  // Example code of how to sign in with email and password.
   void _signInWithEmailAndPassword() async {
     final User user = (await _auth.signInWithEmailAndPassword(
       email: _emailController.text,
@@ -249,8 +205,88 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
         _success = true;
         _userEmail = user.email;
       });
+      Navigator.pushNamed(context, '/bottom_bar');
     } else {
       _success = false;
     }
+  }
+}
+
+class _GoogleSignInSection extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _GoogleSignInSectionState();
+}
+
+class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
+  bool _success;
+  String _userID;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(
+              '구글 아이디가 있으신가요?',
+              style: TextStyle(fontSize: 12.0, color: Colors.grey[400]),
+            ),
+            FlatButton(
+              onPressed: () async {
+                _signInWithGoogle();
+              },
+              child: Text(
+                '구글 아이디로 로그인',
+                style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    fontSize: 12.0,
+                    color: Colors.black),
+              ),
+            ),
+          ]),
+        ),
+        // Container(
+        //   alignment: Alignment.center,
+        //   padding: const EdgeInsets.symmetric(horizontal: 16),
+        //   child: Text(
+        //     _success == null
+        //         ? ''
+        //         : (_success
+        //             ? 'Successfully signed in, uid: ' + _userID
+        //             : 'Sign in failed'),
+        //     style: TextStyle(color: Colors.red),
+        //   ),
+        // )
+      ],
+    );
+  }
+
+  // Example code of how to sign in with google.
+  void _signInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final user = (await _auth.signInWithCredential(credential)).user;
+    print("signed in " + user.displayName);
+
+    assert(user.email != null);
+    assert(user.displayName != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+
+    final currentUser = _auth.currentUser;
+    assert(user.uid == currentUser.uid);
+    setState(() {
+      if (user != null) {
+        _success = true;
+        _userID = user.uid;
+        Navigator.pushNamed(context, '/bottom_bar');
+      } else {
+        _success = false;
+      }
+    });
   }
 }
