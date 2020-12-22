@@ -108,6 +108,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                 labelText: '비밀번호',
                 labelStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
               ),
+              obscureText: true,
               validator: (String value) {
                 if (value.isEmpty) {
                   return '비밀번호를 입력해주세요';
