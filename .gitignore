@@ -91,3 +91,4 @@ lib/generated_plugin_registrant.dart
 .project
 .settings/
 .vscode/
+pubspec.lock
