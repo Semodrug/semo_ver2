@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart'; 
 import 'review.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WriteReview extends StatefulWidget {
   _WriteReviewState createState() => _WriteReviewState();
@@ -68,7 +69,7 @@ class _WriteReviewState extends State<WriteReview> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Write Review',
-              style: TextStyle(
+              style: GoogleFonts.roboto(
                   fontSize: 16.5,
                   fontWeight: FontWeight.bold,
                   color: Colors.white)),
@@ -158,7 +159,7 @@ class _WriteReviewState extends State<WriteReview> {
                           },
                         ),
                         Padding(padding: EdgeInsets.only(top: 3)),
-                        Text("$starRating", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,)),
+//                        Text("$starRating", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,)),
                       ],
                     )
 
