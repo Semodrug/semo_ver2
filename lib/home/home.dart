@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'search_screen.dart';
+import 'home_add_button_stack.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -110,8 +111,12 @@ class _HomePageState extends State<HomePage> {
           RaisedButton.icon(
             color: Colors.white70,
             icon: Icon(Icons.add),
-            onPressed: () {},
-            //textColor: Color(0xffffff),
+            onPressed: () {
+              Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OverlayWithHole()));
+            },
             padding: EdgeInsets.fromLTRB(20, 5, 5, 15),
             label: Container(
               width: 340,
@@ -252,33 +257,35 @@ class _SearchBarState extends State<SearchBar> {
     return Row(
       children: <Widget>[
         Container(
-          width: 380,
-          height: 33,
-          padding: EdgeInsets.only(left: 20, right: 30),
-          margin: EdgeInsets.fromLTRB(12, 11, 0, 0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            color: Colors.grey[200],
-          ),
-          child: TextField(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => SearchScreen(),
-                ),
-              );
-            },
-            cursorColor: Colors.black,
-            decoration: InputDecoration(
-              icon: Icon(Icons.search, size: 20),
-              hintText: "어떤 약을 찾고 계세요? ",
-              //hintStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-              hintStyle: Theme.of(context).textTheme.bodyText2,
-              disabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-            ),
+          padding: EdgeInsets.only(left: 10,),
+          margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
+          child: SizedBox(
+            width: 390,
+            height: 35,
+            child:
+    FlatButton(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(Icons.search, size: 20),
+                  Text("어떤 약을 찾고 계세요? "),
+                ],
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => SearchScreen(),
+                  ),
+                );
+              },
+              textColor: Colors.grey[500],
+              color: Colors.grey[200],
+              shape: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      style: BorderStyle.solid, width: 1.0, color: Colors.white),
+                  borderRadius: new BorderRadius.circular(8.0)),
+            )
           ),
         ),
         SizedBox(
