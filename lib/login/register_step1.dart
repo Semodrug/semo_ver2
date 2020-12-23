@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'register_2.dart';
+import 'register_step2.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -83,13 +83,13 @@ class RegisterFirstPageState extends State<RegisterFirstPage> {
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.teal),
                         ),
-                        labelText: '이메일',
-                        labelStyle:
+                        hintText: '아이디(이메일)',
+                        hintStyle:
                             TextStyle(color: Colors.grey, fontSize: 16.0),
                       ),
                       validator: (String value) {
                         if (value.isEmpty) {
-                          return '이메일을 입력해주세요';
+                          return '아이디(이메일)을 입력해주세요';
                         }
                         return null;
                       },
@@ -104,8 +104,8 @@ class RegisterFirstPageState extends State<RegisterFirstPage> {
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.teal),
                         ),
-                        labelText: '비밀번호',
-                        labelStyle:
+                        hintText: '비밀번호',
+                        hintStyle:
                             TextStyle(color: Colors.grey, fontSize: 16.0),
                         // filled: true,
                         // fillColor: Colors.white,
@@ -129,8 +129,8 @@ class RegisterFirstPageState extends State<RegisterFirstPage> {
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.teal),
                         ),
-                        labelText: '비밀번호 확인',
-                        labelStyle:
+                        hintText: '비밀번호 확인',
+                        hintStyle:
                             TextStyle(color: Colors.grey, fontSize: 16.0),
                         // filled: true,
                         // fillColor: Colors.white,

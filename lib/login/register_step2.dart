@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-import 'register_3.dart';
+import 'register_step3.dart';
 
 final fireInstance = FirebaseFirestore.instance;
 
@@ -105,8 +105,8 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.teal),
                             ),
-                            labelText: '이름',
-                            labelStyle:
+                            hintText: '이름',
+                            hintStyle:
                                 TextStyle(color: Colors.grey, fontSize: 16.0)),
                         keyboardType: TextInputType.text,
                         validator: (String value) {
@@ -155,8 +155,8 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.teal),
                             ),
-                            labelText: '생년월일',
-                            labelStyle:
+                            hintText: '생년월일',
+                            hintStyle:
                                 TextStyle(color: Colors.grey, fontSize: 16.0)),
                         keyboardType: TextInputType.number,
                         inputFormatters: [birthMaskFormatter],
@@ -175,8 +175,8 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.teal),
                             ),
-                            labelText: '전화번호',
-                            labelStyle:
+                            hintText: '전화번호',
+                            hintStyle:
                                 TextStyle(color: Colors.grey, fontSize: 16.0)),
                         keyboardType: TextInputType.number,
                         inputFormatters: [phoneMaskFormatter],
@@ -236,6 +236,18 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                             color: Colors.teal[400],
                           ),
                         ),
+                      ),
+                      /* 로그인 뛰어넘기 */
+                      IconButton(
+                        icon: Icon(Icons.skip_next),
+                        color: Colors.redAccent,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterThirdPage()),
+                          );
+                        },
                       ),
                     ],
                   ),
