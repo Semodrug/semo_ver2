@@ -84,7 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
 //                ),
                 Container(
                   width: 330,
-                  height: 45,
+                  height: 35,
                   padding: EdgeInsets.only(top: 3,),
                   margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   decoration: BoxDecoration(
