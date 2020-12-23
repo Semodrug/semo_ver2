@@ -18,7 +18,7 @@ class IYMYApp extends StatelessWidget {
     return MaterialApp(
         title: 'IYMY',
         home: HomePage(),
-        initialRoute: '/bottom_bar',
+        initialRoute: '/login',
         routes: {
           // TODO
           // Add route
