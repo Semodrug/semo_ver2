@@ -15,9 +15,7 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      /*appBar: _appbar(context),*/
       body: topOfReview(context),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.create),
@@ -340,6 +338,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+
                             _starAndId(record, context),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
