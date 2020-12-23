@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:semo_ver2/login/register_1.dart';
+import 'package:semo_ver2/login/find_id.dart';
+import 'package:semo_ver2/login/find_password.dart';
+import 'package:semo_ver2/login/register_step1.dart';
 
 // TODO: find id, passwd page
 // TODO: kakao login
 // TODO: theme style
+
+// TODO: 확인 버튼이 키보드 바로 위에 위치하면 좋겠다
+// TODO: Page route를 무조건 push pull 아니고 아예 reset 할때도 필요
+
+// TODO: 어떤건 private 변수/ public 변수 --> 언제 써야하는가
+// TODO: 위젯과 클래스의 차이
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -63,7 +71,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
       key: _formKey,
       child: Padding(
         // left, right : 16, top: 60
-        padding: const EdgeInsets.fromLTRB(16, 60, 16, 0),
+        padding: const EdgeInsets.fromLTRB(20, 60, 20, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -80,14 +88,17 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
             ),
             TextFormField(
               controller: _emailController,
+              cursorColor: Colors.teal[400],
               decoration: const InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                labelText: '아이디',
-                labelStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.teal),
+                ),
+                hintText: '아이디(이메일)',
+                hintStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
               ),
               validator: (String value) {
                 if (value.isEmpty) {
-                  return '아이디를 입력해주세요';
+                  return '아이디(이메일)을 입력해주세요';
                 }
                 return null;
               },
@@ -97,11 +108,15 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
             ),
             TextFormField(
               controller: _passwordController,
+              cursorColor: Colors.teal[400],
               decoration: const InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                labelText: '비밀번호',
-                labelStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.teal),
+                ),
+                hintText: '비밀번호',
+                hintStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
               ),
+              obscureText: true,
               validator: (String value) {
                 if (value.isEmpty) {
                   return '비밀번호를 입력해주세요';
@@ -131,18 +146,45 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                 color: Colors.teal[400],
               ),
             ),
-            Container(
-              child: FlatButton(
+            // SizedB
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              FlatButton(
+                padding: EdgeInsets.all(0),
                 child: Text(
-                  '아이디/비밀번호 찾기',
+                  '아이디 찾기',
                   style: TextStyle(
                       decoration: TextDecoration.underline,
                       fontSize: 13.0,
                       color: Colors.grey[400]),
                 ),
-                onPressed: () {}, //아이디 비밀번호 찾기 페이지로 이동
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FindId()),
+                  );
+                },
               ),
-            ),
+              Text(
+                ' |  ',
+                style: TextStyle(fontSize: 13.0, color: Colors.grey[400]),
+              ),
+              FlatButton(
+                padding: EdgeInsets.all(0),
+                child: Text(
+                  '비밀번호 찾기',
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 13.0,
+                      color: Colors.grey[400]),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FindPassword()),
+                  );
+                },
+              ),
+            ]),
             Container(
               child:
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [

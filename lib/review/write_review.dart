@@ -3,12 +3,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class WriteReview extends StatefulWidget {
   _WriteReviewState createState() => _WriteReviewState();
 }
 
 class _WriteReviewState extends State<WriteReview> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   final myControllerEffect = TextEditingController();
   final myControllerSideEffect = TextEditingController();
   final myControllerOverall = TextEditingController();
@@ -40,23 +43,10 @@ class _WriteReviewState extends State<WriteReview> {
 
   void _registerReview() {
     Firestore.instance.collection("Reviews").add(
-/*      {
-        "id": "testUser",
-        "effect": effect,
-        "sideEffect" : sideEffect,
-        "starRating": starRating,
-        "effectText" : effectText,
-        "sideEffectText": sideEffectText,
-        "overallText": overallText,
-        "favoriteSelected": favoriteSelected,
-        "noFavorite": noFavorite,
-        "name" : "TESTUSER",
-      }*/
-
         {
           "SeqNum" : "21700432",
-          "UID" : "testUser",
-          "id": "testUser",
+          "UID" : auth.currentUser.uid,
+          "id": auth.currentUser.email,
           "effect": effect,
           "sideEffect" : sideEffect,
           "starRating": starRating,
@@ -66,19 +56,6 @@ class _WriteReviewState extends State<WriteReview> {
           "favoriteSelected": favoriteSelected,
           "noFavorite": noFavorite,
           "name" : "TESTUSER",
-
-//          "Content": {
-//            "id": "testUser",
-//            "effect": effect,
-//            "sideEffect" : sideEffect,
-//            "starRating": starRating,
-//            "effectText" : effectText,
-//            "sideEffectText": sideEffectText,
-//            "overallText": overallText,
-//            "favoriteSelected": favoriteSelected,
-//            "noFavorite": noFavorite,
-//            "name" : "TESTUSER",
-//          }
         }
     );
   }
