@@ -224,27 +224,43 @@ class _ReviewPageState extends State<ReviewPage> {
                     style: TextStyle(
                         fontSize: 14.0, color: Colors.grey[700])),
                 Padding(padding: EdgeInsets.only(top: 7.0)),
-/*                Container(
-                  child: RatingBar(
-                    itemSize: 30,
-                    glow: false,
-                    initialRating: 3,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: false,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-//                            TODO Fix this!!!!!! Not working itemBuilder
+                RatingBar.builder(
+                  initialRating: 3,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (rating) {
+                    print(rating);
+                  },
+                )
+
+//                Container(
+//                  child: RatingBar(
+//                    itemSize: 30,
+//                    glow: false,
+//                    initialRating: 3,
+//                    minRating: 1,
+//                    direction: Axis.horizontal,
+//                    allowHalfRating: false,
+//                    itemCount: 5,
+//                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+////                            TODO Fix this!!!!!! Not working itemBuilder
 //                              itemBuilder: (context, _) =>
 //                                  Icon(
 //                                    Icons.star,
 //                                    color: Colors.amber[300],
 //                                  ),
-                    onRatingUpdate: (rating) {
-//                      print(rating);
-                    },
-                  ),
-                ),*/
+//                    onRatingUpdate: (rating) {
+////                      print(rating);
+//                    },
+//                  ),
+//                ),
               ],
             )),
         Container(
