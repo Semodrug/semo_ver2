@@ -225,42 +225,22 @@ class _ReviewPageState extends State<ReviewPage> {
                         fontSize: 14.0, color: Colors.grey[700])),
                 Padding(padding: EdgeInsets.only(top: 7.0)),
                 RatingBar.builder(
-                  initialRating: 3,
+                  initialRating:3,
                   minRating: 1,
                   direction: Axis.horizontal,
-                  allowHalfRating: true,
+                  allowHalfRating: false,
                   itemCount: 5,
+                  itemSize: 30,
+                  glow: false,
                   itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                   itemBuilder: (context, _) => Icon(
                     Icons.star,
-                    color: Colors.amber,
+                    color: Colors.amberAccent,
                   ),
                   onRatingUpdate: (rating) {
                     print(rating);
                   },
-                )
-
-//                Container(
-//                  child: RatingBar(
-//                    itemSize: 30,
-//                    glow: false,
-//                    initialRating: 3,
-//                    minRating: 1,
-//                    direction: Axis.horizontal,
-//                    allowHalfRating: false,
-//                    itemCount: 5,
-//                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-////                            TODO Fix this!!!!!! Not working itemBuilder
-//                              itemBuilder: (context, _) =>
-//                                  Icon(
-//                                    Icons.star,
-//                                    color: Colors.amber[300],
-//                                  ),
-//                    onRatingUpdate: (rating) {
-////                      print(rating);
-//                    },
-//                  ),
-//                ),
+                ),
               ],
             )),
         Container(

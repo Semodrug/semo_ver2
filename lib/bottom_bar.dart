@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'camera/camera.dart';
 import 'home/home.dart';
 import 'ranking/ranking.dart';
+import 'review/phil_info.dart';
 import 'review/review_page.dart';
 
 class BottomBar extends StatefulWidget {
@@ -17,7 +18,8 @@ class _BottomBarState extends State<BottomBar> {
     HomePage(),
     CameraPage(),
     RankingPage(),
-    ReviewPage(),
+    PhilInfoPage()
+//    ReviewPage(),
   ];
 
   void _onItemTapped(int index) {
