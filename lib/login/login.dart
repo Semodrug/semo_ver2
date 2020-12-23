@@ -247,7 +247,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
         _success = true;
         _userEmail = user.email;
       });
-      Navigator.pushNamed(context, '/bottom_bar');
+      Navigator.pushReplacementNamed(context, '/bottom_bar');
     } else {
       _success = false;
     }
