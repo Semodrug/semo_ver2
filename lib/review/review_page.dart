@@ -22,6 +22,7 @@ class _ReviewPageState extends State<ReviewPage> {
           backgroundColor: Colors.teal[300],
           elevation: 0.0,
           onPressed: () {
+            rating();
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -30,6 +31,17 @@ class _ReviewPageState extends State<ReviewPage> {
           }
       ),
     );
+  }
+
+  Widget rating() {
+    FirebaseFirestore.instance
+        .collection('Reviews')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((doc) {
+      print(doc["starRating"]);
+    });
+    });
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
@@ -194,6 +206,8 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget topOfReview(BuildContext context) {
     int _effectColor;
     int _sideEffectColor;
+
+
 
     return Column(
       mainAxisSize: MainAxisSize.max,
