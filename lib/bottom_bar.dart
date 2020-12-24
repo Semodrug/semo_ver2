@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'camera/camera.dart';
 import 'home/home.dart';
+import 'mypage/my_page.dart';
 import 'ranking/ranking.dart';
 import 'review/review_page.dart';
 
@@ -30,12 +31,25 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        // centerTitle: true,
+        automaticallyImplyLeading: false,
         title: Text(
           '이약모약',
           style: TextStyle(
-              fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
+              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.person,
+              color: Colors.teal[200],
+            ),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyPage()),
+            ),
+          ),
+        ],
         backgroundColor: Colors.white,
         elevation: 0,
         flexibleSpace: Container(
