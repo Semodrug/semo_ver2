@@ -54,10 +54,6 @@ flutter_native_splash:
 
 # The following section is specific to Flutter.
 flutter:
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
