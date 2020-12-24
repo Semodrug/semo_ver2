@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart'; 
 import 'review.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pedantic/pedantic.dart';
 
 class WriteReview extends StatefulWidget {
   _WriteReviewState createState() => _WriteReviewState();
@@ -193,18 +194,10 @@ class _WriteReviewState extends State<WriteReview> {
                                             height: 35,
                                             decoration: BoxDecoration(
                                                 color: value.getEffect() == "bad" ? Colors.amber[300]: Colors.grey[300],
-//                                            color: effectBadSelected == true ? Colors.amber[300]: Colors.grey[300],
                                                 shape: BoxShape.circle)),
                                         onTap: () {
                                           value.effectToBad();
                                           effect = "bad";
-//                                      setState((){
-//                                        effectBadSelected = !effectBadSelected;
-//                                        if (effectBadSelected = true)
-//                                          effect = "bad";
-//                                        effectSosoSelected = false;
-//                                        effectGoodSelected = false;
-//                                      });
                                         }
                                     ),
                                     Padding(padding: EdgeInsets.only(top: 10)),
