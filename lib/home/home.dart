@@ -21,9 +21,8 @@ class _HomePageState extends State<HomePage> {
     CollectionReference user_drug =
         FirebaseFirestore.instance //user가 가지고 있는 약 data
             .collection('users')
-            //.doc(_auth.currentUser.uid)
+            .doc(_auth.currentUser.uid)
             //TODO: right now 1, i will changed after Login page complete
-            .doc('1')
             .collection('savedList');
 
     print('user_drug == $user_drug');
@@ -107,15 +106,12 @@ class _HomePageState extends State<HomePage> {
           minWidth: 340.0,
           height: 70.0,
           //buttonColor: Colors.redAccent,
-          child:
-          RaisedButton.icon(
+          child: RaisedButton.icon(
             color: Colors.white70,
             icon: Icon(Icons.add),
             onPressed: () {
-              Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OverlayWithHole()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => OverlayWithHole()));
             },
             padding: EdgeInsets.fromLTRB(20, 5, 5, 15),
             label: Container(
@@ -160,21 +156,21 @@ class _HomePageState extends State<HomePage> {
           final drug_snapshot = Drugs.fromSnapshot(snapshot.data);
           final drugFromUser = DrugFromUser.fromSnapshot(data);
           //if (compare < num) {
-            return Column(
-              children: [
-                ListCards(
-                    drug_snapshot.item_name,
-                    drug_snapshot.image,
-                    drug_snapshot.entp_name,
-                    drug_snapshot.item_seq,
-                    drug_snapshot.valid_term,
-                    drug_snapshot.category,
-                    drugFromUser.expiration),
-                Divider(
-                  thickness: 1,
-                )
-              ],
-            );
+          return Column(
+            children: [
+              ListCards(
+                  drug_snapshot.item_name,
+                  drug_snapshot.image,
+                  drug_snapshot.entp_name,
+                  drug_snapshot.item_seq,
+                  drug_snapshot.valid_term,
+                  drug_snapshot.category,
+                  drugFromUser.expiration),
+              Divider(
+                thickness: 1,
+              )
+            ],
+          );
           //}
 
           //check = docID;
@@ -257,36 +253,38 @@ class _SearchBarState extends State<SearchBar> {
     return Row(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(left: 10,),
+          padding: EdgeInsets.only(
+            left: 10,
+          ),
           margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
           child: SizedBox(
-            width: 390,
-            height: 35,
-            child:
-    FlatButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(Icons.search, size: 20),
-                  Text("어떤 약을 찾고 계세요? "),
-                ],
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => SearchScreen(),
-                  ),
-                );
-              },
-              textColor: Colors.grey[500],
-              color: Colors.grey[200],
-              shape: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      style: BorderStyle.solid, width: 1.0, color: Colors.white),
-                  borderRadius: new BorderRadius.circular(8.0)),
-            )
-          ),
+              width: 390,
+              height: 35,
+              child: FlatButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.search, size: 20),
+                    Text("어떤 약을 찾고 계세요? "),
+                  ],
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => SearchScreen(),
+                    ),
+                  );
+                },
+                textColor: Colors.grey[500],
+                color: Colors.grey[200],
+                shape: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        style: BorderStyle.solid,
+                        width: 1.0,
+                        color: Colors.white),
+                    borderRadius: new BorderRadius.circular(8.0)),
+              )),
         ),
         SizedBox(
           width: 10,
