@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'camera/camera.dart';
 import 'home/home.dart';
+import 'mypage/my_page.dart';
 import 'ranking/ranking.dart';
 import 'review/phil_info.dart';
 import 'review/review_page.dart';
@@ -32,38 +33,55 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-//        backgroundColor: Theme.of(context).primaryColor,
+        // centerTitle: true,
         automaticallyImplyLeading: false,
-//        title: Text("Face U", style: Theme.of(context).textTheme.headline1),
-
+        title: Text(
+          '이약모약',
+          style: TextStyle(
+              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.person,
+              color: Colors.teal[200],
+            ),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyPage()),
+            ),
+          ),
+        ],
+        backgroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
+                Color(0xFFE9FFFB),
+                Color(0xFFE9FFFB),
+                Color(0xFFFFFFFF),
+              ])),
+        ),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          type : BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem> [
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'home'
-            ),
+                icon: Icon(Icons.camera_alt), label: 'camera'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.camera_alt),
-                label: 'camera'
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today),
-                label: 'ranking'
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.create),
-                label: 'review'
-            ),
+                icon: Icon(Icons.calendar_today), label: 'ranking'),
+            BottomNavigationBarItem(icon: Icon(Icons.create), label: 'review'),
           ],
           currentIndex: _selectedIndex,
 //          selectedItemColor: Theme.of(context).bottomAppBarColor,
-          onTap: _onItemTapped
-      ),
+          onTap: _onItemTapped),
     );
   }
 }
