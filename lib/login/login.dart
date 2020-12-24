@@ -12,8 +12,7 @@ import 'package:semo_ver2/login/register_step1.dart';
 // TODO: 확인 버튼이 키보드 바로 위에 위치하면 좋겠다
 // TODO: Page route를 무조건 push pull 아니고 아예 reset 할때도 필요
 
-// TODO: 어떤건 private 변수/ public 변수 --> 언제 써야하는가
-// TODO: 위젯과 클래스의 차이
+// TODO: 구글 로그인 후, 개인 정보 받아야한다
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = GoogleSignIn();
