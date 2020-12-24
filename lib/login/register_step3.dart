@@ -237,11 +237,8 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
                                           'disease_list': disease_list,
                                         },
                                       );
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BottomBar()));
+                                      Navigator.pushReplacementNamed(
+                                          context, '/login');
                                     },
                                     shape: RoundedRectangleBorder(
                                         borderRadius:

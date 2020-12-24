@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+import 'bottom_bar.dart';
 import 'camera/camera.dart';
 import 'home/home.dart';
 import 'login/login.dart';
-import 'bottom_bar.dart';
-import 'ranking/ranking.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:connectivity/connectivity.dart';
+import 'ranking/ranking.dart'; 
+import 'package:firebase_core/firebase_core.dart'; 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,7 @@ class IYMYApp extends StatelessWidget {
     return MaterialApp(
         title: 'IYMY',
         home: HomePage(),
+        debugShowCheckedModeBanner: false,
         initialRoute: '/login',
         routes: {
           // TODO
