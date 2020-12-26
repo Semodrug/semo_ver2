@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'search_screen.dart';
 import 'home_add_button_stack.dart';
+import 'package:semo_ver2/review//phil_info.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -150,15 +151,15 @@ class _HomePageState extends State<HomePage> {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-//          if (docID != check) {
-////            compare = compare + 1;
-////          }
           final drug_snapshot = Drugs.fromSnapshot(snapshot.data);
+          print('Snapshot Data ==> ${snapshot.data}');
+          print(drug_snapshot.reference.id); //this is item seq num
+
           final drugFromUser = DrugFromUser.fromSnapshot(data);
-          //if (compare < num) {
           return Column(
             children: [
               ListCards(
+                  //drug_snapshot.reference,
                   drug_snapshot.item_name,
                   drug_snapshot.image,
                   drug_snapshot.entp_name,
@@ -171,30 +172,6 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           );
-          //}
-
-          //check = docID;
-          /*
-          if (compare == num) {
-            check = 'defult';
-            compare = 0;
-            return Column(
-              children: [
-                ListCards(
-                    drug_snapshot.item_name,
-                    drug_snapshot.image,
-                    drug_snapshot.entp_name,
-                    drug_snapshot.item_seq,
-                    drug_snapshot.valid_term,
-                    drug_snapshot.category,
-                    drugFromUser.expiration),
-                SizedBox(
-                  height: 3,
-                ),
-              ],
-            );
-          }
-          */
         }
         return Text("loading");
       },
@@ -295,6 +272,7 @@ class _SearchBarState extends State<SearchBar> {
 }
 
 class ListCards extends StatefulWidget {
+  //final String ref;
   final String item_name;
   final String image;
   final String entp_name;
@@ -304,6 +282,7 @@ class ListCards extends StatefulWidget {
   final String expiration;
 
   const ListCards(
+    //this.ref,
     this.item_name,
     this.image,
     this.entp_name,
@@ -322,11 +301,17 @@ class _ListCardsState extends State<ListCards> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {
-//        Navigator.push(
-//            context,
-//            MaterialPageRoute(
-//                builder: (context) => PhilInfoPage(index))),
+      onTap: () => //{Navigator.pushNamed(context, '/phill_info')},
+          {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PhilInfoPage(drug_item_seq: widget.item_seq),
+          ),
+        ),
+            print('===> pushed'),
+            print(widget.item_name),
+        print(widget.item_seq)
       },
       child: Container(
         width: double.infinity,
