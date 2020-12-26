@@ -9,19 +9,19 @@ class OverlayWithHole extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _getExperimentThree());
+        body: _getExperimentThree(context));
   }
 
-  Stack _getExperimentThree() {
+  Widget _getExperimentThree(BuildContext context) {
     return Stack(children: <Widget>[
       //HomePage(),
       BottomBar(),
-      _getColorFilteredOverlay(),
+      _getColorFilteredOverlay(context),
       _getHint()
     ]);
   }
 
-  ColorFiltered _getColorFilteredOverlay() {
+  Widget _getColorFilteredOverlay(BuildContext context) {
     return ColorFiltered(
       colorFilter: ColorFilter.mode(Colors.black54, BlendMode.srcOut),
       child: Stack(
@@ -41,10 +41,11 @@ class OverlayWithHole extends StatelessWidget {
                 child: FlatButton(
                   child: Text("X", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                   onPressed: (){
-                    /*Navigator.push(
+                    print('XXXXXXX');
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HomeDrugPage()));*/
+                            builder: (context) => HomePage()));
                     //Navigator.pop(context);
                   },
                 )
@@ -70,16 +71,16 @@ class OverlayWithHole extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Icon(Icons.search, size: 20),
-                      Text("어떤 약을 찾고 계세요? "),
+                      Text(" "),
                     ],
                   ),
                   onPressed: () {
-//                    Navigator.push(
-//                      context,
-//                      MaterialPageRoute(
-//                        builder: (BuildContext context) => SearchScreen(),
-//                      ),
-//                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => SearchScreen(),
+                      ),
+                    );
                   print("the button on pressed ");
                   },
                   textColor: Colors.grey[500],
@@ -89,22 +90,6 @@ class OverlayWithHole extends StatelessWidget {
                           style: BorderStyle.solid, width: 1.0, color: Colors.white),
                       borderRadius: new BorderRadius.circular(8.0)),
                 ),
-                /*
-                child:
-                TextField(
-                  cursorColor: Colors.black,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.search, size: 30),
-                    hintText: "어떤 약을 찾고 계세요?",
-                    disabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-//                        filled: true,
-//                        fillColor: Colors.white
-                    //contentPadding: EdgeInsets.only(left: 5)
-                  ),
-                ),
-                */
               ),
             ),
           ),
@@ -114,7 +99,7 @@ class OverlayWithHole extends StatelessWidget {
     );
   }
 
-  Positioned _getHint() {
+  Widget _getHint() {
     return Positioned(
         bottom: 0,
         child: Container(
@@ -154,7 +139,7 @@ class OverlayWithHole extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                        print("bar code");
+                        print("바코드 인식 페이지로!!");// 여기는 바코드 인식 페이지가 어떤 약인지 알려주는 바코드 페이지
                       },
                     ),
                     padding: EdgeInsets.all(8),
@@ -184,7 +169,7 @@ class OverlayWithHole extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                        print("bar code");
+                        print("CASE 인식");
                       },
                     ),
                     padding: EdgeInsets.all(8),
@@ -214,7 +199,7 @@ class OverlayWithHole extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                        print("bar code");
+                        print("한 알 인식 페이지로!!");
                       },
                     ),
                     padding: EdgeInsets.all(8),
@@ -245,7 +230,9 @@ class OverlayWithHole extends StatelessWidget {
                         )
                       ],
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      print('약을 추가하는 페이지!! 인식이 아님!!');
+                    },
                   ),
                 ),
                 // ),
