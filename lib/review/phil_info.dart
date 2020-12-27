@@ -6,14 +6,20 @@ import 'review_page.dart';
 final fireInstance = Firestore.instance;
 
 class PhilInfoPage extends StatefulWidget {
+  String drug_item_seq;//추가
+
+  PhilInfoPage({Key key, @required this.drug_item_seq}) : super(key: key);//약의 item seq받아오
+
   @override
   _PhilInfoPageState createState() => _PhilInfoPageState();
 }
 
 class _PhilInfoPageState extends State<PhilInfoPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
 //        appBar: AppBar(
 //          title: Text(
 //            '약정보',
