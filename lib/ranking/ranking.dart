@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class RankingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,6 @@ class Category {
 
   Category(this.name, [this.children = const <Category>[]]);
 }
-
 
 final List<Category> data = <Category>[
   Category('감기', <Category>[Category('감기약')]),
@@ -56,7 +54,7 @@ class CategoryList extends StatelessWidget {
     if (root.children.isEmpty) {
       return ListTile(
         title: Text(root.name),
-        onTap: (){
+        onTap: () {
           print('${root.name}');
         },
       );
@@ -67,11 +65,9 @@ class CategoryList extends StatelessWidget {
       //children: root.children.map<Widget>(_buildTiles).toList(),
       children: root.children
           .map<Widget>(
-        _buildTiles,
-      )
+            _buildTiles,
+          )
           .toList(),
     );
   }
 }
-
-
