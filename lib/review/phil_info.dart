@@ -19,6 +19,7 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
 //        appBar: AppBar(
 //          title: Text(
 //            '약정보',
