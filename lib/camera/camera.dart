@@ -11,14 +11,13 @@ class CameraPage extends StatefulWidget {
 class _CameraState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _getExperimentThree(context));
+    return Scaffold(body: _getEContent(context));
   }
 
-  Widget _getExperimentThree(BuildContext context) {
+  Widget _getEContent(BuildContext context) {
     return Stack(children: <Widget>[
-      HomePage(),
+      BottomBar(),
       _getColorFilteredOverlay(context),
-      _goToSearchBar(context),
       _getButtons()
     ]);
   }
@@ -37,46 +36,31 @@ class _CameraState extends State<CameraPage> {
               //)
             ),
           ),
-/*
           Container(
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                  padding: EdgeInsets.fromLTRB(15, 35, 0, 0),
-                    child: FlatButton(
-                      child: Text("X", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                      onPressed: (){
-                        print('XXXXXXX');
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomePage()));
-                        //Navigator.pop(context);
-                      },
-                    ),
-
-              ),
-            ),
-          ),
-*/
-          Container(
-            padding: EdgeInsets.fromLTRB(330, 10, 0, 0),
             decoration: BoxDecoration(
               color: Colors.transparent,
             ),
             child: Align(
                 alignment: Alignment.topCenter,
-                child: FlatButton(
-                  child: Text(
-                    "X",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () {
-                    print('BACK to home');
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomePage()));
-                    print('XXXXXX');
-                  },
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(330, 10, 0, 0),
+                      child: FlatButton(
+                        child: Text(
+                          "X",
+                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          print('BACK to home');
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => BottomBar()));
+                          print('XXXXXX');
+                        },
+                      ),
+                    ),
+                    _goToSearchBar(context),
+                  ],
                 )),
           ),
         ],
@@ -93,8 +77,7 @@ class _CameraState extends State<CameraPage> {
       child: Align(
         alignment: Alignment.topCenter,
         child: Container(
-          //padding: EdgeInsets.fromLTRB(15, 50, 0, 0),
-          margin: const EdgeInsets.only(top: 69, bottom: 4),
+          margin: const EdgeInsets.only(top: 11, bottom: 4),
           height: 36,
           width: 400,
           decoration: BoxDecoration(
@@ -153,7 +136,6 @@ class _CameraState extends State<CameraPage> {
                     height: 130,
                     child: FlatButton(
                       child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(height: 10),
                           Icon(Icons.content_paste),
@@ -183,13 +165,11 @@ class _CameraState extends State<CameraPage> {
                     height: 130,
                     child: FlatButton(
                       child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(height: 10),
                           Icon(Icons.content_paste),
                           SizedBox(height: 15),
                           Container(
-                            //  padding: EdgeInsets.all(5),
                             child: Text(
                               "케이스 인식",
                               style: TextStyle(fontSize: 17),
@@ -213,13 +193,11 @@ class _CameraState extends State<CameraPage> {
                     height: 130,
                     child: FlatButton(
                       child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(height: 10),
                           Icon(Icons.content_paste),
                           SizedBox(height: 15),
                           Container(
-                            //  padding: EdgeInsets.all(5),
                             child: Text(
                               "한 알   인식",
                               style: TextStyle(fontSize: 17),
@@ -237,7 +215,6 @@ class _CameraState extends State<CameraPage> {
                         color: Colors.white60,
                         borderRadius: BorderRadius.all(Radius.circular(4))),
                   ),
-                  //Text("You can add news pages with a tap"),
                 ]),
                 Container(
                   margin: const EdgeInsets.all(15.0),
@@ -245,12 +222,10 @@ class _CameraState extends State<CameraPage> {
                   height: 70,
                   child: FlatButton(
                     child: Column(
-                      //crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(height: 10),
                         Icon(Icons.camera_alt),
                         Container(
-                          //  padding: EdgeInsets.all(5),
                           child: Text(
                             "촬영해서 약 추가하기",
                             style: TextStyle(
