@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:semo_ver2/review/phil_info.dart';
 import 'home.dart';
 
 //final FirebaseAuth _auth = FirebaseAuth.instance;
 //final String auth_id = _auth.currentUser.uid;
+int check_for_search_button = 0;
+
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -50,26 +52,32 @@ class _SearchScreenState extends State<SearchScreen> {
       child: ListView(
         padding: EdgeInsets.fromLTRB(0,10,0,0),
         children:
-            searchResults.map((data) => _buildListItem(context, data)).toList(),
+            searchResults.map((data) => _buildListItemOfAll(context, data)).toList(),
       ),
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+  Widget _buildListItemOfAll(BuildContext context, DocumentSnapshot data) {
     final drug_snapshot = Drugs.fromSnapshot(data);
-    final drugFromUser = DrugFromUser.fromSnapshot(data);
+    //final drugFromUser = DrugFromUser.fromSnapshot(data);
 
-    String docID = data.id;
+    //String docID = data.id;
 
-    return ListDrug(
+    return ListDrugOfAll(
         drug_snapshot.item_name,
         drug_snapshot.category,
+        drug_snapshot.item_seq
         //drugFromUser.expiration
        );
   }
 
   @override
   Widget build(BuildContext context) {
+    int buttonIndex = 0;
+    if(check_for_search_button == 0) {
+      isSelected[buttonIndex] = true;
+    }
+
     return Scaffold(
       appBar: AppBar(),
       body: Container(
@@ -175,13 +183,15 @@ class _SearchScreenState extends State<SearchScreen> {
                     //selectedColor: Colors.teal[400],
                     //fillColor: Colors.teal[100],
                     onPressed: (int index) {
+                      check_for_search_button = 1;
                       setState(() {
-                        for (int buttonIndex = 0;
+                        for (buttonIndex = 0;
                         buttonIndex < isSelected.length;
                         buttonIndex++) {
                           if (buttonIndex == index) {
                             isSelected[buttonIndex] = true;
-                          } else {
+                          }
+                          else {
                             isSelected[buttonIndex] = false;
                           }
                         }
@@ -200,14 +210,16 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-class ListDrug extends StatefulWidget {
+class ListDrugOfAll extends StatefulWidget {
   final String item_name;
   final String category;
+  final String item_seq;
   //final String expiration;
 
-  const ListDrug(
+  const ListDrugOfAll(
       this.item_name,
       this.category,
+      this.item_seq,
       //this.expiration,
       {
         Key key,
@@ -217,16 +229,17 @@ class ListDrug extends StatefulWidget {
   _ListDrugState createState() => _ListDrugState();
 }
 
-class _ListDrugState extends State<ListDrug> {
+class _ListDrugState extends State<ListDrugOfAll> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => {
-        print("   ==> pushed")
-//        Navigator.push(
-//            context,
-//            MaterialPageRoute(
-//                builder: (context) => PhilInfoPage(index))),
+        check_for_search_button = 0,
+        print("   ==> pushed"),
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PhilInfoPage(drug_item_seq: widget.item_seq))),
       },
       child: Container(
         width: double.infinity,
@@ -254,13 +267,6 @@ class _ListDrugState extends State<ListDrug> {
                         SizedBox(
                           height: 3,
                         ),
-//                        Expanded(
-//                          child: Text(
-//                            widget.expiration,
-//                            style: TextStyle(
-//                                color: Colors.grey[600], fontSize: 13),
-//                          ),
-//                        )
                       ],
                     )),
               ],
