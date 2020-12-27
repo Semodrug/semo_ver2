@@ -102,7 +102,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         ButtonTheme(
-          //이게 왜 떠오르고 난리냐 거기 계속 고정하게끔 해두기!!
           padding: EdgeInsets.fromLTRB(50, 0, 5, 15),
           minWidth: 340.0,
           height: 70.0,
@@ -112,7 +111,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.add),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => OverlayWithHole()));
+                  MaterialPageRoute(builder: (context) => AddButton()));
             },
             padding: EdgeInsets.fromLTRB(20, 5, 5, 15),
             label: Container(
@@ -120,17 +119,6 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(10.0),
               child: const Text('상비약 추가하기'),
             ),
-
-//                  RaisedButton.icon(
-//                    //color: Colors.redAccent,
-//                    icon: Icon(Icons.add),
-//                    label: Text("상비약 추가하기"), //
-//                    onPressed: () {
-//                      Navigator.push(
-//                          context,
-//                          MaterialPageRoute(
-//                              builder: (context) => OverlayWithHole()));
-//                    },
           ),
         )
       ],
