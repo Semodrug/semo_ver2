@@ -338,6 +338,7 @@ class _ReviewPageState extends State<ReviewPage> {
 //                physics: NeverScrollableScrollPhysics(),
                 children: snapshot.data.documents.map((DocumentSnapshot data) {
                   final record = Record.fromSnapshot(data);
+                  List<String> names = List.from(data["favoriteSelected"]);
                   return Container(
 //                      key: ValueKey(record.name),
                       padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
@@ -367,18 +368,30 @@ class _ReviewPageState extends State<ReviewPage> {
                                     children: <Widget>[
                                       new GestureDetector(
                                           child: new Icon(
-                                            Icons.favorite,
-                                            //color: _rating >= 1 ? Colors.orange : Colors.grey,
-                                            /*color: record.favoriteSelected == true
-                                                ? Colors.redAccent[200]
-                                                : Colors.grey[300],*/
+                                            names.contains(auth.currentUser.uid) ? Icons.favorite
+                                            : Icons.favorite_border,
+//                                            color: names.contains(auth.currentUser.uid) ?
+//                                                Colors.redAccent[200] : Colors.grey[300],
+                                            color: Colors.redAccent[200],
                                             size: 21,
                                           ),
                                           //when 2 people click this
-                                          onTap:() => record.reference.updateData({
-                                            'noFavorite': FieldValue.increment(1),
-                                            /*'favoriteSelected': !record.favoriteSelected,*/
-                                          })
+                                          onTap:() {
+//                                            List<String> names = List.from(data["favoriteSelected"]);
+                                            if(names.contains(auth.currentUser.uid)) {
+                                              print("UID: "+auth.currentUser.uid);
+                                              record.reference.update({
+                                                'favoriteSelected': FieldValue.arrayRemove([auth.currentUser.uid]),
+                                                'noFavorite': FieldValue.increment(-1),
+                                              });
+                                            }
+                                            else {
+                                              record.reference.update({
+                                                'favoriteSelected': FieldValue.arrayUnion([auth.currentUser.uid]),
+                                                'noFavorite': FieldValue.increment(1),
+                                              });
+                                            }
+                                          }
                                       )
                                     ],
                                   ),
@@ -433,7 +446,7 @@ class _ReviewPageState extends State<ReviewPage> {
               children: <Widget>[
                 MaterialButton(
                     onPressed: () {
-                      print("A");
+
                     },
                     child: Center(child: Text("신고하기,",
                         style: TextStyle(color: Colors.blue[700],
@@ -469,6 +482,9 @@ class _ReviewPageState extends State<ReviewPage> {
             IconButton(
               icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
               onPressed: () {
+                //TODO : It doesn't working
+                print("auth.currentUser.uid: " + auth.currentUser.uid);
+                print("record.uid: " + record.uid);
                 if(auth.currentUser.uid == record.uid) {
                   showModalBottomSheet(
                       context: context,
@@ -479,46 +495,14 @@ class _ReviewPageState extends State<ReviewPage> {
                       context: context,
                       builder: buildBottomSheetAnonymous);
                 }
-
               },
             )
           ],
         ),
-
-
-//        MySnackBar(),
-
       ],
     );
   }
 }
-
-
-//class MySnackBar extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return IconButton(
-//      icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19
-//      ),
-//      onPressed: () {
-//
-//        Scaffold.of(context).showSnackBar(SnackBar(
-//            content: Text(
-//              'Hello',
-//              textAlign: TextAlign.center,
-//              style: TextStyle(color: Colors.teal),
-//            ),
-//            backgroundColor: Colors.white,
-//            duration: Duration(milliseconds: 5000),
-//            elevation: 10,
-//            behavior: SnackBarBehavior.floating,
-//            shape: RoundedRectangleBorder(
-//                borderRadius: BorderRadius.all(Radius.circular(10)))));
-//      },
-//    );
-//  }
-//}
-
 
 class Record {
   final DocumentReference reference;
