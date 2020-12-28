@@ -210,7 +210,8 @@ class _AllReveiewState extends State<AllReview> {
                             //when 2 people click this
                             onTap: () => record.reference.updateData({
                               'noFavorite': FieldValue.increment(1),
-                              'favoriteSelected': !record.favoriteSelected,
+                              //TODO removed next one line
+//                              'favoriteSelected': !record.favoriteSelected,
                             })
                           /*//                          onTap: () => Firestore.instance.runTransaction((transaction) async {
 //                            final freshSnapshot = await transaction.get(record.reference);
@@ -404,8 +405,9 @@ class _AllReveiewState extends State<AllReview> {
                                               record.reference.updateData({
                                                 'noFavorite':
                                                 FieldValue.increment(1),
-                                                'favoriteSelected':
-                                                !record.favoriteSelected,
+                                                    //Todo removed next two lines
+//                                                'favoriteSelected':
+//                                                !record.favoriteSelected,
                                               })
                                         /*//                          onTap: () => Firestore.instance.runTransaction((transaction) async {
 //                            final freshSnapshot = await transaction.get(record.reference);
@@ -470,7 +472,8 @@ class _AllReveiewState extends State<AllReview> {
           ],
         ),
 
-        MySnackBar(),
+        //TODO: GET
+        //MySnackBar(),
 
 //      Stack(
 //        children: <Widget>[
