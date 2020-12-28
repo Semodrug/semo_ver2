@@ -19,9 +19,9 @@ class IYMYApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'IYMY',
-        home: HomePage(),
+        home: LoginPage(),
         debugShowCheckedModeBanner: false,
-        initialRoute: '/login',
+        // initialRoute: '/login',
         routes: {
           // TODO
           // Add route

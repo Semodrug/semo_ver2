@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+
 import 'package:semo_ver2/login/find_id.dart';
 import 'package:semo_ver2/login/find_password.dart';
 import 'package:semo_ver2/login/register_step1.dart';
+import 'package:semo_ver2/login/user_auth.dart';
 
-// TODO: find id, passwd page
+// TODO: find id, passwd
 // TODO: kakao login
 // TODO: theme style
 
@@ -13,9 +14,6 @@ import 'package:semo_ver2/login/register_step1.dart';
 // TODO: Page route를 무조건 push pull 아니고 아예 reset 할때도 필요
 
 // TODO: 구글 로그인 후, 개인 정보 받아야한다
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
   @override
@@ -27,28 +25,26 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(builder: (BuildContext context) {
-        return ListView(
-          scrollDirection: Axis.vertical,
-          children: <Widget>[
-            _EmailPasswordForm(),
-            _GoogleSignInSection(),
-            /* 로그인 뛰어넘기 */
-            IconButton(
-              icon: Icon(Icons.skip_next),
-              color: Colors.redAccent,
-              onPressed: () {
-                Navigator.pushNamed(context, '/bottom_bar');
-              },
-            ),
-          ],
+        return ChangeNotifierProvider<FirebaseProvider>(
+          create: (context) => FirebaseProvider(),
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            children: <Widget>[
+              _EmailPasswordForm(),
+              _GoogleSignInSection(),
+              /* 로그인 뛰어넘기 */
+              IconButton(
+                icon: Icon(Icons.skip_next),
+                color: Colors.redAccent,
+                onPressed: () {
+                  Navigator.pushNamed(context, '/bottom_bar');
+                },
+              ),
+            ],
+          ),
         );
       }),
     );
-  }
-
-  // Example code for sign out.
-  void _signOut() async {
-    await _auth.signOut();
   }
 }
 
@@ -61,8 +57,6 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _success;
-  String _userEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -132,9 +126,21 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
               child: RaisedButton(
                 padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    _signInWithEmailAndPassword();
-                  }
+                  // if (_formKey.currentState.validate()) {
+                  //   // _signInWithEmailAndPassword();
+                  //   //TODO: 로그인 실패
+                  //   await Provider.of<FirebaseProvider>(context, listen: false)
+                  //           .signInWithEmail(
+                  //               _emailController.text, _passwordController.text)
+                  //       ? Navigator.pushNamed(context, '/bottom_bar')
+                  //       : null;
+                  // }
+                  // TODO: 로그인 실패
+                  await Provider.of<FirebaseProvider>(context, listen: false)
+                          .signInWithEmail(
+                              _emailController.text, _passwordController.text)
+                      ? Navigator.pushNamed(context, '/bottom_bar')
+                      : null;
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(10.0)),
@@ -192,8 +198,6 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                   style: TextStyle(fontSize: 12.0, color: Colors.grey[400]),
                 ),
                 FlatButton(
-                  onPressed: () => _pushPage(
-                      context, RegisterFirstPage()), //register page로 이동
                   child: Text(
                     '회원가입',
                     style: TextStyle(
@@ -201,30 +205,20 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                         fontSize: 12.0,
                         color: Colors.black),
                   ),
+                  onPressed: () {
+                    // register page로 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RegisterFirstPage()),
+                    );
+                  },
                 ),
               ]),
             ),
-            // Container(
-            //   alignment: Alignment.center,
-            //   padding: const EdgeInsets.symmetric(horizontal: 16),
-            //   child: Text(
-            //     _success == null
-            //         ? ''
-            //         : (_success
-            //             ? 'Successfully signed in ' + _userEmail
-            //             : 'Sign in failed'),
-            //     style: TextStyle(color: Colors.red),
-            //   ),
-            // ),
           ],
         ),
       ),
-    );
-  }
-
-  void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => page),
     );
   }
 
@@ -234,23 +228,6 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
     _passwordController.dispose();
     super.dispose();
   }
-
-  void _signInWithEmailAndPassword() async {
-    final User user = (await _auth.signInWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    ))
-        .user;
-    if (user != null) {
-      setState(() {
-        _success = true;
-        _userEmail = user.email;
-      });
-      Navigator.pushReplacementNamed(context, '/bottom_bar');
-    } else {
-      _success = false;
-    }
-  }
 }
 
 class _GoogleSignInSection extends StatefulWidget {
@@ -259,8 +236,6 @@ class _GoogleSignInSection extends StatefulWidget {
 }
 
 class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
-  bool _success;
-  String _userID;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -273,7 +248,12 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
             ),
             FlatButton(
               onPressed: () async {
-                _signInWithGoogle();
+                // TODO: 로그인 실패시
+                // _signInWithGoogle();
+                await Provider.of<FirebaseProvider>(context, listen: false)
+                        .signInWithGoogle()
+                    ? Navigator.pushNamed(context, '/bottom_bar')
+                    : null;
               },
               child: Text(
                 '구글 아이디로 로그인',
@@ -285,49 +265,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
             ),
           ]),
         ),
-        // Container(
-        //   alignment: Alignment.center,
-        //   padding: const EdgeInsets.symmetric(horizontal: 16),
-        //   child: Text(
-        //     _success == null
-        //         ? ''
-        //         : (_success
-        //             ? 'Successfully signed in, uid: ' + _userID
-        //             : 'Sign in failed'),
-        //     style: TextStyle(color: Colors.red),
-        //   ),
-        // )
       ],
     );
-  }
-
-  // Example code of how to sign in with google.
-  void _signInWithGoogle() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    final user = (await _auth.signInWithCredential(credential)).user;
-    print("signed in " + user.displayName);
-
-    assert(user.email != null);
-    assert(user.displayName != null);
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
-
-    final currentUser = _auth.currentUser;
-    assert(user.uid == currentUser.uid);
-    setState(() {
-      if (user != null) {
-        _success = true;
-        _userID = user.uid;
-        Navigator.pushNamed(context, '/bottom_bar');
-      } else {
-        _success = false;
-      }
-    });
   }
 }
