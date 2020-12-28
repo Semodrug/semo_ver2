@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'review_page.dart';
+import 'write_review.dart';
 
 final fireInstance = Firestore.instance;
 
@@ -20,6 +21,19 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.create),
+            backgroundColor: Colors.teal[200],
+            elevation: 0.0,
+            onPressed: () {
+//            rating();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WriteReview()
+                  ));
+            }
+        ),
 //        appBar: AppBar(
 //          title: Text(
 //            '약정보',
