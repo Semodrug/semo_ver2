@@ -79,7 +79,23 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(),
+        appBar: AppBar(
+          // centerTitle: true,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[
+                      Color(0xFFE9FFFB),
+                      Color(0xFFE9FFFB),
+                      Color(0xFFFFFFFF),
+                    ])),
+          ),
+        ),
       body: Container(
         padding: EdgeInsets.fromLTRB(10, 10, 10, 7),
         child: Column(
@@ -87,14 +103,22 @@ class _SearchScreenState extends State<SearchScreen> {
             //Padding(padding: EdgeInsets.all(30)),
             Row(
               children: [
-//                IconButton(icon: Icon(Icons.arrow_back), onPressed: (){
-//                  Navigator.pushNamed(context, '/home');}
-//                ),
+                SizedBox(
+                  //padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  width: 20,
+                  height: 20,
+                  child: IconButton(
+                      onPressed: (){
+                        Navigator.pushNamed(context, '/bottom_bar');
+                      },
+                      icon: Icon(Icons.arrow_back, size: 20,)
+                  ),
+                ),
                 Container(
-                  width: 330,
+                  width: 320,
                   height: 35,
-                  padding: EdgeInsets.only(top: 3,),
-                  margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  padding: EdgeInsets.only(top: 0,),
+                  margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     color: Colors.grey[200],
@@ -116,8 +140,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   color: Colors.grey,
                                   size: 20,
                                 ),
-                                suffixIcon: focusNode.hasFocus
-                                    ? IconButton(
+                                suffixIcon: IconButton(
                                         icon: Icon(Icons.cancel, size: 20),
                                         onPressed: () {
                                           setState(() {
@@ -125,25 +148,30 @@ class _SearchScreenState extends State<SearchScreen> {
                                             _searchText = "";
                                           });
                                         },
-                                      )
-                                    : Container(),
+                                      ),
                                 hintText: '어떤 약을 찾고 계세요?',
                                 labelStyle: TextStyle(color: Colors.grey),
+
                                 focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
+//                                    borderRadius:
+//                                        BorderRadius.all(Radius.circular(10)),
                                     borderSide:
-                                        BorderSide(color: Colors.transparent)),
+                                        BorderSide(color: Colors.transparent)
+                                ),
+
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10)),
                                     borderSide:
                                         BorderSide(color: Colors.transparent)),
+                                /*
                                 border: OutlineInputBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10)),
                                     borderSide:
-                                        BorderSide(color: Colors.transparent))),
+                                        BorderSide(color: Colors.transparent))
+                                */
+                            ),
                           )),
                     ],
                   ),
