@@ -45,12 +45,14 @@ dependencies:
   #functions
   flappy_search_bar: ^1.7.2
   flutter_rating_bar: ^3.2.0+1
+  fl_chart: ^0.12.2
 
   #and so on
   flutter_launcher_icons: ^0.8.1
   flutter_native_splash: ^0.1.9
   connectivity: ^2.0.2
-  fl_chart: ^0.12.2
+  google_fonts: ^1.1.1
+  pedantic: ^1.9.2
 
 dev_dependencies:
   flutter_test:
