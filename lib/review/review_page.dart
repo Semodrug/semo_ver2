@@ -3,9 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'all_review.dart';
 import 'write_review.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ReviewPage extends StatefulWidget {
   @override
@@ -13,6 +14,31 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
+  List<PieChartSectionData> _sections = [
+    PieChartSectionData(
+    color: Color(0xff88F0BE),
+    value: 40,
+//    title: 'Food',
+    radius: 20,
+    titleStyle: TextStyle(color: Colors.white, fontSize:12),
+    ),
+    PieChartSectionData(
+      color: Color(0xffFED74D),
+      value: 40,
+//      title: 'Food',
+      radius: 20,
+      titleStyle: TextStyle(color: Colors.white, fontSize:12),
+    ),
+    PieChartSectionData(
+      color: Color(0xffFF7070),
+      value: 20,
+//      title: 'Food',
+      radius: 20,
+      titleStyle: TextStyle(color: Colors.white, fontSize:12),
+    )
+  ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +48,7 @@ class _ReviewPageState extends State<ReviewPage> {
           backgroundColor: Colors.teal[300],
           elevation: 0.0,
           onPressed: () {
-            rating();
+//            rating();
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -33,7 +59,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget rating() {
+  Widget _rating() {
     FirebaseFirestore.instance
         .collection('Reviews')
         .get()
@@ -44,66 +70,221 @@ class _ReviewPageState extends State<ReviewPage> {
     });
   }
 
+  Widget _pieChart(String text) {
+    return  Column(
+      children: [
+        Text(text),
+        Container(
+          width: 110,
+          height: 110,
+          child: AspectRatio(
+              aspectRatio: 1,
+              child: PieChart(
+                PieChartData(
+                  sections: _sections,
+                  borderData: FlBorderData(show: false),
+                  centerSpaceRadius: 20,
+                  sectionsSpace: 3,
+                ),
+              )
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _review(record) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Container(
+                height: 28,
+                width: 70,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.grey[400], width: 1.0),
+                    borderRadius:
+                    BorderRadius.all(Radius.circular(6.0))),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("효과", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
+                    Padding(padding: EdgeInsets.all(2.5)),
+                    //Container(width: size.width * 0.015),
+                    Container(
+                        width: 17,
+                        height: 17,
+                        decoration: BoxDecoration(
+                            color: Colors.green[200],
+                            shape: BoxShape.circle)),
+                  ],
+                )),
+            //Container(width: size.width * 0.025),
+            Padding(padding: EdgeInsets.all(5)),
+            Text(record.effectText, style: TextStyle(fontSize: 17.0)),
+          ],
+        ),
+        Padding(padding: EdgeInsets.only(top: 6.0)),
+        Row(
+          children: <Widget>[
+            Container(
+                height: 28,
+                width: 80,
+                //width: 5, height: 5,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.grey[400], width: 1.0),
+                    borderRadius:
+                    BorderRadius.all(Radius.circular(6.0))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("부작용", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
+                    Padding(padding: EdgeInsets.all(2.5)),
+                    Container(
+                        width: 17,
+                        height: 17,
+                        decoration: BoxDecoration(
+                            color: Colors.redAccent[100],
+                            shape: BoxShape.circle)),
+                  ],
+                )),
+            Padding(padding: EdgeInsets.all(5)),
+            Text(record.sideEffectText, style: TextStyle(fontSize: 17.0)),
+          ],
+        ),
+        Padding(padding: EdgeInsets.only(top: 6.0)),
+
+        Row(
+          children: <Widget>[
+            Container(
+                height: 25,
+                width: 45,
+                //width: 5, height: 5,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.grey[400], width: 1.0),
+                    borderRadius:
+                    BorderRadius.all(Radius.circular(6.0))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("총평", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
+                  ],
+                )),
+            Padding(padding: EdgeInsets.all(5)),
+            Text(record.overallText, style: TextStyle(fontSize: 17.0)),
+          ],
+        ),
+        Padding(padding: EdgeInsets.only(top: 6.0)),
+      ],
+    );
+  }
+
+  Widget _tapToRate() {
+    return RatingBar.builder(
+      initialRating:3,
+      minRating: 1,
+      direction: Axis.horizontal,
+      allowHalfRating: false,
+      itemCount: 5,
+      itemSize: 30,
+      glow: false,
+      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: Colors.amberAccent,
+      ),
+      onRatingUpdate: (rating) {
+        print(rating);
+      },
+    );
+  }
+
+  Widget _searchBar() {
+    return //TODO: Bring SEARCH FUNCTION & show review according to search keyword
+      Container(
+        height: 50,
+        padding: EdgeInsets.only(left: 20, right: 30),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          color: Colors.grey[200],
+        ),
+        child: TextField(
+          cursorColor: Colors.black,
+          decoration: InputDecoration(
+            icon: Icon(Icons.search, size: 30),
+            hintText: "어떤 리뷰를 찾고계세요?",
+            disabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+//                        filled: true,
+//                        fillColor: Colors.white
+            //contentPadding: EdgeInsets.only(left: 5)
+          ),
+        ),
+      );
+  }
+
+  Widget _totalRating() {
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("총 평점",
+                style: TextStyle(
+                    fontSize: 16.5, fontWeight: FontWeight.bold)),
+            //Container(height: size.height * 0.02),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Icon(Icons.star, color: Colors.amber[300], size: 35),
+                //Todo : Rating
+                Text("4.26", style: TextStyle(fontSize: 35)),
+                Text("/5",
+                    style: TextStyle(
+                        fontSize: 20, color: Colors.grey[500])),
+                SizedBox(
+                    width:30
+                ),
+                _pieChart("효과"),
+                _pieChart("부작용"),
+              ],
+            ),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+            Text("탭해서 평가하기",
+                style: TextStyle(
+                    fontSize: 14.0, color: Colors.grey[700])),
+            Padding(padding: EdgeInsets.only(top: 7.0)),
+            _tapToRate()
+          ],
+        ));
+  }
+
 
   Widget topOfReview(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
         SizedBox(height:10),
-        Container(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("총 평점",
-                    style: TextStyle(
-                        fontSize: 16.5, fontWeight: FontWeight.bold)),
-                //Container(height: size.height * 0.02),
-                Padding(padding: EdgeInsets.only(top: 14.0)),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.star, color: Colors.amber[300], size: 35),
-                    //Todo : Rating
-                    Text("4.26", style: TextStyle(fontSize: 35)),
-                    Text("/5",
-                        style: TextStyle(
-                            fontSize: 20, color: Colors.grey[500])),
-                  ],
-                ),
-                Padding(padding: EdgeInsets.only(top: 84.0)),
-                Text("탭해서 평가하기",
-                    style: TextStyle(
-                        fontSize: 14.0, color: Colors.grey[700])),
-                Padding(padding: EdgeInsets.only(top: 7.0)),
-                RatingBar.builder(
-                  initialRating:3,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: false,
-                  itemCount: 5,
-                  itemSize: 30,
-                  glow: false,
-                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amberAccent,
-                  ),
-                  onRatingUpdate: (rating) {
-                    print(rating);
-                  },
-                ),
-              ],
-            )),
+        _totalRating(),
         Container(
           height: 4,
           color: Colors.grey[200],
         ),
+
         Container(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                //TODO EDIT num of reviews
                 Text('리뷰 360개',
                     style: TextStyle(
                       fontSize: 16.5,
@@ -122,27 +303,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     }),
               ],
             )),
-        Container(
-          height: 50,
-          padding: EdgeInsets.only(left: 20, right: 30),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            color: Colors.grey[200],
-          ),
-          child: TextField(
-            cursorColor: Colors.black,
-            decoration: InputDecoration(
-              icon: Icon(Icons.search, size: 30),
-              hintText: "어떤 리뷰를 찾고계세요?",
-              disabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-//                        filled: true,
-//                        fillColor: Colors.white
-              //contentPadding: EdgeInsets.only(left: 5)
-            ),
-          ),
-        ),
+        _searchBar(),
         Container(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
             decoration: BoxDecoration(
@@ -171,13 +332,14 @@ class _ReviewPageState extends State<ReviewPage> {
                 return Text("Error: ${snapshot.error}");
               if (!snapshot.hasData)
                 return LinearProgressIndicator();
-              return ListView(
-//                    crossAxisCount: 1,
-//                        scrollDirection: Axis.vertical,
+              return Column(
+//                primary: false,
+//                shrinkWrap: true,
+//                physics: NeverScrollableScrollPhysics(),
                 children: snapshot.data.documents.map((DocumentSnapshot data) {
                   final record = Record.fromSnapshot(data);
                   return Container(
-                      key: ValueKey(record.name),
+//                      key: ValueKey(record.name),
                       padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                       decoration: BoxDecoration(
                           border: Border(
@@ -186,96 +348,8 @@ class _ReviewPageState extends State<ReviewPage> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
-                            _starAndId(record, context),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Container(
-                                        height: 28,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.grey[400], width: 1.0),
-                                            borderRadius:
-                                            BorderRadius.all(Radius.circular(6.0))),
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text("효과", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
-                                            Padding(padding: EdgeInsets.all(2.5)),
-                                            //Container(width: size.width * 0.015),
-                                            Container(
-                                                width: 17,
-                                                height: 17,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.green[200],
-                                                    shape: BoxShape.circle)),
-                                          ],
-                                        )),
-                                    //Container(width: size.width * 0.025),
-                                    Padding(padding: EdgeInsets.all(5)),
-                                    Text(record.effectText, style: TextStyle(fontSize: 17.0)),
-                                  ],
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 6.0)),
-                                Row(
-                                  children: <Widget>[
-                                    Container(
-                                        height: 28,
-                                        width: 80,
-                                        //width: 5, height: 5,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.grey[400], width: 1.0),
-                                            borderRadius:
-                                            BorderRadius.all(Radius.circular(6.0))),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text("부작용", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
-                                            Padding(padding: EdgeInsets.all(2.5)),
-                                            Container(
-                                                width: 17,
-                                                height: 17,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.redAccent[100],
-                                                    shape: BoxShape.circle)),
-                                          ],
-                                        )),
-                                    Padding(padding: EdgeInsets.all(5)),
-                                    Text(record.sideEffectText, style: TextStyle(fontSize: 17.0)),
-                                  ],
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 6.0)),
-
-                                Row(
-                                  children: <Widget>[
-                                    Container(
-                                        height: 25,
-                                        width: 45,
-                                        //width: 5, height: 5,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.grey[400], width: 1.0),
-                                            borderRadius:
-                                            BorderRadius.all(Radius.circular(6.0))),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text("총평", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
-                                          ],
-                                        )),
-                                    Padding(padding: EdgeInsets.all(5)),
-                                    Text(record.overallText, style: TextStyle(fontSize: 17.0)),
-                                  ],
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 6.0)),
-                              ],
-                            ),
+                            _starAndIdAndMore(record, context, auth),
+                            _review(record),
                             //Container(height: size.height * 0.01),
 //              _dateAndLike(record),
                             Row(
@@ -295,15 +369,15 @@ class _ReviewPageState extends State<ReviewPage> {
                                           child: new Icon(
                                             Icons.favorite,
                                             //color: _rating >= 1 ? Colors.orange : Colors.grey,
-                                            color: record.favoriteSelected == true
+                                            /*color: record.favoriteSelected == true
                                                 ? Colors.redAccent[200]
-                                                : Colors.grey[300],
+                                                : Colors.grey[300],*/
                                             size: 21,
                                           ),
                                           //when 2 people click this
                                           onTap:() => record.reference.updateData({
                                             'noFavorite': FieldValue.increment(1),
-                                            'favoriteSelected': !record.favoriteSelected,
+                                            /*'favoriteSelected': !record.favoriteSelected,*/
                                           })
                                       )
                                     ],
@@ -323,7 +397,63 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget _starAndId(record, context) {
+  Widget buildBottomSheetWriter(BuildContext context) {
+    return SizedBox(
+        child: Container(
+//                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Wrap(
+            children: <Widget>[
+              MaterialButton(
+                onPressed: () {
+                  print("A");
+                },
+                child: Center(child: Text("수정하기",
+                    style: TextStyle(color: Colors.blue[700],
+                    fontSize: 16)))
+              ),
+              MaterialButton(
+                  onPressed: () {
+                    print("A");
+                  },
+                  child: Center(child: Text("삭제하기",
+                      style: TextStyle(color: Colors.red[600],
+                      fontSize: 16)))
+              )
+            ],
+          )
+        )
+    );
+  }
+
+  Widget buildBottomSheetAnonymous(BuildContext context) {
+    return SizedBox(
+        child: Container(
+//                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Wrap(
+              children: <Widget>[
+                MaterialButton(
+                    onPressed: () {
+                      print("A");
+                    },
+                    child: Center(child: Text("신고하기,",
+                        style: TextStyle(color: Colors.blue[700],
+                            fontSize: 16)))
+                ),
+                MaterialButton(
+                    onPressed: () {
+                      print("A");
+                    },
+                    child: Center(child: Text("취소,",
+                        style: TextStyle(color: Colors.blue[700],
+                            fontSize: 16)))
+                ),
+              ],
+            )
+        )
+    );
+  }
+
+  Widget _starAndIdAndMore(record, context, auth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -335,40 +465,59 @@ class _ReviewPageState extends State<ReviewPage> {
             Icon(Icons.star, color: Colors.grey[300], size: 16),
             Padding(padding: EdgeInsets.only(left: 10)),
             Text(record.id, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+            SizedBox(width: 145),
+            IconButton(
+              icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
+              onPressed: () {
+                if(auth.currentUser.uid == record.uid) {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: buildBottomSheetWriter);
+                }
+                else if(auth.currentUser.uid != record.uid) {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: buildBottomSheetAnonymous);
+                }
+
+              },
+            )
           ],
         ),
 
-        MySnackBar(),
+
+//        MySnackBar(),
+
       ],
     );
   }
 }
 
 
-class MySnackBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19
-      ),
-      onPressed: () {
-
-        Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text(
-              'Hello',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.teal),
-            ),
-            backgroundColor: Colors.white,
-            duration: Duration(milliseconds: 5000),
-            elevation: 10,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)))));
-      },
-    );
-  }
-}
+//class MySnackBar extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return IconButton(
+//      icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19
+//      ),
+//      onPressed: () {
+//
+//        Scaffold.of(context).showSnackBar(SnackBar(
+//            content: Text(
+//              'Hello',
+//              textAlign: TextAlign.center,
+//              style: TextStyle(color: Colors.teal),
+//            ),
+//            backgroundColor: Colors.white,
+//            duration: Duration(milliseconds: 5000),
+//            elevation: 10,
+//            behavior: SnackBarBehavior.floating,
+//            shape: RoundedRectangleBorder(
+//                borderRadius: BorderRadius.all(Radius.circular(10)))));
+//      },
+//    );
+//  }
+//}
 
 
 class Record {
@@ -379,7 +528,8 @@ class Record {
   final String sideEffectText;
   final String overallText;
   final String id;
-  final bool favoriteSelected;
+  List<String> favoriteSelected = List<String>();
+  final String uid;
   var noFavorite;
 
   Record.fromMap(Map<String, dynamic> map, {this.reference})
@@ -388,17 +538,20 @@ class Record {
         assert(map['sideEffectText'] != null),
         assert(map['overallText'] != null),
         assert(map['id'] != null),
-        assert(map['favoriteSelected'] != null),
         assert(map['noFavorite'] != null),
+        assert(map['uid'] != null),
 
         name = map['name'],
         effectText = map['effectText'],
         sideEffectText = map['sideEffectText'],
         overallText = map['overallText'],
         id = map['id'],
-        favoriteSelected = map['favoriteSelected'],
-        noFavorite = map['noFavorite'];
+//        favoriteSelected = map['favoriteSelected'],
+//        favoriteSelected = favoriteSelected.map((item){return item.toMap();}).toList(),
+        noFavorite = map['noFavorite'],
+        uid = map['uid'];
 
   Record.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
 }
+

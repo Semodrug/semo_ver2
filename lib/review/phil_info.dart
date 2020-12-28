@@ -228,7 +228,7 @@ Widget _myTab() {
           Container(
             padding: EdgeInsets.all(0.0),
             width: double.infinity,
-            height: 500.0,
+            height: 1700.0,
             child: TabBarView(
               /* 여기에 은영학우님 page 넣기! */
               children: [_specificInfo(), ReviewPage()],
