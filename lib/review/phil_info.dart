@@ -6,14 +6,20 @@ import 'review_page.dart';
 final fireInstance = Firestore.instance;
 
 class PhilInfoPage extends StatefulWidget {
+  String drug_item_seq;//추가
+
+  PhilInfoPage({Key key, @required this.drug_item_seq}) : super(key: key);//약의 item seq받아오
+
   @override
   _PhilInfoPageState createState() => _PhilInfoPageState();
 }
 
 class _PhilInfoPageState extends State<PhilInfoPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
 //        appBar: AppBar(
 //          title: Text(
 //            '약정보',
@@ -228,7 +234,7 @@ Widget _myTab() {
           Container(
             padding: EdgeInsets.all(0.0),
             width: double.infinity,
-            height: 500.0,
+            height: 1700.0,
             child: TabBarView(
               /* 여기에 은영학우님 page 넣기! */
               children: [_specificInfo(), ReviewPage()],

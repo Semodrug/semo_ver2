@@ -42,14 +42,14 @@ class _WriteReviewState extends State<WriteReview> {
   String effectText = '';
   String sideEffectText = '';
   String overallText = '';
-  bool favoriteSelected = false;
+  List<String> favoriteSelected = [];
   var noFavorite = 0;
 
   void _registerReview() {
     Firestore.instance.collection("Reviews").add(
         {
           "SeqNum" : "21700432",
-          "UID" : auth.currentUser.uid,
+          "uid" : auth.currentUser.uid,
           "id": auth.currentUser.email,
           "effect": effect,
           "sideEffect" : sideEffect,

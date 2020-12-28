@@ -1,27 +1,28 @@
-
-
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'search_screen.dart';
 import 'package:semo_ver2/bottom_bar.dart';
 
-class OverlayWithHole extends StatelessWidget {
+class AddButton extends StatefulWidget {
+  @override
+  _AddButtonState createState() => _AddButtonState();
+}
+
+class _AddButtonState extends State<AddButton> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: _getExperimentThree());
+    return Scaffold(body: _getEContent(context));
   }
 
-  Stack _getExperimentThree() {
+  Widget _getEContent(BuildContext context) {
     return Stack(children: <Widget>[
-      //HomePage(),
       BottomBar(),
-      _getColorFilteredOverlay(),
-      _getHint()
+      _getColorFilteredOverlay(context),
+      _getButtons()
     ]);
   }
 
-  ColorFiltered _getColorFilteredOverlay() {
+  Widget _getColorFilteredOverlay(BuildContext context) {
     return ColorFiltered(
       colorFilter: ColorFilter.mode(Colors.black54, BlendMode.srcOut),
       child: Stack(
@@ -29,25 +30,9 @@ class OverlayWithHole extends StatelessWidget {
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
-                padding: EdgeInsets.fromLTRB(15, 55, 0, 0),
-                child: Text("검색해서 약 추가하기",
-                    style:
-                    TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-                padding: EdgeInsets.fromLTRB(15, 35, 0, 0),
-                child: FlatButton(
-                  child: Text("X", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                  onPressed: (){
-                    /*Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HomeDrugPage()));*/
-                    //Navigator.pop(context);
-                  },
-                )
+              padding: EdgeInsets.fromLTRB(15, 48, 0, 0),
+              child: Text("검색해서 약 추가하기",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
             ),
           ),
           Container(
@@ -55,66 +40,79 @@ class OverlayWithHole extends StatelessWidget {
               color: Colors.transparent,
             ),
             child: Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                margin: const EdgeInsets.only(top: 80, right: 4, bottom: 4),
-                height: 48,
-                width: 400,
-                decoration: BoxDecoration(
-                  // Color does not matter but must not be transparent
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child:  FlatButton(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(Icons.search, size: 20),
-                      Text("어떤 약을 찾고 계세요? "),
-                    ],
-                  ),
-                  onPressed: () {
-//                    Navigator.push(
-//                      context,
-//                      MaterialPageRoute(
-//                        builder: (BuildContext context) => SearchScreen(),
-//                      ),
-//                    );
-                  print("the button on pressed ");
-                  },
-                  textColor: Colors.grey[500],
-                  color: Colors.grey[200],
-                  shape: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          style: BorderStyle.solid, width: 1.0, color: Colors.white),
-                      borderRadius: new BorderRadius.circular(8.0)),
-                ),
-                /*
-                child:
-                TextField(
-                  cursorColor: Colors.black,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.search, size: 30),
-                    hintText: "어떤 약을 찾고 계세요?",
-                    disabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-//                        filled: true,
-//                        fillColor: Colors.white
-                    //contentPadding: EdgeInsets.only(left: 5)
-                  ),
-                ),
-                */
-              ),
-            ),
+                alignment: Alignment.topCenter,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(330, 10, 0, 0),
+                    child: FlatButton(
+                        child: Text(
+                          "X",
+                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          print('BACK to home');
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => BottomBar()));
+                          print('XXXXXX');
+                        },
+                      ),
+                    ),
+                    _goToSearchBar(context),
+                  ],
+                )),
           ),
-
         ],
       ),
     );
   }
 
-  Positioned _getHint() {
+  Widget _goToSearchBar(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(13, 0, 13, 0),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          margin: const EdgeInsets.only(top: 11, bottom: 4),
+          height: 36,
+          width: 400,
+          decoration: BoxDecoration(
+            // Color does not matter but must not be transparent
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: FlatButton(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(Icons.search, size: 20),
+                Text("어떤 약을 찾고 계세요? "),
+              ],
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => SearchScreen(),
+                ),
+              );
+            },
+            textColor: Colors.grey[500],
+            color: Colors.grey[200],
+            shape: OutlineInputBorder(
+                borderSide: BorderSide(
+                    style: BorderStyle.solid, width: 1.0, color: Colors.white),
+                borderRadius: new BorderRadius.circular(8.0)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _getButtons() {
     return Positioned(
         bottom: 0,
         child: Container(
@@ -138,13 +136,11 @@ class OverlayWithHole extends StatelessWidget {
                     height: 130,
                     child: FlatButton(
                       child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(height: 10),
                           Icon(Icons.content_paste),
                           SizedBox(height: 15),
                           Container(
-                            //  padding: EdgeInsets.all(5),
                             child: Text(
                               "바코드 인식",
                               style: TextStyle(fontSize: 17),
@@ -154,7 +150,8 @@ class OverlayWithHole extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                        print("bar code");
+                        print(
+                            "바코드 인식 페이지로!!"); // 여기는 바코드 인식 페이지가 어떤 약인지 알려주는 바코드 페이지
                       },
                     ),
                     padding: EdgeInsets.all(8),
@@ -168,13 +165,11 @@ class OverlayWithHole extends StatelessWidget {
                     height: 130,
                     child: FlatButton(
                       child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(height: 10),
                           Icon(Icons.content_paste),
                           SizedBox(height: 15),
                           Container(
-                            //  padding: EdgeInsets.all(5),
                             child: Text(
                               "케이스 인식",
                               style: TextStyle(fontSize: 17),
@@ -184,7 +179,7 @@ class OverlayWithHole extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                        print("bar code");
+                        print("CASE 인식");
                       },
                     ),
                     padding: EdgeInsets.all(8),
@@ -198,13 +193,11 @@ class OverlayWithHole extends StatelessWidget {
                     height: 130,
                     child: FlatButton(
                       child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(height: 10),
                           Icon(Icons.content_paste),
                           SizedBox(height: 15),
                           Container(
-                            //  padding: EdgeInsets.all(5),
                             child: Text(
                               "한 알   인식",
                               style: TextStyle(fontSize: 17),
@@ -214,7 +207,7 @@ class OverlayWithHole extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                        print("bar code");
+                        print("한 알 인식 페이지로!!");
                       },
                     ),
                     padding: EdgeInsets.all(8),
@@ -222,7 +215,6 @@ class OverlayWithHole extends StatelessWidget {
                         color: Colors.white60,
                         borderRadius: BorderRadius.all(Radius.circular(4))),
                   ),
-                  //Text("You can add news pages with a tap"),
                 ]),
                 Container(
                   margin: const EdgeInsets.all(15.0),
@@ -230,12 +222,10 @@ class OverlayWithHole extends StatelessWidget {
                   height: 70,
                   child: FlatButton(
                     child: Column(
-                      //crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(height: 10),
                         Icon(Icons.camera_alt),
                         Container(
-                          //  padding: EdgeInsets.all(5),
                           child: Text(
                             "촬영해서 약 추가하기",
                             style: TextStyle(
@@ -245,14 +235,14 @@ class OverlayWithHole extends StatelessWidget {
                         )
                       ],
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      print('약을 추가하는 페이지!! 인식이 아님!!');
+                    },
                   ),
                 ),
-                // ),
               ],
             )));
   }
-
 }
 
 class HolePainter extends CustomPainter {
