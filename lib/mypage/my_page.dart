@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+
 import 'package:semo_ver2/login/register_step2.dart';
 import 'package:semo_ver2/login/register_step3.dart';
+import 'package:semo_ver2/login/user_auth.dart';
 
 import 'my_reviews.dart';
 
@@ -27,141 +30,169 @@ class _MyPageState extends State<MyPage> {
             .collection('users')
             .doc(_auth.currentUser.uid);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[200],
+    return ChangeNotifierProvider<FirebaseProvider>(
+      create: (context) => FirebaseProvider(),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.teal[200],
+            ),
+            onPressed: () => Navigator.pop(context),
           ),
-          onPressed: () => Navigator.pop(context),
+          centerTitle: true,
+          title: Text(
+            '마이페이지',
+            style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
+          ),
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[
+                  Color(0xFFE9FFFB),
+                  Color(0xFFE9FFFB),
+                  Color(0xFFFFFFFF),
+                ])),
+          ),
         ),
-        centerTitle: true,
-        title: Text(
-          '마이페이지',
-          style: TextStyle(
-              fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
-        ),
-      ),
-      body: FutureBuilder<DocumentSnapshot>(
-        future: curr_user.get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text("Something went wrong");
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // TODO: show wait circle
-            return Text(
-              'loading...',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
-            );
-          }
-          // TODO 구글 로그인 이면
-          var name = snapshot.data.get('name');
-          if (name == null) name = user.displayName;
+        body: FutureBuilder<DocumentSnapshot>(
+          future: curr_user.get(),
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Text("Something went wrong");
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // TODO: show wait circle
+              return Text(
+                'loading...',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              );
+            }
+            // TODO 구글 로그인 이면
+            var name = snapshot.data.get('name');
+            if (name == null) name = user.displayName;
 
-          return Column(
-            children: [
-              Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '$name님, \n오늘도 건강하세요!',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                user.email,
-                                style:
-                                    TextStyle(fontSize: 12, color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          //TODO: image picker
-                          IconButton(
-                            icon: Icon(
-                              Icons.person,
-                              color: Colors.teal[200],
+            return Column(
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '$name님, \n오늘도 건강하세요!',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  user.email,
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey),
+                                )
+                              ],
                             ),
-                            onPressed: () {
-                              null;
-                            },
+                            //TODO: image picker
+                            IconButton(
+                              icon: Icon(
+                                Icons.person,
+                                color: Colors.teal[200],
+                              ),
+                              onPressed: () {
+                                null;
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // TODO: 리뷰 갯수
+                            _myMenu('리뷰', '0', context, MyReviews()),
+                            _myMenu('찜', '0', context, MyReviews()),
+                            _myMenu('1:1 문의', '0', context, MyReviews())
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                // TODO: 회원정보 수정페이지==> 읽어와서 보여줘야함(기말 add page 처럼), 나의 건강정보 관리 페이지
+                SizedBox(
+                  height: 10,
+                ),
+                _myPageMenu('회원정보 수정', context, RegisterSecondPage()),
+                SizedBox(
+                  height: 2,
+                ),
+                _myPageMenu('나의 건강정보 관리', context, RegisterThirdPage()),
+                SizedBox(
+                  height: 10,
+                ),
+                // TODO: 공지사항, 1:1문의, 이용약관, 환경설정 페이지
+                _myPageMenu('공지사항', context, RegisterSecondPage()),
+                SizedBox(
+                  height: 2,
+                ),
+                _myPageMenu('1:1 문의', context, RegisterThirdPage()),
+                SizedBox(
+                  height: 2,
+                ),
+                _myPageMenu('이용약관', context, RegisterThirdPage()),
+                SizedBox(
+                  height: 10,
+                ),
+                _myPageMenu('환경설정', context, RegisterSecondPage()),
+                SizedBox(
+                  height: 2,
+                ),
+                Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.fromLTRB(20.0, 0, 10.0, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '로그아웃',
+                      ),
+                      IconButton(
+                          icon: Icon(
+                            Icons.navigate_next,
+                            color: Colors.teal[200],
                           ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          // TODO: 리뷰 갯수
-                          _myMenu('리뷰', '0', context, MyReviews()),
-                          _myMenu('찜', '0', context, MyReviews()),
-                          _myMenu('1:1 문의', '0', context, MyReviews())
-                        ],
-                      )
+                          onPressed: () async {
+                            await Provider.of<FirebaseProvider>(context,
+                                    listen: false)
+                                .signOut();
+                            Navigator.pushNamed(context, '/login');
+                          }),
                     ],
                   ),
                 ),
-              ),
-              // TODO: 회원정보 수정페이지==> 읽어와서 보여줘야함(기말 add page 처럼), 나의 건강정보 관리 페이지
-              SizedBox(
-                height: 10,
-              ),
-              _myPageMenu('회원정보 수정', context, RegisterSecondPage()),
-              SizedBox(
-                height: 2,
-              ),
-              _myPageMenu('나의 건강정보 관리', context, RegisterThirdPage()),
-              SizedBox(
-                height: 10,
-              ),
-              // TODO: 공지사항, 1:1문의, 이용약관, 환경설정 페이지
-              _myPageMenu('공지사항', context, RegisterSecondPage()),
-              SizedBox(
-                height: 2,
-              ),
-              _myPageMenu('1:1 문의', context, RegisterThirdPage()),
-              SizedBox(
-                height: 2,
-              ),
-              _myPageMenu('이용약관', context, RegisterThirdPage()),
-              SizedBox(
-                height: 10,
-              ),
-              _myPageMenu('환경설정', context, RegisterSecondPage()),
-              SizedBox(
-                height: 2,
-              ),
-              _myPageMenu('로그아웃', context, RegisterThirdPage()),
-            ],
-          );
-        },
+                // _myPageMenu('로그아웃', context, RegisterThirdPage()),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
