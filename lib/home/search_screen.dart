@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:semo_ver2/review/phil_info.dart';
 import 'home.dart';
 
-//final FirebaseAuth _auth = FirebaseAuth.instance;
-//final String auth_id = _auth.currentUser.uid;
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -13,8 +13,6 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<bool> isSelected = List.generate(2, (_) => false);
-
   final TextEditingController _filter = TextEditingController();
   FocusNode focusNode = FocusNode();
   String _searchText = "";
@@ -27,206 +25,313 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBodyOfAll(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('drug')
-          .snapshots(),
+      stream: FirebaseFirestore.instance.collection('drug').snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
-        return _buildList(context, snapshot.data.docs);
+        return _buildListOfAll(context, snapshot.data.docs);
       },
     );
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildListOfAll(
+      BuildContext context, List<DocumentSnapshot> snapshot) {
     List<DocumentSnapshot> searchResults = [];
     for (DocumentSnapshot d in snapshot) {
       if (d.data().toString().contains(_searchText)) {
         searchResults.add(d);
       }
     }
-    return Expanded(
-      child: ListView(
-        padding: EdgeInsets.fromLTRB(0,10,0,0),
-        children:
-            searchResults.map((data) => _buildListItem(context, data)).toList(),
-      ),
+    return ListView(
+      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+      children: searchResults
+          .map((data) => _buildListItemOfAll(context, data))
+          .toList(),
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+  Widget _buildListItemOfAll(BuildContext context, DocumentSnapshot data) {
     final drug_snapshot = Drugs.fromSnapshot(data);
+
+    return ListDrugOfAll(drug_snapshot.item_name, drug_snapshot.category,
+        drug_snapshot.item_seq);
+  }
+
+  Widget _buildBodyOfUser(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(_auth.currentUser.uid)
+          .collection('savedList')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
+        return _buildListOfUser(context, snapshot.data.docs);
+      },
+    );
+  }
+
+  Widget _buildListOfUser(
+      BuildContext context, List<DocumentSnapshot> snapshot) {
+    List<DocumentSnapshot> searchResults = [];
+    for (DocumentSnapshot d in snapshot) {
+      if (d.data().toString().contains(_searchText)) {
+        searchResults.add(d);
+      }
+    }
+    return ListView(
+      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+      children: searchResults
+          .map((data) => _buildListItemOfUser(context, data))
+          .toList(),
+    );
+  }
+
+  Widget _buildListItemOfUser(BuildContext context, DocumentSnapshot data) {
+    //TODO: 사용자가 가지고 있는 약의 데이터들 보여주기
     final drugFromUser = DrugFromUser.fromSnapshot(data);
-
-    String docID = data.id;
-
-    return ListDrug(
-        drug_snapshot.item_name,
-        drug_snapshot.category,
-        //drugFromUser.expiration
-       );
+    return
+        //child:
+        ListDrugOfUser(
+      drugFromUser.item_name,
+      drugFromUser.item_seq,
+      drugFromUser.expiration,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Container(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 7),
-        child: Column(
-          children: [
-            //Padding(padding: EdgeInsets.all(30)),
-            Row(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
+                Color(0xFFE9FFFB),
+                Color(0xFFE9FFFB),
+                Color(0xFFFFFFFF),
+              ])),
+        ),
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
               children: [
-//                IconButton(icon: Icon(Icons.arrow_back), onPressed: (){
-//                  Navigator.pushNamed(context, '/home');}
-//                ),
-                Container(
-                  width: 330,
-                  height: 35,
-                  padding: EdgeInsets.only(top: 3,),
-                  margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    color: Colors.grey[200],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          //flex: 5,
-                          child: TextField(
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/bottom_bar');
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            size: 20,
+                          )),
+                    ),
+                    Container(
+                      width: 320,
+                      height: 35,
+                      padding: EdgeInsets.only(
+                        top: 0,
+                      ),
+                      margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        color: Colors.grey[200],
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              //flex: 5,
+                              child: TextField(
                             focusNode: focusNode,
                             style: TextStyle(fontSize: 15),
                             autofocus: true,
                             controller: _filter,
                             decoration: InputDecoration(
-                                fillColor: Colors.white12,
-                                filled: true,
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: Colors.grey,
-                                  size: 20,
-                                ),
-                                suffixIcon: focusNode.hasFocus
-                                    ? IconButton(
-                                        icon: Icon(Icons.cancel, size: 20),
-                                        onPressed: () {
-                                          setState(() {
-                                            _filter.clear();
-                                            _searchText = "";
-                                          });
-                                        },
-                                      )
-                                    : Container(),
-                                hintText: '어떤 약을 찾고 계세요?',
-                                labelStyle: TextStyle(color: Colors.grey),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent)),
-                                border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent))),
+                              fillColor: Colors.white12,
+                              filled: true,
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Colors.grey,
+                                size: 20,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.cancel, size: 20),
+                                onPressed: () {
+                                  setState(() {
+                                    _filter.clear();
+                                    _searchText = "";
+                                  });
+                                },
+                              ),
+                              hintText: '어떤 약을 찾고 계세요?',
+                              labelStyle: TextStyle(color: Colors.grey),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent)),
+                            ),
                           )),
-                    ],
-                  ),
+                        ],
+                      ),
+                    ),
+                    focusNode.hasFocus
+                        ? Expanded(
+                            child: FlatButton(
+                              child: Text(
+                                '확인', //TODO: 확인 눌렀을 때, 결과 값 보여주기
+                                style: TextStyle(fontSize: 13),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _filter.clear();
+                                  _searchText = "";
+                                  focusNode.unfocus();
+                                });
+                              },
+                            ),
+                          )
+                        : Expanded(
+                            flex: 0,
+                            child: Container(),
+                          )
+                  ],
                 ),
-                focusNode.hasFocus
-                    ? Expanded(
-                  child: FlatButton(
-                    child: Text(
-                      '확인', //TODO: 확인 눌렀을 때, 결과 값 보여주기
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _filter.clear();
-                        _searchText = "";
-                        focusNode.unfocus();
-                      });
-                    },
-                  ),
-                )
-                    : Expanded(
-                  flex: 0,
-                  child: Container(),
-                )
+                SizedBox(
+                  height: 7,
+                ),
               ],
             ),
-            SizedBox(height: 7,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                  ToggleButtons(
-                    constraints: BoxConstraints(
-                      minWidth: 185,
-                      minHeight: 30,
-                    ),
-                    children: [Text('전체 검색'), Text('나의 상비약 검색')],
-                    //selectedColor: Colors.teal[400],
-                    //fillColor: Colors.teal[100],
-                    onPressed: (int index) {
-                      setState(() {
-                        for (int buttonIndex = 0;
-                        buttonIndex < isSelected.length;
-                        buttonIndex++) {
-                          if (buttonIndex == index) {
-                            isSelected[buttonIndex] = true;
-                          } else {
-                            isSelected[buttonIndex] = false;
-                          }
-                        }
-                      });
-                    },
-                    isSelected: isSelected,
-                  ),
-
-              ],
-            ),
-            _buildBody(context)
-          ],
-        ),
+          ),
+          SliverToBoxAdapter(
+            child: _myTab(),
+          )
+        ],
       ),
     );
   }
+
+  Widget _myTab() {
+    return DefaultTabController(
+        length: 2,
+        child: Column(
+          children: [
+            TabBar(
+              labelStyle:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              unselectedLabelStyle:
+                  TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
+              //indicatorSize: TabBarIndicatorSize.label,
+              tabs: [
+                /*여기는 일단 버튼 형식처럼 해놓은 TabBar
+                Tab(
+                    child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Align(
+                            alignment: Alignment.center,
+                            child: Text('전체 검색',
+                                style: TextStyle(color: Colors.black))))),
+                Tab(
+                    child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Align(
+                            alignment: Alignment.center,
+                            child: Text('나의 상비약 검색 ',
+                                style: TextStyle(color: Colors.black))))),
+                indicator: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  Color(0xFFE9FFFB),
+                  Color(0xFFE9FFFB),
+                ]),
+                color: Colors.white70,
+                borderRadius: BorderRadius.circular(5),
+              ),
+                */
+
+                Tab(
+                    child: Text('전체 검색',
+                        style: TextStyle(color: Colors.black))),
+                Tab(
+                    child: Text('나의 상비약 검색',
+                        style: TextStyle(color: Colors.black))),
+              ],
+              indicatorColor: Colors.teal[400],
+            ),
+            Container(
+              padding: EdgeInsets.all(0.0),
+              width: double.infinity,
+              height: 500.0,
+              child: TabBarView(
+                children: [_buildBodyOfAll(context), _buildBodyOfUser(context)],
+              ),
+            )
+          ],
+        ));
+  }
 }
 
-class ListDrug extends StatefulWidget {
+class ListDrugOfAll extends StatefulWidget {
   final String item_name;
   final String category;
-  //final String expiration;
+  final String item_seq;
 
-  const ListDrug(
-      this.item_name,
-      this.category,
-      //this.expiration,
-      {
-        Key key,
-      }) : super(key: key);
+  const ListDrugOfAll(
+    this.item_name,
+    this.category,
+    this.item_seq,
+    {
+    Key key,
+  }) : super(key: key);
 
   @override
   _ListDrugState createState() => _ListDrugState();
 }
 
-class _ListDrugState extends State<ListDrug> {
+class ListDrugOfUser extends StatefulWidget {
+  final String item_name;
+  final String item_seq;
+  final String expiration;
+
+  const ListDrugOfUser(
+    this.item_name,
+    this.item_seq,
+    this.expiration, {
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _ListDrugUserState createState() => _ListDrugUserState();
+}
+
+class _ListDrugState extends State<ListDrugOfAll> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => {
-        print("   ==> pushed")
-//        Navigator.push(
-//            context,
-//            MaterialPageRoute(
-//                builder: (context) => PhilInfoPage(index))),
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    PhilInfoPage(drug_item_seq: widget.item_seq))),
       },
       child: Container(
         width: double.infinity,
@@ -235,7 +340,7 @@ class _ListDrugState extends State<ListDrug> {
             color: Colors.white,
             child: Row(
               children: [
-               SizedBox(
+                SizedBox(
                   width: 15,
                 ),
                 Container(
@@ -248,19 +353,13 @@ class _ListDrugState extends State<ListDrug> {
                           Text(
                             widget.item_name,
                             style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
+                              fontSize: 15,
+                            ),
                           )
                         ]),
                         SizedBox(
                           height: 3,
                         ),
-//                        Expanded(
-//                          child: Text(
-//                            widget.expiration,
-//                            style: TextStyle(
-//                                color: Colors.grey[600], fontSize: 13),
-//                          ),
-//                        )
                       ],
                     )),
               ],
@@ -268,6 +367,58 @@ class _ListDrugState extends State<ListDrug> {
       ),
     );
   }
-
 }
 
+class _ListDrugUserState extends State<ListDrugOfUser> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    PhilInfoPage(drug_item_seq: widget.item_seq))),
+      },
+      child: Container(
+        width: double.infinity,
+        height: 50.0,
+        child: Material(
+            color: Colors.white,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 15,
+                ),
+                Container(
+                    padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(children: [
+                          Text(
+                            widget.item_name,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            widget.expiration,
+                            style: TextStyle(fontSize: 11, color: Colors.grey),
+                          ),
+                        ]),
+                        SizedBox(
+                          height: 3,
+                        ),
+                      ],
+                    )),
+              ],
+            )),
+      ),
+    );
+  }
+}

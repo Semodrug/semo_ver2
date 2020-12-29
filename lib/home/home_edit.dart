@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'home_edit.dart';
+import 'package:semo_ver2/mypage/my_page.dart';
 import 'search_screen.dart';
 
 import 'home_add_button_stack.dart';
-import 'package:semo_ver2/review//phil_info.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -13,12 +12,12 @@ int num; // streambuilder 로 불러오기
 int compare;
 String check = 'defalut'; //check for docID
 
-class HomePage extends StatefulWidget {
+class HomeEditPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeEditPageState createState() => _HomeEditPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeEditPageState extends State<HomeEditPage> {
   @override
   Widget build(BuildContext context) {
     CollectionReference user_drug =
@@ -34,17 +33,51 @@ class _HomePageState extends State<HomePage> {
       num = totalEquals;
       return totalEquals;
     }
+
     totalNum();
 
     Stream<QuerySnapshot> data = user_drug.snapshots();
     return Scaffold(
+      appBar: AppBar(
+        // centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: Text(
+          '이약모약',
+          style: TextStyle(
+              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.person,
+              color: Colors.teal[200],
+            ),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyPage()),
+            ),
+          ),
+        ],
+        backgroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
+                    Color(0xFFE9FFFB),
+                    Color(0xFFE9FFFB),
+                    Color(0xFFFFFFFF),
+                  ])),
+        ),
+      ),
       body: _buildBody(context, data),
     );
   }
 
   Widget _buildBody(BuildContext context, Stream<QuerySnapshot> data) {
     return StreamBuilder<QuerySnapshot>(
-
         stream: data,
         builder: (context, stream) {
           if (!stream.hasData) return LinearProgressIndicator();
@@ -77,16 +110,6 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 width: 180,
               ),
-              FlatButton(
-                child: Text(
-                  '편집',
-                ),
-                onPressed: () {
-                  print('편집');
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeEditPage()));
-                },
-              )
             ],
           ),
         ),
@@ -140,8 +163,8 @@ class _HomePageState extends State<HomePage> {
 
         if (snapshot.connectionState == ConnectionState.done) {
           final drug_snapshot = Drugs.fromSnapshot(snapshot.data);
-          //print('Snapshot Data ==> ${snapshot.data}');
-          //print(drug_snapshot.reference.id); //this is item seq num
+          print('Snapshot Data ==> ${snapshot.data}');
+          print(drug_snapshot.reference.id); //this is item seq num
 
           final drugFromUser = DrugFromUser.fromSnapshot(data);
           return Column(
@@ -168,7 +191,6 @@ class _HomePageState extends State<HomePage> {
 }
 
 class DrugFromUser {
-  final String item_name;
   final String item_seq;
   final String expiration;
 
@@ -177,7 +199,6 @@ class DrugFromUser {
   DrugFromUser.fromMap(Map<String, dynamic> map, {this.reference})
       :
         //assert(map['expiration'] != null),
-        item_name = map['ITEM_NAME'],
         item_seq = map['ITEM_SEQ'],
         expiration = map['expiration'];
 
@@ -294,68 +315,119 @@ class _ListCardsState extends State<ListCards> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => //{Navigator.pushNamed(context, '/phill_info')},
-          {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PhilInfoPage(drug_item_seq: widget.item_seq),
-          ),
-        ),
-            print('===> pushed'),
-            print(widget.item_name),
-        print(widget.item_seq)
-      },
       child: Container(
         width: double.infinity,
         height: 100.0,
         child: Material(
             color: Colors.white,
-            child: Row(
+            child: Stack(
               children: [
-//                Container(
-//                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-//                    child: Text(compare.toString())),
-                SizedBox(
-                  width: 15,
-                ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-                    child: Image.network(widget.image)),
-                Container(
-                    padding: EdgeInsets.fromLTRB(15, 20, 5, 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          Text(
-                            widget.item_name,
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          )
-                        ]),
-                        Expanded(
-                            child: Row(
-                          children: [_categoryButton((widget.category))],
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Container(
+                        padding: EdgeInsets.fromLTRB(5, 0, 0, 5),
+                        child: Image.network(widget.image)),
+                    Container(
+                        padding: EdgeInsets.fromLTRB(15, 20, 0, 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(children: [
+                              Text(
+                                widget.item_name,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+
+                            ]),
+                            Expanded(
+                                child: Row(
+                                  children: [_categoryButton((widget.category))],
+                                )),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Expanded(
+                              child: Text(
+                                widget.expiration,
+                                style: TextStyle(
+                                    color: Colors.grey[600], fontSize: 13),
+                              ),
+                            )
+                          ],
                         )),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Expanded(
-                          child: Text(
-                            widget.expiration,
-                            style: TextStyle(
-                                color: Colors.grey[600], fontSize: 13),
-                          ),
-                        )
-                      ],
-                    )),
+                  ],
+                ),
+
+                //Stack(
+                  //children: [
+                            Positioned(
+                              top: 5,
+                              right: 20,
+                              width: 20,
+                             height: 30,
+                             // top: 0,                             // right: 0,
+                                child: Align(
+                                  //alignment: Alignment.centerRight,
+                                  child: IconButton(
+                                    padding: EdgeInsets.all(2.0),
+                                    icon:
+                                      Icon(
+                                        Icons.cancel, size: 20
+                                       ),
+                                    onPressed: () {
+                                      askDeleteAlert(context);                                  },
+                                  ),
+                                ),
+                              ),
+
+                          //),
+                  //]
+                //)
               ],
             )),
       ),
     );
   }
+
+  void askDeleteAlert (BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          //title: Text('나의 상비약 목록에서 지우시겠습니까?'),
+          content: Text("나의 상비약 목록에서 지우시겠습니까?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('삭제'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/bottom_bar');
+
+                      FirebaseFirestore.instance //user가 가지고 있는 약 data
+                          .collection('users')
+                          .doc(_auth.currentUser.uid)
+                          .collection('savedList')
+                          .doc(widget.item_seq)
+                          .delete();
+                      },
+            ),
+            FlatButton(
+              child: Text('취소'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/bottom_bar');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   Widget _categoryButton(str) {
     return Container(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
 import 'search_screen.dart';
 import 'package:semo_ver2/bottom_bar.dart';
 
@@ -39,7 +38,8 @@ class _AddButtonState extends State<AddButton> {
             decoration: BoxDecoration(
               color: Colors.transparent,
             ),
-            child: Align(
+            child:
+            Align(
                 alignment: Alignment.topCenter,
                 child: Column(
                   children: [
