@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'all_review.dart';
+import 'edit_review.dart';
+import 'searchbar.dart';
 import 'write_review.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +16,7 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
+
   List<PieChartSectionData> _sections = [
     PieChartSectionData(
     color: Color(0xff88F0BE),
@@ -43,19 +46,19 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: topOfReview(context),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.create),
-          backgroundColor: Colors.teal[300],
-          elevation: 0.0,
-          onPressed: () {
-//            rating();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => WriteReview()
-                ));
-          }
-      ),
+//      floatingActionButton: FloatingActionButton(
+//          child: Icon(Icons.create),
+//          backgroundColor: Colors.teal[300],
+//          elevation: 0.0,
+//          onPressed: () {
+////            rating();
+//            Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                    builder: (context) => WriteReview()
+//                ));
+//          }
+//      ),
     );
   }
 
@@ -118,7 +121,8 @@ class _ReviewPageState extends State<ReviewPage> {
                         width: 17,
                         height: 17,
                         decoration: BoxDecoration(
-                            color: Colors.green[200],
+                          //TODO: COlor: Based on effect color
+                            color: record.effect == "soso" ? Color(0xffFFDD66) : record.effect == "bad" ? Color(0xffFF7070) : Color(0xff88F0BE),
                             shape: BoxShape.circle)),
                   ],
                 )),
@@ -127,6 +131,7 @@ class _ReviewPageState extends State<ReviewPage> {
             Text(record.effectText, style: TextStyle(fontSize: 17.0)),
           ],
         ),
+
         Padding(padding: EdgeInsets.only(top: 6.0)),
         Row(
           children: <Widget>[
@@ -148,7 +153,8 @@ class _ReviewPageState extends State<ReviewPage> {
                         width: 17,
                         height: 17,
                         decoration: BoxDecoration(
-                            color: Colors.redAccent[100],
+                          color: record.sideEffect == "yes"? Color(0xffFF7070) : Color(0xff88F0BE),
+//                            color: Colors.redAccent[100],
                             shape: BoxShape.circle)),
                   ],
                 )),
@@ -194,12 +200,58 @@ class _ReviewPageState extends State<ReviewPage> {
       itemSize: 30,
       glow: false,
       itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+      unratedColor: Colors.grey[300],
       itemBuilder: (context, _) => Icon(
         Icons.star,
         color: Colors.amberAccent,
       ),
       onRatingUpdate: (rating) {
+        //TODO: add rating!!!!!!!!!!!!!!!!!!!!!!!!
+        _showMyDialog();
         print(rating);
+      },
+    );
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+//          title: Center(child: Text('AlertDialog Title')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Center(child: Icon(Icons.star, size: 30, color: Colors.amberAccent)),
+                SizedBox(height: 5),
+                Center(child: Text('별점이 반영되었습니다.', style: TextStyle(color: Colors.black45, fontSize: 14))),
+                SizedBox(height: 20),
+                Center(child: Text('리뷰 작성도 이어서 할까요?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('확인', style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        //TODO: GOTO Edit Review
+//                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+
+        );
       },
     );
   }
@@ -304,6 +356,8 @@ class _ReviewPageState extends State<ReviewPage> {
               ],
             )),
         _searchBar(),
+
+        //TODO: YOU can delete
         Container(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
             decoration: BoxDecoration(
@@ -322,6 +376,17 @@ class _ReviewPageState extends State<ReviewPage> {
                   Padding(padding: EdgeInsets.only(top: 7.0)),
                   //_dateAndLike(size),
                 ])),
+
+        IconButton(
+          icon: Icon(Icons.hotel),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SearchScreen()
+                ));
+          },),
+
         Expanded(
 //            height: 400,
           child: StreamBuilder<QuerySnapshot>(
@@ -338,6 +403,7 @@ class _ReviewPageState extends State<ReviewPage> {
 //                physics: NeverScrollableScrollPhysics(),
                 children: snapshot.data.documents.map((DocumentSnapshot data) {
                   final record = Record.fromSnapshot(data);
+                  List<String> names = List.from(data["favoriteSelected"]);
                   return Container(
 //                      key: ValueKey(record.name),
                       padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
@@ -367,18 +433,30 @@ class _ReviewPageState extends State<ReviewPage> {
                                     children: <Widget>[
                                       new GestureDetector(
                                           child: new Icon(
-                                            Icons.favorite,
-                                            //color: _rating >= 1 ? Colors.orange : Colors.grey,
-                                            /*color: record.favoriteSelected == true
-                                                ? Colors.redAccent[200]
-                                                : Colors.grey[300],*/
+                                            names.contains(auth.currentUser.uid) ? Icons.favorite
+                                            : Icons.favorite_border,
+//                                            color: names.contains(auth.currentUser.uid) ?
+//                                                Colors.redAccent[200] : Colors.grey[300],
+                                            color: Colors.redAccent[200],
                                             size: 21,
                                           ),
                                           //when 2 people click this
-                                          onTap:() => record.reference.updateData({
-                                            'noFavorite': FieldValue.increment(1),
-                                            /*'favoriteSelected': !record.favoriteSelected,*/
-                                          })
+                                          onTap:() {
+//                                            List<String> names = List.from(data["favoriteSelected"]);
+                                            if(names.contains(auth.currentUser.uid)) {
+                                              print("UID: "+auth.currentUser.uid);
+                                              record.reference.update({
+                                                'favoriteSelected': FieldValue.arrayRemove([auth.currentUser.uid]),
+                                                'noFavorite': FieldValue.increment(-1),
+                                              });
+                                            }
+                                            else {
+                                              record.reference.update({
+                                                'favoriteSelected': FieldValue.arrayUnion([auth.currentUser.uid]),
+                                                'noFavorite': FieldValue.increment(1),
+                                              });
+                                            }
+                                          }
                                       )
                                     ],
                                   ),
@@ -397,7 +475,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget buildBottomSheetWriter(BuildContext context) {
+  Widget buildBottomSheetWriter(BuildContext context, record) {
     return SizedBox(
         child: Container(
 //                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -413,7 +491,7 @@ class _ReviewPageState extends State<ReviewPage> {
               ),
               MaterialButton(
                   onPressed: () {
-                    print("A");
+                    _showDeleteDialog(record);
                   },
                   child: Center(child: Text("삭제하기",
                       style: TextStyle(color: Colors.red[600],
@@ -425,6 +503,45 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
+  Future<void> _showDeleteDialog(record) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+//          title: Center(child: Text('AlertDialog Title')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        record.reference.delete();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+
+        );
+      },
+    );
+  }
+
   Widget buildBottomSheetAnonymous(BuildContext context) {
     return SizedBox(
         child: Container(
@@ -433,7 +550,7 @@ class _ReviewPageState extends State<ReviewPage> {
               children: <Widget>[
                 MaterialButton(
                     onPressed: () {
-                      print("A");
+
                     },
                     child: Center(child: Text("신고하기,",
                         style: TextStyle(color: Colors.blue[700],
@@ -469,61 +586,62 @@ class _ReviewPageState extends State<ReviewPage> {
             IconButton(
               icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
               onPressed: () {
+                //TODO : It doesn't working
+                print("auth.currentUser.uid: " + auth.currentUser.uid);
+                print("record.uid: " + record.uid);
                 if(auth.currentUser.uid == record.uid) {
                   showModalBottomSheet(
                       context: context,
-                      builder: buildBottomSheetWriter);
+                      builder: (BuildContext context) {
+                        return SizedBox(
+                            child: Container(
+//                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                child: Wrap(
+                                  children: <Widget>[
+                                    MaterialButton(
+                                        onPressed: () {
+                                          Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) => EditReview(record)
+                                          ));
+                                        },
+                                        child: Center(child: Text("수정하기",
+                                            style: TextStyle(color: Colors.blue[700],
+                                                fontSize: 16)))
+                                    ),
+                                    MaterialButton(
+                                        onPressed: () {
+                                          _showDeleteDialog(record);
+                                        },
+                                        child: Center(child: Text("삭제하기",
+                                            style: TextStyle(color: Colors.red[600],
+                                                fontSize: 16)))
+                                    )
+                                  ],
+                                )
+                            )
+                        );
+                      });
                 }
                 else if(auth.currentUser.uid != record.uid) {
                   showModalBottomSheet(
                       context: context,
                       builder: buildBottomSheetAnonymous);
                 }
-
               },
             )
           ],
         ),
-
-
-//        MySnackBar(),
-
       ],
     );
   }
 }
 
-
-//class MySnackBar extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return IconButton(
-//      icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19
-//      ),
-//      onPressed: () {
-//
-//        Scaffold.of(context).showSnackBar(SnackBar(
-//            content: Text(
-//              'Hello',
-//              textAlign: TextAlign.center,
-//              style: TextStyle(color: Colors.teal),
-//            ),
-//            backgroundColor: Colors.white,
-//            duration: Duration(milliseconds: 5000),
-//            elevation: 10,
-//            behavior: SnackBarBehavior.floating,
-//            shape: RoundedRectangleBorder(
-//                borderRadius: BorderRadius.all(Radius.circular(10)))));
-//      },
-//    );
-//  }
-//}
-
-
 class Record {
   final DocumentReference reference;
 
   final String name;
+  final String effect;
+  final String sideEffect;
   final String effectText;
   final String sideEffectText;
   final String overallText;
@@ -549,7 +667,9 @@ class Record {
 //        favoriteSelected = map['favoriteSelected'],
 //        favoriteSelected = favoriteSelected.map((item){return item.toMap();}).toList(),
         noFavorite = map['noFavorite'],
-        uid = map['uid'];
+        uid = map['uid'],
+        effect = map['effect'],
+        sideEffect = map['sideEffect'];
 
   Record.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);

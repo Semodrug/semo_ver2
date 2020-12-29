@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'review_page.dart';
+import 'write_review.dart';
 
 final fireInstance = FirebaseFirestore.instance;
 
@@ -52,6 +53,42 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
                 ])),
           ),
         ),
+
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.create),
+            backgroundColor: Colors.teal[200],
+            elevation: 0.0,
+            onPressed: () {
+//            rating();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WriteReview()
+                  ));
+            }
+        ),
+//        appBar: AppBar(
+//          title: Text(
+//            '약정보',
+//            style: TextStyle(
+//                color: Colors.black, letterSpacing: 2.0, fontSize: 18),
+//          ),
+//          centerTitle: true,
+//          backgroundColor: Colors.white,
+//          elevation: 1.0,
+////          leading: Icon(
+////            Icons.arrow_back,
+////            color: Colors.teal[400],
+////          ),
+//          actions: [
+//            IconButton(
+//              icon: Icon(Icons.search),
+//              onPressed: () => {},
+//              color: Colors.teal[400],
+//            ),
+//          ],
+//        ),
+
         backgroundColor: Colors.white,
         body: CustomScrollView(
           slivers: [
