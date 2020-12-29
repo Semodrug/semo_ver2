@@ -4,10 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:semo_ver2/mypage/my_page.dart';
 import 'search_screen.dart';
 
-import 'search_screen22.dart';
-
 import 'home_add_button_stack.dart';
-import 'package:semo_ver2/review//phil_info.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -266,7 +263,7 @@ class _SearchBarState extends State<SearchBar> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => SearchScreen22(),
+                      builder: (BuildContext context) => SearchScreen(),
                     ),
                   );
                 },
@@ -323,65 +320,74 @@ class _ListCardsState extends State<ListCards> {
         height: 100.0,
         child: Material(
             color: Colors.white,
-            child: Row(
+            child: Stack(
               children: [
-                SizedBox(
-                  width: 15,
-                ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(5, 0, 0, 5),
-                    child: Image.network(widget.image)),
-                Container(
-                    padding: EdgeInsets.fromLTRB(15, 20, 0, 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          Text(
-                            widget.item_name,
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-
-                        ]),
-                        Expanded(
-                            child: Row(
-                          children: [_categoryButton((widget.category))],
-                        )),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Expanded(
-                          child: Text(
-                            widget.expiration,
-                            style: TextStyle(
-                                color: Colors.grey[600], fontSize: 13),
-                          ),
-                        )
-                      ],
-                    )),
-                Stack(
+                Row(
                   children: [
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Container(
-                                width: 45,
-                                height: 35,
-                                //padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
-                                child: IconButton(
-                                  icon:
-                                    Icon(
-                                      Icons.cancel, size: 20
-                                     ),
-                                  onPressed: () {
-                                    askDeleteAlert(context);                                  },
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Container(
+                        padding: EdgeInsets.fromLTRB(5, 0, 0, 5),
+                        child: Image.network(widget.image)),
+                    Container(
+                        padding: EdgeInsets.fromLTRB(15, 20, 0, 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(children: [
+                              Text(
+                                widget.item_name,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+
+                            ]),
+                            Expanded(
+                                child: Row(
+                                  children: [_categoryButton((widget.category))],
+                                )),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Expanded(
+                              child: Text(
+                                widget.expiration,
+                                style: TextStyle(
+                                    color: Colors.grey[600], fontSize: 13),
+                              ),
+                            )
+                          ],
+                        )),
+                  ],
+                ),
+
+                //Stack(
+                  //children: [
+                            Positioned(
+                              top: 5,
+                              right: 20,
+                              width: 20,
+                             height: 30,
+                             // top: 0,                             // right: 0,
+                                child: Align(
+                                  //alignment: Alignment.centerRight,
+                                  child: IconButton(
+                                    padding: EdgeInsets.all(2.0),
+                                    icon:
+                                      Icon(
+                                        Icons.cancel, size: 20
+                                       ),
+                                    onPressed: () {
+                                      askDeleteAlert(context);                                  },
+                                  ),
                                 ),
                               ),
-                            ),
+
                           //),
-                  ]
-                )
+                  //]
+                //)
               ],
             )),
       ),

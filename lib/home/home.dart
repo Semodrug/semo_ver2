@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'home_edit.dart';
 import 'search_screen.dart';
+
 import 'home_add_button_stack.dart';
 import 'package:semo_ver2/review//phil_info.dart';
 
@@ -23,10 +25,7 @@ class _HomePageState extends State<HomePage> {
         FirebaseFirestore.instance //user가 가지고 있는 약 data
             .collection('users')
             .doc(_auth.currentUser.uid)
-            //TODO: right now 1, i will changed after Login page complete
             .collection('savedList');
-
-    print('user_drug == $user_drug');
 
     Future totalNum() async {
       var querySnapshot = await user_drug.getDocuments();
@@ -35,7 +34,6 @@ class _HomePageState extends State<HomePage> {
       num = totalEquals;
       return totalEquals;
     }
-
     totalNum();
 
     Stream<QuerySnapshot> data = user_drug.snapshots();
@@ -47,7 +45,6 @@ class _HomePageState extends State<HomePage> {
   Widget _buildBody(BuildContext context, Stream<QuerySnapshot> data) {
     return StreamBuilder<QuerySnapshot>(
 
-        ///sumi
         stream: data,
         builder: (context, stream) {
           if (!stream.hasData) return LinearProgressIndicator();
@@ -86,6 +83,8 @@ class _HomePageState extends State<HomePage> {
                 ),
                 onPressed: () {
                   print('편집');
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HomeEditPage()));
                 },
               )
             ],
@@ -131,6 +130,7 @@ class _HomePageState extends State<HomePage> {
     CollectionReference drug = FirebaseFirestore.instance.collection('drug');
 
     return FutureBuilder<DocumentSnapshot>(
+      //user의 savedList안에 있는 애들과 실제 약 데이터 매치하여 약에 대한 정보를 받아오는 부분
       future: drug.doc(docID).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -140,8 +140,8 @@ class _HomePageState extends State<HomePage> {
 
         if (snapshot.connectionState == ConnectionState.done) {
           final drug_snapshot = Drugs.fromSnapshot(snapshot.data);
-          print('Snapshot Data ==> ${snapshot.data}');
-          print(drug_snapshot.reference.id); //this is item seq num
+          //print('Snapshot Data ==> ${snapshot.data}');
+          //print(drug_snapshot.reference.id); //this is item seq num
 
           final drugFromUser = DrugFromUser.fromSnapshot(data);
           return Column(
@@ -168,6 +168,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 class DrugFromUser {
+  final String item_name;
+  final String item_seq;
   final String expiration;
 
   final DocumentReference reference;
@@ -175,6 +177,8 @@ class DrugFromUser {
   DrugFromUser.fromMap(Map<String, dynamic> map, {this.reference})
       :
         //assert(map['expiration'] != null),
+        item_name = map['ITEM_NAME'],
+        item_seq = map['ITEM_SEQ'],
         expiration = map['expiration'];
 
   DrugFromUser.fromSnapshot(DocumentSnapshot snapshot)
@@ -192,9 +196,10 @@ class Drugs {
   final DocumentReference reference;
 
   Drugs.fromMap(Map<String, dynamic> map, {this.reference})
-      : assert(map['ITEM_NAME'] != null),
-        assert(map['ENTP_NAME'] != null),
-        assert(map['ITEM_SEQ'] != null),
+      :
+        //assert(map['ITEM_NAME'] != null),
+        //assert(map['ENTP_NAME'] != null),
+        //assert(map['ITEM_SEQ'] != null),
         item_name = map['ITEM_NAME'],
         image = map['image'],
         entp_name = map['ENTP_NAME'],
