@@ -69,13 +69,15 @@ class _BottomBarState extends State<BottomBar> {
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.camera_alt),
-          onPressed: (){
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CameraPage()));
-          },
-        ),
+//        floatingActionButton: FloatingActionButton(
+//          backgroundColor: Colors.teal[200],
+//          child: Icon(Icons.camera_alt),
+//          onPressed: (){
+//            Navigator.push(context,
+//                MaterialPageRoute(builder: (context) => CameraPage()));
+//          },
+//        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             items: const <BottomNavigationBarItem>[
