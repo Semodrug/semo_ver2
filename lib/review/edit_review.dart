@@ -23,9 +23,9 @@ class EditReview extends StatefulWidget {
 class _EditReviewState extends State<EditReview> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  final myControllerEffect = TextEditingController();
-  final myControllerSideEffect = TextEditingController();
-  final myControllerOverall = TextEditingController();
+  TextEditingController myControllerEffect = TextEditingController();
+  TextEditingController myControllerSideEffect = TextEditingController();
+  TextEditingController myControllerOverall = TextEditingController();
 
   @override
   void dispose() {
@@ -37,54 +37,33 @@ class _EditReviewState extends State<EditReview> {
 
   final firestoreInstance = Firestore.instance;
 
-//  String id = '';
   String effect = '';
   String sideEffect = '';
   double starRating =  0;
   String effectText = '';
   String sideEffectText = '';
   String overallText = '';
-//  List<String> favoriteSelected = [];
-//  var noFavorite = 0;
 
   void _registerReview() {
     widget.record.reference.update({
-      //TODO: SeqNUm!!!!!!!!!!!!!!!!!!!!
-//      "SeqNum" : "21700432",
-//      "uid" : auth.currentUser.uid,
-//      "id": auth.currentUser.email,
       "effect": effect,
       "sideEffect" : sideEffect,
       "starRating": starRating,
       "effectText" : effectText,
       "sideEffectText": sideEffectText,
       "overallText": overallText,
-//      "favoriteSelected": favoriteSelected,
-//      "noFavorite": noFavorite,
-//      "name" : "TESTUSER",
     });
-//    Firestore.instance.collection("Reviews").add(
-//        {
-//          //TODO: SeqNUm!!!!!!!!!!!!!!!!!!!!
-//          "SeqNum" : "21700432",
-//          "uid" : auth.currentUser.uid,
-//          "id": auth.currentUser.email,
-//          "effect": effect,
-//          "sideEffect" : sideEffect,
-//          "starRating": starRating,
-//          "effectText" : effectText,
-//          "sideEffectText": sideEffectText,
-//          "overallText": overallText,
-//          "favoriteSelected": favoriteSelected,
-//          "noFavorite": noFavorite,
-//          "name" : "TESTUSER",
-//        }
-//    );
   }
 
 
   @override
   Widget build(BuildContext context) {
+    effect = widget.record.effect;
+    sideEffect = widget.record.sideEffect;
+    myControllerEffect.text = widget.record.effectText;
+    myControllerSideEffect.text = widget.record.sideEffectText;
+    myControllerOverall.text = widget.record.overallText;
+
     return Scaffold(
         appBar: AppBar(
           title: Text('Write Review',
@@ -163,7 +142,7 @@ class _EditReviewState extends State<EditReview> {
                           RatingBar.builder(
                             itemSize: 48,
                             glow: false,
-                            initialRating: 3,
+                            initialRating: widget.record.starRating,
                             minRating: 1,
                             direction: Axis.horizontal,
                             allowHalfRating: false,
@@ -296,9 +275,6 @@ class _EditReviewState extends State<EditReview> {
 //                          keyboardType: TextInputType.multiline,
                                         maxLines: null,
                                         decoration: new InputDecoration(
-                                          //###############
-//                                            hintText: "이 제품을 복용하시면서 만족도(효과, 효능,성분 등)\n에 대한 후기를 남겨주세요 (최소 10자 이상)",
-//                                            labelText: widget.record.effect,
                                             border: InputBorder.none
 //                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,
 //                        color: Colors.grey[400])
@@ -387,7 +363,6 @@ class _EditReviewState extends State<EditReview> {
 //                          keyboardType: TextInputType.multiline,
                                         maxLines: null,
                                         decoration: new InputDecoration(
-                                            hintText: "이 제품을 복용하시면서 만족도(효과, 효능,성분 등)\n에 대한 후기를 남겨주세요 (최소 10자 이상)",
                                             border: InputBorder.none
                                         )),
                                   ),
@@ -422,7 +397,6 @@ class _EditReviewState extends State<EditReview> {
 //                          keyboardType: TextInputType.multiline,
                                     maxLines: null,
                                     decoration: new InputDecoration(
-                                        hintText: "이 제품을 복용하시면서 만족도(효과, 효능,성분 등)\n에 대한 후기를 남겨주세요 (최소 10자 이상)",
                                         border: InputBorder.none
 //                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,
 //                        color: Colors.grey[400])
@@ -442,7 +416,7 @@ class _EditReviewState extends State<EditReview> {
                                 width: 350,
                                 height: 50,
                                 child: Center(
-                                    child: Text("등록하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
+                                    child: Text("수정하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
                                 )
                             ),
                             onTap: () {
