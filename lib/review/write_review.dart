@@ -48,6 +48,7 @@ class _WriteReviewState extends State<WriteReview> {
   void _registerReview() {
     Firestore.instance.collection("Reviews").add(
         {
+          //TODO: SeqNUm!!!!!!!!!!!!!!!!!!!!
           "SeqNum" : "21700432",
           "uid" : auth.currentUser.uid,
           "id": auth.currentUser.email,
@@ -94,6 +95,7 @@ class _WriteReviewState extends State<WriteReview> {
             },
             child: ListView(
               children: <Widget>[
+                //TODO: Bring pill information
                 Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
