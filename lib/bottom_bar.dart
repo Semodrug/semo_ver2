@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/ranking/test_ranking.dart';
 
 import 'camera/camera.dart';
 import 'home/home.dart';
@@ -51,6 +52,18 @@ class _BottomBarState extends State<BottomBar> {
                 MaterialPageRoute(builder: (context) => MyPage()),
               ),
             ),
+            //for test home
+            IconButton(
+              icon: Icon(
+                Icons.map,
+                color: Colors.teal[200],
+              ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TestRanking()),
+              ),
+            ),
+
           ],
           backgroundColor: Colors.white,
           elevation: 0,
