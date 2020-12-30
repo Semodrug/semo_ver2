@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/login/find_id.dart';
 import 'package:semo_ver2/login/find_password.dart';
 import 'package:semo_ver2/login/register_step1.dart';
-import 'package:semo_ver2/login/user_auth.dart';
+import 'package:semo_ver2/login/login_provider.dart';
 
 // TODO: find id, passwd
 // TODO: kakao login
@@ -25,8 +25,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(builder: (BuildContext context) {
-        return ChangeNotifierProvider<FirebaseProvider>(
-          create: (context) => FirebaseProvider(),
+        return ChangeNotifierProvider<UserProvider>(
+          create: (context) => UserProvider(),
           child: ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
@@ -136,7 +136,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                   //       : null;
                   // }
                   // TODO: 로그인 실패
-                  await Provider.of<FirebaseProvider>(context, listen: false)
+                  await Provider.of<UserProvider>(context, listen: false)
                           .signInWithEmail(
                               _emailController.text, _passwordController.text)
                       ? Navigator.pushNamed(context, '/bottom_bar')
@@ -250,7 +250,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
               onPressed: () async {
                 // TODO: 로그인 실패시
                 // _signInWithGoogle();
-                await Provider.of<FirebaseProvider>(context, listen: false)
+                await Provider.of<UserProvider>(context, listen: false)
                         .signInWithGoogle()
                     ? Navigator.pushNamed(context, '/bottom_bar')
                     : null;

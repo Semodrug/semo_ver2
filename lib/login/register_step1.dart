@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
 import 'register_step2.dart';
-import 'package:semo_ver2/login/user_auth.dart';
+import 'package:semo_ver2/login/login_provider.dart';
 
 class RegisterFirstPage extends StatefulWidget {
   final String title = '회원가입';
@@ -45,8 +45,8 @@ class RegisterFirstPageState extends State<RegisterFirstPage> {
       ),
       backgroundColor: Colors.white,
       body: Builder(builder: (context) {
-        return ChangeNotifierProvider<FirebaseProvider>(
-          create: (context) => FirebaseProvider(),
+        return ChangeNotifierProvider<UserProvider>(
+          create: (context) => UserProvider(),
           child: GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
@@ -172,8 +172,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       // _register();
-                      await Provider.of<FirebaseProvider>(context,
-                                  listen: false)
+                      await Provider.of<UserProvider>(context, listen: false)
                               .signUpWithEmail(_emailController.text,
                                   _passwordController.text)
                           ? Navigator.push(

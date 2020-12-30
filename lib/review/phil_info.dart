@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 import 'review_page.dart';
 import 'write_review.dart';
+import 'durg_provider.dart';
 
 final fireInstance = FirebaseFirestore.instance;
 
@@ -53,42 +55,15 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
                 ])),
           ),
         ),
-
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.create),
             backgroundColor: Colors.teal[200],
             elevation: 0.0,
             onPressed: () {
 //            rating();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => WriteReview()
-                  ));
-            }
-        ),
-//        appBar: AppBar(
-//          title: Text(
-//            '약정보',
-//            style: TextStyle(
-//                color: Colors.black, letterSpacing: 2.0, fontSize: 18),
-//          ),
-//          centerTitle: true,
-//          backgroundColor: Colors.white,
-//          elevation: 1.0,
-////          leading: Icon(
-////            Icons.arrow_back,
-////            color: Colors.teal[400],
-////          ),
-//          actions: [
-//            IconButton(
-//              icon: Icon(Icons.search),
-//              onPressed: () => {},
-//              color: Colors.teal[400],
-//            ),
-//          ],
-//        ),
-
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => WriteReview()));
+            }),
         backgroundColor: Colors.white,
         body: CustomScrollView(
           slivers: [
@@ -124,10 +99,6 @@ Widget _topInfo(
   return StreamBuilder(
       stream: fireInstance.collection('drug').doc(drugItemSeq).snapshots(),
       builder: (context, snapshot) {
-        print("CHECK");
-        print(snapshot.data['ENTP_NAME']);
-        print(snapshot.data['ITEM_NAME']);
-
         return Stack(children: [
           Positioned(
             top: 0,
@@ -216,6 +187,36 @@ Widget _topInfo(
 
 /* warning */
 void _showWarning(context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        title: new Text(
+          "질병주의",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.teal[400]),
+        ),
+        content: new Text("신장질환이 있는 환자는 반드시 의사와 상의할 것"),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text(
+              "닫기",
+              style: TextStyle(color: Colors.teal[200]),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+/* add favorite list */
+void _question(context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -341,7 +342,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String docName) {
   //   name = '주의사항';
   // else if (docName == 'UD_DOC_DATA') name = '용법용량';
 
-  //TODO: The method '[]' was call기ed on null. error 해결하
+  //TODO: The method '[]' was called on null. error 해결하기
   return StreamBuilder(
       stream: fireInstance
           .collection('drug')

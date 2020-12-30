@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:semo_ver2/login/register_step2.dart';
 import 'package:semo_ver2/login/register_step3.dart';
-import 'package:semo_ver2/login/user_auth.dart';
+import 'package:semo_ver2/login/login_provider.dart';
 
 import 'my_reviews.dart';
 
@@ -30,8 +30,8 @@ class _MyPageState extends State<MyPage> {
             .collection('users')
             .doc(_auth.currentUser.uid);
 
-    return ChangeNotifierProvider<FirebaseProvider>(
-      create: (context) => FirebaseProvider(),
+    return ChangeNotifierProvider<UserProvider>(
+      create: (context) => UserProvider(),
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -180,7 +180,7 @@ class _MyPageState extends State<MyPage> {
                             color: Colors.teal[200],
                           ),
                           onPressed: () async {
-                            await Provider.of<FirebaseProvider>(context,
+                            await Provider.of<UserProvider>(context,
                                     listen: false)
                                 .signOut();
                             Navigator.pushNamed(context, '/login');
