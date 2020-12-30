@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 // Logger logger = Logger();
 
-class FirebaseProvider with ChangeNotifier {
+class UserProvider with ChangeNotifier {
   // final FirebaseAuth _auth = FirebaseAuth.instance; // Firebase 인증 플러그인의 인스턴스
   User _user;
 
@@ -14,7 +14,7 @@ class FirebaseProvider with ChangeNotifier {
 
   String _lastFirebaseResponse = ""; // Firebase로부터 받은 최신 메시지(에러 처리용)
 
-  FirebaseProvider() {
+  UserProvider() {
     // logger.d("init FirebaseProvider");
     _prepareUser();
   }
