@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'home_edit.dart';
-import 'search_screen.dart';
+import 'package:provider/provider.dart';
 
-import 'home_add_button_stack.dart';
-import 'package:semo_ver2/review//phil_info.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
+import 'package:semo_ver2/home/home_edit.dart';
+import 'package:semo_ver2/home/search_screen.dart';
+import 'package:semo_ver2/home/home_add_button_stack.dart';
+import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/services/auth.dart';
+import 'package:semo_ver2/review/phil_info.dart';
 
 int num; // streambuilder 로 불러오기
 int compare;
@@ -19,24 +19,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final AuthService _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
-    CollectionReference user_drug =
+    TheUser user = Provider.of<TheUser>(context);
+
+    CollectionReference userDrug =
         FirebaseFirestore.instance //user가 가지고 있는 약 data
             .collection('users')
-            .doc(_auth.currentUser.uid)
+            .doc(user.uid)
             .collection('savedList');
 
     Future totalNum() async {
-      var querySnapshot = await user_drug.getDocuments();
+      var querySnapshot = await userDrug.get();
       var totalEquals = querySnapshot.docs.length;
 
       num = totalEquals;
       return totalEquals;
     }
+
     totalNum();
 
-    Stream<QuerySnapshot> data = user_drug.snapshots();
+    Stream<QuerySnapshot> data = userDrug.snapshots();
     return Scaffold(
       body: _buildBody(context, data),
     );
@@ -44,7 +49,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBody(BuildContext context, Stream<QuerySnapshot> data) {
     return StreamBuilder<QuerySnapshot>(
-
         stream: data,
         builder: (context, stream) {
           if (!stream.hasData) return LinearProgressIndicator();
@@ -302,8 +306,8 @@ class _ListCardsState extends State<ListCards> {
             builder: (context) => PhilInfoPage(drug_item_seq: widget.item_seq),
           ),
         ),
-            print('===> pushed'),
-            print(widget.item_name),
+        print('===> pushed'),
+        print(widget.item_name),
         print(widget.item_seq)
       },
       child: Container(
