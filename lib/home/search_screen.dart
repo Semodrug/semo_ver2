@@ -17,10 +17,18 @@ class _SearchScreenState extends State<SearchScreen> {
   FocusNode focusNode = FocusNode();
   String _searchText = "";
 
+  CollectionReference userSearchList =
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(_auth.currentUser.uid)
+      .collection('searchList');
+
   _SearchScreenState() {
     _filter.addListener(() {
       setState(() {
         _searchText = _filter.text;
+        print('=== CHANGED === ');
+        print(_filter.value);
       });
     });
   }
@@ -35,20 +43,30 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildListOfAll(
-      BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildListOfAll(BuildContext context, List<DocumentSnapshot> snapshot) {
     List<DocumentSnapshot> searchResults = [];
     for (DocumentSnapshot d in snapshot) {
       if (d.data().toString().contains(_searchText)) {
         searchResults.add(d);
       }
     }
-    return ListView(
-      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-      children: searchResults
-          .map((data) => _buildListItemOfAll(context, data))
-          .toList(),
-    );
+
+    if(searchResults.length == 0){
+      return Container(
+        padding: EdgeInsets.only( top: 30),
+        child: Align(alignment: Alignment.topCenter,
+        child: Text('일치하는 약이 없습니다', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey[400]),)),
+      );
+    }
+
+    else if(searchResults.length != 0) {
+      return ListView(
+        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+        children: searchResults
+            .map((data) => _buildListItemOfAll(context, data))
+            .toList(),
+      );
+    }
   }
 
   Widget _buildListItemOfAll(BuildContext context, DocumentSnapshot data) {
@@ -72,28 +90,34 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildListOfUser(
-      BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildListOfUser(BuildContext context, List<DocumentSnapshot> snapshot) {
     List<DocumentSnapshot> searchResults = [];
     for (DocumentSnapshot d in snapshot) {
       if (d.data().toString().contains(_searchText)) {
         searchResults.add(d);
       }
     }
-    return ListView(
-      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-      children: searchResults
-          .map((data) => _buildListItemOfUser(context, data))
-          .toList(),
-    );
+    if(searchResults.length == 0){
+      return Container(
+        padding: EdgeInsets.only( top: 30),
+        child: Align(alignment: Alignment.topCenter,
+            child: Text('일치하는 약이 없습니다', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey[400]),)),
+      );
+    }
+
+    else {
+      return ListView(
+        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+        children: searchResults
+            .map((data) => _buildListItemOfUser(context, data))
+            .toList(),
+      );
+    }
   }
 
   Widget _buildListItemOfUser(BuildContext context, DocumentSnapshot data) {
-    //TODO: 사용자가 가지고 있는 약의 데이터들 보여주기
     final drugFromUser = DrugFromUser.fromSnapshot(data);
-    return
-        //child:
-        ListDrugOfUser(
+    return ListDrugOfUser(
       drugFromUser.item_name,
       drugFromUser.item_seq,
       drugFromUser.expiration,
@@ -102,6 +126,27 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String searchList;
+
+    Future<void> addRecentSearchList() async {
+      try {
+        assert(_searchText != null);
+
+        searchList = _searchText;
+        assert(searchList != null);
+
+        userSearchList.add({
+          'searchList' : searchList
+        });
+
+        print(
+            'DONE !!!! saved searchList');
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
+
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -199,8 +244,11 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                               onPressed: () {
                                 setState(() {
+                                  //_searchText = "";
+                                  //TODO: Update the recentSearchList[]
+                                  addRecentSearchList();
+                                  print(searchList);
                                   _filter.clear();
-                                  _searchText = "";
                                   focusNode.unfocus();
                                 });
                               },
@@ -225,6 +273,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
+
 
   Widget _myTab() {
     return DefaultTabController(
@@ -266,7 +315,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 borderRadius: BorderRadius.circular(5),
               ),
                 */
-
                 Tab(
                     child: Text('전체 검색',
                         style: TextStyle(color: Colors.black))),
@@ -288,6 +336,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ));
   }
 }
+
 
 class ListDrugOfAll extends StatefulWidget {
   final String item_name;
