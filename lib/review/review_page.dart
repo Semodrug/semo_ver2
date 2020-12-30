@@ -15,93 +15,39 @@ class ReviewPage extends StatefulWidget {
   _ReviewPageState createState() => _ReviewPageState();
 }
 
-class Record {
-  final DocumentReference reference;
-
-  final String name;
-  final String effect;
-  final String sideEffect;
-  final String effectText;
-  final String sideEffectText;
-  final String overallText;
-  final String id;
-  List<String> favoriteSelected = List<String>();
-  final String uid;
-  final num starRating;
-  var noFavorite;
-
-  Record.fromMap(Map<String, dynamic> map, {this.reference})
-      : assert(map['name'] != null),
-        assert(map['effectText'] != null),
-        assert(map['sideEffectText'] != null),
-        assert(map['overallText'] != null),
-        assert(map['id'] != null),
-        assert(map['noFavorite'] != null),
-        assert(map['uid'] != null),
-
-        name = map['name'],
-        effectText = map['effectText'],
-        sideEffectText = map['sideEffectText'],
-        overallText = map['overallText'],
-        id = map['id'],
-//        favoriteSelected = map['favoriteSelected'],
-//        favoriteSelected = favoriteSelected.map((item){return item.toMap();}).toList(),
-        noFavorite = map['noFavorite'],
-        uid = map['uid'],
-        effect = map['effect'],
-        sideEffect = map['sideEffect'],
-        starRating = map['starRating'];
-
-
-
-  Record.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
-}
-
 class _ReviewPageState extends State<ReviewPage> {
+  static const green = Color(0xff88F0BE);
+  static const yellow = Color(0xffFED74D);
+  static const red = Color(0xffFF7070);
 
   List<PieChartSectionData> _sections = [
     PieChartSectionData(
-    color: Color(0xff88F0BE),
+    color: green,
     value: 40,
-//    title: 'Food',
+    title: 'Food',
     radius: 20,
     titleStyle: TextStyle(color: Colors.white, fontSize:12),
     ),
     PieChartSectionData(
-      color: Color(0xffFED74D),
+      color: yellow,
       value: 40,
-//      title: 'Food',
+      title: 'Food',
       radius: 20,
       titleStyle: TextStyle(color: Colors.white, fontSize:12),
     ),
     PieChartSectionData(
-      color: Color(0xffFF7070),
+      color: red,
       value: 20,
-//      title: 'Food',
+      title: 'Food',
       radius: 20,
       titleStyle: TextStyle(color: Colors.white, fontSize:12),
     )
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: topOfReview(context),
-//      floatingActionButton: FloatingActionButton(
-//          child: Icon(Icons.create),
-//          backgroundColor: Colors.teal[300],
-//          elevation: 0.0,
-//          onPressed: () {
-////            rating();
-//            Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                    builder: (context) => WriteReview()
-//                ));
-//          }
-//      ),
     );
   }
 
@@ -116,26 +62,132 @@ class _ReviewPageState extends State<ReviewPage> {
     });
   }
 
-  Widget _pieChart(String text) {
-    return  Column(
-      children: [
-        Text(text),
-        Container(
-          width: 110,
-          height: 110,
-          child: AspectRatio(
-              aspectRatio: 1,
-              child: PieChart(
-                PieChartData(
-                  sections: _sections,
-                  borderData: FlBorderData(show: false),
-                  centerSpaceRadius: 20,
-                  sectionsSpace: 3,
+  Widget _pieChart() {
+    return  Container(
+      width: 110,
+      height: 110,
+      child: AspectRatio(
+          aspectRatio: 1,
+          child: PieChart(
+            PieChartData(
+              sections: _sections,
+              borderData: FlBorderData(show: false),
+              centerSpaceRadius: 20,
+              sectionsSpace: 3,
+            ),
+          )
+      ),
+    );
+  }
+
+  Widget _totalRating() {
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("총 평점",
+                style: TextStyle(
+                    fontSize: 16.5, fontWeight: FontWeight.bold)),
+            //Container(height: size.height * 0.02),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Icon(Icons.star, color: Colors.amber[300], size: 35),
+                //Todo : Rating
+                Text("4.26", style: TextStyle(fontSize: 35)),
+                Text("/5",
+                    style: TextStyle(
+                        fontSize: 20, color: Colors.grey[500])),
+                SizedBox(
+                    width:30
                 ),
-              )
+                //pie chart
+                Column(
+                  children: [
+                    Text("효과"),
+                    _pieChart(),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text("부작용"),
+                    _pieChart(),
+                  ],
+                ),
+
+              ],
+            ),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+            Text("탭해서 평가하기",
+                style: TextStyle(
+                    fontSize: 14.0, color: Colors.grey[700])),
+            Padding(padding: EdgeInsets.only(top: 7.0)),
+            _tapToRate()
+          ],
+        ));
+  }
+
+  Widget _tapToRate() {
+    return RatingBar.builder(
+      initialRating:3,
+      minRating: 1,
+      direction: Axis.horizontal,
+      allowHalfRating: false,
+      itemCount: 5,
+      itemSize: 30,
+      glow: false,
+      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+      unratedColor: Colors.grey[300],
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: Colors.amberAccent,
+      ),
+      onRatingUpdate: (rating) {
+        //TODO: add rating!!!!!!!!!!!!!!!!!!!!!!!!
+        _showMyDialog();
+      },
+    );
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Center(child: Icon(Icons.star, size: 30, color: Colors.amberAccent)),
+                SizedBox(height: 5),
+                Center(child: Text('별점이 반영되었습니다.', style: TextStyle(color: Colors.black45, fontSize: 14))),
+                SizedBox(height: 20),
+                Center(child: Text('리뷰 작성도 이어서 할까요?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('확인', style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        //TODO: GOTO Edit Review
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 
@@ -237,71 +289,9 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget _tapToRate() {
-    return RatingBar.builder(
-      initialRating:3,
-      minRating: 1,
-      direction: Axis.horizontal,
-      allowHalfRating: false,
-      itemCount: 5,
-      itemSize: 30,
-      glow: false,
-//      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-      unratedColor: Colors.grey[300],
-      itemBuilder: (context, _) => Icon(
-        Icons.star,
-        color: Colors.amberAccent,
-      ),
-      onRatingUpdate: (rating) {
-        //TODO: add rating!!!!!!!!!!!!!!!!!!!!!!!!
-        _showMyDialog();
-        print(rating);
-      },
-    );
-  }
 
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-//          title: Center(child: Text('AlertDialog Title')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Center(child: Icon(Icons.star, size: 30, color: Colors.amberAccent)),
-                SizedBox(height: 5),
-                Center(child: Text('별점이 반영되었습니다.', style: TextStyle(color: Colors.black45, fontSize: 14))),
-                SizedBox(height: 20),
-                Center(child: Text('리뷰 작성도 이어서 할까요?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    TextButton(
-                      child: Text('확인', style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        //TODO: GOTO Edit Review
-//                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
 
-        );
-      },
-    );
-  }
+
 
   Widget _searchBar() {
     return //TODO: Bring SEARCH FUNCTION & show review according to search keyword
@@ -328,42 +318,7 @@ class _ReviewPageState extends State<ReviewPage> {
       );
   }
 
-  Widget _totalRating() {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("총 평점",
-                style: TextStyle(
-                    fontSize: 16.5, fontWeight: FontWeight.bold)),
-            //Container(height: size.height * 0.02),
-            Padding(padding: EdgeInsets.only(top: 14.0)),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Icon(Icons.star, color: Colors.amber[300], size: 35),
-                //Todo : Rating
-                Text("4.26", style: TextStyle(fontSize: 35)),
-                Text("/5",
-                    style: TextStyle(
-                        fontSize: 20, color: Colors.grey[500])),
-                SizedBox(
-                    width:30
-                ),
-                _pieChart("효과"),
-                _pieChart("부작용"),
-              ],
-            ),
-            Padding(padding: EdgeInsets.only(top: 14.0)),
-            Text("탭해서 평가하기",
-                style: TextStyle(
-                    fontSize: 14.0, color: Colors.grey[700])),
-            Padding(padding: EdgeInsets.only(top: 7.0)),
-            _tapToRate()
-          ],
-        ));
-  }
+
 
 
   Widget topOfReview(BuildContext context) {
@@ -634,14 +589,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 Icons.star,
                 color: Colors.amberAccent,
               ),
-//              onRatingUpdate: (rating) {
-//              },
             ),
-//            Icon(Icons.star, color: Colors.amber, size: 16),
-//            Icon(Icons.star, color: Colors.amber, size: 16),
-//            Icon(Icons.star, color: Colors.amber, size: 16),
-//            Icon(Icons.star, color: Colors.amber, size: 16),
-//            Icon(Icons.star, color: Colors.grey[300], size: 16),
 
             Padding(padding: EdgeInsets.only(left: 10)),
             Text(record.id, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
@@ -707,3 +655,42 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 }
 
+class Record {
+  final DocumentReference reference;
+  final String name;
+  final String effect;
+  final String sideEffect;
+  final String effectText;
+  final String sideEffectText;
+  final String overallText;
+  final String id;
+  List<String> favoriteSelected = List<String>();
+  final String uid;
+  final num starRating;
+  var noFavorite;
+
+  Record.fromMap(Map<String, dynamic> map, {this.reference})
+      : assert(map['name'] != null),
+        assert(map['effectText'] != null),
+        assert(map['sideEffectText'] != null),
+        assert(map['overallText'] != null),
+        assert(map['id'] != null),
+        assert(map['noFavorite'] != null),
+        assert(map['uid'] != null),
+
+        name = map['name'],
+        effectText = map['effectText'],
+        sideEffectText = map['sideEffectText'],
+        overallText = map['overallText'],
+        id = map['id'],
+//        favoriteSelected = map['favoriteSelected'],
+//        favoriteSelected = favoriteSelected.map((item){return item.toMap();}).toList(),
+        noFavorite = map['noFavorite'],
+        uid = map['uid'],
+        effect = map['effect'],
+        sideEffect = map['sideEffect'],
+        starRating = map['starRating'];
+
+  Record.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+}
