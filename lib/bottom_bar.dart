@@ -53,6 +53,7 @@ class _BottomBarState extends State<BottomBar> {
               context,
               MaterialPageRoute(builder: (context) => MyPage()),
             ),
+          ),
             //for test home
             IconButton(
               icon: Icon(
@@ -66,20 +67,7 @@ class _BottomBarState extends State<BottomBar> {
             ),
 
           ],
-          backgroundColor: Colors.white,
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[
-                      Color(0xFFE9FFFB),
-                      Color(0xFFE9FFFB),
-                      Color(0xFFFFFFFF),
-                    ])),
-          ),
-        ],
+
         backgroundColor: Colors.white,
         elevation: 0,
         flexibleSpace: Container(
