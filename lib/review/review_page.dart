@@ -246,7 +246,7 @@ class _ReviewPageState extends State<ReviewPage> {
       itemCount: 5,
       itemSize: 30,
       glow: false,
-      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+//      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
       unratedColor: Colors.grey[300],
       itemBuilder: (context, _) => Icon(
         Icons.star,
@@ -628,7 +628,7 @@ class _ReviewPageState extends State<ReviewPage> {
               itemCount: 5,
               itemSize: 14,
               glow: false,
-              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemPadding: EdgeInsets.symmetric(horizontal: 0),
               unratedColor: Colors.grey[300],
               itemBuilder: (context, _) => Icon(
                 Icons.star,

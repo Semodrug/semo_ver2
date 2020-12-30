@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart'; 
 import 'review.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pedantic/pedantic.dart';
 
 class WriteReview extends StatefulWidget {
   _WriteReviewState createState() => _WriteReviewState();
