@@ -53,6 +53,7 @@ dependencies:
   connectivity: ^2.0.2
   google_fonts: ^1.1.1
   pedantic: ^1.9.2
+  flutter_spinkit: ^4.1.2+1
 
 dev_dependencies:
   flutter_test:
