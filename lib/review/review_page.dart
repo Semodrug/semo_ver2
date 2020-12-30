@@ -15,6 +15,49 @@ class ReviewPage extends StatefulWidget {
   _ReviewPageState createState() => _ReviewPageState();
 }
 
+class Record {
+  final DocumentReference reference;
+
+  final String name;
+  final String effect;
+  final String sideEffect;
+  final String effectText;
+  final String sideEffectText;
+  final String overallText;
+  final String id;
+  List<String> favoriteSelected = List<String>();
+  final String uid;
+  final num starRating;
+  var noFavorite;
+
+  Record.fromMap(Map<String, dynamic> map, {this.reference})
+      : assert(map['name'] != null),
+        assert(map['effectText'] != null),
+        assert(map['sideEffectText'] != null),
+        assert(map['overallText'] != null),
+        assert(map['id'] != null),
+        assert(map['noFavorite'] != null),
+        assert(map['uid'] != null),
+
+        name = map['name'],
+        effectText = map['effectText'],
+        sideEffectText = map['sideEffectText'],
+        overallText = map['overallText'],
+        id = map['id'],
+//        favoriteSelected = map['favoriteSelected'],
+//        favoriteSelected = favoriteSelected.map((item){return item.toMap();}).toList(),
+        noFavorite = map['noFavorite'],
+        uid = map['uid'],
+        effect = map['effect'],
+        sideEffect = map['sideEffect'],
+        starRating = map['starRating'];
+
+
+
+  Record.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+}
+
 class _ReviewPageState extends State<ReviewPage> {
 
   List<PieChartSectionData> _sections = [
@@ -100,6 +143,7 @@ class _ReviewPageState extends State<ReviewPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        //effect
         Row(
           children: <Widget>[
             Container(
@@ -132,8 +176,11 @@ class _ReviewPageState extends State<ReviewPage> {
           ],
         ),
 
-        Padding(padding: EdgeInsets.only(top: 6.0)),
+        SizedBox(height:13),
+
+        //side effect
         Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
           children: <Widget>[
             Container(
                 height: 28,
@@ -162,14 +209,14 @@ class _ReviewPageState extends State<ReviewPage> {
             Text(record.sideEffectText, style: TextStyle(fontSize: 17.0)),
           ],
         ),
-        Padding(padding: EdgeInsets.only(top: 6.0)),
 
+
+        SizedBox(height:13),
         Row(
           children: <Widget>[
             Container(
                 height: 25,
                 width: 45,
-                //width: 5, height: 5,
                 decoration: BoxDecoration(
                     border: Border.all(
                         color: Colors.grey[400], width: 1.0),
@@ -405,7 +452,6 @@ class _ReviewPageState extends State<ReviewPage> {
                   final record = Record.fromSnapshot(data);
                   List<String> names = List.from(data["favoriteSelected"]);
                   return Container(
-//                      key: ValueKey(record.name),
                       padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
                       decoration: BoxDecoration(
                           border: Border(
@@ -435,14 +481,10 @@ class _ReviewPageState extends State<ReviewPage> {
                                           child: new Icon(
                                             names.contains(auth.currentUser.uid) ? Icons.favorite
                                             : Icons.favorite_border,
-//                                            color: names.contains(auth.currentUser.uid) ?
-//                                                Colors.redAccent[200] : Colors.grey[300],
                                             color: Colors.redAccent[200],
                                             size: 21,
                                           ),
-                                          //when 2 people click this
                                           onTap:() {
-//                                            List<String> names = List.from(data["favoriteSelected"]);
                                             if(names.contains(auth.currentUser.uid)) {
                                               print("UID: "+auth.currentUser.uid);
                                               record.reference.update({
@@ -493,10 +535,10 @@ class _ReviewPageState extends State<ReviewPage> {
                   onPressed: () {
                     _showDeleteDialog(record);
                   },
-                  child: Center(child: Text("삭제하기",
+                  child: Center(child: Text("취소",
                       style: TextStyle(color: Colors.red[600],
                       fontSize: 16)))
-              )
+              ),
             ],
           )
         )
@@ -570,16 +612,37 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
+
+
   Widget _starAndIdAndMore(record, context, auth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Row(
-          children: <Widget>[Icon(Icons.star, color: Colors.amber, size: 16),
-            Icon(Icons.star, color: Colors.amber, size: 16),
-            Icon(Icons.star, color: Colors.amber, size: 16),
-            Icon(Icons.star, color: Colors.amber, size: 16),
-            Icon(Icons.star, color: Colors.grey[300], size: 16),
+          children: <Widget>[
+            RatingBar.builder(
+              initialRating: record.starRating,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: false,
+              itemCount: 5,
+              itemSize: 14,
+              glow: false,
+              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              unratedColor: Colors.grey[300],
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amberAccent,
+              ),
+//              onRatingUpdate: (rating) {
+//              },
+            ),
+//            Icon(Icons.star, color: Colors.amber, size: 16),
+//            Icon(Icons.star, color: Colors.amber, size: 16),
+//            Icon(Icons.star, color: Colors.amber, size: 16),
+//            Icon(Icons.star, color: Colors.amber, size: 16),
+//            Icon(Icons.star, color: Colors.grey[300], size: 16),
+
             Padding(padding: EdgeInsets.only(left: 10)),
             Text(record.id, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
             SizedBox(width: 145),
@@ -615,6 +678,14 @@ class _ReviewPageState extends State<ReviewPage> {
                                         child: Center(child: Text("삭제하기",
                                             style: TextStyle(color: Colors.red[600],
                                                 fontSize: 16)))
+                                    ),
+                                    MaterialButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Center(child: Text("취소",
+                                            style: TextStyle(color: Colors.grey[600],
+                                                fontSize: 16)))
                                     )
                                   ],
                                 )
@@ -634,44 +705,5 @@ class _ReviewPageState extends State<ReviewPage> {
       ],
     );
   }
-}
-
-class Record {
-  final DocumentReference reference;
-
-  final String name;
-  final String effect;
-  final String sideEffect;
-  final String effectText;
-  final String sideEffectText;
-  final String overallText;
-  final String id;
-  List<String> favoriteSelected = List<String>();
-  final String uid;
-  var noFavorite;
-
-  Record.fromMap(Map<String, dynamic> map, {this.reference})
-      : assert(map['name'] != null),
-        assert(map['effectText'] != null),
-        assert(map['sideEffectText'] != null),
-        assert(map['overallText'] != null),
-        assert(map['id'] != null),
-        assert(map['noFavorite'] != null),
-        assert(map['uid'] != null),
-
-        name = map['name'],
-        effectText = map['effectText'],
-        sideEffectText = map['sideEffectText'],
-        overallText = map['overallText'],
-        id = map['id'],
-//        favoriteSelected = map['favoriteSelected'],
-//        favoriteSelected = favoriteSelected.map((item){return item.toMap();}).toList(),
-        noFavorite = map['noFavorite'],
-        uid = map['uid'],
-        effect = map['effect'],
-        sideEffect = map['sideEffect'];
-
-  Record.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
 }
 

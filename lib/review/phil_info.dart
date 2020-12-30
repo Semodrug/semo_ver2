@@ -1,67 +1,76 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 import 'review_page.dart';
 import 'write_review.dart';
+import 'durg_provider.dart';
 
-final fireInstance = Firestore.instance;
+final fireInstance = FirebaseFirestore.instance;
+
+// TODO: drug도 provider 필요!!!
+// TODO: appbar 통일. 한군데 있는 거 계속 불러오게? fontsize: 16
+// TODO: image
 
 class PhilInfoPage extends StatefulWidget {
-  String drug_item_seq;//추가
+  final String drug_item_seq; //추가
 
-  PhilInfoPage({Key key, @required this.drug_item_seq}) : super(key: key);//약의 item seq받아오
+  PhilInfoPage({Key key, @required this.drug_item_seq})
+      : super(key: key); //약의 item seq 받아
 
   @override
   _PhilInfoPageState createState() => _PhilInfoPageState();
 }
 
 class _PhilInfoPageState extends State<PhilInfoPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.teal[200],
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          centerTitle: true,
+          title: Text(
+            '약 정보',
+            style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
+          ),
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[
+                  Color(0xFFE9FFFB),
+                  Color(0xFFE9FFFB),
+                  Color(0xFFFFFFFF),
+                ])),
+          ),
+        ),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.create),
             backgroundColor: Colors.teal[200],
             elevation: 0.0,
             onPressed: () {
 //            rating();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => WriteReview()
-                  ));
-            }
-        ),
-//        appBar: AppBar(
-//          title: Text(
-//            '약정보',
-//            style: TextStyle(
-//                color: Colors.black, letterSpacing: 2.0, fontSize: 18),
-//          ),
-//          centerTitle: true,
-//          backgroundColor: Colors.white,
-//          elevation: 1.0,
-////          leading: Icon(
-////            Icons.arrow_back,
-////            color: Colors.teal[400],
-////          ),
-//          actions: [
-//            IconButton(
-//              icon: Icon(Icons.search),
-//              onPressed: () => {},
-//              color: Colors.teal[400],
-//            ),
-//          ],
-//        ),
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => WriteReview()));
+            }),
         backgroundColor: Colors.white,
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
-                child: _topInfo(context),
+                child: _topInfo(context, widget.drug_item_seq),
               ),
             ),
             SliverToBoxAdapter(
@@ -75,18 +84,20 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
             ),
             /* FROM HERE: TAB */
             SliverToBoxAdapter(
-              child: _myTab(),
+              child: _myTab(context, widget.drug_item_seq),
             )
           ],
-        )
-    );
+        ));
   }
 }
 
 /* 약 이름, 회사 등 위쪽에 위치한 정보들 */
-Widget _topInfo(context) {
+Widget _topInfo(
+  BuildContext context,
+  String drugItemSeq,
+) {
   return StreamBuilder(
-      stream: fireInstance.collection('drug').snapshots(),
+      stream: fireInstance.collection('drug').doc(drugItemSeq).snapshots(),
       builder: (context, snapshot) {
         return Stack(children: [
           Positioned(
@@ -141,35 +152,33 @@ Widget _topInfo(context) {
                   ),
                 ),
                 Text(
-                  snapshot.data.documents[0]['ENTP_NAME'],
-                  //'동아제약',
+                  snapshot.data['ENTP_NAME'],
                   style: TextStyle(
                     color: Colors.grey[600],
                   ),
                 ),
                 Text(
-                  snapshot.data.documents[0]['ITEM_NAME'],
-//                  '타이레놀',
+                  snapshot.data['ITEM_NAME'],
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold),
                 ),
                 Row(children: <Widget>[
+                  // TODO: firebase connection
                   Text(
                     '4.5',
                     style: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold),
                   ),
+                  // TODO: firebase connection
                   Text(
                     ' (305개)',
                     style: TextStyle(color: Colors.grey[600]),
                   )
                 ]),
                 Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                  _categoryButton('두통'),
-                  _categoryButton('치통'),
-                  _categoryButton('생리통'),
+                  _categoryButton(snapshot.data['category'])
                 ]),
               ]),
         ]);
@@ -178,6 +187,36 @@ Widget _topInfo(context) {
 
 /* warning */
 void _showWarning(context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        title: new Text(
+          "질병주의",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.teal[400]),
+        ),
+        content: new Text("신장질환이 있는 환자는 반드시 의사와 상의할 것"),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text(
+              "닫기",
+              style: TextStyle(color: Colors.teal[200]),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+/* add favorite list */
+void _question(context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -229,7 +268,7 @@ Widget _categoryButton(str) {
 }
 
 /* tab 구현 */
-Widget _myTab() {
+Widget _myTab(BuildContext context, String drugItemSeq) {
   return DefaultTabController(
       length: 2,
       child: Column(
@@ -245,58 +284,80 @@ Widget _myTab() {
             ],
             indicatorColor: Colors.teal[400],
           ),
+          //TODO: height 없이 괜찮게
           Container(
             padding: EdgeInsets.all(0.0),
             width: double.infinity,
-            height: 1700.0,
+            height: 6000.0,
             child: TabBarView(
               /* 여기에 은영학우님 page 넣기! */
-              children: [_specificInfo(), ReviewPage()],
+              children: [_specificInfo(context, drugItemSeq), ReviewPage()],
             ),
           )
         ],
       ));
 }
 
+//TODO:
 /* 약의 자세한 정보들 */
-Widget _specificInfo() {
+Widget _specificInfo(BuildContext context, String drugItemSeq) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
     child:
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
       Text(
-        "효능효과",
+        '효능효과',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      Text(
-        "1. 주효능효과\n감기로 인한 발열 및 통증, 두통, 신경통, 근육통, 월경통, 염좌통",
+      _drugInfo(context, drugItemSeq, 'EE_DOC_DATA'),
+      Container(
+        height: 10,
       ),
       Text(
-        "2. 다음 질환에도 사용할 수 있다.\n치통, 관절통, 류마티양 통증",
-      ),
-      SizedBox(
-        child: Divider(color: Colors.grey),
-      ),
-      Text(
-        "용법용량",
+        '용법용량',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      Text(
-        "1회 400g",
-      ),
-      SizedBox(
-        child: Divider(color: Colors.grey),
+      _drugInfo(context, drugItemSeq, 'UD_DOC_DATA'),
+      Container(
+        height: 10,
       ),
       Text(
-        "복약정보",
+        '주의사항',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      Text(
-        "- 충분한 물과 함께 투여하세요.\n- 정기적으로 술을 마시는 사람은 이 약을 투여하기 전 반드시 전문가와 상의하세요",
+      _drugInfo(context, drugItemSeq, 'NB_DOC_DATA'),
+      Container(
+        height: 10,
       ),
-      Text(
-        "- 황달 등 간기능 이상징후가 나타날 경우에는 전문가와 상의하세요.\n- 전문가와 상의없이 다른 소염진통제와 병용하지 마세요.",
-      )
     ]),
   );
+}
+
+Widget _drugInfo(BuildContext context, String drugItemSeq, String docName) {
+  // String name;
+  //
+  // if (docName == 'EE_DOC_DATA')
+  //   name = '효능효과';
+  // else if (docName == 'NB_DOC_DATA')
+  //   name = '주의사항';
+  // else if (docName == 'UD_DOC_DATA') name = '용법용량';
+
+  //TODO: The method '[]' was called on null. error 해결하기
+  return StreamBuilder(
+      stream: fireInstance
+          .collection('drug')
+          .doc(drugItemSeq)
+          .collection('DOCS')
+          .doc(docName)
+          .snapshots(),
+      builder: (context, snapshot) {
+        return ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data['paragraph'].length,
+            itemBuilder: (BuildContext context, int index) {
+              return Text(
+                snapshot.data['paragraph'][index].toString(),
+              );
+            });
+      });
 }

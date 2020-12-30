@@ -230,7 +230,7 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(10.0)),
                             child: const Text(
-                              '확인',
+                              '다음',
                               style: TextStyle(color: Colors.white),
                             ),
                             color: Colors.teal[400],
