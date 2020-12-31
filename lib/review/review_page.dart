@@ -15,73 +15,63 @@ class ReviewPage extends StatefulWidget {
   _ReviewPageState createState() => _ReviewPageState();
 }
 
-class Record {
-  final DocumentReference reference;
-
-  final String name;
-  final String effect;
-  final String sideEffect;
-  final String effectText;
-  final String sideEffectText;
-  final String overallText;
-  final String id;
-  List<String> favoriteSelected = List<String>();
-  final String uid;
-  final num starRating;
-  var noFavorite;
-
-  Record.fromMap(Map<String, dynamic> map, {this.reference})
-      : assert(map['name'] != null),
-        assert(map['effectText'] != null),
-        assert(map['sideEffectText'] != null),
-        assert(map['overallText'] != null),
-        assert(map['id'] != null),
-        assert(map['noFavorite'] != null),
-        assert(map['uid'] != null),
-
-        name = map['name'],
-        effectText = map['effectText'],
-        sideEffectText = map['sideEffectText'],
-        overallText = map['overallText'],
-        id = map['id'],
-//        favoriteSelected = map['favoriteSelected'],
-//        favoriteSelected = favoriteSelected.map((item){return item.toMap();}).toList(),
-        noFavorite = map['noFavorite'],
-        uid = map['uid'],
-        effect = map['effect'],
-        sideEffect = map['sideEffect'],
-        starRating = map['starRating'];
-
-
-
-  Record.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
-}
-
 class _ReviewPageState extends State<ReviewPage> {
+  _ReviewPageState() {
+    _filter.addListener(() {
+      setState(() {
+        _searchText = _filter.text;
+        print('       filter == ${_filter.text}');
+      });
+    });
+  }
 
-  List<PieChartSectionData> _sections = [
+  final TextEditingController _filter = TextEditingController();
+  FocusNode focusNode = FocusNode();
+  String _searchText = "";
+
+  static const green = Color(0xff88F0BE);
+  static const yellow = Color(0xffFED74D);
+  static const red = Color(0xffFF7070);
+
+  List<PieChartSectionData> _effectChart = [
     PieChartSectionData(
-    color: Color(0xff88F0BE),
-    value: 40,
-//    title: 'Food',
+    color: green,
+//    value: effectGood,
+    title: 'good',
     radius: 20,
     titleStyle: TextStyle(color: Colors.white, fontSize:12),
     ),
     PieChartSectionData(
-      color: Color(0xffFED74D),
+      color: yellow,
       value: 40,
-//      title: 'Food',
+      title: 'Food',
       radius: 20,
       titleStyle: TextStyle(color: Colors.white, fontSize:12),
     ),
     PieChartSectionData(
-      color: Color(0xffFF7070),
+      color: red,
       value: 20,
-//      title: 'Food',
+      title: 'Food',
       radius: 20,
       titleStyle: TextStyle(color: Colors.white, fontSize:12),
     )
+  ];
+
+  List<PieChartSectionData> _sideEffectChart = [
+    PieChartSectionData(
+      color: green,
+      value: 40,
+      title: 'Food',
+      radius: 20,
+      titleStyle: TextStyle(color: Colors.white, fontSize:12),
+    ),
+    PieChartSectionData(
+      color: yellow,
+      value: 40,
+      title: 'Food',
+      radius: 20,
+      titleStyle: TextStyle(color: Colors.white, fontSize:12),
+    ),
   ];
 
 
@@ -89,53 +79,167 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: topOfReview(context),
-//      floatingActionButton: FloatingActionButton(
-//          child: Icon(Icons.create),
-//          backgroundColor: Colors.teal[300],
-//          elevation: 0.0,
-//          onPressed: () {
-////            rating();
-//            Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                    builder: (context) => WriteReview()
-//                ));
-//          }
-//      ),
     );
   }
 
-  Widget _rating() {
-    FirebaseFirestore.instance
-        .collection('Reviews')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-    querySnapshot.docs.forEach((doc) {
-      print(doc["starRating"]);
-    });
-    });
+  Widget _pieChart(String val, good, soso, bad) {
+    double sum = (good+soso+bad)*1.0;
+    double effectGood = (good/sum)*100;
+    double effectSoso = (soso/sum)*100;
+    double effectBad = (bad/sum)*100;
+    return  Container(
+      width: 110,
+      height: 110,
+      child: AspectRatio(
+          aspectRatio: 1,
+          child: PieChart(
+            PieChartData(
+//              sections: val == "effect" ? _effectChart : _sideEffectChart,
+              sections: [
+                if(good != 0)
+                PieChartSectionData(
+                  color: green,
+                  value: effectGood,
+                  title: 'good',
+                  radius: 20,
+                  titleStyle: TextStyle(color: Colors.white, fontSize:12),
+                ),
+                if(soso != 0)
+                PieChartSectionData(
+                  color: yellow,
+                  value: effectSoso,
+                  title: 'soso',
+                  radius: 20,
+                  titleStyle: TextStyle(color: Colors.white, fontSize:12),
+                ),
+                if(bad != 0)
+                PieChartSectionData(
+                  color: red,
+                  value: effectBad,
+                  title: 'bad',
+                  radius: 20,
+                  titleStyle: TextStyle(color: Colors.white, fontSize:12),
+                )
+              ],
+              borderData: FlBorderData(show: false),
+              centerSpaceRadius: 20,
+              sectionsSpace: 1,
+            ),
+          )
+      ),
+    );
   }
 
-  Widget _pieChart(String text) {
-    return  Column(
-      children: [
-        Text(text),
-        Container(
-          width: 110,
-          height: 110,
-          child: AspectRatio(
-              aspectRatio: 1,
-              child: PieChart(
-                PieChartData(
-                  sections: _sections,
-                  borderData: FlBorderData(show: false),
-                  centerSpaceRadius: 20,
-                  sectionsSpace: 3,
-                ),
-              )
+  Widget _totalRating() {
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("총 평점",
+                style: TextStyle(
+                    fontSize: 16.5, fontWeight: FontWeight.bold)),
+            //Container(height: size.height * 0.02),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+            _rate(context),
+//            Row(
+//              crossAxisAlignment: CrossAxisAlignment.start,
+//              children: <Widget>[
+//                Icon(Icons.star, color: Colors.amber[300], size: 35),
+//                //Todo : Rating
+//                _rate(context),
+////                Text(_rating(), style: TextStyle(fontSize: 35)),
+//                Text("/5",
+//                    style: TextStyle(
+//                        fontSize: 20, color: Colors.grey[500])),
+//                SizedBox(
+//                    width:30
+//                ),
+//                //pie chart
+//                Column(
+//                  children: [
+//                    Text("효과"),
+//                    _pieChart(),
+//                  ],
+//                ),
+//                Column(
+//                  children: [
+//                    Text("부작용"),
+//                    _pieChart(),
+//                  ],
+//                ),
+//
+//              ],
+//            ),
+            Padding(padding: EdgeInsets.only(top: 14.0)),
+            Text("탭해서 평가하기",
+                style: TextStyle(
+                    fontSize: 14.0, color: Colors.grey[700])),
+            Padding(padding: EdgeInsets.only(top: 7.0)),
+            _tapToRate()
+          ],
+        ));
+  }
+
+  Widget _tapToRate() {
+    return RatingBar.builder(
+      initialRating:3,
+      minRating: 1,
+      direction: Axis.horizontal,
+      allowHalfRating: false,
+      itemCount: 5,
+      itemSize: 30,
+      glow: false,
+      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+      unratedColor: Colors.grey[300],
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: Colors.amberAccent,
+      ),
+      onRatingUpdate: (rating) {
+        //TODO: add rating!!!!!!!!!!!!!!!!!!!!!!!!
+        _showMyDialog();
+      },
+    );
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Center(child: Icon(Icons.star, size: 30, color: Colors.amberAccent)),
+                SizedBox(height: 5),
+                Center(child: Text('별점이 반영되었습니다.', style: TextStyle(color: Colors.black45, fontSize: 14))),
+                SizedBox(height: 20),
+                Center(child: Text('리뷰 작성도 이어서 할까요?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('확인', style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        //TODO: GOTO Edit Review
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 
@@ -237,134 +341,6 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget _tapToRate() {
-    return RatingBar.builder(
-      initialRating:3,
-      minRating: 1,
-      direction: Axis.horizontal,
-      allowHalfRating: false,
-      itemCount: 5,
-      itemSize: 30,
-      glow: false,
-//      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-      unratedColor: Colors.grey[300],
-      itemBuilder: (context, _) => Icon(
-        Icons.star,
-        color: Colors.amberAccent,
-      ),
-      onRatingUpdate: (rating) {
-        //TODO: add rating!!!!!!!!!!!!!!!!!!!!!!!!
-        _showMyDialog();
-        print(rating);
-      },
-    );
-  }
-
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-//          title: Center(child: Text('AlertDialog Title')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Center(child: Icon(Icons.star, size: 30, color: Colors.amberAccent)),
-                SizedBox(height: 5),
-                Center(child: Text('별점이 반영되었습니다.', style: TextStyle(color: Colors.black45, fontSize: 14))),
-                SizedBox(height: 20),
-                Center(child: Text('리뷰 작성도 이어서 할까요?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    TextButton(
-                      child: Text('확인', style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        //TODO: GOTO Edit Review
-//                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-
-        );
-      },
-    );
-  }
-
-  Widget _searchBar() {
-    return //TODO: Bring SEARCH FUNCTION & show review according to search keyword
-      Container(
-        height: 50,
-        padding: EdgeInsets.only(left: 20, right: 30),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          color: Colors.grey[200],
-        ),
-        child: TextField(
-          cursorColor: Colors.black,
-          decoration: InputDecoration(
-            icon: Icon(Icons.search, size: 30),
-            hintText: "어떤 리뷰를 찾고계세요?",
-            disabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-//                        filled: true,
-//                        fillColor: Colors.white
-            //contentPadding: EdgeInsets.only(left: 5)
-          ),
-        ),
-      );
-  }
-
-  Widget _totalRating() {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("총 평점",
-                style: TextStyle(
-                    fontSize: 16.5, fontWeight: FontWeight.bold)),
-            //Container(height: size.height * 0.02),
-            Padding(padding: EdgeInsets.only(top: 14.0)),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Icon(Icons.star, color: Colors.amber[300], size: 35),
-                //Todo : Rating
-                Text("4.26", style: TextStyle(fontSize: 35)),
-                Text("/5",
-                    style: TextStyle(
-                        fontSize: 20, color: Colors.grey[500])),
-                SizedBox(
-                    width:30
-                ),
-                _pieChart("효과"),
-                _pieChart("부작용"),
-              ],
-            ),
-            Padding(padding: EdgeInsets.only(top: 14.0)),
-            Text("탭해서 평가하기",
-                style: TextStyle(
-                    fontSize: 14.0, color: Colors.grey[700])),
-            Padding(padding: EdgeInsets.only(top: 7.0)),
-            _tapToRate()
-          ],
-        ));
-  }
-
 
   Widget topOfReview(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -395,6 +371,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           fontSize: 14.5,
                         )),
                     onTap: () {
+//                      _rating();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -403,8 +380,9 @@ class _ReviewPageState extends State<ReviewPage> {
               ],
             )),
         _searchBar(),
+        _buildBody(context)
 
-        //TODO: YOU can delete
+/*        //TODO: YOU can delete
         Container(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
             decoration: BoxDecoration(
@@ -512,8 +490,306 @@ class _ReviewPageState extends State<ReviewPage> {
               );
             },
           ),
-        )
+        )*/
       ],
+    );
+  }
+
+
+  //BuildContext context, List<DocumentSnapshot> snapshot
+  Widget _rate(BuildContext context) {
+    num sum = 0;
+    int length = 0;
+    num ratingResult = 0;
+    int effectGood = 0;
+    int effectSoso = 0;
+    int effectBad = 0;
+    int sideEffectYes = 0;
+    int sideEffectNo = 0;
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Reviews').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError)
+          return Text('Something went wrong');
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Text("Loading");
+
+        length = snapshot.data.documents.length;
+//        snapshot.data.documents.map((DocumentSnapshot document) {
+//           sum += document.data()['starRating'];
+//        });
+
+        snapshot.data.docs.forEach((doc) {
+          sum += doc["starRating"];
+        });
+        ratingResult = sum/length;
+        print(ratingResult);
+
+
+        snapshot.data.docs.forEach((doc) {
+          doc["effect"] == "good" ? effectGood++ :
+          doc["effect"] == "soso" ? effectSoso++ : effectBad ++;
+        });
+
+        snapshot.data.docs.forEach((doc) {
+          doc["sideEffect"] == "yes" ? sideEffectYes++ : sideEffectNo++;
+        });
+
+        return
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Icon(Icons.star, color: Colors.amber[300], size: 35),
+              //Todo : Rating
+              Text(ratingResult.toStringAsFixed(1), style: TextStyle(fontSize: 35)),
+              Text("/5",
+                  style: TextStyle(
+                      fontSize: 20, color: Colors.grey[500])),
+              SizedBox(
+                  width:30
+              ),
+              //pie chart
+              Column(
+                children: [
+                  Text("효과"),
+                  _pieChart("effect", effectGood, effectSoso, effectBad),
+                ],
+              ),
+              Column(
+                children: [
+                  Text("부작용"),
+//                  _pieChart("sideEffect", ),
+                ],
+              ),
+
+            ],
+          );
+
+
+
+
+      },
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Reviews').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
+        return _buildList(context, snapshot.data.docs);
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    List<DocumentSnapshot> searchResults = [];
+    for (DocumentSnapshot d in snapshot) {
+      if (d.data().toString().contains(_searchText)) {
+        searchResults.add(d);
+      } else
+        print('    RESULT Nothing     ');
+    }
+    return Expanded(
+      child: ListView(
+        physics: const ClampingScrollPhysics(),
+//        shrinkWrap: true,
+//        scrollDirection: Axis.vertical,
+        padding: EdgeInsets.all(16.0),
+        children:
+        searchResults.map((data) => _buildListItem(context, data)).toList(),
+      ),
+    );
+  }
+
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final record = Record.fromSnapshot(data);
+    FirebaseAuth auth = FirebaseAuth.instance;
+    List<String> names = List.from(data["favoriteSelected"]);
+    String docID = data.id;
+    //print(docID);
+
+    return Container(
+//                      key: ValueKey(record.name),
+//        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom:
+                BorderSide(width: 0.6, color: Colors.grey[300]))),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _starAndIdAndMore(record, context, auth),
+              _review(record),
+              //Container(height: size.height * 0.01),
+//              _dateAndLike(record),
+              Row(
+                children: <Widget>[
+                  //Container(height: size.height * 0.05),
+                  Text("2020.08.11",
+                      style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+//        Container(width: size.width * 0.63),
+                  Padding(padding: EdgeInsets.all(18)),
+                  Padding(padding: EdgeInsets.only(left: 235)),
+                  Container(
+                    //width: 500.0,
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        new GestureDetector(
+                            child: new Icon(
+                              names.contains(auth.currentUser.uid) ? Icons.favorite
+                                  : Icons.favorite_border,
+//                                            color: names.contains(auth.currentUser.uid) ?
+//                                                Colors.redAccent[200] : Colors.grey[300],
+                              color: Colors.redAccent[200],
+                              size: 21,
+                            ),
+                            //when 2 people click this
+                            onTap:() {
+//                                            List<String> names = List.from(data["favoriteSelected"]);
+                              if(names.contains(auth.currentUser.uid)) {
+                                print("UID: "+auth.currentUser.uid);
+                                record.reference.update({
+                                  'favoriteSelected': FieldValue.arrayRemove([auth.currentUser.uid]),
+                                  'noFavorite': FieldValue.increment(-1),
+                                });
+                              }
+                              else {
+                                record.reference.update({
+                                  'favoriteSelected': FieldValue.arrayUnion([auth.currentUser.uid]),
+                                  'noFavorite': FieldValue.increment(1),
+                                });
+                              }
+                            }
+                        )
+                      ],
+                    ),
+                  ),
+                  Text((record.noFavorite).toString(),
+                      style: TextStyle(fontSize: 14, color: Colors.black)),
+                ],
+              )
+            ]));
+  }
+
+/*  Widget _starAndIdAndMore(record, context, auth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Row(
+          children: <Widget>[Icon(Icons.star, color: Colors.amber, size: 16),
+            Icon(Icons.star, color: Colors.amber, size: 16),
+            Icon(Icons.star, color: Colors.amber, size: 16),
+            Icon(Icons.star, color: Colors.amber, size: 16),
+            Icon(Icons.star, color: Colors.grey[300], size: 16),
+            Padding(padding: EdgeInsets.only(left: 10)),
+            Text(record.id, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+            SizedBox(width: 145),
+            IconButton(
+              icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
+              onPressed: () {
+                //TODO : It doesn't working
+                print("auth.currentUser.uid: " + auth.currentUser.uid);
+                print("record.uid: " + record.uid);
+                if(auth.currentUser.uid == record.uid) {
+//                  showModalBottomSheet(
+//                      context: context,
+//                      builder: buildBottomSheetWriter);
+                }
+                else if(auth.currentUser.uid != record.uid) {
+//                  showModalBottomSheet(
+//                      context: context,
+//                      builder: buildBottomSheetAnonymous);
+                }
+              },
+            )
+          ],
+        ),
+      ],
+    );
+  }*/
+
+  Widget _searchBar() {
+    return             Container(
+      width: 370,
+      height: 45,
+      //padding: EdgeInsets.only(top: 3,),
+      margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        color: Colors.grey[200],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+              flex: 5,
+              child: TextField(
+                focusNode: focusNode,
+                style: TextStyle(fontSize: 15),
+                autofocus: true,
+                controller: _filter,
+                decoration: InputDecoration(
+                    fillColor: Colors.white12,
+                    filled: true,
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
+                    suffixIcon: focusNode.hasFocus
+                        ? IconButton(
+                      icon: Icon(Icons.cancel, size: 20),
+                      onPressed: () {
+                        setState(() {
+                          _filter.clear();
+                          _searchText = "";
+                        });
+                      },
+                    )
+                        : Container(),
+                    hintText: '검색',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10)),
+                        borderSide:
+                        BorderSide(color: Colors.transparent)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10)),
+                        borderSide:
+                        BorderSide(color: Colors.transparent)),
+                    border: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10)),
+                        borderSide:
+                        BorderSide(color: Colors.transparent))),
+              )),
+          focusNode.hasFocus
+              ? Expanded(
+            child: FlatButton(
+              child: Text(
+                'clear',
+                style: TextStyle(fontSize: 13),
+              ),
+              onPressed: () {
+                setState(() {
+                  _filter.clear();
+                  _searchText = "";
+                  focusNode.unfocus();
+                });
+              },
+            ),
+          )
+              : Expanded(
+            flex: 0,
+            child: Container(),
+          )
+        ],
+      ),
     );
   }
 
@@ -634,14 +910,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 Icons.star,
                 color: Colors.amberAccent,
               ),
-//              onRatingUpdate: (rating) {
-//              },
             ),
-//            Icon(Icons.star, color: Colors.amber, size: 16),
-//            Icon(Icons.star, color: Colors.amber, size: 16),
-//            Icon(Icons.star, color: Colors.amber, size: 16),
-//            Icon(Icons.star, color: Colors.amber, size: 16),
-//            Icon(Icons.star, color: Colors.grey[300], size: 16),
 
             Padding(padding: EdgeInsets.only(left: 10)),
             Text(record.id, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
@@ -707,3 +976,42 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 }
 
+class Record {
+  final DocumentReference reference;
+  final String name;
+  final String effect;
+  final String sideEffect;
+  final String effectText;
+  final String sideEffectText;
+  final String overallText;
+  final String id;
+  List<String> favoriteSelected = List<String>();
+  final String uid;
+  final num starRating;
+  var noFavorite;
+
+  Record.fromMap(Map<String, dynamic> map, {this.reference})
+      : assert(map['name'] != null),
+        assert(map['effectText'] != null),
+        assert(map['sideEffectText'] != null),
+        assert(map['overallText'] != null),
+        assert(map['id'] != null),
+        assert(map['noFavorite'] != null),
+        assert(map['uid'] != null),
+
+        name = map['name'],
+        effectText = map['effectText'],
+        sideEffectText = map['sideEffectText'],
+        overallText = map['overallText'],
+        id = map['id'],
+//        favoriteSelected = map['favoriteSelected'],
+//        favoriteSelected = favoriteSelected.map((item){return item.toMap();}).toList(),
+        noFavorite = map['noFavorite'],
+        uid = map['uid'],
+        effect = map['effect'],
+        sideEffect = map['sideEffect'],
+        starRating = map['starRating'];
+
+  Record.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+}
