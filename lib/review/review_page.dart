@@ -16,7 +16,6 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
-
   _ReviewPageState() {
     _filter.addListener(() {
       setState(() {
@@ -34,11 +33,11 @@ class _ReviewPageState extends State<ReviewPage> {
   static const yellow = Color(0xffFED74D);
   static const red = Color(0xffFF7070);
 
-  List<PieChartSectionData> _sections = [
+  List<PieChartSectionData> _effectChart = [
     PieChartSectionData(
     color: green,
-    value: 40,
-    title: 'Food',
+//    value: effectGood,
+    title: 'good',
     radius: 20,
     titleStyle: TextStyle(color: Colors.white, fontSize:12),
     ),
@@ -58,6 +57,24 @@ class _ReviewPageState extends State<ReviewPage> {
     )
   ];
 
+  List<PieChartSectionData> _sideEffectChart = [
+    PieChartSectionData(
+      color: green,
+      value: 40,
+      title: 'Food',
+      radius: 20,
+      titleStyle: TextStyle(color: Colors.white, fontSize:12),
+    ),
+    PieChartSectionData(
+      color: yellow,
+      value: 40,
+      title: 'Food',
+      radius: 20,
+      titleStyle: TextStyle(color: Colors.white, fontSize:12),
+    ),
+  ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,18 +82,11 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget _rating() {
-    FirebaseFirestore.instance
-        .collection('Reviews')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-    querySnapshot.docs.forEach((doc) {
-      print(doc["starRating"]);
-    });
-    });
-  }
-
-  Widget _pieChart() {
+  Widget _pieChart(String val, good, soso, bad) {
+    double sum = (good+soso+bad)*1.0;
+    double effectGood = (good/sum)*100;
+    double effectSoso = (soso/sum)*100;
+    double effectBad = (bad/sum)*100;
     return  Container(
       width: 110,
       height: 110,
@@ -84,10 +94,36 @@ class _ReviewPageState extends State<ReviewPage> {
           aspectRatio: 1,
           child: PieChart(
             PieChartData(
-              sections: _sections,
+//              sections: val == "effect" ? _effectChart : _sideEffectChart,
+              sections: [
+                if(good != 0)
+                PieChartSectionData(
+                  color: green,
+                  value: effectGood,
+                  title: 'good',
+                  radius: 20,
+                  titleStyle: TextStyle(color: Colors.white, fontSize:12),
+                ),
+                if(soso != 0)
+                PieChartSectionData(
+                  color: yellow,
+                  value: effectSoso,
+                  title: 'soso',
+                  radius: 20,
+                  titleStyle: TextStyle(color: Colors.white, fontSize:12),
+                ),
+                if(bad != 0)
+                PieChartSectionData(
+                  color: red,
+                  value: effectBad,
+                  title: 'bad',
+                  radius: 20,
+                  titleStyle: TextStyle(color: Colors.white, fontSize:12),
+                )
+              ],
               borderData: FlBorderData(show: false),
               centerSpaceRadius: 20,
-              sectionsSpace: 3,
+              sectionsSpace: 1,
             ),
           )
       ),
@@ -105,34 +141,36 @@ class _ReviewPageState extends State<ReviewPage> {
                     fontSize: 16.5, fontWeight: FontWeight.bold)),
             //Container(height: size.height * 0.02),
             Padding(padding: EdgeInsets.only(top: 14.0)),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Icon(Icons.star, color: Colors.amber[300], size: 35),
-                //Todo : Rating
-                Text("4.26", style: TextStyle(fontSize: 35)),
-                Text("/5",
-                    style: TextStyle(
-                        fontSize: 20, color: Colors.grey[500])),
-                SizedBox(
-                    width:30
-                ),
-                //pie chart
-                Column(
-                  children: [
-                    Text("효과"),
-                    _pieChart(),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text("부작용"),
-                    _pieChart(),
-                  ],
-                ),
-
-              ],
-            ),
+            _rate(context),
+//            Row(
+//              crossAxisAlignment: CrossAxisAlignment.start,
+//              children: <Widget>[
+//                Icon(Icons.star, color: Colors.amber[300], size: 35),
+//                //Todo : Rating
+//                _rate(context),
+////                Text(_rating(), style: TextStyle(fontSize: 35)),
+//                Text("/5",
+//                    style: TextStyle(
+//                        fontSize: 20, color: Colors.grey[500])),
+//                SizedBox(
+//                    width:30
+//                ),
+//                //pie chart
+//                Column(
+//                  children: [
+//                    Text("효과"),
+//                    _pieChart(),
+//                  ],
+//                ),
+//                Column(
+//                  children: [
+//                    Text("부작용"),
+//                    _pieChart(),
+//                  ],
+//                ),
+//
+//              ],
+//            ),
             Padding(padding: EdgeInsets.only(top: 14.0)),
             Text("탭해서 평가하기",
                 style: TextStyle(
@@ -304,37 +342,6 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
 
-
-
-
-/*  Widget _searchBar() {
-    return //TODO: Bring SEARCH FUNCTION & show review according to search keyword
-      Container(
-        height: 50,
-        padding: EdgeInsets.only(left: 20, right: 30),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          color: Colors.grey[200],
-        ),
-        child: TextField(
-          cursorColor: Colors.black,
-          decoration: InputDecoration(
-            icon: Icon(Icons.search, size: 30),
-            hintText: "어떤 리뷰를 찾고계세요?",
-            disabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-//                        filled: true,
-//                        fillColor: Colors.white
-            //contentPadding: EdgeInsets.only(left: 5)
-          ),
-        ),
-      );
-  }*/
-
-
-
-
   Widget topOfReview(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
     return Column(
@@ -364,6 +371,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           fontSize: 14.5,
                         )),
                     onTap: () {
+//                      _rating();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -487,6 +495,84 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
+
+  //BuildContext context, List<DocumentSnapshot> snapshot
+  Widget _rate(BuildContext context) {
+    num sum = 0;
+    int length = 0;
+    num ratingResult = 0;
+    int effectGood = 0;
+    int effectSoso = 0;
+    int effectBad = 0;
+    int sideEffectYes = 0;
+    int sideEffectNo = 0;
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Reviews').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError)
+          return Text('Something went wrong');
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Text("Loading");
+
+        length = snapshot.data.documents.length;
+//        snapshot.data.documents.map((DocumentSnapshot document) {
+//           sum += document.data()['starRating'];
+//        });
+
+        snapshot.data.docs.forEach((doc) {
+          sum += doc["starRating"];
+        });
+        ratingResult = sum/length;
+        print(ratingResult);
+
+
+        snapshot.data.docs.forEach((doc) {
+          doc["effect"] == "good" ? effectGood++ :
+          doc["effect"] == "soso" ? effectSoso++ : effectBad ++;
+        });
+
+        snapshot.data.docs.forEach((doc) {
+          doc["sideEffect"] == "yes" ? sideEffectYes++ : sideEffectNo++;
+        });
+
+        return
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Icon(Icons.star, color: Colors.amber[300], size: 35),
+              //Todo : Rating
+              Text(ratingResult.toStringAsFixed(1), style: TextStyle(fontSize: 35)),
+              Text("/5",
+                  style: TextStyle(
+                      fontSize: 20, color: Colors.grey[500])),
+              SizedBox(
+                  width:30
+              ),
+              //pie chart
+              Column(
+                children: [
+                  Text("효과"),
+                  _pieChart("effect", effectGood, effectSoso, effectBad),
+                ],
+              ),
+              Column(
+                children: [
+                  Text("부작용"),
+//                  _pieChart("sideEffect", ),
+                ],
+              ),
+
+            ],
+          );
+
+
+
+
+      },
+    );
+  }
+
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('Reviews').snapshots(),
@@ -507,7 +593,9 @@ class _ReviewPageState extends State<ReviewPage> {
     }
     return Expanded(
       child: ListView(
-        shrinkWrap: true,
+        physics: const ClampingScrollPhysics(),
+//        shrinkWrap: true,
+//        scrollDirection: Axis.vertical,
         padding: EdgeInsets.all(16.0),
         children:
         searchResults.map((data) => _buildListItem(context, data)).toList(),
