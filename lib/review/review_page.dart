@@ -16,6 +16,20 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
+
+  _ReviewPageState() {
+    _filter.addListener(() {
+      setState(() {
+        _searchText = _filter.text;
+        print('       filter == ${_filter.text}');
+      });
+    });
+  }
+
+  final TextEditingController _filter = TextEditingController();
+  FocusNode focusNode = FocusNode();
+  String _searchText = "";
+
   static const green = Color(0xff88F0BE);
   static const yellow = Color(0xffFED74D);
   static const red = Color(0xffFF7070);
@@ -293,7 +307,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
 
 
-  Widget _searchBar() {
+/*  Widget _searchBar() {
     return //TODO: Bring SEARCH FUNCTION & show review according to search keyword
       Container(
         height: 50,
@@ -316,7 +330,7 @@ class _ReviewPageState extends State<ReviewPage> {
           ),
         ),
       );
-  }
+  }*/
 
 
 
@@ -358,8 +372,9 @@ class _ReviewPageState extends State<ReviewPage> {
               ],
             )),
         _searchBar(),
+        _buildBody(context)
 
-        //TODO: YOU can delete
+/*        //TODO: YOU can delete
         Container(
             padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
             decoration: BoxDecoration(
@@ -467,8 +482,226 @@ class _ReviewPageState extends State<ReviewPage> {
               );
             },
           ),
-        )
+        )*/
       ],
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Reviews').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
+        return _buildList(context, snapshot.data.docs);
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    List<DocumentSnapshot> searchResults = [];
+    for (DocumentSnapshot d in snapshot) {
+      if (d.data().toString().contains(_searchText)) {
+        searchResults.add(d);
+      } else
+        print('    RESULT Nothing     ');
+    }
+    return Expanded(
+      child: ListView(
+        shrinkWrap: true,
+        padding: EdgeInsets.all(16.0),
+        children:
+        searchResults.map((data) => _buildListItem(context, data)).toList(),
+      ),
+    );
+  }
+
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final record = Record.fromSnapshot(data);
+    FirebaseAuth auth = FirebaseAuth.instance;
+    List<String> names = List.from(data["favoriteSelected"]);
+    String docID = data.id;
+    //print(docID);
+
+    return Container(
+//                      key: ValueKey(record.name),
+//        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom:
+                BorderSide(width: 0.6, color: Colors.grey[300]))),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _starAndIdAndMore(record, context, auth),
+              _review(record),
+              //Container(height: size.height * 0.01),
+//              _dateAndLike(record),
+              Row(
+                children: <Widget>[
+                  //Container(height: size.height * 0.05),
+                  Text("2020.08.11",
+                      style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+//        Container(width: size.width * 0.63),
+                  Padding(padding: EdgeInsets.all(18)),
+                  Padding(padding: EdgeInsets.only(left: 235)),
+                  Container(
+                    //width: 500.0,
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        new GestureDetector(
+                            child: new Icon(
+                              names.contains(auth.currentUser.uid) ? Icons.favorite
+                                  : Icons.favorite_border,
+//                                            color: names.contains(auth.currentUser.uid) ?
+//                                                Colors.redAccent[200] : Colors.grey[300],
+                              color: Colors.redAccent[200],
+                              size: 21,
+                            ),
+                            //when 2 people click this
+                            onTap:() {
+//                                            List<String> names = List.from(data["favoriteSelected"]);
+                              if(names.contains(auth.currentUser.uid)) {
+                                print("UID: "+auth.currentUser.uid);
+                                record.reference.update({
+                                  'favoriteSelected': FieldValue.arrayRemove([auth.currentUser.uid]),
+                                  'noFavorite': FieldValue.increment(-1),
+                                });
+                              }
+                              else {
+                                record.reference.update({
+                                  'favoriteSelected': FieldValue.arrayUnion([auth.currentUser.uid]),
+                                  'noFavorite': FieldValue.increment(1),
+                                });
+                              }
+                            }
+                        )
+                      ],
+                    ),
+                  ),
+                  Text((record.noFavorite).toString(),
+                      style: TextStyle(fontSize: 14, color: Colors.black)),
+                ],
+              )
+            ]));
+  }
+
+/*  Widget _starAndIdAndMore(record, context, auth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Row(
+          children: <Widget>[Icon(Icons.star, color: Colors.amber, size: 16),
+            Icon(Icons.star, color: Colors.amber, size: 16),
+            Icon(Icons.star, color: Colors.amber, size: 16),
+            Icon(Icons.star, color: Colors.amber, size: 16),
+            Icon(Icons.star, color: Colors.grey[300], size: 16),
+            Padding(padding: EdgeInsets.only(left: 10)),
+            Text(record.id, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+            SizedBox(width: 145),
+            IconButton(
+              icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
+              onPressed: () {
+                //TODO : It doesn't working
+                print("auth.currentUser.uid: " + auth.currentUser.uid);
+                print("record.uid: " + record.uid);
+                if(auth.currentUser.uid == record.uid) {
+//                  showModalBottomSheet(
+//                      context: context,
+//                      builder: buildBottomSheetWriter);
+                }
+                else if(auth.currentUser.uid != record.uid) {
+//                  showModalBottomSheet(
+//                      context: context,
+//                      builder: buildBottomSheetAnonymous);
+                }
+              },
+            )
+          ],
+        ),
+      ],
+    );
+  }*/
+
+  Widget _searchBar() {
+    return             Container(
+      width: 370,
+      height: 45,
+      //padding: EdgeInsets.only(top: 3,),
+      margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        color: Colors.grey[200],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+              flex: 5,
+              child: TextField(
+                focusNode: focusNode,
+                style: TextStyle(fontSize: 15),
+                autofocus: true,
+                controller: _filter,
+                decoration: InputDecoration(
+                    fillColor: Colors.white12,
+                    filled: true,
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
+                    suffixIcon: focusNode.hasFocus
+                        ? IconButton(
+                      icon: Icon(Icons.cancel, size: 20),
+                      onPressed: () {
+                        setState(() {
+                          _filter.clear();
+                          _searchText = "";
+                        });
+                      },
+                    )
+                        : Container(),
+                    hintText: '검색',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10)),
+                        borderSide:
+                        BorderSide(color: Colors.transparent)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10)),
+                        borderSide:
+                        BorderSide(color: Colors.transparent)),
+                    border: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10)),
+                        borderSide:
+                        BorderSide(color: Colors.transparent))),
+              )),
+          focusNode.hasFocus
+              ? Expanded(
+            child: FlatButton(
+              child: Text(
+                'clear',
+                style: TextStyle(fontSize: 13),
+              ),
+              onPressed: () {
+                setState(() {
+                  _filter.clear();
+                  _searchText = "";
+                  focusNode.unfocus();
+                });
+              },
+            ),
+          )
+              : Expanded(
+            flex: 0,
+            child: Container(),
+          )
+        ],
+      ),
     );
   }
 
