@@ -12,6 +12,9 @@ class DatabaseService {
   final CollectionReference drugCollection =
       FirebaseFirestore.instance.collection('drug');
 
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
+
   //drug list from snapshot
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
@@ -46,11 +49,12 @@ class DatabaseService {
 
   // get user doc stream
   Stream<UserData> get userData {
-    return drugCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
+    return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
 
   // // get user's saved doc stream
   // Stream<Drug> get savedListData {
   //   return drugCollection.doc(uid).collection('savedList').snapshot().map(_userDataFromSnapshot);
   // }
+
 }

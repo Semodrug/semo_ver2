@@ -20,13 +20,12 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<TheUser>.value(
-      value: AuthService().user,
+    return StreamProvider<TheUser>(
+      create: (_) => AuthService().user,
       child: MaterialApp(
-          title: 'IYMY',
+          title: '이약모약 ver2',
           home: Wrapper(),
           debugShowCheckedModeBanner: false,
-          // initialRoute: '/login',
           routes: {
             // TODO: Add route
             '/login': (context) => LoginPage(),
