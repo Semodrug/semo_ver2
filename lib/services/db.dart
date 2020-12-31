@@ -12,11 +12,27 @@ class DatabaseService {
   final CollectionReference drugCollection =
       FirebaseFirestore.instance.collection('drug');
 
+  Query drugQuery =
+      FirebaseFirestore.instance.collection('drug');
+
+
+  //get drugQuery 값
+  Query getDrugQuery() {
+    return drugQuery;
+  }
+
+  //set Drug Query for Drop down button
+
+  //
+
+
+
+
   //drug list from snapshot
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return Drug(
-        barcode: doc.data()['barcode'] ?? '',
+        barcode: doc.data()['BAR_CODE'] ?? '',
         entp_name: doc.data()['ENTP_NAME'] ?? '',
         item_name: doc.data()['ITEM_NAME'] ?? '',
         item_seq: doc.data()['ITEM_SEQ'] ?? '',
@@ -34,6 +50,7 @@ class DatabaseService {
   }
 
   // user data from snapshots
+  /*
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
         uid: uid,
@@ -48,6 +65,7 @@ class DatabaseService {
   Stream<UserData> get userData {
     return drugCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
+  */
 
   // // get user's saved doc stream
   // Stream<Drug> get savedListData {

@@ -76,7 +76,7 @@ class CategoryList extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (context) => TestRanking(categoryName: root.name,)),
             );
-            print('${root.name}');
+            //print('${root.name}');
           },
         );
       }
@@ -88,16 +88,16 @@ class CategoryList extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (context) => TestRanking(categoryName: root.name,)),
             );
-            print('전체가 맞나 ? ${root.name}');
-            print('$BigCategory');
+            //print('전체가 맞나 ? ${root.name}');
+            //print('$BigCategory');
           },
         );
       }
     }
     else {
-      print(root.name);
+      // print(root.name);
       BigCategory = root.name;
-      print('in ExpandTile in BC ==> $BigCategory');
+      //print('in ExpandTile in BC ==> $BigCategory');
       //listOfCategory[index] = root.name;
       return ExpansionTile(
         key: PageStorageKey<Category>(root),

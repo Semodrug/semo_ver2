@@ -26,7 +26,9 @@ class DrugTile extends StatelessWidget {
               ),
             ),
             print('===> pushed'),
-            print(drug.item_seq)
+            print(drug.item_seq),
+
+            print(' 리뷰 개수 잘 받아오느닞 확인 ${drug.review.toString()} ')
           },
           child: Container(
             width: double.infinity,
