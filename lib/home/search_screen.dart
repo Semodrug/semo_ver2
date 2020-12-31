@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:semo_ver2/review/phil_info.dart';
 import 'home.dart';
 
-
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class SearchScreen extends StatefulWidget {
@@ -17,8 +16,7 @@ class _SearchScreenState extends State<SearchScreen> {
   FocusNode focusNode = FocusNode();
   String _searchText = "";
 
-  CollectionReference userSearchList =
-  FirebaseFirestore.instance
+  CollectionReference userSearchList = FirebaseFirestore.instance
       .collection('users')
       .doc(_auth.currentUser.uid)
       .collection('searchList');
@@ -43,7 +41,8 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildListOfAll(BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildListOfAll(
+      BuildContext context, List<DocumentSnapshot> snapshot) {
     List<DocumentSnapshot> searchResults = [];
     for (DocumentSnapshot d in snapshot) {
       if (d.data().toString().contains(_searchText)) {
@@ -51,15 +50,20 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     }
 
-    if(searchResults.length == 0){
+    if (searchResults.length == 0) {
       return Container(
-        padding: EdgeInsets.only( top: 30),
-        child: Align(alignment: Alignment.topCenter,
-        child: Text('일치하는 약이 없습니다', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey[400]),)),
+        padding: EdgeInsets.only(top: 30),
+        child: Align(
+            alignment: Alignment.topCenter,
+            child: Text(
+              '일치하는 약이 없습니다',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[400]),
+            )),
       );
-    }
-
-    else if(searchResults.length != 0) {
+    } else if (searchResults.length != 0) {
       return ListView(
         padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
         children: searchResults
@@ -90,22 +94,28 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildListOfUser(BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildListOfUser(
+      BuildContext context, List<DocumentSnapshot> snapshot) {
     List<DocumentSnapshot> searchResults = [];
     for (DocumentSnapshot d in snapshot) {
       if (d.data().toString().contains(_searchText)) {
         searchResults.add(d);
       }
     }
-    if(searchResults.length == 0){
+    if (searchResults.length == 0) {
       return Container(
-        padding: EdgeInsets.only( top: 30),
-        child: Align(alignment: Alignment.topCenter,
-            child: Text('일치하는 약이 없습니다', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey[400]),)),
+        padding: EdgeInsets.only(top: 30),
+        child: Align(
+            alignment: Alignment.topCenter,
+            child: Text(
+              '일치하는 약이 없습니다',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[400]),
+            )),
       );
-    }
-
-    else {
+    } else {
       return ListView(
         padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
         children: searchResults
@@ -135,17 +145,13 @@ class _SearchScreenState extends State<SearchScreen> {
         searchList = _searchText;
         assert(searchList != null);
 
-        userSearchList.add({
-          'searchList' : searchList
-        });
+        userSearchList.add({'searchList': searchList});
 
-        print(
-            'DONE !!!! saved searchList');
+        print('DONE !!!! saved searchList');
       } catch (e) {
         print('Error: $e');
       }
     }
-
 
     return Scaffold(
       appBar: AppBar(
@@ -274,7 +280,6 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-
   Widget _myTab() {
     return DefaultTabController(
         length: 2,
@@ -316,8 +321,8 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
                 */
                 Tab(
-                    child: Text('전체 검색',
-                        style: TextStyle(color: Colors.black))),
+                    child:
+                        Text('전체 검색', style: TextStyle(color: Colors.black))),
                 Tab(
                     child: Text('나의 상비약 검색',
                         style: TextStyle(color: Colors.black))),
@@ -337,7 +342,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-
 class ListDrugOfAll extends StatefulWidget {
   final String item_name;
   final String category;
@@ -346,8 +350,7 @@ class ListDrugOfAll extends StatefulWidget {
   const ListDrugOfAll(
     this.item_name,
     this.category,
-    this.item_seq,
-    {
+    this.item_seq, {
     Key key,
   }) : super(key: key);
 
@@ -380,7 +383,7 @@ class _ListDrugState extends State<ListDrugOfAll> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    PhilInfoPage(drug_item_seq: widget.item_seq))),
+                    PhilInfoPage(drugItemSeq: widget.item_seq))),
       },
       child: Container(
         width: double.infinity,
@@ -427,7 +430,7 @@ class _ListDrugUserState extends State<ListDrugOfUser> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    PhilInfoPage(drug_item_seq: widget.item_seq))),
+                    PhilInfoPage(drugItemSeq: widget.item_seq))),
       },
       child: Container(
         width: double.infinity,

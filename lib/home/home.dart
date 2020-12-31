@@ -303,7 +303,7 @@ class _ListCardsState extends State<ListCards> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PhilInfoPage(drug_item_seq: widget.item_seq),
+            builder: (context) => PhilInfoPage(drugItemSeq: widget.item_seq),
           ),
         ),
         print('===> pushed'),

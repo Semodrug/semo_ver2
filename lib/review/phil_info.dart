@@ -13,9 +13,9 @@ final fireInstance = FirebaseFirestore.instance;
 // TODO: image
 
 class PhilInfoPage extends StatefulWidget {
-  final String drug_item_seq; //추가
+  final String drugItemSeq; //추가
 
-  PhilInfoPage({Key key, @required this.drug_item_seq})
+  PhilInfoPage({Key key, @required this.drugItemSeq})
       : super(key: key); //약의 item seq 받아
 
   @override
@@ -70,7 +70,7 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
-                child: _topInfo(context, widget.drug_item_seq),
+                child: _topInfo(context, widget.drugItemSeq),
               ),
             ),
             SliverToBoxAdapter(
@@ -84,7 +84,7 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
             ),
             /* FROM HERE: TAB */
             SliverToBoxAdapter(
-              child: _myTab(context, widget.drug_item_seq),
+              child: _myTab(context, widget.drugItemSeq),
             )
           ],
         ));
