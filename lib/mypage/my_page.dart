@@ -158,8 +158,11 @@ class _MyPageState extends State<MyPage> {
                             color: Colors.teal[200],
                           ),
                           onPressed: () async {
+                            // TODO: when log-out, we should go to login page by Wrapper
+
                             setState(() => loading = true);
                             dynamic result = await _auth.signOut();
+                            Navigator.pop(context);
                             // if (result == null) {
                             //   setState(() {
                             //     loading = false;
