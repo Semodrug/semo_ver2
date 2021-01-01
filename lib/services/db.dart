@@ -5,16 +5,19 @@ import 'package:semo_ver2/models/user.dart';
 
 class DatabaseService {
   final String uid;
+  final String itemSeq;
 
-  DatabaseService({this.uid});
+  DatabaseService({this.uid, this.itemSeq});
 
-  // collection reference
+  // DRUG collection reference
   final CollectionReference drugCollection =
       FirebaseFirestore.instance.collection('drug');
 
+  // USER collection reference
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
+  /* Drug List */
   //drug list from snapshot
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
@@ -36,25 +39,59 @@ class DatabaseService {
     return drugCollection.snapshots().map(_drugListFromSnapshot);
   }
 
+  /* Drug */
+  // drug data from snapshots
+  Drug _drugFromSnapshot(DocumentSnapshot snapshot) {
+    return Drug(
+      barcode: snapshot.data()['barcode'] ?? '',
+      entp_name: snapshot.data()['ENTP_NAME'] ?? '',
+      item_name: snapshot.data()['ITEM_NAME'] ?? '',
+      item_seq: snapshot.data()['ITEM_SEQ'] ?? '',
+      storage_method: snapshot.data()['STORAGE_METHOD'] ?? '',
+      category: snapshot.data()['category'] ?? '',
+      image: snapshot.data()['image'] ?? '',
+      review: snapshot.data()['review'],
+    );
+  }
+
+  // get user doc stream
+  Stream<Drug> get drugData {
+    return drugCollection.doc(itemSeq).snapshots().map(_drugFromSnapshot);
+  }
+
+  /* Specific Information of Drug */
+  SpecInfo _specInfoFromSnapshot(DocumentSnapshot snapshot) {
+    return SpecInfo(
+      eeDataList: snapshot.data()['EE'] ?? '',
+      nbDataList: snapshot.data()['NB'] ?? '',
+      udDataList: snapshot.data()['UD'] ?? '',
+    );
+  }
+
+  // get user doc stream
+  Stream<SpecInfo> get specInfo {
+    // collection reference
+    final CollectionReference infoCollection =
+        drugCollection.doc(itemSeq).collection('OtherInfos');
+
+    return infoCollection.doc('DOCS').snapshots().map(_specInfoFromSnapshot);
+  }
+
+  /* User */
   // user data from snapshots
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
-        uid: uid,
-        name: snapshot.data()['name'],
-        sex: snapshot.data()['sex'],
-        phone: snapshot.data()['phone'],
-        birth: snapshot.data()['birth'],
-        diseaseList: snapshot.data()['diseaseList']);
+      uid: uid,
+      name: snapshot.data()['name'] ?? '',
+      sex: snapshot.data()['sex'] ?? '',
+      phone: snapshot.data()['phone'] ?? '',
+      birth: snapshot.data()['birth'] ?? '',
+      diseaseList: snapshot.data()['diseaseList'] ?? '',
+    );
   }
 
   // get user doc stream
   Stream<UserData> get userData {
     return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
-
-  // // get user's saved doc stream
-  // Stream<Drug> get savedListData {
-  //   return drugCollection.doc(uid).collection('savedList').snapshot().map(_userDataFromSnapshot);
-  // }
-
 }
