@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/drug.dart';
+import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/loading.dart';
 
@@ -9,7 +10,6 @@ import 'review_page.dart';
 import 'write_review.dart';
 
 final fireInstance = FirebaseFirestore.instance;
-
 // TODO: drug도 provider 필요!!!
 // TODO: appbar 통일. 한군데 있는 거 계속 불러오게? fontsize: 16
 // TODO: image
@@ -98,95 +98,111 @@ Widget _topInfo(
   BuildContext context,
   String drugItemSeq,
 ) {
+  TheUser user = Provider.of<TheUser>(context);
+
   return StreamBuilder<Drug>(
       stream: DatabaseService(itemSeq: drugItemSeq).drugData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           Drug drug = snapshot.data;
           // print('SUMI's TEST: ${drug.item_name}')
-          return Stack(children: [
-            Positioned(
-              top: 0,
-              right: 0,
-              child: IconButton(
-                  padding: EdgeInsets.all(2.0),
-                  icon: Icon(
-                    Icons.announcement,
-                    color: Colors.amber[700],
+          return StreamBuilder<Lists>(
+              stream: DatabaseService(uid: user.uid).lists,
+              builder: (context, snapshot2) {
+                List favoriteLists = snapshot2.data.favoriteLists;
+                bool isFavorite = favoriteLists.contains(drugItemSeq);
+
+                return Stack(children: [
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                        padding: EdgeInsets.all(2.0),
+                        icon: Icon(
+                          Icons.announcement,
+                          color: Colors.amber[700],
+                        ),
+                        onPressed: () => _showWarning(context)),
                   ),
-                  onPressed: () => _showWarning(context)),
-            ),
-            Positioned(
-                bottom: 70,
-                right: 0,
-                child: IconButton(
-                    padding: EdgeInsets.all(2.0),
-                    icon: Icon(
-                      Icons.favorite_border,
-                      //alreadySaved ? Icons.favorite : Icons.favorite_border,
-                      //              //color: alreadySaved ? Colors.redAccent : null,
-                    ),
-                    onPressed: () => print('좋아요!'))),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: ButtonTheme(
-                minWidth: 20,
-                height: 30,
-                child: FlatButton(
-                  color: Colors.teal[300],
-                  child: Text(
-                    '+ 담기',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () => print('보관함 추가!'),
-                ),
-              ),
-            ),
-            Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Center(
-                    child: SizedBox(
-                      child: Image.asset('images/01.png'),
-                      width: 200.0,
-                      height: 100.0,
-                    ),
-                  ),
-                  Text(
-                    drug.entp_name,
-                    style: TextStyle(
-                      color: Colors.grey[600],
+                  Positioned(
+                      bottom: 70,
+                      right: 0,
+                      child: IconButton(
+                          padding: EdgeInsets.all(2.0),
+                          icon: Icon(
+                            // Icons.favorite_border,
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite ? Colors.redAccent : null,
+                          ),
+                          onPressed: () async {
+                            isFavorite
+                                ? favoriteLists.remove(drugItemSeq)
+                                : favoriteLists.add(drugItemSeq);
+                            await DatabaseService(uid: user.uid)
+                                .updateLists(favoriteLists);
+                          })),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: ButtonTheme(
+                      minWidth: 20,
+                      height: 30,
+                      child: FlatButton(
+                        color: Colors.teal[300],
+                        child: Text(
+                          '+ 담기',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () => print('보관함 추가!'),
+                      ),
                     ),
                   ),
-                  Text(
-                    drug.item_name,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 28.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Row(children: <Widget>[
-                    // TODO: firebase connection
-                    Text(
-                      '4.5',
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    // TODO: firebase connection
-                    Text(
-                      ' (305개)',
-                      style: TextStyle(color: Colors.grey[600]),
-                    )
-                  ]),
-                  Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[_categoryButton(drug.category)]),
-                ]),
-          ]);
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Center(
+                          child: SizedBox(
+                            child: Image.asset('images/01.png'),
+                            width: 200.0,
+                            height: 100.0,
+                          ),
+                        ),
+                        Text(
+                          drug.entp_name,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        Text(
+                          drug.item_name,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 28.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Row(children: <Widget>[
+                          // TODO: firebase connection
+                          Text(
+                            '4.5',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          // TODO: firebase connection
+                          Text(
+                            ' (305개)',
+                            style: TextStyle(color: Colors.grey[600]),
+                          )
+                        ]),
+                        Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[_categoryButton(drug.category)]),
+                      ]),
+                ]);
+              });
         } else {
           return Loading();
         }

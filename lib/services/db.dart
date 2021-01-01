@@ -9,15 +9,11 @@ class DatabaseService {
 
   DatabaseService({this.uid, this.itemSeq});
 
-  // DRUG collection reference
+  /* Drug List */
+  // collection reference
   final CollectionReference drugCollection =
       FirebaseFirestore.instance.collection('drug');
 
-  // USER collection reference
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('users');
-
-  /* Drug List */
   //drug list from snapshot
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
@@ -60,6 +56,7 @@ class DatabaseService {
   }
 
   /* Specific Information of Drug */
+  // specific information data from snapshots
   SpecInfo _specInfoFromSnapshot(DocumentSnapshot snapshot) {
     return SpecInfo(
       eeDataList: snapshot.data()['EE'] ?? '',
@@ -68,7 +65,7 @@ class DatabaseService {
     );
   }
 
-  // get user doc stream
+  // get specific information stream
   Stream<SpecInfo> get specInfo {
     // collection reference
     final CollectionReference infoCollection =
@@ -78,6 +75,10 @@ class DatabaseService {
   }
 
   /* User */
+  // collection reference
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
+
   // user data from snapshots
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
@@ -93,5 +94,33 @@ class DatabaseService {
   // get user doc stream
   Stream<UserData> get userData {
     return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
+  }
+
+  /* User's List - Favorite List */
+  Future<void> updateLists(List newList) async {
+    return await userCollection
+        .doc(uid)
+        .collection('OtherInfos')
+        .doc('Lists')
+        .set({
+      'favoriteLists': newList,
+    });
+  }
+
+  // List data from snapshots
+  Lists _listsFromSnapshot(DocumentSnapshot snapshot) {
+    return Lists(
+      favoriteLists: snapshot.data()['favoriteLists'] ?? '',
+    );
+  }
+
+  // get favorite list stream
+  Stream<Lists> get lists {
+    return userCollection
+        .doc(uid)
+        .collection('OtherInfos')
+        .doc('Lists')
+        .snapshots()
+        .map(_listsFromSnapshot);
   }
 }
