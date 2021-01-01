@@ -37,7 +37,7 @@ class _WriteReviewState extends State<WriteReview> {
   String id = '';
   String effect = '';
   String sideEffect = '';
-  double starRating =  0;
+  double starRating =  3;
   String effectText = '';
   String sideEffectText = '';
   String overallText = '';
