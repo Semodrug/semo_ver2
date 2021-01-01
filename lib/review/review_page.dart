@@ -3,12 +3,16 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:semo_ver2/models/review.dart';
 import 'all_review.dart';
 import 'edit_review.dart';
 import 'searchbar.dart';
 import 'write_review.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'review_list.dart';
+import 'package:semo_ver2/services/review.dart';
 
 class ReviewPage extends StatefulWidget {
   @override
@@ -74,13 +78,63 @@ class _ReviewPageState extends State<ReviewPage> {
     ),
   ];
 
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: topOfReview(context),
+    return StreamProvider<List<Review>>.value(
+      value: ReviewService().reviews,
+      child: Scaffold(
+//        body: topOfReview(context),
+//        body: ReviewList()
+      //below is top of review
+        body:  Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(height:10),
+            _totalRating(),
+            Container(
+              height: 4,
+              color: Colors.grey[200],
+            ),
+
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    //TODO EDIT num of reviews
+                    Text('리뷰 360개',
+                        style: TextStyle(
+                          fontSize: 16.5,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    InkWell(
+                        child: Text('전체리뷰 보기',
+                            style: TextStyle(
+                              fontSize: 14.5,
+                            )),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AllReview()));
+                        }),
+                  ],
+                )),
+  //TODO: save _searchBar()
+  //        _searchBar(),
+  //        _buildBody(context)
+          ],
+        )
+
+      )
     );
   }
+//    return Scaffold(
+//      body: topOfReview(context),
+//    );
+
 
   Widget _effectPieChart(good, soso, bad) {
     double sum = (good+soso+bad)*1.0;
@@ -181,35 +235,6 @@ class _ReviewPageState extends State<ReviewPage> {
             //Container(height: size.height * 0.02),
             Padding(padding: EdgeInsets.only(top: 14.0)),
             _rate(context),
-//            Row(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: <Widget>[
-//                Icon(Icons.star, color: Colors.amber[300], size: 35),
-//                //Todo : Rating
-//                _rate(context),
-////                Text(_rating(), style: TextStyle(fontSize: 35)),
-//                Text("/5",
-//                    style: TextStyle(
-//                        fontSize: 20, color: Colors.grey[500])),
-//                SizedBox(
-//                    width:30
-//                ),
-//                //pie chart
-//                Column(
-//                  children: [
-//                    Text("효과"),
-//                    _pieChart(),
-//                  ],
-//                ),
-//                Column(
-//                  children: [
-//                    Text("부작용"),
-//                    _pieChart(),
-//                  ],
-//                ),
-//
-//              ],
-//            ),
             Padding(padding: EdgeInsets.only(top: 14.0)),
             Text("탭해서 평가하기",
                 style: TextStyle(
@@ -410,7 +435,6 @@ class _ReviewPageState extends State<ReviewPage> {
                           fontSize: 14.5,
                         )),
                     onTap: () {
-//                      _rating();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -418,118 +442,9 @@ class _ReviewPageState extends State<ReviewPage> {
                     }),
               ],
             )),
-        _searchBar(),
-        _buildBody(context)
-
-/*        //TODO: YOU can delete
-        Container(
-            padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
-            decoration: BoxDecoration(
-                border: Border(
-                    bottom:
-                    BorderSide(width: 0.6, color: Colors.grey[300]))),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //_starAndId(size),
-                  Padding(padding: EdgeInsets.only(top: 6.0)),
-                  //_reviewSideEffect(size, _sideEffectColor),
-                  Padding(padding: EdgeInsets.only(top: 6.0)),
-                  //_reviewOverall(size),
-                  Padding(padding: EdgeInsets.only(top: 6.0)),
-                  Padding(padding: EdgeInsets.only(top: 7.0)),
-                  //_dateAndLike(size),
-                ])),
-
-        IconButton(
-          icon: Icon(Icons.hotel),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SearchScreen()
-                ));
-          },),
-
-        Expanded(
-//            height: 400,
-          child: StreamBuilder<QuerySnapshot>(
-            stream: Firestore.instance.collection("Reviews").snapshots(),
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError)
-                return Text("Error: ${snapshot.error}");
-              if (!snapshot.hasData)
-                return LinearProgressIndicator();
-              return Column(
-//                primary: false,
-//                shrinkWrap: true,
-//                physics: NeverScrollableScrollPhysics(),
-                children: snapshot.data.documents.map((DocumentSnapshot data) {
-                  final record = Record.fromSnapshot(data);
-                  List<String> names = List.from(data["favoriteSelected"]);
-                  return Container(
-                      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom:
-                              BorderSide(width: 0.6, color: Colors.grey[300]))),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _starAndIdAndMore(record, context, auth),
-                            _review(record),
-                            //Container(height: size.height * 0.01),
-//              _dateAndLike(record),
-                            Row(
-                              children: <Widget>[
-                                //Container(height: size.height * 0.05),
-                                Text("2020.08.11",
-                                    style: TextStyle(color: Colors.grey[500], fontSize: 13)),
-//        Container(width: size.width * 0.63),
-                                Padding(padding: EdgeInsets.all(18)),
-                                Padding(padding: EdgeInsets.only(left: 235)),
-                                Container(
-                                  //width: 500.0,
-                                  child: new Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      new GestureDetector(
-                                          child: new Icon(
-                                            names.contains(auth.currentUser.uid) ? Icons.favorite
-                                            : Icons.favorite_border,
-                                            color: Colors.redAccent[200],
-                                            size: 21,
-                                          ),
-                                          onTap:() {
-                                            if(names.contains(auth.currentUser.uid)) {
-                                              print("UID: "+auth.currentUser.uid);
-                                              record.reference.update({
-                                                'favoriteSelected': FieldValue.arrayRemove([auth.currentUser.uid]),
-                                                'noFavorite': FieldValue.increment(-1),
-                                              });
-                                            }
-                                            else {
-                                              record.reference.update({
-                                                'favoriteSelected': FieldValue.arrayUnion([auth.currentUser.uid]),
-                                                'noFavorite': FieldValue.increment(1),
-                                              });
-                                            }
-                                          }
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Text((record.noFavorite).toString(),
-                                    style: TextStyle(fontSize: 14, color: Colors.black)),
-                              ],
-                            )
-                          ]));
-                }).toList(),
-              );
-            },
-          ),
-        )*/
+//TODO: save _searchBar()
+//        _searchBar(),
+//        _buildBody(context)
       ],
     );
   }
