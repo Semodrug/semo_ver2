@@ -82,7 +82,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget _pieChart(String val, good, soso, bad) {
+  Widget _effectPieChart(good, soso, bad) {
     double sum = (good+soso+bad)*1.0;
     double effectGood = (good/sum)*100;
     double effectSoso = (soso/sum)*100;
@@ -120,6 +120,45 @@ class _ReviewPageState extends State<ReviewPage> {
                   radius: 20,
                   titleStyle: TextStyle(color: Colors.white, fontSize:12),
                 )
+              ],
+              borderData: FlBorderData(show: false),
+              centerSpaceRadius: 20,
+              sectionsSpace: 1,
+            ),
+          )
+      ),
+    );
+  }
+
+  Widget _sideEffectPieChart(yes, no) {
+    double sum = (yes + no)*1.0;
+    double sideEffectYes = (yes/sum)*100;
+    double sideEffectNo = (no/sum)*100;
+    return  Container(
+      width: 110,
+      height: 110,
+      child: AspectRatio(
+          aspectRatio: 1,
+          child: PieChart(
+            PieChartData(
+//              sections: val == "effect" ? _effectChart : _sideEffectChart,
+              sections: [
+                if(sideEffectYes != 0)
+                  PieChartSectionData(
+                    color: red,
+                    value: sideEffectYes,
+                    title: 'Yes',
+                    radius: 20,
+                    titleStyle: TextStyle(color: Colors.white, fontSize:12),
+                  ),
+                if(sideEffectNo != 0)
+                  PieChartSectionData(
+                    color: green,
+                    value: sideEffectNo,
+                    title: 'No',
+                    radius: 20,
+                    titleStyle: TextStyle(color: Colors.white, fontSize:12),
+                  ),
               ],
               borderData: FlBorderData(show: false),
               centerSpaceRadius: 20,
@@ -553,13 +592,13 @@ class _ReviewPageState extends State<ReviewPage> {
               Column(
                 children: [
                   Text("효과"),
-                  _pieChart("effect", effectGood, effectSoso, effectBad),
+                  _effectPieChart(effectGood, effectSoso, effectBad),
                 ],
               ),
               Column(
                 children: [
                   Text("부작용"),
-//                  _pieChart("sideEffect", ),
+                  _sideEffectPieChart(sideEffectYes, sideEffectNo),
                 ],
               ),
 
@@ -612,8 +651,6 @@ class _ReviewPageState extends State<ReviewPage> {
     //print(docID);
 
     return Container(
-//                      key: ValueKey(record.name),
-//        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
