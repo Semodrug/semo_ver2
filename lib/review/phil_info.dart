@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/review/set_expiration.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/loading.dart';
 
 import 'review_page.dart';
@@ -100,6 +102,7 @@ Widget _topInfo(
 ) {
   TheUser user = Provider.of<TheUser>(context);
 
+  //TODO: how to control the state management better?
   return StreamBuilder<Drug>(
       stream: DatabaseService(itemSeq: drugItemSeq).drugData,
       builder: (context, snapshot) {
@@ -109,104 +112,188 @@ Widget _topInfo(
           return StreamBuilder<Lists>(
               stream: DatabaseService(uid: user.uid).lists,
               builder: (context, snapshot2) {
-                List favoriteLists = snapshot2.data.favoriteLists;
-                bool isFavorite = favoriteLists.contains(drugItemSeq);
+                if (snapshot2.hasData) {
+                  List favoriteLists = snapshot2.data.favoriteLists;
+                  bool isFavorite = favoriteLists.contains(drugItemSeq);
 
-                return Stack(children: [
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: IconButton(
-                        padding: EdgeInsets.all(2.0),
-                        icon: Icon(
-                          Icons.announcement,
-                          color: Colors.amber[700],
-                        ),
-                        onPressed: () => _showWarning(context)),
-                  ),
-                  Positioned(
-                      bottom: 70,
-                      right: 0,
-                      child: IconButton(
-                          padding: EdgeInsets.all(2.0),
-                          icon: Icon(
-                            // Icons.favorite_border,
-                            isFavorite ? Icons.favorite : Icons.favorite_border,
-                            color: isFavorite ? Colors.redAccent : null,
+                  return StreamBuilder<List<SavedDrug>>(
+                    stream: DatabaseService(uid: user.uid).savedDrugs,
+                    builder: (context, snapshot3) {
+                      if (snapshot3.hasData) {
+                        List<SavedDrug> savedDrugs = snapshot3.data;
+                        bool isSaved;
+
+                        for (SavedDrug savedDrug in savedDrugs) {
+                          isSaved = savedDrug.item_seq.contains(drugItemSeq);
+                          if (isSaved == true) break;
+                        }
+
+                        return Stack(children: [
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: IconButton(
+                                padding: EdgeInsets.all(2.0),
+                                icon: Icon(
+                                  Icons.announcement,
+                                  color: Colors.amber[700],
+                                ),
+                                onPressed: () => _showWarning(context)),
                           ),
-                          onPressed: () async {
-                            isFavorite
-                                ? favoriteLists.remove(drugItemSeq)
-                                : favoriteLists.add(drugItemSeq);
-                            await DatabaseService(uid: user.uid)
-                                .updateLists(favoriteLists);
-                          })),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: ButtonTheme(
-                      minWidth: 20,
-                      height: 30,
-                      child: FlatButton(
-                        color: Colors.teal[300],
-                        child: Text(
-                          '+ 담기',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () => print('보관함 추가!'),
-                      ),
-                    ),
-                  ),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Center(
-                          child: SizedBox(
-                            child: Image.asset('images/01.png'),
-                            width: 200.0,
-                            height: 100.0,
+                          Positioned(
+                              bottom: 70,
+                              right: 0,
+                              child: IconButton(
+                                  padding: EdgeInsets.all(2.0),
+                                  icon: Icon(
+                                    // Icons.favorite_border,
+                                    isFavorite
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: isFavorite ? Colors.redAccent : null,
+                                  ),
+                                  onPressed: () async {
+                                    isFavorite
+                                        ? favoriteLists.remove(drugItemSeq)
+                                        : favoriteLists.add(drugItemSeq);
+                                    await DatabaseService(uid: user.uid)
+                                        .updateLists(favoriteLists);
+                                  })),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: ButtonTheme(
+                              minWidth: 20,
+                              height: 30,
+                              child: FlatButton(
+                                color: Colors.teal[300],
+                                child: Text(
+                                  '+ 담기',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  if (isSaved) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            fullscreenDialog: true,
+                                            builder: (context) => Expiration(
+                                                  drugItemSeq: drugItemSeq,
+                                                )));
+
+//                                     _myDialog(context, '약 보관함',
+//                                         '이미 보관함에 저장되어있습니다.', '', '확인');
+
+                                    // MyDialog(
+                                    //     contents: '이미 보관함에 저장되어있습니다.',
+                                    //     tail1: '확인');
+                                  } else {
+                                    _myDialog(context, '약 보관함',
+                                        '나의 보관함에 저장하시겠습니까?', '예', '아니요');
+                                  }
+                                },
+                              ),
+                            ),
                           ),
-                        ),
-                        Text(
-                          drug.entp_name,
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        Text(
-                          drug.item_name,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Row(children: <Widget>[
-                          // TODO: firebase connection
-                          Text(
-                            '4.5',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          // TODO: firebase connection
-                          Text(
-                            ' (305개)',
-                            style: TextStyle(color: Colors.grey[600]),
-                          )
-                        ]),
-                        Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[_categoryButton(drug.category)]),
-                      ]),
-                ]);
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Center(
+                                  child: SizedBox(
+                                    child: Image.asset('images/01.png'),
+                                    width: 200.0,
+                                    height: 100.0,
+                                  ),
+                                ),
+                                Text(
+                                  drug.entp_name,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Text(
+                                  drug.item_name,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 28.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Row(children: <Widget>[
+                                  // TODO: firebase connection
+                                  Text(
+                                    '4.5',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // TODO: firebase connection
+                                  Text(
+                                    ' (305개)',
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  )
+                                ]),
+                                Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      _categoryButton(drug.category)
+                                    ]),
+                              ]),
+                        ]);
+                      } else {
+                        return Loading();
+                      }
+                    },
+                  );
+                } else {
+                  return Loading();
+                }
               });
         } else {
           return Loading();
         }
       });
+}
+
+Future<void> _myDialog(
+    context, dialogTitle, dialogContent, tail1, tail2) async {
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        title: Text(
+          dialogTitle,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.teal[400]),
+        ),
+        content: Text(dialogContent),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              tail1,
+              style: TextStyle(color: Colors.teal[200]),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          FlatButton(
+            child: Text(
+              tail2,
+              style: TextStyle(color: Colors.teal[200]),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
 
 /* warning */

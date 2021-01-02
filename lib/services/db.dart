@@ -30,7 +30,7 @@ class DatabaseService {
     }).toList();
   }
 
-  //get drug stream
+  //get drug list stream
   Stream<List<Drug>> get drugs {
     return drugCollection.snapshots().map(_drugListFromSnapshot);
   }
@@ -96,17 +96,7 @@ class DatabaseService {
     return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
 
-  /* User's List - Favorite List */
-  Future<void> updateLists(List newList) async {
-    return await userCollection
-        .doc(uid)
-        .collection('OtherInfos')
-        .doc('Lists')
-        .set({
-      'favoriteLists': newList,
-    });
-  }
-
+  /* Favorite List */
   // List data from snapshots
   Lists _listsFromSnapshot(DocumentSnapshot snapshot) {
     return Lists(
@@ -122,5 +112,50 @@ class DatabaseService {
         .doc('Lists')
         .snapshots()
         .map(_listsFromSnapshot);
+  }
+
+  Future<void> updateLists(List newList) async {
+    return await userCollection
+        .doc(uid)
+        .collection('OtherInfos')
+        .doc('Lists')
+        .set({
+      'favoriteLists': newList,
+    });
+  }
+
+  /* Saved List */
+  //drug list from snapshot
+  List<SavedDrug> _savedDrugListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return SavedDrug(
+        item_name: doc.data()['ITEM_NAME'] ?? '',
+        item_seq: doc.data()['ITEM_SEQ'] ?? '',
+        category: doc.data()['category'] ?? '',
+        expiration: doc.data()['expiration'] ?? '',
+      );
+    }).toList();
+  }
+
+  //get drug list stream
+  Stream<List<SavedDrug>> get savedDrugs {
+    return userCollection
+        .doc(uid)
+        .collection('savedList')
+        .snapshots()
+        .map(_savedDrugListFromSnapshot);
+  }
+
+  Future<void> addSavedList(itemName, itemSeq, category, expiration) async {
+    return await userCollection
+        .doc(uid)
+        .collection('savedList')
+        .doc(itemSeq)
+        .set({
+      'ITEM_NAME': itemName ?? '',
+      'ITEM_SEQ': itemSeq ?? '',
+      'category': category ?? '',
+      'expiration': expiration ?? '',
+    });
   }
 }

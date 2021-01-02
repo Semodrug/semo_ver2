@@ -46,6 +46,9 @@ dependencies:
   flappy_search_bar: ^1.7.2
   flutter_rating_bar: ^3.2.0+1
   fl_chart: ^0.12.2
+  flutter_datetime_picker:
+    git:
+      url: https://github.com/espresso3389/flutter_datetime_picker
 
   #and so on
   flutter_launcher_icons: ^0.8.1

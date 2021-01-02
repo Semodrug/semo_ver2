@@ -38,3 +38,12 @@ class SpecInfo {
 
   SpecInfo({this.eeDataList, this.nbDataList, this.udDataList});
 }
+
+class SavedDrug {
+  final String item_name;
+  final String item_seq;
+  final String category;
+  final String expiration;
+
+  SavedDrug({this.item_name, this.item_seq, this.category, this.expiration});
+}
