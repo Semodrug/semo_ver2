@@ -10,8 +10,24 @@ class ReviewService {
 
   final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
 
-//  Future<void> updateReviewData(/*TODO: parameters with pill otc code?*/) async {
-//    return await reviewCollection.doc(uid/*todo: CHANGE THIS*/).set({
+  //    widget.record.reference.update({
+  Future<void> updateReviewData(QuerySnapshot snapshot) async {
+    return await snapshot.docs.map((doc) {
+      doc.reference.update({
+       'effect':  doc.data()['effect'],
+      'sideEffect': doc.data()['sideEffect'],
+      'effectText': doc.data()['effectText'],
+      'sideEffectText': doc.data()['sideEffectText'],
+      'overallText': doc.data()['overallText'],
+      //List<String> favoriteSelected = List<String>();
+      'favoriteSelected': doc.data()['favoriteSelected'],
+      'starRating': doc.data()['starRating'],
+      'noFavorite': doc.data()['noFavorite'],
+      });
+    });
+
+
+//    doc(uid/*todo: CHANGE THIS*/).set({
 //      //Todo: set data using parameters
 //      'effect': effect,
 //      'sideEffect': sideEffect,
@@ -22,6 +38,42 @@ class ReviewService {
 //      'favoriteSelected': favoriteSelected,
 //      'starRating': starRating,
 //      'noFavorite': noFavorite,
+//    });
+  }
+
+
+//  final record = Record.fromSnapshot(data);
+//  Record.fromSnapshot(DocumentSnapshot snapshot)
+//      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+//  Record.fromMap(Map<String, dynamic> map, {this.reference})
+//      : assert(map['name'] != null),
+//        assert(map['effectText'] != null),
+//        assert(map['sideEffectText'] != null),
+//        assert(map['overallText'] != null),
+//        assert(map['id'] != null),
+//        assert(map['noFavorite'] != null),
+//        assert(map['uid'] != null),
+//
+//        name = map['name'],
+//        effectText = map['effectText'],
+//        sideEffectText = map['sideEffectText'],
+//        overallText = map['overallText'],
+//        id = map['id'],
+////        favoriteSelected = map['favoriteSelected'],
+////        favoriteSelected = favoriteSelected.map((item){return item.toMap();}).toList(),
+//        noFavorite = map['noFavorite'],
+//        uid = map['uid'],
+//        effect = map['effect'],
+//        sideEffect = map['sideEffect'],
+//        starRating = map['starRating'];
+//  void _registerReview() {
+//    widget.record.reference.update({
+//      "effect": effect,
+//      "sideEffect" : sideEffect,
+//      "starRating": starRating,
+//      "effectText" : effectText,
+//      "sideEffectText": sideEffectText,
+//      "overallText": overallText,
 //    });
 //  }
 
@@ -34,9 +86,11 @@ class ReviewService {
         sideEffectText: doc.data()['sideEffectText'] ?? '',
         overallText: doc.data()['overallText'] ?? '',
         //List<String> favoriteSelected = List<String>();
-        starRating: doc.data()['starRating'] ?? '0',
-        noFavorite: doc.data()['noFavorite'] ?? '0',
+//        favoriteSelected: doc.data()['favoriteSelected'] ?? '',
+        starRating: doc.data()['starRating'] ?? 0,
+        noFavorite: doc.data()['noFavorite'] ?? 0,
         uid: doc.data()['uid'] ?? '',
+        id: doc.data()['id'] ?? '',
       );
     }).toList();
   }

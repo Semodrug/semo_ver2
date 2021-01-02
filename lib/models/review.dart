@@ -8,9 +8,10 @@ class Review {
   final num starRating;
   var noFavorite;
   final String uid;
+  final String id;
 
 //  final String name;
 //  final String uid;
 
-  Review({this.effect, this.sideEffect, this.effectText, this.sideEffectText, this.overallText, this.favoriteSelected, this.starRating,this.noFavorite, this.uid});
+  Review({this.effect, this.sideEffect, this.effectText, this.sideEffectText, this.overallText, this.favoriteSelected, this.starRating,this.noFavorite, this.uid, this.id});
 }

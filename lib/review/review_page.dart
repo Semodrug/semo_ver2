@@ -262,7 +262,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }*/
 
-  Widget _review(record) {
+/*  Widget _review(record) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -358,7 +358,7 @@ class _ReviewPageState extends State<ReviewPage> {
         Padding(padding: EdgeInsets.only(top: 6.0)),
       ],
     );
-  }
+  }*/
 
 
 /*  Widget topOfReview(BuildContext context) {
@@ -488,7 +488,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );*/
   }
 
-  Widget _buildBody(BuildContext context) {
+/*  Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('Reviews').snapshots(),
       builder: (context, snapshot) {
@@ -516,10 +516,10 @@ class _ReviewPageState extends State<ReviewPage> {
         searchResults.map((data) => _buildListItem(context, data)).toList(),
       ),
     );
-  }
+  }*/
 
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+/*  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Record.fromSnapshot(data);
     FirebaseAuth auth = FirebaseAuth.instance;
     List<String> names = List.from(data["favoriteSelected"]);
@@ -586,7 +586,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 ],
               )
             ]));
-  }
+  }*/
 
 /*  Widget _starAndIdAndMore(record, context, auth) {
     return Row(
@@ -706,7 +706,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget buildBottomSheetWriter(BuildContext context, record) {
+/*  Widget buildBottomSheetWriter(BuildContext context, record) {
     return SizedBox(
         child: Container(
 //                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -732,9 +732,9 @@ class _ReviewPageState extends State<ReviewPage> {
           )
         )
     );
-  }
+  }*/
 
-  Future<void> _showDeleteDialog(record) async {
+  /*Future<void> _showDeleteDialog(record) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -771,9 +771,9 @@ class _ReviewPageState extends State<ReviewPage> {
         );
       },
     );
-  }
+  }*/
 
-  Widget buildBottomSheetAnonymous(BuildContext context) {
+  /*Widget buildBottomSheetAnonymous(BuildContext context) {
     return SizedBox(
         child: Container(
 //                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -799,11 +799,11 @@ class _ReviewPageState extends State<ReviewPage> {
             )
         )
     );
-  }
+  }*/
 
 
 
-  Widget _starAndIdAndMore(record, context, auth) {
+/*  Widget _starAndIdAndMore(record, context, auth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -886,7 +886,7 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
       ],
     );
-  }
+  }*/
 }
 
 class Record {
