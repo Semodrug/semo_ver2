@@ -16,24 +16,13 @@ class _DrugListState extends State<DrugList> {
 
   @override
   Widget build(BuildContext context) {
-
-    //List<Drug> drugs = Provider.of<List<Drug>>(context) ?? [];
-    //totalNum = drugs.length;
+    //일단 total num을 위해 임시로 열어둔 프로바이더
+    List<Drug> drugs = Provider.of<List<Drug>>(context) ?? [];
+    totalNum = drugs.length;
 
     return Column(
       children: [
         _countDropDown(context, totalNum),
-        /*
-        Expanded(
-          child:
-          ListView.builder(
-              itemCount: drugs.length,
-              itemBuilder: (context, index){
-                return DrugTile(drug: drugs[index], index: (index+1));
-              },
-          ),
-        ),
-        */
         _buildBody(context, _filterOrSort)
       ],
     );
@@ -51,7 +40,6 @@ class _DrugListState extends State<DrugList> {
     return StreamBuilder<List<Drug>>(
       stream: DatabaseService().setter(_filterOrSort),
       builder: (context, stream){
-        //List<Drug> drugs = snapshot.data;
         return _buildList(context, _filterOrSort, stream.data);
       }
     );
@@ -59,9 +47,8 @@ class _DrugListState extends State<DrugList> {
   }
 
   Widget _buildList(BuildContext context,  String _filterOrSort, List<Drug> drugs ) {
-    //drugs = DatabaseService().setter(_filterOrSort);
-    //final drugListByQuery = Provider.of<List<Drug>>(context) ?? [];
-    //final drugs = Provider.of<List<Drug>>(context, listen: false) ?? [];
+    print('길이 알려주기 !! '+ '${drugs.length}');
+    totalNum = drugs.length;
 
     return Expanded(
           child:
@@ -71,11 +58,6 @@ class _DrugListState extends State<DrugList> {
             return DrugTile(drug: drugs[index], index: (index+1));
           },
         ),
-
-//        ListView(
-//          padding: EdgeInsets.all(5.0),
-//          children: drugs.map((data) => DrugTile(drug: data)).toList(),
-//        )
       );
   }
 
