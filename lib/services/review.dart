@@ -45,5 +45,41 @@ class ReviewService {
         .map(_reviewListFromSnapshot);
   }
 
+
+
+
+
+
+/*return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Reviews').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError)
+          return Text('Something went wrong');
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Text("Loading");
+
+        length = snapshot.data.documents.length;
+//        snapshot.data.documents.map((DocumentSnapshot document) {
+//           sum += document.data()['starRating'];
+//        });
+
+        snapshot.data.docs.forEach((doc) {
+          sum += doc["starRating"];
+        });
+        ratingResult = sum/length;
+        print(ratingResult);
+
+
+        snapshot.data.docs.forEach((doc) {
+          doc["effect"] == "good" ? effectGood++ :
+          doc["effect"] == "soso" ? effectSoso++ : effectBad ++;
+        });
+
+        snapshot.data.docs.forEach((doc) {
+          doc["sideEffect"] == "yes" ? sideEffectYes++ : sideEffectNo++;
+        });
+
+ */
+
 }
 
