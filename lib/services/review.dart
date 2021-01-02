@@ -5,8 +5,8 @@ import 'package:semo_ver2/models/review.dart';
 
 class ReviewService {
 
-  final String uid;
-  ReviewService({ this.uid });
+//  final String uid;
+//  ReviewService({ this.uid });
 
   final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
 
@@ -36,6 +36,7 @@ class ReviewService {
         //List<String> favoriteSelected = List<String>();
         starRating: doc.data()['starRating'] ?? '0',
         noFavorite: doc.data()['noFavorite'] ?? '0',
+        uid: doc.data()['uid'] ?? '',
       );
     }).toList();
   }

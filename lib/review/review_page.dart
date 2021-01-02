@@ -10,6 +10,7 @@ import 'edit_review.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'get_rating.dart';
+import 'review_list.dart';
 
 class ReviewPage extends StatefulWidget {
   @override
@@ -78,6 +79,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 )),
   //TODO: save _searchBar()
           _searchBar(),
+            ReviewList(_searchText)
   //        _buildBody(context)
           ],
         )
