@@ -56,7 +56,7 @@ class _MyPageState extends State<MyPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;
-            print(userData.name);
+            // print("SUMI's TEST: ${userData.name}");
             return Column(
               children: [
                 Container(

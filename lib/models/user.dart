@@ -14,7 +14,7 @@ class UserData {
 
   final String phone;
 
-  final bool isPragnant;
+  final bool isPregnant;
   final List diseaseList;
 
   UserData(
@@ -23,6 +23,12 @@ class UserData {
       this.sex,
       this.birth,
       this.phone,
-      this.isPragnant,
+      this.isPregnant,
       this.diseaseList});
+}
+
+class Lists {
+  final List favoriteLists;
+
+  Lists({this.favoriteLists});
 }
