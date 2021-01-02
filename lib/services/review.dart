@@ -5,8 +5,8 @@ import 'package:semo_ver2/models/review.dart';
 
 class ReviewService {
 
-  final String uid;
-  ReviewService({ this.uid });
+//  final String uid;
+//  ReviewService({ this.uid });
 
   final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
 
@@ -36,6 +36,7 @@ class ReviewService {
         //List<String> favoriteSelected = List<String>();
         starRating: doc.data()['starRating'] ?? '0',
         noFavorite: doc.data()['noFavorite'] ?? '0',
+        uid: doc.data()['uid'] ?? '',
       );
     }).toList();
   }
@@ -44,6 +45,42 @@ class ReviewService {
     return reviewCollection.snapshots()
         .map(_reviewListFromSnapshot);
   }
+
+
+
+
+
+
+/*return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('Reviews').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError)
+          return Text('Something went wrong');
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Text("Loading");
+
+        length = snapshot.data.documents.length;
+//        snapshot.data.documents.map((DocumentSnapshot document) {
+//           sum += document.data()['starRating'];
+//        });
+
+        snapshot.data.docs.forEach((doc) {
+          sum += doc["starRating"];
+        });
+        ratingResult = sum/length;
+        print(ratingResult);
+
+
+        snapshot.data.docs.forEach((doc) {
+          doc["effect"] == "good" ? effectGood++ :
+          doc["effect"] == "soso" ? effectSoso++ : effectBad ++;
+        });
+
+        snapshot.data.docs.forEach((doc) {
+          doc["sideEffect"] == "yes" ? sideEffectYes++ : sideEffectNo++;
+        });
+
+ */
 
 }
 

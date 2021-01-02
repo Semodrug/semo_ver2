@@ -8,7 +8,6 @@ class ReviewContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     return
       Card(
 //        margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
@@ -18,4 +17,7 @@ class ReviewContainer extends StatelessWidget {
         ),
       );
   }
+
+
+
 }
