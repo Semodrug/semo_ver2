@@ -16,28 +16,14 @@ class _DrugListState extends State<DrugList> {
 
   @override
   Widget build(BuildContext context) {
-    final drugs = Provider.of<List<Drug>>(context) ?? [];
-    totalNum = drugs.length;
-    Query query = DatabaseService().getDrugQuery();
 
-    Stream<QuerySnapshot> data = query.snapshots();
+    //List<Drug> drugs = Provider.of<List<Drug>>(context) ?? [];
+    //totalNum = drugs.length;
 
-
-    switch (_filterOrSort) {
-      case "이름순":
-        query = query.orderBy('ITEM_NAME', descending: false);
-        break;
-
-      case "리뷰 많은 순":
-        query = query.orderBy('review', descending: false);
-        break;
-    }
-    return _buildBody(context, data);
-
-    /*
     return Column(
       children: [
         _countDropDown(context, totalNum),
+        /*
         Expanded(
           child:
           ListView.builder(
@@ -47,9 +33,11 @@ class _DrugListState extends State<DrugList> {
               },
           ),
         ),
+        */
+        _buildBody(context, _filterOrSort)
       ],
     );
-    */
+
     /*
     return ListView(
       padding: EdgeInsets.all(5.0),
@@ -58,39 +46,39 @@ class _DrugListState extends State<DrugList> {
     */
   }
 
-  Widget _buildBody(BuildContext context, Stream<QuerySnapshot> drugs) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: drugs,
-        builder: (context, stream) {
-          if (!stream.hasData) return LinearProgressIndicator();
 
-          return _buildList(context, drugs);
-        });
+  Widget _buildBody(BuildContext context, String _filterOrSort) {
+    return StreamBuilder<List<Drug>>(
+      stream: DatabaseService().setter(_filterOrSort),
+      builder: (context, stream){
+        //List<Drug> drugs = snapshot.data;
+        return _buildList(context, _filterOrSort, stream.data);
+      }
+    );
+
   }
 
-  Widget _buildList(BuildContext context, Stream<QuerySnapshot> drugs) {
-    //final drugs = Provider.of<List<Drug>>(context) ?? [];
+  Widget _buildList(BuildContext context,  String _filterOrSort, List<Drug> drugs ) {
+    //drugs = DatabaseService().setter(_filterOrSort);
+    //final drugListByQuery = Provider.of<List<Drug>>(context) ?? [];
+    //final drugs = Provider.of<List<Drug>>(context, listen: false) ?? [];
 
-    return Column(
-      children: [
-        _countDropDown(context, totalNum),
-        Expanded(
-            child:
-          ListView.builder(
-            itemCount: drugs.length,
-            itemBuilder: (context, index){
-              return DrugTile(drug: drugs[index], index: (index+1));
-            },
-          ),
+    return Expanded(
+          child:
+        ListView.builder(
+          itemCount: drugs.length,
+          itemBuilder: (context, index){
+            return DrugTile(drug: drugs[index], index: (index+1));
+          },
+        ),
 
 //        ListView(
 //          padding: EdgeInsets.all(5.0),
 //          children: drugs.map((data) => DrugTile(drug: data)).toList(),
 //        )
-        ),
-      ],
-    );
+      );
   }
+
 
   Widget _countDropDown(context, num) {
     return Column(
