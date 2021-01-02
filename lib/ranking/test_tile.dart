@@ -2,27 +2,22 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/review/phil_info.dart';
 
-
 class DrugTile extends StatelessWidget {
-
   final Drug drug;
   final int index;
 
   DrugTile({this.drug, this.index});
-
 
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: GestureDetector(
-          onTap: () =>
-          {
+          onTap: () => {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    PhilInfoPage(drug_item_seq: drug.item_seq),
+                builder: (context) => PhilInfoPage(drugItemSeq: drug.item_seq),
               ),
             ),
             print('===> pushed'),
@@ -35,18 +30,24 @@ class DrugTile extends StatelessWidget {
                 color: Colors.white,
                 child: Row(
                   children: [
-                   SizedBox(
+                    SizedBox(
                       width: 40,
                       child: Container(
-                        margin: EdgeInsets.only(left: 10, right: 5),
-                        //padding: EdgeInsets.only(left: 0, right: 5),
-                          child: Text(' ${index.toString()}위', style: TextStyle(fontSize: 12),)),
+                          margin: EdgeInsets.only(left: 10, right: 5),
+                          //padding: EdgeInsets.only(left: 0, right: 5),
+                          child: Text(
+                            ' ${index.toString()}위',
+                            style: TextStyle(fontSize: 12),
+                          )),
                     ),
                     Container(
-                        padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-                        child: AspectRatio(
-                          aspectRatio: 2/2,
-                            child: Image.network(drug.image,)),),
+                      padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+                      child: AspectRatio(
+                          aspectRatio: 2 / 2,
+                          child: Image.network(
+                            drug.image,
+                          )),
+                    ),
                     Container(
                         margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
                         //padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -56,15 +57,16 @@ class DrugTile extends StatelessWidget {
                           children: [
                             Text(
                               drug.entp_name,
-                              style: TextStyle(
-                                  fontSize: 11, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 11, color: Colors.grey),
                             ),
                             Expanded(
                               child: Row(children: [
                                 Text(
                                   drug.item_name,
                                   style: TextStyle(
-                                      fontSize: 15, fontWeight: FontWeight.bold),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
                                 )
                               ]),
                             ),
@@ -94,17 +96,14 @@ class DrugTile extends StatelessWidget {
                             ),
                             Expanded(
                                 child: Row(
-                                  children: [
-                                    _categoryButton((drug.category))
-                                  ],
-                                )),
+                              children: [_categoryButton((drug.category))],
+                            )),
                           ],
                         )),
                   ],
                 )),
           ),
-        )
-    );
+        ));
   }
 }
 
@@ -127,10 +126,3 @@ Widget _categoryButton(str) {
     ),
   );
 }
-
-
-
-
-
-
-
