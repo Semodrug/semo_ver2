@@ -17,7 +17,7 @@ class ReviewList extends StatefulWidget {
 class _ReviewListState extends State<ReviewList> {
   @override
   Widget build(BuildContext context) {
-    final reviews = Provider.of<List<Review>>(context) ?? [];
+    final reviews = Provider.of<List<Review>>(context, listen: true) ?? [];
     List<Review> searchResults = [];
     for (Review review in reviews) {
       if (review.toString().contains(widget.searchText)) {
@@ -198,7 +198,8 @@ class _ReviewListState extends State<ReviewList> {
                                         onPressed: () {
                                           Navigator.push(context, MaterialPageRoute(
                                             //TODO
-//                                              builder: (context) => EditReview(record)
+                                              builder: (context) => EditReview(review.documentId)
+
                                           ));
                                         },
                                         child: Center(child: Text("수정하기",
