@@ -10,7 +10,7 @@ class ReviewService {
   final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
 
   Future<void> updateReviewData(String effect, String sideEffect, String effectText, String sideEffectText, String overallText, num starRating) async {
-    return await reviewCollection.doc(documentId).set({
+    return await reviewCollection.doc(documentId).update({
       'effect': effect,
       'sideEffect': sideEffect,
       'effectText': effectText,
