@@ -199,7 +199,7 @@ class _ReviewListState extends State<ReviewList> {
                                           Navigator.push(context, MaterialPageRoute(
                                             //TODO
                                               builder: (context) => EditReview(review.documentId)
-
+//                                              builder: (context) => EditReview(review)
                                           ));
                                         },
                                         child: Center(child: Text("수정하기",

@@ -14,6 +14,9 @@ class EditReview extends StatefulWidget {
   String docId;
   EditReview(this.docId, {Key key}) : super(key: key);
 
+//  Review review;
+//  EditReview(this.review, {Key key}) : super(key: key);
+
   _EditReviewState createState() => _EditReviewState();
 }
 
@@ -49,7 +52,6 @@ class _EditReviewState extends State<EditReview> {
 //    myControllerSideEffect.text = widget.review.sideEffectText;
 //    myControllerOverall.text = widget.review.overallText;
 
-//    final review = Provider.of<Review>(context, listen: true);
     return StreamProvider<Review>.value(
         value: ReviewService().getSingleReview(widget.docId),
         child: Scaffold(
@@ -77,6 +79,14 @@ class _EditReviewState extends State<EditReview> {
               },
               child: Consumer<Review>(
                   builder: (context, value, child){
+//                    final review = Provider.of<Review>(context, /*listen: true*/);
+                    //TODO: I don't know why it's not working ? cause value.effect changes?
+                    effect = value.effect;
+//                    print("EFFECT@@@@@"+effect);
+//                    sideEffect = value.sideEffect;
+                    myControllerEffect.text = value.effectText;
+                    myControllerSideEffect.text = value.sideEffectText;
+                    myControllerOverall.text = value.overallText;
                     return ListView(
                       children: <Widget>[
                         //TODO: Bring pill information
@@ -106,6 +116,7 @@ class _EditReviewState extends State<EditReview> {
                                           color: Colors.teal[100],
                                         ),
                                         Padding(padding: EdgeInsets.only(right: 3)),
+                                        //TODO!!!
                                         Text("4.26 (3개) ", style: TextStyle(fontSize: 15, color: Colors.black)),
                                       ],
                                     ),
@@ -142,7 +153,6 @@ class _EditReviewState extends State<EditReview> {
                                   ),
                                   onRatingUpdate: (rating) {
                                     starRating = rating;
-                                    print(rating);
                                   },
                                 ),
                                 Padding(padding: EdgeInsets.only(top: 3)),
@@ -175,15 +185,15 @@ class _EditReviewState extends State<EditReview> {
                                                 width: 35,
                                                 height: 35,
                                                 decoration: BoxDecoration(
-                                                    color: effect == "bad" ? Colors.amber[300]: Colors.grey[300],
+                                                    color: value.effect == "bad" ? Colors.amber[300]: Colors.grey[300],
                                                     shape: BoxShape.circle)),
                                             onTap: () async {
                                               setState(()  {
                                                 effect = "bad";
                                               });
                                               //TODO
-//                                              await ReviewService(documentId: value.documentId).updateEffect(
-//                                                  "bad");
+                                              await ReviewService(documentId: value.documentId).updateEffect(
+                                                  "bad");
                                             }
                                         ),
                                         Padding(padding: EdgeInsets.only(top: 10)),
@@ -200,15 +210,15 @@ class _EditReviewState extends State<EditReview> {
                                                 width: 35,
                                                 height: 35,
                                                 decoration: BoxDecoration(
-                                                    color: effect == "soso" ? Colors.amber[300]: Colors.grey[300],
+                                                    color: value.effect == "soso" ? Colors.amber[300]: Colors.grey[300],
                                                     shape: BoxShape.circle)),
                                             onTap: () async {
                                               setState(()  {
                                                 effect = "soso";
                                               });
                                               //TODO
-//                                              await ReviewService(documentId: value.documentId).updateEffect(
-//                                                  "soso");
+                                              await ReviewService(documentId: value.documentId).updateEffect(
+                                                  "soso");
                                             }
                                         ),
 
@@ -226,15 +236,15 @@ class _EditReviewState extends State<EditReview> {
                                                 width: 35,
                                                 height: 35,
                                                 decoration: BoxDecoration(
-                                                    color: effect == "good" ? Colors.amber[300]: Colors.grey[300],
+                                                    color: value.effect == "good" ? Colors.amber[300]: Colors.grey[300],
                                                     shape: BoxShape.circle)),
                                             onTap: () async {
                                               setState(()  {
                                                 effect = "good";
                                               });
                                               //TODO
-//                                              await ReviewService(documentId: value.documentId).updateEffect(
-//                                                  "good");
+                                              await ReviewService(documentId: value.documentId).updateEffect(
+                                                  "good");
                                             }
                                         ),
                                         Padding(padding: EdgeInsets.only(top: 10)),
@@ -290,22 +300,22 @@ class _EditReviewState extends State<EditReview> {
                                                 height: 35,
                                                 decoration: BoxDecoration(
 //                                                    color: widget.review.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
-                                                    color: sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
+                                                    color: value.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
                                                     shape: BoxShape.circle)),
                                             onTap: () async {
                                               setState(() {
                                                 sideEffect = "yes";
                                               });
                                               //TODO
-//                                              await ReviewService(documentId: widget.review.documentId).updateSideEffect(
-//                                                  "yes"
-//                                              );
+                                              await ReviewService(documentId: widget.docId).updateSideEffect(
+                                                  "yes"
+                                              );
 //                                    value.sideEffectToYes();
 
                                             }
                                         ),
                                         Padding(padding: EdgeInsets.only(top: 10)),
-                                        Text("있어요", style: sideEffect == "yes"?
+                                        Text("있어요", style: value.sideEffect == "yes"?
                                         TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
                                         TextStyle(color:Colors.black87)),
                                       ],
@@ -321,15 +331,15 @@ class _EditReviewState extends State<EditReview> {
                                                 height: 35,
                                                 decoration: BoxDecoration(
 //                                                    color: widget.review.sideEffect == "no" ? Colors.greenAccent[100]: Colors.grey[300],
-                                                    color: sideEffect == "no" ? Colors.greenAccent[100]: Colors.grey[300],
+                                                    color: value.sideEffect == "no" ? Colors.greenAccent[100]: Colors.grey[300],
                                                     shape: BoxShape.circle)),
                                             onTap: () async {
                                               setState(() {
                                                 sideEffect = "no";
                                               });
-//                                              await ReviewService(documentId: widget.review.documentId).updateSideEffect(
-//                                                  "no"
-//                                              );
+                                              await ReviewService(documentId: widget.docId).updateSideEffect(
+                                                  "no"
+                                              );
 //                                    value.sideEffectToNo();
 
                                             }
@@ -415,10 +425,10 @@ class _EditReviewState extends State<EditReview> {
                                     await ReviewService(documentId: widget.docId).updateReviewData(
                                         effect ?? value.effect,
                                         sideEffect ?? value.sideEffect,
-                                        myControllerEffect.text ?? value.effectText,
-                                        myControllerSideEffect.text ?? value.sideEffectText,
-                                        myControllerOverall.text ?? value.overallText,
-                                        starRating ?? value.starRating
+                                        myControllerEffect.text /*?? value.effectText*/,
+                                        myControllerSideEffect.text /*?? value.sideEffectText*/,
+                                        myControllerOverall.text /*?? value.overallText*/,
+                                        starRating == 0 ? value.starRating : starRating/*?? value.starRating*/
                                     );
 
                                     Navigator.pop(context);
