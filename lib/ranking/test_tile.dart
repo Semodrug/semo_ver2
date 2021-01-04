@@ -1,6 +1,6 @@
 import 'package:semo_ver2/models/drug.dart';
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/review/phil_info.dart';
+import 'package:semo_ver2/drug_info/phil_info.dart';
 
 class DrugTile extends StatelessWidget {
   final Drug drug;

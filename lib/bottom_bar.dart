@@ -5,7 +5,7 @@ import 'camera/camera.dart';
 import 'home/home.dart';
 import 'mypage/my_page.dart';
 import 'ranking/ranking.dart';
-import 'review/phil_info.dart';
+import 'drug_info/phil_info.dart';
 import 'review/review_page.dart';
 
 class BottomBar extends StatefulWidget {
@@ -54,19 +54,18 @@ class _BottomBarState extends State<BottomBar> {
               MaterialPageRoute(builder: (context) => MyPage()),
             ),
           ),
-            //for test home
-            IconButton(
-              icon: Icon(
-                Icons.map,
-                color: Colors.teal[200],
-              ),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TestRanking()),
-              ),
+          //for test home
+          IconButton(
+            icon: Icon(
+              Icons.map,
+              color: Colors.teal[200],
             ),
-
-          ],
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TestRanking()),
+            ),
+          ),
+        ],
 
         backgroundColor: Colors.white,
         elevation: 0,
