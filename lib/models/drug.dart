@@ -4,9 +4,13 @@ class Drug {
   final String item_name; //약 이름
   final String item_seq; //약 seq 번호
   final String storage_method; //보관 방법
+
   final String category; //카테고리 //todo: 분류번호 넣어두기
   final String image; // 이미지
   final int review; //약마다 있는 리뷰의 개수
+  final Map eeDocData;
+  final Map nbDocData;
+  final Map udDocData;
 
 /* 수미 일단 이거는 주석처리 해둘게요 필요하면 말해줘요!!
   final String etc_otc_code;//분류: 일반의약품 ==> 안쓸듯
@@ -26,7 +30,9 @@ class Drug {
     this.category,
     this.image,
     this.review,
-
+    this.eeDocData,
+    this.nbDocData,
+    this.udDocData,
     //this.etc_otc_code, this.ingr_name,  this.main_item_name, this.material_name, this.total_content, this.valid_term
   });
 }
