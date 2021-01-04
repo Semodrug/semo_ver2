@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/services/review.dart';
 import 'edit_review.dart';
 import 'review_container.dart';
 import 'package:flutter/material.dart';
@@ -198,7 +199,7 @@ class _ReviewListState extends State<ReviewList> {
                                         onPressed: () {
                                           Navigator.push(context, MaterialPageRoute(
                                             //TODO
-                                              builder: (context) => EditReview(review.documentId)
+                                              builder: (context) => EditReview(review)
 //                                              builder: (context) => EditReview(review)
                                           ));
                                         },
@@ -209,7 +210,7 @@ class _ReviewListState extends State<ReviewList> {
                                     MaterialButton(
                                         onPressed: () {
                                           //TODO
-//                                          _showDeleteDialog(record);
+                                          _showDeleteDialog(review);
                                         },
                                         child: Center(child: Text("삭제하기",
                                             style: TextStyle(color: Colors.red[600],
@@ -266,8 +267,10 @@ class _ReviewListState extends State<ReviewList> {
                     ),
                     TextButton(
                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        record.reference.delete();
+                      onPressed: () async {
+
+                        await ReviewService(documentId: record.documentId).deleteReviewData();
+//                        record.reference.delete();
                         Navigator.of(context).pop();
                       },
                     ),
@@ -279,6 +282,35 @@ class _ReviewListState extends State<ReviewList> {
 
         );
       },
+    );
+  }
+
+
+  Widget buildBottomSheetWriter(BuildContext context, record) {
+    return SizedBox(
+        child: Container(
+//                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Wrap(
+            children: <Widget>[
+              MaterialButton(
+                onPressed: () {
+                  print("A");
+                },
+                child: Center(child: Text("수정하기",
+                    style: TextStyle(color: Colors.blue[700],
+                    fontSize: 16)))
+              ),
+              MaterialButton(
+                  onPressed: () {
+                    _showDeleteDialog(record);
+                  },
+                  child: Center(child: Text("취소",
+                      style: TextStyle(color: Colors.red[600],
+                      fontSize: 16)))
+              ),
+            ],
+          )
+        )
     );
   }
 

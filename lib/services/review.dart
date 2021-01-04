@@ -92,6 +92,10 @@ class ReviewService {
 
 
 
+  Future<void> deleteReviewData() async {
+    return await reviewCollection.doc(documentId).delete();
+  }
+
 
 }
 
