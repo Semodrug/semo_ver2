@@ -46,14 +46,14 @@ class _DrugListState extends State<DrugList> {
 
   }
 
-  Widget _buildList(BuildContext context,  String _filterOrSort, List<Drug> drugs ) {
-    print('길이 알려주기 !! '+ '${drugs.length}');
-    totalNum = drugs.length;
+   Widget _buildList  (BuildContext context,  String _filterOrSort, List<Drug> drugs )  {
+    //print('길이 알려주기 !! '+ '${drugs.length}');
+    //totalNum = drugs.length;
 
-    return Expanded(
+    return Expanded (
           child:
-        ListView.builder(
-          itemCount: drugs.length,
+        ListView.builder (
+          itemCount:  drugs.length,
           itemBuilder: (context, index){
             return DrugTile(drug: drugs[index], index: (index+1));
           },

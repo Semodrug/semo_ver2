@@ -13,6 +13,35 @@ class DatabaseService {
   // collection reference
   final CollectionReference drugCollection =
       FirebaseFirestore.instance.collection('drug');
+  Query drugQuery = FirebaseFirestore.instance.collection('drug');
+
+  //drugSnapshot 값 get이랑 set에서 해주기
+  Stream<List<Drug>> drugsSnapshots;
+
+  //get drug stream
+  Stream<List<Drug>> get drugs {
+    //초기값으로 이름순 정렬
+    drugQuery = drugQuery.orderBy('ITEM_NAME', descending: false);
+
+    drugsSnapshots = drugQuery.snapshots().map(_drugListFromSnapshot);
+    return drugsSnapshots;
+  }
+
+  Stream<List<Drug>> setter(String _filterOrSort) {
+    switch (_filterOrSort) {
+      case "이름순":
+        drugQuery = drugQuery.orderBy('ITEM_NAME', descending: false);
+        break;
+
+      case "리뷰 많은 순":
+        drugQuery = drugQuery.orderBy('review', descending: true);
+        break;
+    }
+
+    drugsSnapshots = drugQuery.snapshots().map(_drugListFromSnapshot);
+
+    return drugsSnapshots;
+  }
 
   //drug list from snapshot
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
@@ -30,10 +59,6 @@ class DatabaseService {
     }).toList();
   }
 
-  //get drug list stream
-  Stream<List<Drug>> get drugs {
-    return drugCollection.snapshots().map(_drugListFromSnapshot);
-  }
 
   /* Drug */
   // drug data from snapshots
