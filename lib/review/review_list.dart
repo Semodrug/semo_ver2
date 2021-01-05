@@ -33,8 +33,6 @@ class _ReviewListState extends State<ReviewList> {
 //        scrollDirection: Axis.vertical,
         padding: EdgeInsets.all(16.0),
         children: searchResults.map((data) => _buildListItem(context, data)).toList(),
-
-
 //       return ReviewContainer(review: reviews[index]);
       ),
 
