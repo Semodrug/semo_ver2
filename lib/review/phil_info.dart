@@ -402,7 +402,7 @@ Widget _myTab(BuildContext context, String drugItemSeq) {
             height: 6000.0,
             child: TabBarView(
               /* 여기에 은영학우님 page 넣기! */
-              children: [_specificInfo(context, drugItemSeq), ReviewPage()],
+              children: [_specificInfo(context, drugItemSeq), ReviewPage(drugItemSeq)],
             ),
           )
         ],
