@@ -11,6 +11,9 @@ import 'get_rating.dart';
 import 'review_list.dart';
 
 class ReviewPage extends StatefulWidget {
+  String drugItemSeq;
+  ReviewPage(this.drugItemSeq);
+
   @override
   _ReviewPageState createState() => _ReviewPageState();
 }
