@@ -402,7 +402,7 @@ Widget _myTab(BuildContext context, String drugItemSeq) {
             height: 6000.0,
             child: TabBarView(
               /* 여기에 은영학우님 page 넣기! */
-              children: [_underInfo(context, drugItemSeq), ReviewPage()],
+              children: [_underInfo(context, drugItemSeq), ReviewPage(drugItemSeq)],
             ),
           )
         ],
@@ -482,6 +482,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
           if (type == 'EE') {
             return ListView.builder(
                 shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
                 itemCount: specInfo.eeDataList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
@@ -490,6 +491,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
                 });
           } else if (type == 'NB') {
             return ListView.builder(
+                physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: specInfo.nbDataList.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -499,6 +501,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
                 });
           } else if (type == 'UD') {
             return ListView.builder(
+                physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: specInfo.udDataList.length,
                 itemBuilder: (BuildContext context, int index) {

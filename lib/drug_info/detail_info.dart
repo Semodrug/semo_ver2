@@ -177,6 +177,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
             infoEE = specInfo.eeDataList;
             return ListView.builder(
                 shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
                 itemCount: specInfo.eeDataList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return
@@ -187,6 +188,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
           } else if (type == 'NB') {
             infoNB = specInfo.nbDataList;
             return ListView.builder(
+                physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: specInfo.nbDataList.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -197,6 +199,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
           } else if (type == 'UD') {
             infoUD = specInfo.udDataList;
             return ListView.builder(
+                physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: specInfo.udDataList.length,
                 itemBuilder: (BuildContext context, int index) {
