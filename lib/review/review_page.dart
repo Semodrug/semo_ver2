@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/review.dart';
-import 'all_review.dart';
-import 'edit_review.dart';
-import 'searchbar.dart';
-import 'write_review.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'review_list.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'all_review.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'get_rating.dart';
+import 'review_list.dart';
 
 class ReviewPage extends StatefulWidget {
+  String drugItemSeq;
+  ReviewPage(this.drugItemSeq);
+
   @override
   _ReviewPageState createState() => _ReviewPageState();
 }
@@ -32,52 +31,6 @@ class _ReviewPageState extends State<ReviewPage> {
   final TextEditingController _filter = TextEditingController();
   FocusNode focusNode = FocusNode();
   String _searchText = "";
-
-  static const green = Color(0xff88F0BE);
-  static const yellow = Color(0xffFED74D);
-  static const red = Color(0xffFF7070);
-
-  List<PieChartSectionData> _effectChart = [
-    PieChartSectionData(
-    color: green,
-//    value: effectGood,
-    title: 'good',
-    radius: 20,
-    titleStyle: TextStyle(color: Colors.white, fontSize:12),
-    ),
-    PieChartSectionData(
-      color: yellow,
-      value: 40,
-      title: 'Food',
-      radius: 20,
-      titleStyle: TextStyle(color: Colors.white, fontSize:12),
-    ),
-    PieChartSectionData(
-      color: red,
-      value: 20,
-      title: 'Food',
-      radius: 20,
-      titleStyle: TextStyle(color: Colors.white, fontSize:12),
-    )
-  ];
-
-  List<PieChartSectionData> _sideEffectChart = [
-    PieChartSectionData(
-      color: green,
-      value: 40,
-      title: 'Food',
-      radius: 20,
-      titleStyle: TextStyle(color: Colors.white, fontSize:12),
-    ),
-    PieChartSectionData(
-      color: yellow,
-      value: 40,
-      title: 'Food',
-      radius: 20,
-      titleStyle: TextStyle(color: Colors.white, fontSize:12),
-    ),
-  ];
-
   FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
@@ -86,13 +39,16 @@ class _ReviewPageState extends State<ReviewPage> {
       value: ReviewService().reviews,
       child: Scaffold(
 //        body: topOfReview(context),
+//TODO Save reviewList()
 //        body: ReviewList()
+//          body: GetRating()
+
       //below is top of review
         body:  Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             SizedBox(height:10),
-            _totalRating(),
+            GetRating(),
             Container(
               height: 4,
               color: Colors.grey[200],
@@ -123,7 +79,8 @@ class _ReviewPageState extends State<ReviewPage> {
                   ],
                 )),
   //TODO: save _searchBar()
-  //        _searchBar(),
+          _searchBar(),
+            ReviewList(_searchText)
   //        _buildBody(context)
           ],
         )
@@ -136,7 +93,7 @@ class _ReviewPageState extends State<ReviewPage> {
 //    );
 
 
-  Widget _effectPieChart(good, soso, bad) {
+/*  Widget _effectPieChart(good, soso, bad) {
     double sum = (good+soso+bad)*1.0;
     double effectGood = (good/sum)*100;
     double effectSoso = (soso/sum)*100;
@@ -183,7 +140,6 @@ class _ReviewPageState extends State<ReviewPage> {
       ),
     );
   }
-
   Widget _sideEffectPieChart(yes, no) {
     double sum = (yes + no)*1.0;
     double sideEffectYes = (yes/sum)*100;
@@ -221,9 +177,9 @@ class _ReviewPageState extends State<ReviewPage> {
           )
       ),
     );
-  }
+  }*/
 
-  Widget _totalRating() {
+/*  Widget _totalRating() {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: Column(
@@ -243,9 +199,9 @@ class _ReviewPageState extends State<ReviewPage> {
             _tapToRate()
           ],
         ));
-  }
+  }*/
 
-  Widget _tapToRate() {
+/*  Widget _tapToRate() {
     return RatingBar.builder(
       initialRating:3,
       minRating: 1,
@@ -262,12 +218,12 @@ class _ReviewPageState extends State<ReviewPage> {
       ),
       onRatingUpdate: (rating) {
         //TODO: add rating!!!!!!!!!!!!!!!!!!!!!!!!
-        _showMyDialog();
+//        _showMyDialog();
       },
     );
-  }
+  }*/
 
-  Future<void> _showMyDialog() async {
+/*  Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -305,9 +261,9 @@ class _ReviewPageState extends State<ReviewPage> {
         );
       },
     );
-  }
+  }*/
 
-  Widget _review(record) {
+/*  Widget _review(record) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -403,10 +359,10 @@ class _ReviewPageState extends State<ReviewPage> {
         Padding(padding: EdgeInsets.only(top: 6.0)),
       ],
     );
-  }
+  }*/
 
 
-  Widget topOfReview(BuildContext context) {
+/*  Widget topOfReview(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -447,7 +403,7 @@ class _ReviewPageState extends State<ReviewPage> {
 //        _buildBody(context)
       ],
     );
-  }
+  }*/
 
 
   //BuildContext context, List<DocumentSnapshot> snapshot
@@ -461,7 +417,17 @@ class _ReviewPageState extends State<ReviewPage> {
     int sideEffectYes = 0;
     int sideEffectNo = 0;
 
-    return StreamBuilder<QuerySnapshot>(
+    GetRating();
+
+
+
+//    Stream<List<Review>> get reviews {
+//      return FirebaseFirestore.instance.collection('Reviews').snapshots()
+//          .map(_reviewListFromSnapshot);
+//    }
+
+    //TODO: CHANGE into provider
+    /*return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('Reviews').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError)
@@ -519,15 +485,11 @@ class _ReviewPageState extends State<ReviewPage> {
 
             ],
           );
-
-
-
-
       },
-    );
+    );*/
   }
 
-  Widget _buildBody(BuildContext context) {
+/*  Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('Reviews').snapshots(),
       builder: (context, snapshot) {
@@ -555,10 +517,10 @@ class _ReviewPageState extends State<ReviewPage> {
         searchResults.map((data) => _buildListItem(context, data)).toList(),
       ),
     );
-  }
+  }*/
 
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+/*  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Record.fromSnapshot(data);
     FirebaseAuth auth = FirebaseAuth.instance;
     List<String> names = List.from(data["favoriteSelected"]);
@@ -625,7 +587,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 ],
               )
             ]));
-  }
+  }*/
 
 /*  Widget _starAndIdAndMore(record, context, auth) {
     return Row(
@@ -665,7 +627,7 @@ class _ReviewPageState extends State<ReviewPage> {
   }*/
 
   Widget _searchBar() {
-    return             Container(
+    return Container(
       width: 370,
       height: 45,
       //padding: EdgeInsets.only(top: 3,),
@@ -745,7 +707,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget buildBottomSheetWriter(BuildContext context, record) {
+/*  Widget buildBottomSheetWriter(BuildContext context, record) {
     return SizedBox(
         child: Container(
 //                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -771,9 +733,9 @@ class _ReviewPageState extends State<ReviewPage> {
           )
         )
     );
-  }
+  }*/
 
-  Future<void> _showDeleteDialog(record) async {
+  /*Future<void> _showDeleteDialog(record) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -810,9 +772,9 @@ class _ReviewPageState extends State<ReviewPage> {
         );
       },
     );
-  }
+  }*/
 
-  Widget buildBottomSheetAnonymous(BuildContext context) {
+  /*Widget buildBottomSheetAnonymous(BuildContext context) {
     return SizedBox(
         child: Container(
 //                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -838,11 +800,11 @@ class _ReviewPageState extends State<ReviewPage> {
             )
         )
     );
-  }
+  }*/
 
 
 
-  Widget _starAndIdAndMore(record, context, auth) {
+/*  Widget _starAndIdAndMore(record, context, auth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -925,7 +887,7 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
       ],
     );
-  }
+  }*/
 }
 
 class Record {

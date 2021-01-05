@@ -230,6 +230,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_datetime_picker:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "7681e2065405b1e194423e0af113712573486c9f"
+      url: "https://github.com/espresso3389/flutter_datetime_picker"
+    source: git
+    version: "1.4.0"
   flutter_launcher_icons:
     dependency: "direct main"
     description:

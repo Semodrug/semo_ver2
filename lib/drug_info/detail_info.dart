@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/drug_info/search_highlighting.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/loading.dart';
+
+//다은 추가
+List infoEE;
+List infoNB;
+List infoUD;
+String storage;
+String entp_name;
+//추가 끝
+
 
 class DetailInfo extends StatefulWidget {
   final String drugItemSeq;
@@ -44,9 +54,43 @@ class _DetailInfoState extends State<DetailInfo> {
         ),
       ),
       backgroundColor: Colors.white,
-      body: Column(
+      body:
+
+      Column(
         children: [
-          Text('search bar 자리'),
+          Center(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
+              child: SizedBox(
+                  width: 390,
+                  height: 35,
+                  child: FlatButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.search, size: 20),
+                        Text("어떤 약 정보를 찾고 계세요? "),
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                          SearchHighlightingScreen(infoEE: infoEE, infoNB: infoNB, infoUD: infoUD, storage: storage, entp_name: entp_name))
+                      );
+                    },
+                    textColor: Colors.grey[500],
+                    color: Colors.grey[200],
+                    shape: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            style: BorderStyle.solid,
+                            width: 1.0,
+                            color: Colors.white),
+                        borderRadius: new BorderRadius.circular(8.0)),
+                  )),
+            ),
+          ),
           Expanded(child: _specificInfo(context, widget.drugItemSeq))
         ],
       ),
@@ -62,6 +106,8 @@ Widget _specificInfo(BuildContext context, String drugItemSeq) {
         print(drugItemSeq);
         if (snapshot.hasData) {
           Drug drug = snapshot.data;
+          storage = drug.storage_method;
+          entp_name = drug.entp_name;
           return Padding(
             padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
             child: Column(
@@ -115,6 +161,8 @@ Widget _specificInfo(BuildContext context, String drugItemSeq) {
       });
 }
 
+
+
 Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
   return StreamBuilder<SpecInfo>(
       stream: DatabaseService(itemSeq: drugItemSeq).specInfo,
@@ -123,15 +171,18 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
           SpecInfo specInfo = snapshot.data;
           // print("SUMI's TEST: ${specInfo.eeDataList}");
           if (type == 'EE') {
+            infoEE = specInfo.eeDataList;
             return ListView.builder(
                 shrinkWrap: true,
                 itemCount: specInfo.eeDataList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Text(
-                    specInfo.eeDataList[index].toString(),
-                  );
+                  return
+                    Text(
+                      specInfo.eeDataList[index].toString(),
+                    );
                 });
           } else if (type == 'NB') {
+            infoNB = specInfo.nbDataList;
             return ListView.builder(
                 shrinkWrap: true,
                 itemCount: specInfo.nbDataList.length,
@@ -141,6 +192,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
                   );
                 });
           } else if (type == 'UD') {
+            infoUD = specInfo.udDataList;
             return ListView.builder(
                 shrinkWrap: true,
                 itemCount: specInfo.udDataList.length,
