@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:semo_ver2/review/phil_info.dart';
+import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'home.dart';
 
 String search;
@@ -117,8 +117,7 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                     size: 20,
                   ),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.cancel,
-                        size: 20, color: Colors.teal[400]),
+                    icon: Icon(Icons.cancel, size: 20, color: Colors.teal[400]),
                     onPressed: () {
 //                                  setState(() {
 //                                    _filter.clear();
@@ -129,13 +128,10 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                   hintText: '어떤 약 정보를 찾고 계세요?',
                   labelStyle: TextStyle(color: Colors.grey),
                   focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.transparent)),
+                      borderSide: BorderSide(color: Colors.transparent)),
                   enabledBorder: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(10)),
-                      borderSide:
-                          BorderSide(color: Colors.transparent)),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(color: Colors.transparent)),
                 ),
               )),
             ],
