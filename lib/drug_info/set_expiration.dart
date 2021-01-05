@@ -103,22 +103,20 @@ class _ExpirationState extends State<Expiration> {
                 ),
                 _categoryButton(drug.category),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 20,
-                      ),
-                      child: Text(
-                        '처방일',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                    Text(
+                      '처방일',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 4,
                     ),
                     FlatButton(
+                        padding: EdgeInsets.zero,
                         onPressed: () {
                           // print(time);
                           DatePicker.showDatePicker(context,

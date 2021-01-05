@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/drug_info/detail_info.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/review/set_expiration.dart';
+import 'package:semo_ver2/drug_info/set_expiration.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/loading.dart';
 
-import 'review_page.dart';
-import 'write_review.dart';
+import '../review/review_page.dart';
+import '../review/write_review.dart';
 
 final fireInstance = FirebaseFirestore.instance;
 // TODO: drug도 provider 필요!!!
@@ -402,7 +402,7 @@ Widget _myTab(BuildContext context, String drugItemSeq) {
             height: 6000.0,
             child: TabBarView(
               /* 여기에 은영학우님 page 넣기! */
-              children: [_specificInfo(context, drugItemSeq), ReviewPage(drugItemSeq)],
+              children: [_underInfo(context, drugItemSeq), ReviewPage()],
             ),
           )
         ],
@@ -411,39 +411,67 @@ Widget _myTab(BuildContext context, String drugItemSeq) {
 
 //TODO: After controller data, I have to re-touch this widget
 /* 약의 자세한 정보들 */
-Widget _specificInfo(BuildContext context, String drugItemSeq) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-    child:
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-      Text(
-        '효능효과',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      _drugInfo(context, drugItemSeq, 'EE'),
-      Container(
-        height: 10,
-      ),
-      Text(
-        '용법용량',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      _drugInfo(context, drugItemSeq, 'UD'),
-      Container(
-        height: 10,
-      ),
-      Text(
-        '주의사항',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      _drugInfo(context, drugItemSeq, 'NB'),
-      Container(
-        height: 10,
-      ),
-    ]),
-  );
+Widget _underInfo(BuildContext context, String drugItemSeq) {
+  return StreamBuilder<Drug>(
+      stream: DatabaseService(itemSeq: drugItemSeq).drugData,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          Drug drug = snapshot.data;
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '효능효과',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  _drugInfo(context, drugItemSeq, 'EE'),
+                  Container(
+                    height: 10,
+                  ),
+                  Text(
+                    '용법용량',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  _drugInfo(context, drugItemSeq, 'UD'),
+                  Container(
+                    height: 10,
+                  ),
+                  Text(
+                    '저장방법',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(drug.storage_method),
+                  Container(
+                    height: 10,
+                  ),
+                  FlatButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailInfo(
+                                      drugItemSeq: drugItemSeq,
+                                    )));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('자세히 보기'),
+                          Icon(Icons.keyboard_arrow_right)
+                        ],
+                      ))
+                ]),
+          );
+        } else {
+          return Loading();
+        }
+      });
 }
 
+/* 약의 자세한 정보들 */
 Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
   return StreamBuilder<SpecInfo>(
       stream: DatabaseService(itemSeq: drugItemSeq).specInfo,

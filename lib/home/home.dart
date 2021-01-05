@@ -7,7 +7,7 @@ import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/home/home_add_button_stack.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
-import 'package:semo_ver2/review/phil_info.dart';
+import 'package:semo_ver2/drug_info/phil_info.dart';
 
 int num; // streambuilder 로 불러오기
 int compare;
