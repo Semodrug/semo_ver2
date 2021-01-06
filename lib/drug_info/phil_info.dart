@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:provider/provider.dart';
+
 import 'package:semo_ver2/drug_info/detail_info.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
@@ -29,6 +31,8 @@ class PhilInfoPage extends StatefulWidget {
 class _PhilInfoPageState extends State<PhilInfoPage> {
   @override
   Widget build(BuildContext context) {
+    downloadURLExample(widget.drugItemSeq);
+
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -108,6 +112,7 @@ Widget _topInfo(
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           Drug drug = snapshot.data;
+
           // print('SUMI's TEST: ${drug.item_name}')
           return StreamBuilder<Lists>(
               stream: DatabaseService(uid: user.uid).lists,
@@ -115,6 +120,9 @@ Widget _topInfo(
                 if (snapshot2.hasData) {
                   List favoriteLists = snapshot2.data.favoriteLists;
                   bool isFavorite = favoriteLists.contains(drugItemSeq);
+                  print('isFavorite : $isFavorite');
+                  print('favoriteLists : $favoriteLists');
+                  print('drugItemSeq : $drugItemSeq');
 
                   return StreamBuilder<List<SavedDrug>>(
                     stream: DatabaseService(uid: user.uid).savedDrugs,
@@ -153,6 +161,8 @@ Widget _topInfo(
                                     color: isFavorite ? Colors.redAccent : null,
                                   ),
                                   onPressed: () async {
+                                    print('onpressed : $isFavorite');
+
                                     isFavorite
                                         ? favoriteLists.remove(drugItemSeq)
                                         : favoriteLists.add(drugItemSeq);
@@ -203,7 +213,19 @@ Widget _topInfo(
                                 ),
                                 Center(
                                   child: SizedBox(
-                                    child: Image.asset('images/01.png'),
+                                    child: Image.asset('images/02.png'),
+                                    // FutureBuilder(
+                                    //   future: downloadURLExample(drugItemSeq),
+                                    //   builder: (BuildContext context,
+                                    //       AsyncSnapshot snapshot) {
+                                    //     if (snapshot.hasData) {
+                                    //       return Image.network(
+                                    //           snapshot.data.toString());
+                                    //     } else {
+                                    //       return Loading();
+                                    //     }
+                                    //   },
+                                    // ),
                                     width: 200.0,
                                     height: 100.0,
                                   ),
@@ -519,4 +541,25 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
           return Loading();
         }
       });
+}
+
+Future<String> downloadURLExample(String itemSeq) async {
+  try {
+    String downloadURL = await firebase_storage.FirebaseStorage.instance
+        .ref('Image/$itemSeq.png')
+        .getDownloadURL();
+    print(downloadURL);
+
+    return downloadURL;
+  } catch (e) {
+    String downloadURL = await firebase_storage.FirebaseStorage.instance
+        .ref('Image/195900043.png')
+        .getDownloadURL();
+    print(downloadURL);
+
+    return downloadURL;
+  }
+  print(itemSeq);
+  // Within your widgets:
+  // Image.network(downloadURL);
 }
