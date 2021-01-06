@@ -12,7 +12,6 @@ String storage;
 String entp_name;
 //추가 끝
 
-
 class DetailInfo extends StatefulWidget {
   final String drugItemSeq;
 
@@ -54,9 +53,7 @@ class _DetailInfoState extends State<DetailInfo> {
         ),
       ),
       backgroundColor: Colors.white,
-      body:
-
-      Column(
+      body: Column(
         children: [
           Center(
             child: Container(
@@ -74,11 +71,15 @@ class _DetailInfoState extends State<DetailInfo> {
                     ),
                     onPressed: () {
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                          SearchHighlightingScreen(infoEE: infoEE, infoNB: infoNB, infoUD: infoUD, storage: storage, entp_name: entp_name))
-                      );
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  SearchHighlightingScreen(
+                                      infoEE: infoEE,
+                                      infoNB: infoNB,
+                                      infoUD: infoUD,
+                                      storage: storage,
+                                      entp_name: entp_name)));
                     },
                     textColor: Colors.grey[500],
                     color: Colors.grey[200],
@@ -106,8 +107,7 @@ Widget _specificInfo(BuildContext context, String drugItemSeq) {
         print(drugItemSeq);
         if (snapshot.hasData) {
           Drug drug = snapshot.data;
-          storage = drug.storage_method;
-          entp_name = drug.entp_name;
+
           return Padding(
             padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
             child: Column(
@@ -133,7 +133,7 @@ Widget _specificInfo(BuildContext context, String drugItemSeq) {
                     '저장방법',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(drug.storage_method),
+                  Text(drug.storageMethod),
                   Container(
                     height: 10,
                   ),
@@ -141,7 +141,7 @@ Widget _specificInfo(BuildContext context, String drugItemSeq) {
                     '회사명',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(drug.entp_name),
+                  Text(drug.entpName),
                   Container(
                     height: 10,
                   ),
@@ -161,44 +161,42 @@ Widget _specificInfo(BuildContext context, String drugItemSeq) {
       });
 }
 
-
-
 Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
-  return StreamBuilder<SpecInfo>(
-      stream: DatabaseService(itemSeq: drugItemSeq).specInfo,
+  return StreamBuilder<Drug>(
+      stream: DatabaseService(itemSeq: drugItemSeq).drugData,
       builder: (context, snapshot) {
+        print(drugItemSeq);
         if (snapshot.hasData) {
-          SpecInfo specInfo = snapshot.data;
+          Drug drug = snapshot.data;
           // print("SUMI's TEST: ${specInfo.eeDataList}");
           if (type == 'EE') {
-            infoEE = specInfo.eeDataList;
+            infoEE = drug.eeDocData;
             return ListView.builder(
                 shrinkWrap: true,
-                itemCount: specInfo.eeDataList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return
-                    Text(
-                      specInfo.eeDataList[index].toString(),
-                    );
-                });
-          } else if (type == 'NB') {
-            infoNB = specInfo.nbDataList;
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: specInfo.nbDataList.length,
+                itemCount: drug.eeDocData.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
-                    specInfo.nbDataList[index].toString(),
+                    drug.eeDocData[index].toString(),
+                  );
+                });
+          } else if (type == 'NB') {
+            infoNB = drug.nbDocData;
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: drug.nbDocData.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Text(
+                    drug.nbDocData[index].toString(),
                   );
                 });
           } else if (type == 'UD') {
-            infoUD = specInfo.udDataList;
+            infoUD = drug.udDocData;
             return ListView.builder(
                 shrinkWrap: true,
-                itemCount: specInfo.udDataList.length,
+                itemCount: drug.udDocData.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
-                    specInfo.udDataList[index].toString(),
+                    drug.udDocData[index].toString(),
                   );
                 });
           } else {
