@@ -89,13 +89,13 @@ class _ExpirationState extends State<Expiration> {
                   height: 20,
                 ),
                 Text(
-                  drug.entp_name,
+                  drug.entpName,
                   style: TextStyle(
                     color: Colors.grey[600],
                   ),
                 ),
                 Text(
-                  drug.item_name,
+                  drug.itemName,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 16.0,
@@ -138,8 +138,8 @@ class _ExpirationState extends State<Expiration> {
                                 DateFormat('yyyy.MM.dd').format(date);
 
                             await DatabaseService(uid: user.uid).addSavedList(
-                                drug.item_name,
-                                drug.item_seq,
+                                drug.itemName,
+                                drug.itemSeq,
                                 drug.category,
                                 expirationTime);
                           },

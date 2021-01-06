@@ -124,7 +124,7 @@ Widget _topInfo(
                         bool isSaved;
 
                         for (SavedDrug savedDrug in savedDrugs) {
-                          isSaved = savedDrug.item_seq.contains(drugItemSeq);
+                          isSaved = savedDrug.itemSeq.contains(drugItemSeq);
                           if (isSaved == true) break;
                         }
 
@@ -209,13 +209,13 @@ Widget _topInfo(
                                   ),
                                 ),
                                 Text(
-                                  drug.entp_name,
+                                  drug.entpName,
                                   style: TextStyle(
                                     color: Colors.grey[600],
                                   ),
                                 ),
                                 Text(
-                                  drug.item_name,
+                                  drug.itemName,
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 28.0,
@@ -445,7 +445,7 @@ Widget _underInfo(BuildContext context, String drugItemSeq) {
                     '저장방법',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(drug.storage_method),
+                  Text(drug.storageMethod),
                   Container(
                     height: 10,
                   ),
@@ -476,37 +476,37 @@ Widget _underInfo(BuildContext context, String drugItemSeq) {
 
 /* 약의 자세한 정보들 */
 Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
-  return StreamBuilder<SpecInfo>(
-      stream: DatabaseService(itemSeq: drugItemSeq).specInfo,
+  return StreamBuilder<Drug>(
+      stream: DatabaseService(itemSeq: drugItemSeq).drugData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          SpecInfo specInfo = snapshot.data;
+          Drug drug = snapshot.data;
           // print("SUMI's TEST: ${specInfo.eeDataList}");
           if (type == 'EE') {
             return ListView.builder(
                 shrinkWrap: true,
-                itemCount: specInfo.eeDataList.length,
+                itemCount: drug.eeDocData.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
-                    specInfo.eeDataList[index].toString(),
+                    drug.eeDocData[index].toString(),
                   );
                 });
           } else if (type == 'NB') {
             return ListView.builder(
                 shrinkWrap: true,
-                itemCount: specInfo.nbDataList.length,
+                itemCount: drug.nbDocData.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
-                    specInfo.nbDataList[index].toString(),
+                    drug.nbDocData[index].toString(),
                   );
                 });
           } else if (type == 'UD') {
             return ListView.builder(
                 shrinkWrap: true,
-                itemCount: specInfo.udDataList.length,
+                itemCount: drug.udDocData.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
-                    specInfo.udDataList[index].toString(),
+                    drug.udDocData[index].toString(),
                   );
                 });
           } else {

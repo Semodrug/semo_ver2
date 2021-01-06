@@ -12,8 +12,8 @@ class DatabaseService {
   /* Drug List */
   // collection reference
   final CollectionReference drugCollection =
-      FirebaseFirestore.instance.collection('drug');
-  Query drugQuery = FirebaseFirestore.instance.collection('drug');
+      FirebaseFirestore.instance.collection('Drugs');
+  Query drugQuery = FirebaseFirestore.instance.collection('Drugs');
 
   //drugSnapshot 값 get이랑 set에서 해주기
   Stream<List<Drug>> drugsSnapshots;
@@ -47,56 +47,92 @@ class DatabaseService {
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return Drug(
-        barcode: doc.data()['barcode'] ?? '',
-        entp_name: doc.data()['ENTP_NAME'] ?? '',
-        item_name: doc.data()['ITEM_NAME'] ?? '',
-        item_seq: doc.data()['ITEM_SEQ'] ?? '',
-        storage_method: doc.data()['STORAGE_METHOD'] ?? '',
+        barCode: doc.data()['BAR_CODE'] ?? '',
+        // cancelName: doc.data()['CANCEL_NAME'] ?? '',
+        chart: doc.data()['CHART'] ?? '',
+        // cnsgnManuf: doc.data()['CNSGN_MANUF'] ?? '',
+        // ediCode: doc.data()['EDI_CODE'] ?? '',
+
+        eeDocData: doc.data()['EE_DOC_DATA'] ?? '',
+        // eeDocId: doc.data()['EE_DOC_ID'] ?? '',
+        entpName: doc.data()['ENTP_NAME'] ?? '',
+        entpNo: doc.data()['ENTP_NO'] ?? '',
+
+        etcOtcCode: doc.data()['ETC_OTC_CODE'] ?? '',
+        // gbnName: doc.data()['GBN_NAME'] ?? '',
+        // indutyType: doc.data()['INDUTY_TYPE'] ?? '',
+        ingrName: doc.data()['INGR_NAME'] ?? '',
+        itemName: doc.data()['ITEM_NAME'] ?? '',
+        // itemPermitDate: doc.data()['ITEM_PERMIT_DATE'] ?? '',
+
+        itemSeq: doc.data()['ITEM_SEQ'] ?? '',
+        mainItemIngr: doc.data()['MAIN_ITEM_INGR'] ?? '',
+        materialName: doc.data()['MATERIAL_NAME'] ?? '',
+
+        nbDocData: doc.data()['NB_DOC_DATA'] ?? '',
+        // nbDocId: doc.data()['NB_DOC_ID'] ?? '',
+        permitKindName: doc.data()['PERMIT_KIND_NAME'] ?? '',
+        storageMethod: doc.data()['STORAGE_METHOD'] ?? '',
+        totalContect: doc.data()['TOTAL_CONTENT'] ?? '',
+
+        udDocData: doc.data()['UD_DOC_DATA'] ?? '',
+        udDocId: doc.data()['UD_DOC_ID'] ?? '',
+        validTerm: doc.data()['VALID_TERM'] ?? '',
+
+        // TODO:
         category: doc.data()['category'] ?? '',
-        image: doc.data()['image'] ?? '',
-        review: doc.data()['review'],
+        // image: doc.data()['image'] ?? '',
+        // review: doc.data()['review'],
       );
     }).toList();
   }
-
 
   /* Drug */
   // drug data from snapshots
   Drug _drugFromSnapshot(DocumentSnapshot snapshot) {
     return Drug(
-      barcode: snapshot.data()['barcode'] ?? '',
-      entp_name: snapshot.data()['ENTP_NAME'] ?? '',
-      item_name: snapshot.data()['ITEM_NAME'] ?? '',
-      item_seq: snapshot.data()['ITEM_SEQ'] ?? '',
-      storage_method: snapshot.data()['STORAGE_METHOD'] ?? '',
+      barCode: snapshot.data()['BAR_CODE'] ?? '',
+      // cancelName: snapshot.data()['CANCEL_NAME'] ?? '',
+      chart: snapshot.data()['CHART'] ?? '',
+      // cnsgnManuf: snapshot.data()['CNSGN_MANUF'] ?? '',
+      // ediCode: snapshot.data()['EDI_CODE'] ?? '',
+
+      eeDocData: snapshot.data()['EE_DOC_DATA'] ?? '',
+      // eeDocId: snapshot.data()['EE_DOC_ID'] ?? '',
+      entpName: snapshot.data()['ENTP_NAME'] ?? '',
+      entpNo: snapshot.data()['ENTP_NO'] ?? '',
+
+      etcOtcCode: snapshot.data()['ETC_OTC_CODE'] ?? '',
+      // gbnName: snapshot.data()['GBN_NAME'] ?? '',
+      // indutyType: snapshot.data()['INDUTY_TYPE'] ?? '',
+      ingrName: snapshot.data()['INGR_NAME'] ?? '',
+      itemName: snapshot.data()['ITEM_NAME'] ?? '',
+      // itemPermitDate: snapshot.data()['ITEM_PERMIT_DATE'] ?? '',
+
+      itemSeq: snapshot.data()['ITEM_SEQ'] ?? '',
+      mainItemIngr: snapshot.data()['MAIN_ITEM_INGR'] ?? '',
+      materialName: snapshot.data()['MATERIAL_NAME'] ?? '',
+
+      nbDocData: snapshot.data()['NB_DOC_DATA'] ?? '',
+      // nbDocId: snapshot.data()['NB_DOC_ID'] ?? '',
+      permitKindName: snapshot.data()['PERMIT_KIND_NAME'] ?? '',
+      storageMethod: snapshot.data()['STORAGE_METHOD'] ?? '',
+      totalContect: snapshot.data()['TOTAL_CONTENT'] ?? '',
+
+      udDocData: snapshot.data()['UD_DOC_DATA'] ?? '',
+      udDocId: snapshot.data()['UD_DOC_ID'] ?? '',
+      validTerm: snapshot.data()['VALID_TERM'] ?? '',
+
+      // TODO:
       category: snapshot.data()['category'] ?? '',
-      image: snapshot.data()['image'] ?? '',
-      review: snapshot.data()['review'],
+      // image: snapshot.data()['image'] ?? '',
+      // review: snapshot.data()['review'],
     );
   }
 
   // get user doc stream
   Stream<Drug> get drugData {
     return drugCollection.doc(itemSeq).snapshots().map(_drugFromSnapshot);
-  }
-
-  /* Specific Information of Drug */
-  // specific information data from snapshots
-  SpecInfo _specInfoFromSnapshot(DocumentSnapshot snapshot) {
-    return SpecInfo(
-      eeDataList: snapshot.data()['EE'] ?? '',
-      nbDataList: snapshot.data()['NB'] ?? '',
-      udDataList: snapshot.data()['UD'] ?? '',
-    );
-  }
-
-  // get specific information stream
-  Stream<SpecInfo> get specInfo {
-    // collection reference
-    final CollectionReference infoCollection =
-        drugCollection.doc(itemSeq).collection('OtherInfos');
-
-    return infoCollection.doc('DOCS').snapshots().map(_specInfoFromSnapshot);
   }
 
   /* User */
@@ -154,8 +190,8 @@ class DatabaseService {
   List<SavedDrug> _savedDrugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return SavedDrug(
-        item_name: doc.data()['ITEM_NAME'] ?? '',
-        item_seq: doc.data()['ITEM_SEQ'] ?? '',
+        itemName: doc.data()['ITEM_NAME'] ?? '',
+        itemSeq: doc.data()['ITEM_SEQ'] ?? '',
         category: doc.data()['category'] ?? '',
         expiration: doc.data()['expiration'] ?? '',
       );
