@@ -107,53 +107,57 @@ Widget _specificInfo(BuildContext context, String drugItemSeq) {
         print(drugItemSeq);
         if (snapshot.hasData) {
           Drug drug = snapshot.data;
-
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    '효능효과',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  _drugInfo(context, drugItemSeq, 'EE'),
-                  Container(
-                    height: 10,
-                  ),
-                  Text(
-                    '용법용량',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  _drugInfo(context, drugItemSeq, 'UD'),
-                  Container(
-                    height: 10,
-                  ),
-                  Text(
-                    '저장방법',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(drug.storageMethod),
-                  Container(
-                    height: 10,
-                  ),
-                  Text(
-                    '회사명',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(drug.entpName),
-                  Container(
-                    height: 10,
-                  ),
-                  Text(
-                    '주의사항',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  _drugInfo(context, drugItemSeq, 'NB'),
-                  Container(
-                    height: 10,
-                  ),
-                ]),
+          storage = drug.storage_method;
+          entp_name = drug.entp_name;
+          return SingleChildScrollView(
+            child:
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '효능효과',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    _drugInfo(context, drugItemSeq, 'EE'),
+                    Container(
+                      height: 10,
+                    ),
+                    Text(
+                      '용법용량',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    _drugInfo(context, drugItemSeq, 'UD'),
+                    Container(
+                      height: 10,
+                    ),
+                    Text(
+                      '저장방법',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(drug.storage_method),
+                    Container(
+                      height: 10,
+                    ),
+                    Text(
+                      '회사명',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(drug.entp_name),
+                    Container(
+                      height: 10,
+                    ),
+                    Text(
+                      '주의사항',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    _drugInfo(context, drugItemSeq, 'NB'),
+                    Container(
+                      height: 10,
+                    ),
+                  ]),
+            ),
           );
         } else {
           return Loading();
@@ -173,7 +177,8 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
             infoEE = drug.eeDocData;
             return ListView.builder(
                 shrinkWrap: true,
-                itemCount: drug.eeDocData.length,
+                physics: const ClampingScrollPhysics(),
+                itemCount: specInfo.eeDataList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
                     drug.eeDocData[index].toString(),
@@ -182,6 +187,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
           } else if (type == 'NB') {
             infoNB = drug.nbDocData;
             return ListView.builder(
+                physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: drug.nbDocData.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -192,6 +198,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
           } else if (type == 'UD') {
             infoUD = drug.udDocData;
             return ListView.builder(
+                physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: drug.udDocData.length,
                 itemBuilder: (BuildContext context, int index) {
