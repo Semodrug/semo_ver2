@@ -94,6 +94,7 @@ class _EditReviewState extends State<EditReview> {
 //            starRating = review.starRating;
 
             return Scaffold(
+                resizeToAvoidBottomInset: true,
                 appBar: AppBar(
                   title: Text('Write Review',
                       style: GoogleFonts.roboto(

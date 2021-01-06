@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/review/report_review.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'edit_review.dart';
 import 'review_container.dart';
@@ -195,10 +196,10 @@ class _ReviewListState extends State<ReviewList> {
                                   children: <Widget>[
                                     MaterialButton(
                                         onPressed: () {
+                                          Navigator.pop(context);
                                           Navigator.push(context, MaterialPageRoute(
                                             //TODO
                                               builder: (context) => EditReview(review)
-//                                              builder: (context) => EditReview(review)
                                           ));
                                         },
                                         child: Center(child: Text("수정하기",
@@ -207,7 +208,7 @@ class _ReviewListState extends State<ReviewList> {
                                     ),
                                     MaterialButton(
                                         onPressed: () {
-                                          //TODO
+                                          Navigator.pop(context);
                                           _showDeleteDialog(review);
                                         },
                                         child: Center(child: Text("삭제하기",
@@ -284,33 +285,33 @@ class _ReviewListState extends State<ReviewList> {
   }
 
 
-  Widget buildBottomSheetWriter(BuildContext context, record) {
-    return SizedBox(
-        child: Container(
-//                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Wrap(
-            children: <Widget>[
-              MaterialButton(
-                onPressed: () {
-                  print("A");
-                },
-                child: Center(child: Text("수정하기",
-                    style: TextStyle(color: Colors.blue[700],
-                    fontSize: 16)))
-              ),
-              MaterialButton(
-                  onPressed: () {
-                    _showDeleteDialog(record);
-                  },
-                  child: Center(child: Text("취소",
-                      style: TextStyle(color: Colors.red[600],
-                      fontSize: 16)))
-              ),
-            ],
-          )
-        )
-    );
-  }
+//  Widget buildBottomSheetWriter(BuildContext context, record) {
+//    return SizedBox(
+//        child: Container(
+////                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+//          child: Wrap(
+//            children: <Widget>[
+//              MaterialButton(
+//                onPressed: () {
+//                  Navigator.pop(context);
+//                },
+//                child: Center(child: Text("수정하기",
+//                    style: TextStyle(color: Colors.blue[700],
+//                    fontSize: 16)))
+//              ),
+//              MaterialButton(
+//                  onPressed: () {
+//                    _showDeleteDialog(record);
+//                  },
+//                  child: Center(child: Text("취소",
+//                      style: TextStyle(color: Colors.red[600],
+//                      fontSize: 16)))
+//              ),
+//            ],
+//          )
+//        )
+//    );
+//  }
 
 Widget buildBottomSheetAnonymous(BuildContext context) {
     return SizedBox(
@@ -320,17 +321,21 @@ Widget buildBottomSheetAnonymous(BuildContext context) {
               children: <Widget>[
                 MaterialButton(
                     onPressed: () {
-
+                      Navigator.push(context, MaterialPageRoute(
+                        //TODO
+                          builder: (context) => ReportReview()
+//                                              builder: (context) => EditReview(review)
+                      ));
                     },
-                    child: Center(child: Text("신고하기,",
+                    child: Center(child: Text("신고하기",
                         style: TextStyle(color: Colors.blue[700],
                             fontSize: 16)))
                 ),
                 MaterialButton(
                     onPressed: () {
-                      print("A");
+                      Navigator.of(context).pop();
                     },
-                    child: Center(child: Text("취소,",
+                    child: Center(child: Text("취소",
                         style: TextStyle(color: Colors.blue[700],
                             fontSize: 16)))
                 ),
