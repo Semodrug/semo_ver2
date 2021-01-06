@@ -25,14 +25,13 @@ class _SearchScreenState extends State<SearchScreen> {
     _filter.addListener(() {
       setState(() {
         _searchText = _filter.text;
-        print('=== CHANGED === ');
-        print(_filter.value);
       });
     });
   }
 
   Widget _buildBodyOfAll(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
+      //현재 2만개 정도 들어와있는 데이터 //todo:안먹음 그래서 조치가 필요 검색어에 따른 정보만 보여주게끔 해야한다.
       stream: FirebaseFirestore.instance.collection('drug').snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
@@ -473,4 +472,48 @@ class _ListDrugUserState extends State<ListDrugOfUser> {
       ),
     );
   }
+}
+
+
+
+
+class DrugFromUser {
+  final String item_name;
+  final String item_seq;
+  final String expiration;
+
+  final DocumentReference reference;
+
+  DrugFromUser.fromMap(Map<String, dynamic> map, {this.reference})
+      :
+  //assert(map['expiration'] != null),
+        item_name = map['ITEM_NAME'],
+        item_seq = map['ITEM_SEQ'],
+        expiration = map['expiration'];
+
+  DrugFromUser.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+}
+
+class Drugs {
+  final String item_name;
+  final String image;
+  final String entp_name;
+  final String item_seq;
+  final String valid_term;
+  final String category;
+
+  final DocumentReference reference;
+
+  Drugs.fromMap(Map<String, dynamic> map, {this.reference})
+      :
+        item_name = map['ITEM_NAME'],
+        image = map['image'],
+        entp_name = map['ENTP_NAME'],
+        item_seq = map['ITEM_SEQ'],
+        valid_term = map['VALID_TERM'],
+        category = map['category'];
+
+  Drugs.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
 }
