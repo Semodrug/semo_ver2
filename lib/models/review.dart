@@ -4,7 +4,8 @@ class Review {
   final String effectText;
   final String sideEffectText;
   final String overallText;
-  List<String> favoriteSelected = List<String>();
+//  List<String> favoriteSelected = List<String>();
+  List favoriteSelected;
   final num starRating;
   var noFavorite;
   final String uid;
