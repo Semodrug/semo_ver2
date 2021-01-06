@@ -45,7 +45,19 @@ class ReviewService {
     });
   }
 
+  Future<void> decreaseFavorite(String docId, String currentUserUid) async {
+    return await reviewCollection.doc(docId).update({
+    'favoriteSelected': FieldValue.arrayRemove([currentUserUid]),
+    'noFavorite': FieldValue.increment(-1),
+    });
+  }
 
+  Future<void> increaseFavorite(String docId, String currentUserUid) async {
+    return await reviewCollection.doc(docId).update({
+      'favoriteSelected': FieldValue.arrayUnion([currentUserUid]),
+      'noFavorite': FieldValue.increment(1),
+    });
+  }
 
   List<Review> _reviewListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
@@ -56,7 +68,7 @@ class ReviewService {
         sideEffectText: doc.data()['sideEffectText'] ?? '',
         overallText: doc.data()['overallText'] ?? '',
         //List<String> favoriteSelected = List<String>();
-//        favoriteSelected: doc.data()['favoriteSelected'] ?? '',
+        favoriteSelected: doc.data()['favoriteSelected'] ?? '',
         starRating: doc.data()['starRating'] ?? 0,
         noFavorite: doc.data()['noFavorite'] ?? 0,
         uid: doc.data()['uid'] ?? '',
@@ -82,7 +94,7 @@ class ReviewService {
           sideEffectText: doc.data()['sideEffectText'] ?? '',
           overallText: doc.data()['overallText'] ?? '',
           //List<String> favoriteSelected = List<String>();
-//        favoriteSelected: doc.data()['favoriteSelected'] ?? '',
+        favoriteSelected: doc.data()['favoriteSelected'] ?? '',
           starRating: doc.data()['starRating'] ?? 0,
           noFavorite: doc.data()['noFavorite'] ?? 0,
           uid: doc.data()['uid'] ?? '',
@@ -124,7 +136,7 @@ class ReviewService {
         sideEffectText: doc.data()['sideEffectText'] ?? '',
         overallText: doc.data()['overallText'] ?? '',
         //List<String> favoriteSelected = List<String>();
-//        favoriteSelected: doc.data()['favoriteSelected'] ?? '',
+        favoriteSelected: doc.data()['favoriteSelected'] ?? '',
         starRating: doc.data()['starRating'] ?? 0,
         noFavorite: doc.data()['noFavorite'] ?? 0,
         uid: doc.data()['uid'] ?? '',

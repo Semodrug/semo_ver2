@@ -73,15 +73,6 @@ class _EditReviewState extends State<EditReview> {
 //    myControllerOverall.text = widget.review.overallText;
 
 
-
-//    FirebaseFirestore.instance.collection("Reviews").doc(widget.review.documentId).get().then((DocumentSnapshot ds) {
-//      effect = ds.data()["effect"];
-//      sideEffect = ds.data()["sideEffect"];
-//      effectText = ds.data()["effectText"];
-//      sideEffectText = ds.data()["sideEffectText"];
-//      overallText = ds.data()["overallText"];
-//      starRating = ds.data()["starRating"];
-//    });
     return StreamBuilder<Review>(
         stream: ReviewService().getSingleReview(widget.review.documentId),
         builder: (context, snapshot) {
@@ -103,7 +94,6 @@ class _EditReviewState extends State<EditReview> {
                           color: Colors.white)),
                   centerTitle: true,
                   elevation: 0.0,
-//        backgroundColor: Colors.tealAccent[100],
                   backgroundColor: Colors.teal[200],
                   leading: IconButton(
                       icon: Icon(Icons.arrow_back, color: Colors.white),

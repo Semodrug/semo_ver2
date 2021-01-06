@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:semo_ver2/login/register_step2.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/review/report_review.dart';
 import 'package:semo_ver2/services/review.dart';
@@ -30,22 +31,10 @@ class _ReviewListState extends State<ReviewList> {
     return Expanded(
       child: ListView(
         physics: const ClampingScrollPhysics(),
-//        shrinkWrap: true,
-//        scrollDirection: Axis.vertical,
         padding: EdgeInsets.all(16.0),
         children: searchResults.map((data) => _buildListItem(context, data)).toList(),
 //       return ReviewContainer(review: reviews[index]);
       ),
-
-//        reviews.forEach((review) {
-//          sum += review.starRating;
-//
-//          review.effect == "good" ? effectGood++ :
-//          review.effect == "soso" ? effectSoso++ : effectBad++;
-//
-//          review.sideEffect == "yes" ? sideEffectYes++ : sideEffectNo++;
-//        });
-
     );
 
 //    return ListView.builder(
@@ -79,15 +68,11 @@ class _ReviewListState extends State<ReviewList> {
 */
 
 
-//  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
   Widget _buildListItem(BuildContext context, Review review) {
     print("BUILDLISTITEM################");
-//    final record = Record.fromSnapshot(data);
 
     FirebaseAuth auth = FirebaseAuth.instance;
-    //TODO: review.favoriteSelected not working
-//    List<String> names = List.from(review.favoriteSelected);
-//    String docID = review.uid;
+    List<String> names = List.from(review.favoriteSelected);
 
     return Container(
         decoration: BoxDecoration(
@@ -115,39 +100,29 @@ class _ReviewListState extends State<ReviewList> {
                     child: new Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        //TODO: NOT WORKING
-//                        new GestureDetector(
-//                            child: new Icon(
-//                              names.contains(auth.currentUser.uid) ? Icons.favorite
-//                                  : Icons.favorite_border,
-////                                            color: names.contains(auth.currentUser.uid) ?
-////                                                Colors.redAccent[200] : Colors.grey[300],
-//                              color: Colors.redAccent[200],
-//                              size: 21,
-//                            ),
-//                            //when 2 people click this
-//                            onTap:() {
-////                                            List<String> names = List.from(data["favoriteSelected"]);
-//                              if(names.contains(auth.currentUser.uid)) {
-//                                print("UID: "+auth.currentUser.uid);
-//                                review.reference.update({
-//                                  'favoriteSelected': FieldValue.arrayRemove([auth.currentUser.uid]),
-//                                  'noFavorite': FieldValue.increment(-1),
-//                                });
-//                              }
-//                              else {
-//                                record.reference.update({
-//                                  'favoriteSelected': FieldValue.arrayUnion([auth.currentUser.uid]),
-//                                  'noFavorite': FieldValue.increment(1),
-//                                });
-//                              }
-//                            }
-//                        )
+                        new GestureDetector(
+                            child: new Icon(
+                              names.contains(auth.currentUser.uid) ? Icons.favorite
+                                  : Icons.favorite_border,
+//                                            color: names.contains(auth.currentUser.uid) ?
+//                                                Colors.redAccent[200] : Colors.grey[300],
+                              color: Colors.redAccent[200],
+                              size: 21,
+                            ),
+                            onTap:() async{
+                              if(names.contains(auth.currentUser.uid)) {
+                                await ReviewService(documentId: review.documentId).decreaseFavorite(review.documentId, auth.currentUser.uid);
+                              }
+                              else {
+                                await ReviewService(documentId: review.documentId).increaseFavorite(review.documentId, auth.currentUser.uid);
+                              }
+                            }
+                        )
                       ],
                     ),
                   ),
-//                  Text((record.noFavorite).toString(),
-//                      style: TextStyle(fontSize: 14, color: Colors.black)),
+                  Text((review.noFavorite).toString(),
+                      style: TextStyle(fontSize: 14, color: Colors.black)),
                 ],
               )
             ]));
