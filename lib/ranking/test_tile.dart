@@ -17,13 +17,13 @@ class DrugTile extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PhilInfoPage(drugItemSeq: drug.item_seq),
+                builder: (context) => PhilInfoPage(drugItemSeq: drug.itemSeq),
               ),
             ),
             print('===> pushed'),
-            print(drug.item_seq),
-
-            print(' 리뷰 개수 잘 받아오느닞 확인 ${drug.review.toString()} ')
+            print(drug.itemSeq),
+            // TODO: 리뷰개수
+            // print(' 리뷰 개수 잘 받아오는 확인 ${drug.review.toString()} ')
           },
           child: Container(
             width: double.infinity,
@@ -45,10 +45,13 @@ class DrugTile extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
                       child: AspectRatio(
-                          aspectRatio: 2 / 2,
-                          child: Image.network(
-                            drug.image,
-                          )),
+                        aspectRatio: 2 / 2,
+                        // TODO: show storage image - if null, defalut image
+                        child: Container(),
+                        // Image.network(
+                        //   drug.image,
+                        // )
+                      ),
                     ),
                     Container(
                         margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
@@ -58,14 +61,14 @@ class DrugTile extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              drug.entp_name,
+                              drug.entpName,
                               style:
                                   TextStyle(fontSize: 11, color: Colors.grey),
                             ),
                             Expanded(
                               child: Row(children: [
                                 Text(
-                                  drug.item_name,
+                                  drug.itemName,
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold),
@@ -86,7 +89,7 @@ class DrugTile extends StatelessWidget {
                                         color: Colors.grey[600], fontSize: 13),
                                   ),
                                   Text(
-                                    '( ${drug.review} 개)',
+                                    '( 4 개)',
                                     style: TextStyle(
                                         color: Colors.grey[600], fontSize: 10),
                                   ),
