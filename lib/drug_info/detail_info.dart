@@ -107,11 +107,10 @@ Widget _specificInfo(BuildContext context, String drugItemSeq) {
         print(drugItemSeq);
         if (snapshot.hasData) {
           Drug drug = snapshot.data;
-          storage = drug.storage_method;
-          entp_name = drug.entp_name;
+          storage = drug.storageMethod;
+          entp_name = drug.entpName;
           return SingleChildScrollView(
-            child:
-            Padding(
+            child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +135,7 @@ Widget _specificInfo(BuildContext context, String drugItemSeq) {
                       '저장방법',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text(drug.storage_method),
+                    Text(drug.storageMethod),
                     Container(
                       height: 10,
                     ),
@@ -144,7 +143,7 @@ Widget _specificInfo(BuildContext context, String drugItemSeq) {
                       '회사명',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text(drug.entp_name),
+                    Text(drug.entpName),
                     Container(
                       height: 10,
                     ),
@@ -178,7 +177,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
             return ListView.builder(
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
-                itemCount: specInfo.eeDataList.length,
+                itemCount: drug.eeDocData.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
                     drug.eeDocData[index].toString(),

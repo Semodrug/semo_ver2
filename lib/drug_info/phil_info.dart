@@ -486,7 +486,7 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
             return ListView.builder(
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
-                itemCount: specInfo.eeDataList.length,
+                itemCount: drug.eeDocData.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
                     drug.eeDocData[index].toString(),
