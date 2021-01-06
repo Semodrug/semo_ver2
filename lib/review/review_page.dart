@@ -36,7 +36,8 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<Review>>.value(
-      value: ReviewService().reviews,
+//      value: ReviewService().getReviews(widget.drugItemSeq),
+        value: ReviewService().reviews,
       child: Scaffold(
 //        body: topOfReview(context),
 //TODO Save reviewList()

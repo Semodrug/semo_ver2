@@ -16,7 +16,7 @@ class EditReview extends StatefulWidget {
 //  EditReview(this.docId, {Key key}) : super(key: key);
 
   Review review;
-  EditReview(this.review, {Key key}) : super(key: key);
+  EditReview(this.review);
 
   _EditReviewState createState() => _EditReviewState();
 }
@@ -36,35 +36,31 @@ class _EditReviewState extends State<EditReview> {
     super.dispose();
   }
 
-  String effect;
+
+
+  Future<QuerySnapshot> future;
+  void getInitialValue() {
+    super.initState();
+    future = FirebaseFirestore.instance.collection("Reviews").doc(widget.review.documentId).get().then((DocumentSnapshot ds) {
+      //return effect = ds.data()["effect"];
+    });
+  }
+
+  String effect = '';
   String sideEffect = '';
   double starRating =  0;
   String effectText = '';
   String sideEffectText = '';
   String overallText = '';
 
-  Future<QuerySnapshot> future;
-  void getInitialValue() {
-    super.initState();
-    future = FirebaseFirestore.instance.collection("Reviews").doc(widget.review.documentId).get().then((DocumentSnapshot ds) {
-      return effect = ds.data()["effect"];
-    });
-  }
-
-
-
-
   @override
   Widget build(BuildContext context) {
 //TODO: USE THIS
-    TheUser user = Provider.of<TheUser>(context);
+//    TheUser user = Provider.of<TheUser>(context);
 
-//    effect = widget.review.effect;
-//    sideEffect = widget.review.sideEffect;
     myControllerEffect.text = widget.review.effectText;
     myControllerSideEffect.text = widget.review.sideEffectText;
     myControllerOverall.text = widget.review.overallText;
-
 
 //    effect = widget.review.effect;
 //    sideEffect = widget.review.sideEffect;
@@ -77,27 +73,19 @@ class _EditReviewState extends State<EditReview> {
 //    myControllerOverall.text = widget.review.overallText;
 
 
-
-//    FirebaseFirestore.instance.collection("Reviews").doc(widget.review.documentId).get().then((DocumentSnapshot ds) {
-//      effect = ds.data()["effect"];
-//      sideEffect = ds.data()["sideEffect"];
-//      effectText = ds.data()["effectText"];
-//      sideEffectText = ds.data()["sideEffectText"];
-//      overallText = ds.data()["overallText"];
-//      starRating = ds.data()["starRating"];
-//    });
-
     return StreamBuilder<Review>(
         stream: ReviewService().getSingleReview(widget.review.documentId),
         builder: (context, snapshot) {
           if(snapshot.hasData) {
             Review review = snapshot.data;
-
+//            effect = review.effect;
+//            sideEffect = review.sideEffect;
 //            sideEffectText = review.sideEffectText;
 //            overallText = review.overallText;
 //            starRating = review.starRating;
 
             return Scaffold(
+                resizeToAvoidBottomInset: true,
                 appBar: AppBar(
                   title: Text('Write Review',
                       style: GoogleFonts.roboto(
@@ -106,7 +94,6 @@ class _EditReviewState extends State<EditReview> {
                           color: Colors.white)),
                   centerTitle: true,
                   elevation: 0.0,
-//        backgroundColor: Colors.tealAccent[100],
                   backgroundColor: Colors.teal[200],
                   leading: IconButton(
                       icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -223,9 +210,6 @@ class _EditReviewState extends State<EditReview> {
                                             setState(()  {
                                               effect = "bad";
                                             });
-                                            //TODO
-//                                            await ReviewService(documentId: value.documentId).updateEffect(
-//                                                "bad");
                                           }
                                       ),
                                       Padding(padding: EdgeInsets.only(top: 10)),
@@ -245,8 +229,10 @@ class _EditReviewState extends State<EditReview> {
                                                   color: effect == "soso" ? Colors.amber[300]: Colors.grey[300],
                                                   shape: BoxShape.circle)),
                                           onTap: ()  {
+                                            effect = "soso";
                                             setState(()  {
                                               effect = "soso";
+                                              print(effect);
                                             });
                                             //TODO
 //                                            await ReviewService(documentId: value.documentId).updateEffect(
@@ -450,7 +436,7 @@ class _EditReviewState extends State<EditReview> {
                                     )
                                 ),
                                 onTap: () async {
-                                                            effectText = myControllerEffect.text;
+                              effectText = myControllerEffect.text;
                               sideEffectText = myControllerSideEffect.text;
                               overallText = myControllerOverall.text;
                                   //_registerReview();
