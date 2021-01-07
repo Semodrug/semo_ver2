@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:provider/provider.dart';
 
 import 'package:semo_ver2/drug_info/detail_info.dart';
@@ -8,6 +7,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/drug_info/set_expiration.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/loading.dart';
 
 import '../review/review_page.dart';
@@ -16,13 +16,11 @@ import '../review/write_review.dart';
 final fireInstance = FirebaseFirestore.instance;
 // TODO: drug도 provider 필요!!!
 // TODO: appbar 통일. 한군데 있는 거 계속 불러오게? fontsize: 16
-// TODO: image
 
 class PhilInfoPage extends StatefulWidget {
-  final String drugItemSeq; //추가
+  final String drugItemSeq;
 
-  PhilInfoPage({Key key, @required this.drugItemSeq})
-      : super(key: key); //약의 item seq 받아
+  PhilInfoPage({Key key, @required this.drugItemSeq}) : super(key: key);
 
   @override
   _PhilInfoPageState createState() => _PhilInfoPageState();
@@ -142,21 +140,7 @@ Widget _topInfo(
                                 ),
                                 Center(
                                   child: SizedBox(
-                                    child:
-                                        // Image.asset('images/02.png'),
-
-                                        FutureBuilder(
-                                      future: downloadURLExample(drugItemSeq),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot snapshot) {
-                                        if (snapshot.hasData) {
-                                          return Image.network(
-                                              snapshot.data.toString());
-                                        } else {
-                                          return Loading();
-                                        }
-                                      },
-                                    ),
+                                    child: DrugImage(drugItemSeq: drugItemSeq),
                                     width: 200.0,
                                     height: 100.0,
                                   ),
@@ -538,22 +522,4 @@ Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
           return Loading();
         }
       });
-}
-
-Future<String> downloadURLExample(String itemSeq) async {
-  try {
-    String downloadURL = await firebase_storage.FirebaseStorage.instance
-        .ref('Image/$itemSeq.png')
-        .getDownloadURL();
-    // print(downloadURL);
-
-    return downloadURL;
-  } catch (e) {
-    String downloadURL = await firebase_storage.FirebaseStorage.instance
-        .ref('Image/195900043.png')
-        .getDownloadURL();
-    // print(downloadURL);
-
-    return downloadURL;
-  }
 }
