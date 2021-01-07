@@ -1,16 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:semo_ver2/mypage/my_page.dart';
-import 'search_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/models/drug.dart';
 
-import 'home_add_button_stack.dart';
+import 'package:semo_ver2/home/search_screen.dart';
+import 'package:semo_ver2/home/home_add_button_stack.dart';
+import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/drug_info/phil_info.dart';
+import 'package:semo_ver2/shared/image.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
+/*약들의 개수를 length 만큼 보여주고 싶은데 그 length의 인덱스를 어떻게 넘겨주지..?*/
+int check = 0;
 
-int num; // streambuilder 로 불러오기
-int compare;
-String check = 'defalut'; //check for docID
 
 class HomeEditPage extends StatefulWidget {
   @override
@@ -20,74 +22,29 @@ class HomeEditPage extends StatefulWidget {
 class _HomeEditPageState extends State<HomeEditPage> {
   @override
   Widget build(BuildContext context) {
-    CollectionReference user_drug =
-        FirebaseFirestore.instance //user가 가지고 있는 약 data
-            .collection('users')
-            .doc(_auth.currentUser.uid)
-            .collection('savedList');
 
-    Future totalNum() async {
-      var querySnapshot = await user_drug.getDocuments();
-      var totalEquals = querySnapshot.docs.length;
-
-      num = totalEquals;
-      return totalEquals;
-    }
-
-    totalNum();
-
-    Stream<QuerySnapshot> data = user_drug.snapshots();
     return Scaffold(
-      appBar: AppBar(
-        // centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: Text(
-          '이약모약',
-          style: TextStyle(
-              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.person,
-              color: Colors.teal[200],
-            ),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyPage()),
-            ),
-          ),
-        ],
-        backgroundColor: Colors.white,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Color(0xFFE9FFFB),
-                    Color(0xFFE9FFFB),
-                    Color(0xFFFFFFFF),
-                  ])),
-        ),
-      ),
-      body: _buildBody(context, data),
+      backgroundColor: Colors.white,
+      body: _buildBody(context),
     );
   }
 
-  Widget _buildBody(BuildContext context, Stream<QuerySnapshot> data) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: data,
-        builder: (context, stream) {
-          if (!stream.hasData) return LinearProgressIndicator();
+  Widget _buildBody(BuildContext context) {
+    TheUser user = Provider.of<TheUser>(context);
 
-          return _buildList(context, stream.data.docs);
+    return StreamBuilder<List<SavedDrug>>(
+        stream: DatabaseService(uid: user.uid).savedDrugs,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return LinearProgressIndicator();
+
+          return _buildList(context, snapshot.data);
         });
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    compare = 0;
+  Widget _buildList(BuildContext context, List<SavedDrug> snapshot) {
+    check = 0;
+
+    int count = snapshot.length;
     return Column(
       children: [
         SearchBar(),
@@ -102,7 +59,7 @@ class _HomeEditPageState extends State<HomeEditPage> {
                 minWidth: 20,
                 child: FlatButton(
                   child: Text(
-                    num.toString(),
+                    count.toString(),
                     style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
                   ),
                 ),
@@ -110,6 +67,14 @@ class _HomeEditPageState extends State<HomeEditPage> {
               SizedBox(
                 width: 180,
               ),
+              FlatButton(
+                child: Text(
+                  '편집 취소',
+                ),
+                onPressed: () {
+                 Navigator.pushNamed(context, '/bottom_bar');
+                },
+              )
             ],
           ),
         ),
@@ -120,7 +85,7 @@ class _HomeEditPageState extends State<HomeEditPage> {
           child: ListView(
             padding: EdgeInsets.all(10.0),
             children:
-                snapshot.map((data) => _buildListItem(context, data)).toList(),
+            snapshot.map((data) => _buildListItem(context, data)).toList(),
           ),
         ),
         ButtonTheme(
@@ -147,89 +112,176 @@ class _HomeEditPageState extends State<HomeEditPage> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    String docID = data.id;
-
-    CollectionReference drug = FirebaseFirestore.instance.collection('drug');
-
-    return FutureBuilder<DocumentSnapshot>(
-      //user의 savedList안에 있는 애들과 실제 약 데이터 매치하여 약에 대한 정보를 받아오는 부분
-      future: drug.doc(docID).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
+  Widget _buildListItem(BuildContext context, SavedDrug data ) {
+    check++;
+    /*너무 긴 이름들 잘라서 보여주기 정보를 바꾸는 건 아님*/
+    String _checkLongName(SavedDrug data) {
+      String newName = data.itemName;
+      List splitName = [];
+      if (data.itemName.contains('(')) {
+        newName = data.itemName.replaceAll('(', '(');
+        if (newName.contains('')) {
+          splitName = newName.split('(');
+          print(splitName);
+          newName = splitName[0];
         }
+      }
+      return newName;
+    }
 
-        if (snapshot.connectionState == ConnectionState.done) {
-          final drug_snapshot = Drugs.fromSnapshot(snapshot.data);
-          print('Snapshot Data ==> ${snapshot.data}');
-          print(drug_snapshot.reference.id); //this is item seq num
+    /*혹시라도 카테고리가 없는 애들을 위해서 임시로 만들어 놓음*/
+    String _checkCategory(SavedDrug data) {
+      String newCategory = '카테고리 지정 없음';
+      if (data.category == '')
+        return newCategory;
+      else
+        return data.category;
+    }
 
-          final drugFromUser = DrugFromUser.fromSnapshot(data);
-          return Column(
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PhilInfoPage(drugItemSeq: data.itemSeq),
+          ),
+        ),
+      },
+      child: Container(
+        width: double.infinity,
+        height: 100.0,
+        child: Material(
+          color: Colors.white,
+          child:
+
+            Stack(
+              children: [
+          Row(
             children: [
-              ListCards(
-                  //drug_snapshot.reference,
-                  drug_snapshot.item_name,
-                  drug_snapshot.image,
-                  drug_snapshot.entp_name,
-                  drug_snapshot.item_seq,
-                  drug_snapshot.valid_term,
-                  drug_snapshot.category,
-                  drugFromUser.expiration),
-              Divider(
-                thickness: 1,
-              )
+              SizedBox(
+                width: 15,
+                child: Center(
+                  child: Text(check.toString()),
+                ),
+              ),
+              Container(
+                  padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+                  child: SizedBox(
+                      width: 88, height: 66, child: DrugImage(data.itemSeq))),
+              Container(
+                  padding: EdgeInsets.fromLTRB(15, 20, 5, 5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(children: [
+                        Text(
+                          _checkLongName(data),
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        )
+                      ]),
+                      Expanded(
+                          child:
+                          Row(
+                            children: [_categoryButton((_checkCategory(data)))],
+                          )),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      Expanded(
+                        child: Text(
+                          data.expiration,
+                          style: TextStyle(
+                              color: Colors.grey[600], fontSize: 13),
+                        ),
+                      )
+                    ],
+                  )),
             ],
-          );
-        }
-        return Text("loading");
+          ),
+           Positioned(
+                              top: 5,
+                              right: 20,
+                              width: 20,
+                             height: 30,
+                             // top: 0,                             // right: 0,
+                                child: Align(
+                                  //alignment: Alignment.centerRight,
+                                  child: IconButton(
+                                    padding: EdgeInsets.all(2.0),
+                                    icon:
+                                      Icon(
+                                        Icons.cancel, size: 20
+                                       ),
+                                    onPressed: () {
+                                      askDeleteAlert(context, data);                                  },
+                                  ),
+                                ),
+                              ),
+      ]
+        ),)
+      ),
+    );
+  }
+
+   void askDeleteAlert (BuildContext context, SavedDrug data) async {
+
+     showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        TheUser user = Provider.of<TheUser>(context);
+        print('  ');
+        print(user.uid);
+
+        return AlertDialog(
+          content: Text("나의 상비약 목록에서 지우시겠습니까?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('삭제'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/bottom_bar');
+
+                      FirebaseFirestore.instance //user가 가지고 있는 약 data
+                          .collection('users')
+                          .doc(user.uid)
+                          .collection('savedList')
+                          .doc(data.itemSeq)
+                          .delete();
+                      },
+            ),
+            FlatButton(
+              child: Text('취소'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/bottom_bar');
+              },
+            ),
+          ],
+        );
       },
     );
   }
-}
 
-class DrugFromUser {
-  final String item_seq;
-  final String expiration;
-
-  final DocumentReference reference;
-
-  DrugFromUser.fromMap(Map<String, dynamic> map, {this.reference})
-      :
-        //assert(map['expiration'] != null),
-        item_seq = map['ITEM_SEQ'],
-        expiration = map['expiration'];
-
-  DrugFromUser.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
-}
-
-class Drugs {
-  final String item_name;
-  final String image;
-  final String entp_name;
-  final String item_seq;
-  final String valid_term;
-  final String category;
-
-  final DocumentReference reference;
-
-  Drugs.fromMap(Map<String, dynamic> map, {this.reference})
-      :
-        //assert(map['ITEM_NAME'] != null),
-        //assert(map['ENTP_NAME'] != null),
-        //assert(map['ITEM_SEQ'] != null),
-        item_name = map['ITEM_NAME'],
-        image = map['image'],
-        entp_name = map['ENTP_NAME'],
-        item_seq = map['ITEM_SEQ'],
-        valid_term = map['VALID_TERM'],
-        category = map['category'];
-
-  Drugs.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+  Widget _categoryButton(str) {
+    return Container(
+      width: 24 + str.length.toDouble() * 10,
+      padding: EdgeInsets.symmetric(horizontal: 2),
+      child: ButtonTheme(
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
+        minWidth: 10,
+        height: 22,
+        child: RaisedButton(
+          child: Text(
+            '#$str',
+            style: TextStyle(color: Colors.grey[600], fontSize: 12.0),
+          ),
+          onPressed: () => print('$str!'),
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
 }
 
 class SearchBar extends StatefulWidget {
@@ -281,171 +333,6 @@ class _SearchBarState extends State<SearchBar> {
           width: 10,
         ),
       ],
-    );
-  }
-}
-
-class ListCards extends StatefulWidget {
-  //final String ref;
-  final String item_name;
-  final String image;
-  final String entp_name;
-  final String item_seq;
-  final String valid_term;
-  final String category;
-  final String expiration;
-
-  const ListCards(
-    //this.ref,
-    this.item_name,
-    this.image,
-    this.entp_name,
-    this.item_seq,
-    this.valid_term,
-    this.category,
-    this.expiration, {
-    Key key,
-  }) : super(key: key);
-
-  @override
-  _ListCardsState createState() => _ListCardsState();
-}
-
-class _ListCardsState extends State<ListCards> {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        width: double.infinity,
-        height: 100.0,
-        child: Material(
-            color: Colors.white,
-            child: Stack(
-              children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Container(
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 5),
-                        child: Image.network(widget.image)),
-                    Container(
-                        padding: EdgeInsets.fromLTRB(15, 20, 0, 5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(children: [
-                              Text(
-                                widget.item_name,
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-
-                            ]),
-                            Expanded(
-                                child: Row(
-                                  children: [_categoryButton((widget.category))],
-                                )),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Expanded(
-                              child: Text(
-                                widget.expiration,
-                                style: TextStyle(
-                                    color: Colors.grey[600], fontSize: 13),
-                              ),
-                            )
-                          ],
-                        )),
-                  ],
-                ),
-
-                //Stack(
-                  //children: [
-                            Positioned(
-                              top: 5,
-                              right: 20,
-                              width: 20,
-                             height: 30,
-                             // top: 0,                             // right: 0,
-                                child: Align(
-                                  //alignment: Alignment.centerRight,
-                                  child: IconButton(
-                                    padding: EdgeInsets.all(2.0),
-                                    icon:
-                                      Icon(
-                                        Icons.cancel, size: 20
-                                       ),
-                                    onPressed: () {
-                                      askDeleteAlert(context);                                  },
-                                  ),
-                                ),
-                              ),
-
-                          //),
-                  //]
-                //)
-              ],
-            )),
-      ),
-    );
-  }
-
-  void askDeleteAlert (BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          //title: Text('나의 상비약 목록에서 지우시겠습니까?'),
-          content: Text("나의 상비약 목록에서 지우시겠습니까?"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('삭제'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/bottom_bar');
-
-                      FirebaseFirestore.instance //user가 가지고 있는 약 data
-                          .collection('users')
-                          .doc(_auth.currentUser.uid)
-                          .collection('savedList')
-                          .doc(widget.item_seq)
-                          .delete();
-                      },
-            ),
-            FlatButton(
-              child: Text('취소'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/bottom_bar');
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-
-  Widget _categoryButton(str) {
-    return Container(
-      width: 24 + str.length.toDouble() * 10,
-      padding: EdgeInsets.symmetric(horizontal: 2),
-      child: ButtonTheme(
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
-        minWidth: 10,
-        height: 22,
-        child: RaisedButton(
-          child: Text(
-            '#$str',
-            style: TextStyle(color: Colors.grey[600], fontSize: 12.0),
-          ),
-          onPressed: () => print('$str!'),
-          color: Colors.white,
-        ),
-      ),
     );
   }
 }

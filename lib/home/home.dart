@@ -9,7 +9,10 @@ import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/home/home_add_button_stack.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
+import 'package:semo_ver2/shared/image.dart';
 
+/*약들의 개수를 length 만큼 보여주고 싶은데 그 length의 인덱스를 어떻게 넘겨주지..?*/
+int check = 0;
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,10 +20,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: _buildBody(context),
     );
   }
@@ -38,7 +41,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildList(BuildContext context, List<SavedDrug> snapshot) {
-    compare = 0;
+    check = 0;
+
+    int count = snapshot.length;
     return Column(
       children: [
         SearchBar(),
@@ -53,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                 minWidth: 20,
                 child: FlatButton(
                   child: Text(
-                    snapshot.length.toString(),
+                    count.toString(),
                     style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
                   ),
                 ),
@@ -77,11 +82,10 @@ class _HomePageState extends State<HomePage> {
           thickness: 1,
         ),
         Expanded(
-          child:
-          ListView(
+          child: ListView(
             padding: EdgeInsets.all(10.0),
             children:
-            snapshot.map((data) => _buildListItem(context, data)).toList(),
+                snapshot.map((data) => _buildListItem(context, data)).toList(),
           ),
         ),
         ButtonTheme(
@@ -108,15 +112,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, SavedDrug data) {
 
+  Widget _buildListItem(BuildContext context, SavedDrug data ) {
+    check++;
     /*너무 긴 이름들 잘라서 보여주기 정보를 바꾸는 건 아님*/
-    String _checkLongName(SavedDrug data){
-      String newName= data.itemName;
+    String _checkLongName(SavedDrug data) {
+      String newName = data.itemName;
       List splitName = [];
-      if(data.itemName.contains('(')){
+      if (data.itemName.contains('(')) {
         newName = data.itemName.replaceAll('(', '(');
-        if(newName.contains('')){
+        if (newName.contains('')) {
           splitName = newName.split('(');
           print(splitName);
           newName = splitName[0];
@@ -124,19 +129,18 @@ class _HomePageState extends State<HomePage> {
       }
       return newName;
     }
-    /*혹시라도 카테고리가 없는 애들을 위해서 임시로 만들어 놓음*/
-    String _checkCategory(SavedDrug data){
-      String newCategory = '카테고리 지정 없음';
-      if(data.category == '')
-        return newCategory;
 
-      else return data.category;
+    /*혹시라도 카테고리가 없는 애들을 위해서 임시로 만들어 놓음*/
+    String _checkCategory(SavedDrug data) {
+      String newCategory = '카테고리 지정 없음';
+      if (data.category == '')
+        return newCategory;
+      else
+        return data.category;
     }
 
-
     return GestureDetector(
-      onTap: () =>
-      {
+      onTap: () => {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -149,46 +153,52 @@ class _HomePageState extends State<HomePage> {
         height: 100.0,
         child: Material(
             color: Colors.white,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 15,
-                ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-                    child: Text('이미지 받기')),
-                //TODO: //child: Image.network(이미지)),
-                Container(
-                    padding: EdgeInsets.fromLTRB(15, 20, 5, 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          Text(
-                            _checkLongName(data),
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          )
-                        ]),
-                        Expanded(
-                            child: Row(
-                              children: [_categoryButton((_checkCategory(data)))],
+            child:
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 15,
+                      child: Center(
+                        child: Text(check.toString()),
+                      ),
+                    ),
+                    Container(
+                        padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+                        child: SizedBox(
+                            width: 88, height: 66, child: DrugImage(data.itemSeq))),
+                    Container(
+                        padding: EdgeInsets.fromLTRB(15, 20, 5, 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(children: [
+                              Text(
+                                _checkLongName(data),
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              )
+                            ]),
+                            Expanded(
+                                child:
+                                Row(
+                                  children: [_categoryButton((_checkCategory(data)))],
                             )),
-                        SizedBox(
-                          height: 3,
-                        ),
-                        Expanded(
-                          child: Text(
-                            data.expiration,
-                            style: TextStyle(
-                                color: Colors.grey[600], fontSize: 13),
-                          ),
-                        )
-                      ],
-                    )),
-              ],
-            )),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Expanded(
+                              child: Text(
+                                data.expiration,
+                                style: TextStyle(
+                                    color: Colors.grey[600], fontSize: 13),
+                              ),
+                            )
+                          ],
+                        )),
+                  ],
+                ),
+        ),
       ),
     );
   }
@@ -212,7 +222,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 }
 
 class SearchBar extends StatefulWidget {
