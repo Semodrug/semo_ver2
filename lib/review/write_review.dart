@@ -9,6 +9,9 @@ import 'review.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WriteReview extends StatefulWidget {
+  String drugItemSeq;
+  WriteReview(this.drugItemSeq);
+
   _WriteReviewState createState() => _WriteReviewState();
 }
 
@@ -43,12 +46,13 @@ class _WriteReviewState extends State<WriteReview> {
   String overallText = '';
   List<String> favoriteSelected = [];
   var noFavorite = 0;
+  DateTime regDate = DateTime.now();
+//  print(regDate);
 
   void _registerReview() {
-    Firestore.instance.collection("Reviews").add(
+    FirebaseFirestore.instance.collection("Reviews").add(
         {
-          //TODO: SeqNUm!!!!!!!!!!!!!!!!!!!!
-          "SeqNum" : "21700432",
+          "SeqNum" : widget.drugItemSeq,
           "uid" : auth.currentUser.uid,
           "id": auth.currentUser.email,
           "effect": effect,
@@ -59,14 +63,20 @@ class _WriteReviewState extends State<WriteReview> {
           "overallText": overallText,
           "favoriteSelected": favoriteSelected,
           "noFavorite": noFavorite,
-          "name" : "TESTUSER",
+          "registrationDate": DateTime.now(),
+//          "name" : "TESTUSER",
         }
     );
   }
 
 
+
   @override
   Widget build(BuildContext context) {
+//    String regDate = DateTime.now().year.toString() + "." + DateTime.now().month.toString() + "." + DateTime.now().day.toString();
+//    print("REGDATE: " + regDate);
+
+
     return Scaffold(
         appBar: AppBar(
           title: Text('Write Review',

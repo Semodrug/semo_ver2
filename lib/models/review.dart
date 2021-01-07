@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Review {
   final String effect;
   final String sideEffect;
@@ -11,9 +13,10 @@ class Review {
   final String uid;
   final String id;
   final String documentId;
+  final Timestamp registrationDate;
 
 //  final String name;
 //  final String uid;
 
-  Review({this.effect, this.sideEffect, this.effectText, this.sideEffectText, this.overallText, this.favoriteSelected, this.starRating,this.noFavorite, this.uid, this.id, this.documentId});
+  Review({this.effect, this.sideEffect, this.effectText, this.sideEffectText, this.overallText, this.favoriteSelected, this.starRating,this.noFavorite, this.uid, this.id, this.documentId, this.registrationDate});
 }

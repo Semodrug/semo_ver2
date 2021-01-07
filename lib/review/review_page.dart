@@ -642,7 +642,7 @@ class _ReviewPageState extends State<ReviewPage> {
           Expanded(
               flex: 5,
               child: TextField(
-                focusNode: focusNode,
+//                focusNode: focusNode,
                 style: TextStyle(fontSize: 15),
                 autofocus: true,
                 controller: _filter,

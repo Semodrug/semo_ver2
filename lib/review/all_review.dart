@@ -27,10 +27,11 @@ class _AllReveiewState extends State<AllReview> {
           child: Icon(Icons.create),
           backgroundColor: Colors.teal[300],
           elevation: 0.0,
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => WriteReview()));
-          }),
+//          onPressed: () {
+//            Navigator.push(context,
+//                MaterialPageRoute(builder: (context) => WriteReview()));
+//          }
+          ),
     );
   }
 
