@@ -120,9 +120,6 @@ Widget _topInfo(
                 if (snapshot2.hasData) {
                   List favoriteLists = snapshot2.data.favoriteLists;
                   bool isFavorite = favoriteLists.contains(drugItemSeq);
-                  print('isFavorite : $isFavorite');
-                  print('favoriteLists : $favoriteLists');
-                  print('drugItemSeq : $drugItemSeq');
 
                   return StreamBuilder<List<SavedDrug>>(
                     stream: DatabaseService(uid: user.uid).savedDrugs,
@@ -137,6 +134,66 @@ Widget _topInfo(
                         }
 
                         return Stack(children: [
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Center(
+                                  child: SizedBox(
+                                    child:
+                                        // Image.asset('images/02.png'),
+
+                                        FutureBuilder(
+                                      future: downloadURLExample(drugItemSeq),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Image.network(
+                                              snapshot.data.toString());
+                                        } else {
+                                          return Loading();
+                                        }
+                                      },
+                                    ),
+                                    width: 200.0,
+                                    height: 100.0,
+                                  ),
+                                ),
+                                Text(
+                                  drug.entpName,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Text(
+                                  drug.itemName,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 28.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Row(children: <Widget>[
+                                  // TODO: firebase connection
+                                  Text(
+                                    '4.5',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // TODO: firebase connection
+                                  Text(
+                                    ' (305개)',
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  )
+                                ]),
+                                Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      _categoryButton(drug.category)
+                                    ]),
+                              ]),
                           Positioned(
                             top: 0,
                             right: 0,
@@ -161,8 +218,6 @@ Widget _topInfo(
                                     color: isFavorite ? Colors.redAccent : null,
                                   ),
                                   onPressed: () async {
-                                    print('onpressed : $isFavorite');
-
                                     isFavorite
                                         ? favoriteLists.remove(drugItemSeq)
                                         : favoriteLists.add(drugItemSeq);
@@ -205,64 +260,6 @@ Widget _topInfo(
                               ),
                             ),
                           ),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 20.0,
-                                ),
-                                Center(
-                                  child: SizedBox(
-                                    child: Image.asset('images/02.png'),
-                                    // FutureBuilder(
-                                    //   future: downloadURLExample(drugItemSeq),
-                                    //   builder: (BuildContext context,
-                                    //       AsyncSnapshot snapshot) {
-                                    //     if (snapshot.hasData) {
-                                    //       return Image.network(
-                                    //           snapshot.data.toString());
-                                    //     } else {
-                                    //       return Loading();
-                                    //     }
-                                    //   },
-                                    // ),
-                                    width: 200.0,
-                                    height: 100.0,
-                                  ),
-                                ),
-                                Text(
-                                  drug.entpName,
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                Text(
-                                  drug.itemName,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 28.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Row(children: <Widget>[
-                                  // TODO: firebase connection
-                                  Text(
-                                    '4.5',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  // TODO: firebase connection
-                                  Text(
-                                    ' (305개)',
-                                    style: TextStyle(color: Colors.grey[600]),
-                                  )
-                                ]),
-                                Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      _categoryButton(drug.category)
-                                    ]),
-                              ]),
                         ]);
                       } else {
                         return Loading();
@@ -548,18 +545,15 @@ Future<String> downloadURLExample(String itemSeq) async {
     String downloadURL = await firebase_storage.FirebaseStorage.instance
         .ref('Image/$itemSeq.png')
         .getDownloadURL();
-    print(downloadURL);
+    // print(downloadURL);
 
     return downloadURL;
   } catch (e) {
     String downloadURL = await firebase_storage.FirebaseStorage.instance
         .ref('Image/195900043.png')
         .getDownloadURL();
-    print(downloadURL);
+    // print(downloadURL);
 
     return downloadURL;
   }
-  print(itemSeq);
-  // Within your widgets:
-  // Image.network(downloadURL);
 }
