@@ -142,18 +142,28 @@ class DatabaseService {
 
   // user data from snapshots
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
+    print("** SUMI's TEST: ${snapshot.data()['name']}");
+    print("** SUMI's TEST: ${snapshot.data()['sex']}");
+    print("** SUMI's TEST: ${snapshot.data()['phone']}");
+    print("** SUMI's TEST: ${snapshot.data()['birth']}");
+    print("** SUMI's TEST: ${snapshot.data()['diseaseList']}");
+    print("** SUMI's TEST: ${snapshot.data()['isPregnant']}");
+
     return UserData(
       uid: uid,
       name: snapshot.data()['name'] ?? '',
       sex: snapshot.data()['sex'] ?? '',
       phone: snapshot.data()['phone'] ?? '',
       birth: snapshot.data()['birth'] ?? '',
-      diseaseList: snapshot.data()['diseaseList'] ?? '',
+      diseaseList: snapshot.data()['diseaseList'] ?? [],
+      isPregnant: snapshot.data()['isPregnant'] ?? false,
     );
   }
 
   // get user doc stream
   Stream<UserData> get userData {
+    print("** SUMI's TEST: ${uid}");
+
     return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
 
