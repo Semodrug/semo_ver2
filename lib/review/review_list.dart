@@ -69,11 +69,14 @@ class _ReviewListState extends State<ReviewList> {
 
 
   Widget _buildListItem(BuildContext context, Review review) {
-    print("BUILDLISTITEM################");
-
     FirebaseAuth auth = FirebaseAuth.instance;
     List<String> names = List.from(review.favoriteSelected);
-
+    String year = review.registrationDate.toDate().year.toString();
+    String month = review.registrationDate.toDate().month.toString();
+    if(month.length == 1) month = '0'+ month;
+    String day = review.registrationDate.toDate().day.toString();
+    if(day.length == 1) day = '0'+ day;
+    String regDate =  year + "." + month + "." + day;
     return Container(
         decoration: BoxDecoration(
             border: Border(
@@ -87,16 +90,15 @@ class _ReviewListState extends State<ReviewList> {
               //Container(height: size.height * 0.01),
 //              _dateAndLike(record),
               Row(
+//                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   //Container(height: size.height * 0.05),
                   //TODO: DATE!!!!!!!
-                  Text("2020.08.11",
+                  Text(regDate,
                       style: TextStyle(color: Colors.grey[500], fontSize: 13)),
-//        Container(width: size.width * 0.63),
                   Padding(padding: EdgeInsets.all(18)),
-                  Padding(padding: EdgeInsets.only(left: 235)),
+                  Expanded(child: Container( )),
                   Container(
-                    //width: 500.0,
                     child: new Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -123,6 +125,7 @@ class _ReviewListState extends State<ReviewList> {
                   ),
                   Text((review.noFavorite).toString(),
                       style: TextStyle(fontSize: 14, color: Colors.black)),
+                  SizedBox(width: 15)
                 ],
               )
             ]));
@@ -132,87 +135,79 @@ class _ReviewListState extends State<ReviewList> {
 //  Widget _starAndIdAndMore(record, context, auth) {
   Widget _starAndIdAndMore(review, context, auth) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            RatingBar.builder(
-              initialRating: review.starRating*1.0,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: false,
-              itemCount: 5,
-              itemSize: 14,
-              glow: false,
-              itemPadding: EdgeInsets.symmetric(horizontal: 0),
-              unratedColor: Colors.grey[300],
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: Colors.amberAccent,
-              ),
-            ),
-
-            Padding(padding: EdgeInsets.only(left: 10)),
-            Text(review.id, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
-            SizedBox(width: 145),
-            IconButton(
-              icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
-              onPressed: () {
-                //TODO : It doesn't working
-                print("auth.currentUser.uid: " + auth.currentUser.uid);
-                print("record.uid: " + review.uid);
-                if(auth.currentUser.uid == review.uid) {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return SizedBox(
-                            child: Container(
-                                child: Wrap(
-                                  children: <Widget>[
-                                    MaterialButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.push(context, MaterialPageRoute(
-                                            //TODO
-                                              builder: (context) => EditReview(review)
-                                          ));
-                                        },
-                                        child: Center(child: Text("수정하기",
-                                            style: TextStyle(color: Colors.blue[700],
-                                                fontSize: 16)))
-                                    ),
-                                    MaterialButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          _showDeleteDialog(review);
-                                        },
-                                        child: Center(child: Text("삭제하기",
-                                            style: TextStyle(color: Colors.red[600],
-                                                fontSize: 16)))
-                                    ),
-                                    MaterialButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Center(child: Text("취소",
-                                            style: TextStyle(color: Colors.grey[600],
-                                                fontSize: 16)))
-                                    )
-                                  ],
-                                )
-                            )
-                        );
-                      });
-                }
-                else if(auth.currentUser.uid != review.uid) {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: buildBottomSheetAnonymous);
-                }
-              },
-            )
-          ],
+        RatingBar.builder(
+          initialRating: review.starRating*1.0,
+          minRating: 1,
+          direction: Axis.horizontal,
+          allowHalfRating: false,
+          itemCount: 5,
+          itemSize: 14,
+          glow: false,
+          itemPadding: EdgeInsets.symmetric(horizontal: 0),
+          unratedColor: Colors.grey[300],
+          itemBuilder: (context, _) => Icon(
+            Icons.star,
+            color: Colors.amberAccent,
+          ),
         ),
+        SizedBox(width: 10),
+        Text(review.id, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+//            SizedBox(width: 145),
+        Expanded(child: Container()),
+        IconButton(
+          icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
+          onPressed: () {
+            if(auth.currentUser.uid == review.uid) {
+              showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SizedBox(
+                        child: Container(
+                            child: Wrap(
+                              children: <Widget>[
+                                MaterialButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.push(context, MaterialPageRoute(
+                                        //TODO
+                                          builder: (context) => EditReview(review)
+                                      ));
+                                    },
+                                    child: Center(child: Text("수정하기",
+                                        style: TextStyle(color: Colors.blue[700],
+                                            fontSize: 16)))
+                                ),
+                                MaterialButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      _showDeleteDialog(review);
+                                    },
+                                    child: Center(child: Text("삭제하기",
+                                        style: TextStyle(color: Colors.red[600],
+                                            fontSize: 16)))
+                                ),
+                                MaterialButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Center(child: Text("취소",
+                                        style: TextStyle(color: Colors.grey[600],
+                                            fontSize: 16)))
+                                )
+                              ],
+                            )
+                        )
+                    );
+                  });
+            }
+            else if(auth.currentUser.uid != review.uid) {
+              showModalBottomSheet(
+                  context: context,
+                  builder: buildBottomSheetAnonymous);
+            }
+          },
+        )
       ],
     );
   }
@@ -296,6 +291,7 @@ Widget buildBottomSheetAnonymous(BuildContext context) {
               children: <Widget>[
                 MaterialButton(
                     onPressed: () {
+                      Navigator.of(context).pop();
                       Navigator.push(context, MaterialPageRoute(
                         //TODO
                           builder: (context) => ReportReview()
@@ -361,7 +357,7 @@ Widget buildBottomSheetAnonymous(BuildContext context) {
 
         //side effect
         Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
                 height: 28,

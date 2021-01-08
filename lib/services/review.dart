@@ -73,7 +73,8 @@ class ReviewService {
         noFavorite: doc.data()['noFavorite'] ?? 0,
         uid: doc.data()['uid'] ?? '',
         id: doc.data()['id'] ?? '',
-          documentId: doc.id ?? '',
+         documentId: doc.id ?? '',
+        registrationDate: doc.data()['registrationDate'],
       );
     }).toList();
   }
@@ -100,6 +101,7 @@ class ReviewService {
           uid: doc.data()['uid'] ?? '',
           id: doc.data()['id'] ?? '',
           documentId: doc.id ?? '',
+          registrationDate: doc.data()['registrationDate'],
         );
       }).toList();
     });
@@ -142,6 +144,7 @@ class ReviewService {
         uid: doc.data()['uid'] ?? '',
         id: doc.data()['id'] ?? '',
         documentId: doc.id ?? '',
+        registrationDate: doc.data()['registrationDate']
       );
     });
   }

@@ -68,7 +68,7 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
             onPressed: () {
 //            rating();
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => WriteReview()));
+                  MaterialPageRoute(builder: (context) => WriteReview(widget.drugItemSeq)));
             }),
         backgroundColor: Colors.white,
         body: CustomScrollView(
