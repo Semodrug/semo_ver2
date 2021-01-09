@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:semo_ver2/login/register_step2.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/review/report_review.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'edit_review.dart';
-import 'review_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

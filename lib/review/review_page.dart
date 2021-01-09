@@ -19,6 +19,10 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
+//  @override
+//  _ReviewPageState createState() => _ReviewPageState();
+//
+
   _ReviewPageState() {
     _filter.addListener(() {
       setState(() {
@@ -36,14 +40,8 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<Review>>.value(
-//      value: ReviewService().getReviews(widget.drugItemSeq),
-        value: ReviewService().reviews,
+        value: ReviewService().getReviews(widget.drugItemSeq),
       child: Scaffold(
-//        body: topOfReview(context),
-//TODO Save reviewList()
-//        body: ReviewList()
-//          body: GetRating()
-
       //below is top of review
         body:  Column(
           mainAxisSize: MainAxisSize.max,
@@ -54,7 +52,6 @@ class _ReviewPageState extends State<ReviewPage> {
               height: 4,
               color: Colors.grey[200],
             ),
-
             Container(
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                 child: Row(
@@ -79,20 +76,95 @@ class _ReviewPageState extends State<ReviewPage> {
                         }),
                   ],
                 )),
-  //TODO: save _searchBar()
           _searchBar(),
             ReviewList(_searchText)
-  //        _buildBody(context)
           ],
         )
 
       )
     );
   }
-//    return Scaffold(
-//      body: topOfReview(context),
-//    );
 
+  Widget _searchBar() {
+    return Container(
+      width: 370,
+      height: 45,
+      //padding: EdgeInsets.only(top: 3,),
+      margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        color: Colors.grey[200],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+              flex: 5,
+              child: TextField(
+//                focusNode: focusNode,
+                style: TextStyle(fontSize: 15),
+                autofocus: true,
+                controller: _filter,
+                decoration: InputDecoration(
+                    fillColor: Colors.white12,
+                    filled: true,
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
+                    suffixIcon: focusNode.hasFocus
+                        ? IconButton(
+                      icon: Icon(Icons.cancel, size: 20),
+                      onPressed: () {
+                        setState(() {
+                          _filter.clear();
+                          _searchText = "";
+                        });
+                      },
+                    )
+                        : Container(),
+                    hintText: '검색',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10)),
+                        borderSide:
+                        BorderSide(color: Colors.transparent)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10)),
+                        borderSide:
+                        BorderSide(color: Colors.transparent)),
+                    border: OutlineInputBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10)),
+                        borderSide:
+                        BorderSide(color: Colors.transparent))),
+              )),
+          focusNode.hasFocus
+              ? Expanded(
+            child: FlatButton(
+              child: Text(
+                'clear',
+                style: TextStyle(fontSize: 13),
+              ),
+              onPressed: () {
+                setState(() {
+                  _filter.clear();
+                  _searchText = "";
+                  focusNode.unfocus();
+                });
+              },
+            ),
+          )
+              : Expanded(
+            flex: 0,
+            child: Container(),
+          )
+        ],
+      ),
+    );
+  }
 
 /*  Widget _effectPieChart(good, soso, bad) {
     double sum = (good+soso+bad)*1.0;
@@ -627,86 +699,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }*/
 
-  Widget _searchBar() {
-    return Container(
-      width: 370,
-      height: 45,
-      //padding: EdgeInsets.only(top: 3,),
-      margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        color: Colors.grey[200],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-              flex: 5,
-              child: TextField(
-//                focusNode: focusNode,
-                style: TextStyle(fontSize: 15),
-                autofocus: true,
-                controller: _filter,
-                decoration: InputDecoration(
-                    fillColor: Colors.white12,
-                    filled: true,
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                      size: 20,
-                    ),
-                    suffixIcon: focusNode.hasFocus
-                        ? IconButton(
-                      icon: Icon(Icons.cancel, size: 20),
-                      onPressed: () {
-                        setState(() {
-                          _filter.clear();
-                          _searchText = "";
-                        });
-                      },
-                    )
-                        : Container(),
-                    hintText: '검색',
-                    labelStyle: TextStyle(color: Colors.grey),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(10)),
-                        borderSide:
-                        BorderSide(color: Colors.transparent)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(10)),
-                        borderSide:
-                        BorderSide(color: Colors.transparent)),
-                    border: OutlineInputBorder(
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(10)),
-                        borderSide:
-                        BorderSide(color: Colors.transparent))),
-              )),
-          focusNode.hasFocus
-              ? Expanded(
-            child: FlatButton(
-              child: Text(
-                'clear',
-                style: TextStyle(fontSize: 13),
-              ),
-              onPressed: () {
-                setState(() {
-                  _filter.clear();
-                  _searchText = "";
-                  focusNode.unfocus();
-                });
-              },
-            ),
-          )
-              : Expanded(
-            flex: 0,
-            child: Container(),
-          )
-        ],
-      ),
-    );
-  }
+
 
 /*  Widget buildBottomSheetWriter(BuildContext context, record) {
     return SizedBox(
