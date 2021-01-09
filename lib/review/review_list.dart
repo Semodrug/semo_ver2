@@ -31,7 +31,6 @@ class _ReviewListState extends State<ReviewList> {
         physics: const ClampingScrollPhysics(),
         padding: EdgeInsets.all(16.0),
         children: searchResults.map((data) => _buildListItem(context, data)).toList(),
-//       return ReviewContainer(review: reviews[index]);
       ),
     );
 
@@ -43,38 +42,17 @@ class _ReviewListState extends State<ReviewList> {
 //    );
   }
 
-/*
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-//    List<DocumentSnapshot> searchResults = [];
-//    for (DocumentSnapshot d in snapshot) {
-//      if (d.data().toString().contains(_searchText)) {
-//        searchResults.add(d);
-//      } else
-//        print('    RESULT Nothing     ');
-//    }
-    return Expanded(
-      child: ListView(
-        physics: const ClampingScrollPhysics(),
-//        shrinkWrap: true,
-//        scrollDirection: Axis.vertical,
-        padding: EdgeInsets.all(16.0),
-        children:
-        searchResults.map((data) => _buildListItem(context, data)).toList(),
-      ),
-    );
-  }
-*/
-
-
   Widget _buildListItem(BuildContext context, Review review) {
     FirebaseAuth auth = FirebaseAuth.instance;
     List<String> names = List.from(review.favoriteSelected);
     String year = review.registrationDate.toDate().year.toString();
     String month = review.registrationDate.toDate().month.toString();
+
     if(month.length == 1) month = '0'+ month;
     String day = review.registrationDate.toDate().day.toString();
     if(day.length == 1) day = '0'+ day;
     String regDate =  year + "." + month + "." + day;
+
     return Container(
         decoration: BoxDecoration(
             border: Border(
@@ -85,52 +63,11 @@ class _ReviewListState extends State<ReviewList> {
             children: [
               _starAndIdAndMore(review, context, auth),
               _review(review),
-              //Container(height: size.height * 0.01),
-//              _dateAndLike(record),
-              Row(
-//                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  //Container(height: size.height * 0.05),
-                  //TODO: DATE!!!!!!!
-                  Text(regDate,
-                      style: TextStyle(color: Colors.grey[500], fontSize: 13)),
-                  Padding(padding: EdgeInsets.all(18)),
-                  Expanded(child: Container( )),
-                  Container(
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        new GestureDetector(
-                            child: new Icon(
-                              names.contains(auth.currentUser.uid) ? Icons.favorite
-                                  : Icons.favorite_border,
-//                                            color: names.contains(auth.currentUser.uid) ?
-//                                                Colors.redAccent[200] : Colors.grey[300],
-                              color: Colors.redAccent[200],
-                              size: 21,
-                            ),
-                            onTap:() async{
-                              if(names.contains(auth.currentUser.uid)) {
-                                await ReviewService(documentId: review.documentId).decreaseFavorite(review.documentId, auth.currentUser.uid);
-                              }
-                              else {
-                                await ReviewService(documentId: review.documentId).increaseFavorite(review.documentId, auth.currentUser.uid);
-                              }
-                            }
-                        )
-                      ],
-                    ),
-                  ),
-                  Text((review.noFavorite).toString(),
-                      style: TextStyle(fontSize: 14, color: Colors.black)),
-                  SizedBox(width: 15)
-                ],
-              )
+              _dateAndFavorite(regDate, names, auth, review)
+
             ]));
   }
 
-
-//  Widget _starAndIdAndMore(record, context, auth) {
   Widget _starAndIdAndMore(review, context, auth) {
     return Row(
       children: <Widget>[
@@ -207,110 +144,6 @@ class _ReviewListState extends State<ReviewList> {
           },
         )
       ],
-    );
-  }
-
-
-  Future<void> _showDeleteDialog(record) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-//          title: Center(child: Text('AlertDialog Title')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    TextButton(
-                      child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-                      onPressed: () async {
-
-                        await ReviewService(documentId: record.documentId).deleteReviewData();
-//                        record.reference.delete();
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-
-        );
-      },
-    );
-  }
-
-
-//  Widget buildBottomSheetWriter(BuildContext context, record) {
-//    return SizedBox(
-//        child: Container(
-////                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-//          child: Wrap(
-//            children: <Widget>[
-//              MaterialButton(
-//                onPressed: () {
-//                  Navigator.pop(context);
-//                },
-//                child: Center(child: Text("수정하기",
-//                    style: TextStyle(color: Colors.blue[700],
-//                    fontSize: 16)))
-//              ),
-//              MaterialButton(
-//                  onPressed: () {
-//                    _showDeleteDialog(record);
-//                  },
-//                  child: Center(child: Text("취소",
-//                      style: TextStyle(color: Colors.red[600],
-//                      fontSize: 16)))
-//              ),
-//            ],
-//          )
-//        )
-//    );
-//  }
-
-Widget buildBottomSheetAnonymous(BuildContext context) {
-    return SizedBox(
-        child: Container(
-//                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Wrap(
-              children: <Widget>[
-                MaterialButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(context, MaterialPageRoute(
-                        //TODO
-                          builder: (context) => ReportReview()
-//                                              builder: (context) => EditReview(review)
-                      ));
-                    },
-                    child: Center(child: Text("신고하기",
-                        style: TextStyle(color: Colors.blue[700],
-                            fontSize: 16)))
-                ),
-                MaterialButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Center(child: Text("취소",
-                        style: TextStyle(color: Colors.blue[700],
-                            fontSize: 16)))
-                ),
-              ],
-            )
-        )
     );
   }
 
@@ -411,5 +244,146 @@ Widget buildBottomSheetAnonymous(BuildContext context) {
       ],
     );
   }
+
+  Widget _dateAndFavorite(regDate, names, auth, review) {
+    return Row(
+      children: <Widget>[
+        Text(regDate,
+            style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+        Padding(padding: EdgeInsets.all(18)),
+        Expanded(child: Container( )),
+        Container(
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              new GestureDetector(
+                  child: new Icon(
+                    names.contains(auth.currentUser.uid) ? Icons.favorite
+                        : Icons.favorite_border,
+//                                            color: names.contains(auth.currentUser.uid) ?
+//                                                Colors.redAccent[200] : Colors.grey[300],
+                    color: Colors.redAccent[200],
+                    size: 21,
+                  ),
+                  onTap:() async{
+                    if(names.contains(auth.currentUser.uid)) {
+                      await ReviewService(documentId: review.documentId).decreaseFavorite(review.documentId, auth.currentUser.uid);
+                    }
+                    else {
+                      await ReviewService(documentId: review.documentId).increaseFavorite(review.documentId, auth.currentUser.uid);
+                    }
+                  }
+              )
+            ],
+          ),
+        ),
+        Text((review.noFavorite).toString(),
+            style: TextStyle(fontSize: 14, color: Colors.black)),
+        SizedBox(width: 15)
+      ],
+    );
+  }
+
+  Future<void> _showDeleteDialog(record) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+//          title: Center(child: Text('AlertDialog Title')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () async {
+
+                        await ReviewService(documentId: record.documentId).deleteReviewData();
+//                        record.reference.delete();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+
+        );
+      },
+    );
+  }
+
+  Widget buildBottomSheetAnonymous(BuildContext context) {
+    return SizedBox(
+        child: Container(
+//                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Wrap(
+              children: <Widget>[
+                MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(context, MaterialPageRoute(
+                        //TODO
+                          builder: (context) => ReportReview()
+//                                              builder: (context) => EditReview(review)
+                      ));
+                    },
+                    child: Center(child: Text("신고하기",
+                        style: TextStyle(color: Colors.blue[700],
+                            fontSize: 16)))
+                ),
+                MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Center(child: Text("취소",
+                        style: TextStyle(color: Colors.blue[700],
+                            fontSize: 16)))
+                ),
+              ],
+            )
+        )
+    );
+  }
+
+//  Widget buildBottomSheetWriter(BuildContext context, record) {
+//    return SizedBox(
+//        child: Container(
+////                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+//          child: Wrap(
+//            children: <Widget>[
+//              MaterialButton(
+//                onPressed: () {
+//                  Navigator.pop(context);
+//                },
+//                child: Center(child: Text("수정하기",
+//                    style: TextStyle(color: Colors.blue[700],
+//                    fontSize: 16)))
+//              ),
+//              MaterialButton(
+//                  onPressed: () {
+//                    _showDeleteDialog(record);
+//                  },
+//                  child: Center(child: Text("취소",
+//                      style: TextStyle(color: Colors.red[600],
+//                      fontSize: 16)))
+//              ),
+//            ],
+//          )
+//        )
+//    );
+//  }
 
 }

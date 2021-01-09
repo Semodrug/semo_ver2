@@ -19,10 +19,6 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
-//  @override
-//  _ReviewPageState createState() => _ReviewPageState();
-//
-
   _ReviewPageState() {
     _filter.addListener(() {
       setState(() {
@@ -76,11 +72,10 @@ class _ReviewPageState extends State<ReviewPage> {
                         }),
                   ],
                 )),
-          _searchBar(),
+            _searchBar(),
             ReviewList(_searchText)
           ],
         )
-
       )
     );
   }
@@ -100,7 +95,7 @@ class _ReviewPageState extends State<ReviewPage> {
           Expanded(
               flex: 5,
               child: TextField(
-//                focusNode: focusNode,
+                focusNode: focusNode,
                 style: TextStyle(fontSize: 15),
                 autofocus: true,
                 controller: _filter,

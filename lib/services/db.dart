@@ -13,7 +13,7 @@ class DatabaseService {
   // collection reference
   final CollectionReference drugCollection =
       FirebaseFirestore.instance.collection('Drugs');
-  Query drugQuery = FirebaseFirestore.instance.collection('Drugs');
+  Query drugQuery = FirebaseFirestore.instance.collection('drug');
 
   //drugSnapshot 값 get이랑 set에서 해주기
   Stream<List<Drug>> drugsSnapshots;
