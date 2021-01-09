@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-
-import 'register_step2.dart';
 import 'package:semo_ver2/login/login_provider.dart';
+import 'package:semo_ver2/login/register_step2.dart';
+
+bool _isSecret = true;
+bool _isIdFilled = false;
+bool _isPasswordFilled = false;
 
 class RegisterFirstPage extends StatefulWidget {
   final String title = '회원가입';
@@ -59,9 +61,6 @@ class RegisterFirstPageState extends State<RegisterFirstPage> {
       }),
     );
   }
-
-  // Example code for registration.
-
 }
 
 class RegisterForm extends StatefulWidget {
@@ -73,8 +72,6 @@ class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordCheckController =
-      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -95,124 +92,13 @@ class _RegisterFormState extends State<RegisterForm> {
             SizedBox(
               height: 20,
             ),
-            TextFormField(
-              controller: _emailController,
-              cursorColor: Colors.teal[400],
-              decoration: const InputDecoration(
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.teal),
-                ),
-                hintText: '아이디(이메일)',
-                hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
-              ),
-              validator: (String value) {
-                if (value.isEmpty) {
-                  return '아이디(이메일)을 입력해주세요';
-                }
-                return null;
-              },
-            ),
+            emailField(),
             SizedBox(
               height: 10,
             ),
-            TextFormField(
-              controller: _passwordController,
-              cursorColor: Colors.teal[400],
-              decoration: InputDecoration(
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.teal),
-                ),
-                hintText: '비밀번호',
-                hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
-                // filled: true,
-                // fillColor: Colors.white,
-                // hintText: '8자리 이상',
-              ),
-              obscureText: true,
-              validator: (String value) {
-                if (value.isEmpty) {
-                  return '8자리 이상 입력해주세요';
-                }
-                return null;
-              },
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: _passwordCheckController,
-              cursorColor: Colors.teal[400],
-              decoration: InputDecoration(
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.teal),
-                ),
-                hintText: '비밀번호 확인',
-                hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
-                // filled: true,
-                // fillColor: Colors.white,
-                // hintText: '8자리 이상',
-              ),
-              obscureText: true,
-              validator: (String value) {
-                if (value.isEmpty) {
-                  return '8자리 이상 입력해주세요';
-                }
-                return null;
-              },
-            ),
+            passwordField(),
             SizedBox(height: 50.0),
-            Container(
-              alignment: Alignment.center,
-              child: SizedBox(
-                width: 400.0,
-                height: 45.0,
-                //padding: const EdgeInsets.symmetric(vertical: 16.0),
-                //alignment: Alignment.center,
-                child: RaisedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState.validate()) {
-                      // _register();
-                      await Provider.of<UserProvider>(context, listen: false)
-                              .signUpWithEmail(_emailController.text,
-                                  _passwordController.text)
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RegisterSecondPage()),
-                            )
-                          : null;
-                    }
-                  },
-                  shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(10.0)),
-                  child: const Text(
-                    '확인',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  color: Colors.teal[400],
-                ),
-              ),
-            ),
-            // Container(
-            //   alignment: Alignment.center,
-            //   child: Text(_success == null
-            //       ? ''
-            //       : (_success
-            //           ? '로그인 정보가 입력되었습니다.' + _userEmail
-            //           : 'Registration failed')),
-            // ),
-
-            /* 로그인 뛰어넘기 */
-            IconButton(
-              icon: Icon(Icons.skip_next),
-              color: Colors.redAccent,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterSecondPage()),
-                );
-              },
-            ),
+            submitField(),
           ],
         ),
       ),
@@ -224,7 +110,118 @@ class _RegisterFormState extends State<RegisterForm> {
     // Clean up the controller when the Widget is disposed
     _emailController.dispose();
     _passwordController.dispose();
-    _passwordCheckController.dispose();
     super.dispose();
+  }
+
+  Widget emailField() {
+    return TextFormField(
+      controller: _emailController,
+      cursorColor: Colors.teal[400],
+      decoration: const InputDecoration(
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.teal),
+        ),
+        hintText: '아이디(이메일)',
+        hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
+      ),
+      onChanged: (text) {
+        if (text.isNotEmpty) {
+          setState(() {
+            _isIdFilled = true;
+          });
+        } else {
+          setState(() {
+            _isIdFilled = false;
+          });
+        }
+      },
+      validator: (String value) {
+        if (value.isEmpty) {
+          return '아이디(이메일)을 입력해주세요';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget passwordField() {
+    return TextFormField(
+      controller: _passwordController,
+      cursorColor: Colors.teal[400],
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.teal),
+          ),
+          hintText: '비밀번호',
+          hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
+          suffixIcon: IconButton(
+            icon: Icon(
+              _isSecret ? Icons.visibility_off : Icons.visibility,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              setState(() {
+                _isSecret = !_isSecret;
+                print(_isSecret);
+              });
+            },
+          )),
+      obscureText: _isSecret ? true : false,
+      onChanged: (text) {
+        if (text.length > 8) {
+          setState(() {
+            _isPasswordFilled = true;
+          });
+        } else {
+          setState(() {
+            _isPasswordFilled = false;
+          });
+        }
+      },
+      validator: (String value) {
+        if (value.isEmpty) {
+          return '8자리 이상 입력해주세요';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget submitField() {
+    return Container(
+      alignment: Alignment.center,
+      child: SizedBox(
+        width: 400.0,
+        height: 45.0,
+        //padding: const EdgeInsets.symmetric(vertical: 16.0),
+        //alignment: Alignment.center,
+        child: RaisedButton(
+          child: const Text(
+            '확인',
+            style: TextStyle(color: Colors.white),
+          ),
+          color:
+              _isIdFilled && _isPasswordFilled ? Colors.teal[400] : Colors.grey,
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(10.0)),
+          onPressed: () async {
+            if (_isIdFilled && _isPasswordFilled) {
+              if (_formKey.currentState.validate()) {
+                // _register();
+                await Provider.of<UserProvider>(context, listen: false)
+                        .signUpWithEmail(
+                            _emailController.text, _passwordController.text)
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegisterSecondPage()),
+                      )
+                    : Container();
+              }
+            }
+          },
+        ),
+      ),
+    );
   }
 }

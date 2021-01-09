@@ -222,4 +222,32 @@ class DatabaseService {
       'expiration': expiration ?? '',
     });
   }
+
+  /* Policy */
+  // collection reference
+  final CollectionReference policyCollection =
+      FirebaseFirestore.instance.collection('Policy');
+
+  // privacy from snapshots
+  String _termsFromSnapshot(DocumentSnapshot snapshot) {
+    return snapshot.data()['terms'] ?? '';
+  }
+
+  // get privacy stream
+  Stream<String> get terms {
+    return policyCollection.doc('terms').snapshots().map(_termsFromSnapshot);
+  }
+
+  // privacy from snapshots
+  String _privacyFromSnapshot(DocumentSnapshot snapshot) {
+    return snapshot.data()['privacy'] ?? '';
+  }
+
+  // get privacy stream
+  Stream<String> get privacy {
+    return policyCollection
+        .doc('privacy')
+        .snapshots()
+        .map(_privacyFromSnapshot);
+  }
 }
