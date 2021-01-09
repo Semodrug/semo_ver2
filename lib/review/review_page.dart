@@ -38,7 +38,6 @@ class _ReviewPageState extends State<ReviewPage> {
     return StreamProvider<List<Review>>.value(
         value: ReviewService().getReviews(widget.drugItemSeq),
       child: Scaffold(
-      //below is top of review
         body:  Column(
           mainAxisSize: MainAxisSize.max,
           children: [

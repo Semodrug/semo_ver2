@@ -52,7 +52,7 @@ class _WriteReviewState extends State<WriteReview> {
   void _registerReview() {
     FirebaseFirestore.instance.collection("Reviews").add(
         {
-          "SeqNum" : widget.drugItemSeq,
+          "seqNum" : widget.drugItemSeq,
           "uid" : auth.currentUser.uid,
           "id": auth.currentUser.email,
           "effect": effect,
@@ -73,10 +73,6 @@ class _WriteReviewState extends State<WriteReview> {
 
   @override
   Widget build(BuildContext context) {
-//    String regDate = DateTime.now().year.toString() + "." + DateTime.now().month.toString() + "." + DateTime.now().day.toString();
-//    print("REGDATE: " + regDate);
-
-
     return Scaffold(
         appBar: AppBar(
           title: Text('Write Review',
