@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:semo_ver2/login/register_step2.dart';
+import 'package:semo_ver2/login/register2_name.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/review/report_review.dart';
 import 'package:semo_ver2/services/review.dart';
@@ -32,7 +32,8 @@ class _ReviewListState extends State<ReviewList> {
       child: ListView(
         physics: const ClampingScrollPhysics(),
         padding: EdgeInsets.all(16.0),
-        children: searchResults.map((data) => _buildListItem(context, data)).toList(),
+        children:
+            searchResults.map((data) => _buildListItem(context, data)).toList(),
 //       return ReviewContainer(review: reviews[index]);
       ),
     );
@@ -67,7 +68,6 @@ class _ReviewListState extends State<ReviewList> {
   }
 */
 
-
   Widget _buildListItem(BuildContext context, Review review) {
     print("BUILDLISTITEM################");
 
@@ -77,57 +77,56 @@ class _ReviewListState extends State<ReviewList> {
     return Container(
         decoration: BoxDecoration(
             border: Border(
-                bottom:
-                BorderSide(width: 0.6, color: Colors.grey[300]))),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _starAndIdAndMore(review, context, auth),
-              _review(review),
-              //Container(height: size.height * 0.01),
+                bottom: BorderSide(width: 0.6, color: Colors.grey[300]))),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          _starAndIdAndMore(review, context, auth),
+          _review(review),
+          //Container(height: size.height * 0.01),
 //              _dateAndLike(record),
-              Row(
-                children: <Widget>[
-                  //Container(height: size.height * 0.05),
-                  //TODO: DATE!!!!!!!
-                  Text("2020.08.11",
-                      style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+          Row(
+            children: <Widget>[
+              //Container(height: size.height * 0.05),
+              //TODO: DATE!!!!!!!
+              Text("2020.08.11",
+                  style: TextStyle(color: Colors.grey[500], fontSize: 13)),
 //        Container(width: size.width * 0.63),
-                  Padding(padding: EdgeInsets.all(18)),
-                  Padding(padding: EdgeInsets.only(left: 235)),
-                  Container(
-                    //width: 500.0,
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        new GestureDetector(
-                            child: new Icon(
-                              names.contains(auth.currentUser.uid) ? Icons.favorite
-                                  : Icons.favorite_border,
+              Padding(padding: EdgeInsets.all(18)),
+              Padding(padding: EdgeInsets.only(left: 235)),
+              Container(
+                //width: 500.0,
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    new GestureDetector(
+                        child: new Icon(
+                          names.contains(auth.currentUser.uid)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
 //                                            color: names.contains(auth.currentUser.uid) ?
 //                                                Colors.redAccent[200] : Colors.grey[300],
-                              color: Colors.redAccent[200],
-                              size: 21,
-                            ),
-                            onTap:() async{
-                              if(names.contains(auth.currentUser.uid)) {
-                                await ReviewService(documentId: review.documentId).decreaseFavorite(review.documentId, auth.currentUser.uid);
-                              }
-                              else {
-                                await ReviewService(documentId: review.documentId).increaseFavorite(review.documentId, auth.currentUser.uid);
-                              }
-                            }
-                        )
-                      ],
-                    ),
-                  ),
-                  Text((review.noFavorite).toString(),
-                      style: TextStyle(fontSize: 14, color: Colors.black)),
-                ],
-              )
-            ]));
+                          color: Colors.redAccent[200],
+                          size: 21,
+                        ),
+                        onTap: () async {
+                          if (names.contains(auth.currentUser.uid)) {
+                            await ReviewService(documentId: review.documentId)
+                                .decreaseFavorite(
+                                    review.documentId, auth.currentUser.uid);
+                          } else {
+                            await ReviewService(documentId: review.documentId)
+                                .increaseFavorite(
+                                    review.documentId, auth.currentUser.uid);
+                          }
+                        })
+                  ],
+                ),
+              ),
+              Text((review.noFavorite).toString(),
+                  style: TextStyle(fontSize: 14, color: Colors.black)),
+            ],
+          )
+        ]));
   }
-
 
 //  Widget _starAndIdAndMore(record, context, auth) {
   Widget _starAndIdAndMore(review, context, auth) {
@@ -137,7 +136,7 @@ class _ReviewListState extends State<ReviewList> {
         Row(
           children: <Widget>[
             RatingBar.builder(
-              initialRating: review.starRating*1.0,
+              initialRating: review.starRating * 1.0,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: false,
@@ -151,9 +150,9 @@ class _ReviewListState extends State<ReviewList> {
                 color: Colors.amberAccent,
               ),
             ),
-
             Padding(padding: EdgeInsets.only(left: 10)),
-            Text(review.id, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+            Text(review.id,
+                style: TextStyle(color: Colors.grey[500], fontSize: 13)),
             SizedBox(width: 145),
             IconButton(
               icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
@@ -161,53 +160,54 @@ class _ReviewListState extends State<ReviewList> {
                 //TODO : It doesn't working
                 print("auth.currentUser.uid: " + auth.currentUser.uid);
                 print("record.uid: " + review.uid);
-                if(auth.currentUser.uid == review.uid) {
+                if (auth.currentUser.uid == review.uid) {
                   showModalBottomSheet(
                       context: context,
                       builder: (BuildContext context) {
                         return SizedBox(
                             child: Container(
                                 child: Wrap(
-                                  children: <Widget>[
-                                    MaterialButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.push(context, MaterialPageRoute(
-                                            //TODO
-                                              builder: (context) => EditReview(review)
-                                          ));
-                                        },
-                                        child: Center(child: Text("수정하기",
-                                            style: TextStyle(color: Colors.blue[700],
-                                                fontSize: 16)))
-                                    ),
-                                    MaterialButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          _showDeleteDialog(review);
-                                        },
-                                        child: Center(child: Text("삭제하기",
-                                            style: TextStyle(color: Colors.red[600],
-                                                fontSize: 16)))
-                                    ),
-                                    MaterialButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Center(child: Text("취소",
-                                            style: TextStyle(color: Colors.grey[600],
-                                                fontSize: 16)))
-                                    )
-                                  ],
-                                )
-                            )
-                        );
+                          children: <Widget>[
+                            MaterialButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          //TODO
+                                          builder: (context) =>
+                                              EditReview(review)));
+                                },
+                                child: Center(
+                                    child: Text("수정하기",
+                                        style: TextStyle(
+                                            color: Colors.blue[700],
+                                            fontSize: 16)))),
+                            MaterialButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  _showDeleteDialog(review);
+                                },
+                                child: Center(
+                                    child: Text("삭제하기",
+                                        style: TextStyle(
+                                            color: Colors.red[600],
+                                            fontSize: 16)))),
+                            MaterialButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Center(
+                                    child: Text("취소",
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 16))))
+                          ],
+                        )));
                       });
-                }
-                else if(auth.currentUser.uid != review.uid) {
+                } else if (auth.currentUser.uid != review.uid) {
                   showModalBottomSheet(
-                      context: context,
-                      builder: buildBottomSheetAnonymous);
+                      context: context, builder: buildBottomSheetAnonymous);
                 }
               },
             )
@@ -216,7 +216,6 @@ class _ReviewListState extends State<ReviewList> {
       ],
     );
   }
-
 
   Future<void> _showDeleteDialog(record) async {
     return showDialog<void>(
@@ -228,22 +227,35 @@ class _ReviewListState extends State<ReviewList> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                Center(
+                    child: Text('정말 삭제하시겠습니까?',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold))),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     TextButton(
-                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+                      child: Text('취소',
+                          style: TextStyle(
+                              color: Colors.black38,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
                     TextButton(
-                      child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+                      child: Text('삭제',
+                          style: TextStyle(
+                              color: Colors.teal[00],
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold)),
                       onPressed: () async {
-
-                        await ReviewService(documentId: record.documentId).deleteReviewData();
+                        await ReviewService(documentId: record.documentId)
+                            .deleteReviewData();
 //                        record.reference.delete();
                         Navigator.of(context).pop();
                       },
@@ -253,12 +265,10 @@ class _ReviewListState extends State<ReviewList> {
               ],
             ),
           ),
-
         );
       },
     );
   }
-
 
 //  Widget buildBottomSheetWriter(BuildContext context, record) {
 //    return SizedBox(
@@ -288,36 +298,34 @@ class _ReviewListState extends State<ReviewList> {
 //    );
 //  }
 
-Widget buildBottomSheetAnonymous(BuildContext context) {
+  Widget buildBottomSheetAnonymous(BuildContext context) {
     return SizedBox(
         child: Container(
 //                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Wrap(
-              children: <Widget>[
-                MaterialButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        //TODO
-                          builder: (context) => ReportReview()
+      children: <Widget>[
+        MaterialButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      //TODO
+                      builder: (context) => ReportReview()
 //                                              builder: (context) => EditReview(review)
                       ));
-                    },
-                    child: Center(child: Text("신고하기",
-                        style: TextStyle(color: Colors.blue[700],
-                            fontSize: 16)))
-                ),
-                MaterialButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Center(child: Text("취소",
-                        style: TextStyle(color: Colors.blue[700],
-                            fontSize: 16)))
-                ),
-              ],
-            )
-        )
-    );
+            },
+            child: Center(
+                child: Text("신고하기",
+                    style: TextStyle(color: Colors.blue[700], fontSize: 16)))),
+        MaterialButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Center(
+                child: Text("취소",
+                    style: TextStyle(color: Colors.blue[700], fontSize: 16)))),
+      ],
+    )));
   }
 
   Widget _review(review) {
@@ -331,23 +339,27 @@ Widget buildBottomSheetAnonymous(BuildContext context) {
                 height: 28,
                 width: 70,
                 decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.grey[400], width: 1.0),
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(6.0))),
+                    border: Border.all(color: Colors.grey[400], width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(6.0))),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text("효과", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
+                    Text("효과",
+                        style:
+                            TextStyle(fontSize: 14.5, color: Colors.grey[600])),
                     Padding(padding: EdgeInsets.all(2.5)),
                     //Container(width: size.width * 0.015),
                     Container(
                         width: 17,
                         height: 17,
                         decoration: BoxDecoration(
-                          //TODO: COlor: Based on effect color
-                            color: review.effect == "soso" ? Color(0xffFFDD66) : review.effect == "bad" ? Color(0xffFF7070) : Color(0xff88F0BE),
+                            //TODO: COlor: Based on effect color
+                            color: review.effect == "soso"
+                                ? Color(0xffFFDD66)
+                                : review.effect == "bad"
+                                    ? Color(0xffFF7070)
+                                    : Color(0xff88F0BE),
                             shape: BoxShape.circle)),
                   ],
                 )),
@@ -357,7 +369,7 @@ Widget buildBottomSheetAnonymous(BuildContext context) {
           ],
         ),
 
-        SizedBox(height:13),
+        SizedBox(height: 13),
 
         //side effect
         Row(
@@ -368,20 +380,22 @@ Widget buildBottomSheetAnonymous(BuildContext context) {
                 width: 80,
                 //width: 5, height: 5,
                 decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.grey[400], width: 1.0),
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(6.0))),
+                    border: Border.all(color: Colors.grey[400], width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(6.0))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text("부작용", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
+                    Text("부작용",
+                        style:
+                            TextStyle(fontSize: 14.5, color: Colors.grey[600])),
                     Padding(padding: EdgeInsets.all(2.5)),
                     Container(
                         width: 17,
                         height: 17,
                         decoration: BoxDecoration(
-                            color: review.sideEffect == "yes"? Color(0xffFF7070) : Color(0xff88F0BE),
+                            color: review.sideEffect == "yes"
+                                ? Color(0xffFF7070)
+                                : Color(0xff88F0BE),
 //                            color: Colors.redAccent[100],
                             shape: BoxShape.circle)),
                   ],
@@ -391,22 +405,21 @@ Widget buildBottomSheetAnonymous(BuildContext context) {
           ],
         ),
 
-
-        SizedBox(height:13),
+        SizedBox(height: 13),
         Row(
           children: <Widget>[
             Container(
                 height: 25,
                 width: 45,
                 decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.grey[400], width: 1.0),
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(6.0))),
+                    border: Border.all(color: Colors.grey[400], width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(6.0))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text("총평", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
+                    Text("총평",
+                        style:
+                            TextStyle(fontSize: 14.5, color: Colors.grey[600])),
                   ],
                 )),
             Padding(padding: EdgeInsets.all(5)),
@@ -417,5 +430,4 @@ Widget buildBottomSheetAnonymous(BuildContext context) {
       ],
     );
   }
-
 }

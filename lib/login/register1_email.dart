@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/login/login_provider.dart';
-import 'package:semo_ver2/login/register_step2.dart';
+import 'package:semo_ver2/login/register2_name.dart';
 
 bool _isSecret = true;
 bool _isIdFilled = false;

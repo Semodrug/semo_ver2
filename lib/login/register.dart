@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/login/register_policy.dart';
-import 'package:semo_ver2/login/register_step1.dart';
+import 'package:semo_ver2/login/register0_policy.dart';
+import 'package:semo_ver2/login/register1_email.dart';
 
 class RegisterPage extends StatefulWidget {
   @override

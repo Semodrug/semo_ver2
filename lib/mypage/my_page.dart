@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:semo_ver2/login/register_step2.dart';
-import 'package:semo_ver2/login/register_step3.dart';
+import 'package:semo_ver2/login/register2_name.dart';
+import 'package:semo_ver2/login/register3_health.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
