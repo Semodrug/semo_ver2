@@ -142,13 +142,6 @@ class DatabaseService {
 
   // user data from snapshots
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
-    print("** SUMI's TEST: ${snapshot.data()['name']}");
-    print("** SUMI's TEST: ${snapshot.data()['sex']}");
-    print("** SUMI's TEST: ${snapshot.data()['phone']}");
-    print("** SUMI's TEST: ${snapshot.data()['birth']}");
-    print("** SUMI's TEST: ${snapshot.data()['diseaseList']}");
-    print("** SUMI's TEST: ${snapshot.data()['isPregnant']}");
-
     return UserData(
       uid: uid,
       name: snapshot.data()['name'] ?? '',

@@ -6,6 +6,10 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  String get userEmail {
+    return _auth.currentUser.email;
+  }
+
   // create user obj based on firebase user
   TheUser _userFromFirebaseUser(User user) {
     return user != null ? TheUser(uid: user.uid) : null;

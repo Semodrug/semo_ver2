@@ -7,11 +7,7 @@ import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/loading.dart';
-import 'my_reviews.dart';
-
-bool loading = false;
-final AuthService _auth = AuthService();
-String error = '';
+import 'package:semo_ver2/mypage/my_reviews.dart';
 
 class MyPage extends StatefulWidget {
   @override
@@ -19,6 +15,8 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  final AuthService _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
@@ -56,7 +54,6 @@ class _MyPageState extends State<MyPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;
-            // print("SUMI's TEST: ${userData.name}");
             return Column(
               children: [
                 Container(
@@ -79,8 +76,7 @@ class _MyPageState extends State<MyPage> {
                                   height: 10,
                                 ),
                                 Text(
-                                  //TODO: email
-                                  ' email ',
+                                  _auth.userEmail,
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey),
                                 )
@@ -159,17 +155,9 @@ class _MyPageState extends State<MyPage> {
                           ),
                           onPressed: () async {
                             // TODO: when log-out, we should go to login page by Wrapper
-
-                            setState(() => loading = true);
-                            dynamic result = await _auth.signOut();
+                            await _auth.signOut();
                             Navigator.pop(context);
-                            // if (result == null) {
-                            //   setState(() {
-                            //     loading = false;
-                            //     error =
-                            //         'Could not sign in with those credentials';
-                            //   });
-                            // }
+                            // Navigator.pushReplacementNamed(context, '/login');
                           }),
                     ],
                   ),
