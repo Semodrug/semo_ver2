@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
         newName = data.itemName.replaceAll('(', '(');
         if (newName.contains('')) {
           splitName = newName.split('(');
-          print(splitName);
+          //print(splitName);
           newName = splitName[0];
         }
       }
@@ -165,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                         padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
                         child: SizedBox(
-                            width: 88, height: 66, child: DrugImage(data.itemSeq))),
+                            width: 88, height: 66, child: DrugImage(drugItemSeq: data.itemSeq))),
                     Container(
                         padding: EdgeInsets.fromLTRB(15, 20, 5, 5),
                         child: Column(

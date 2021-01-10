@@ -13,7 +13,6 @@ import 'package:semo_ver2/shared/image.dart';
 /*약들의 개수를 length 만큼 보여주고 싶은데 그 length의 인덱스를 어떻게 넘겨주지..?*/
 int check = 0;
 
-
 class HomeEditPage extends StatefulWidget {
   @override
   _HomeEditPageState createState() => _HomeEditPageState();
@@ -167,7 +166,7 @@ class _HomeEditPageState extends State<HomeEditPage> {
               Container(
                   padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
                   child: SizedBox(
-                      width: 88, height: 66, child: DrugImage(data.itemSeq))),
+                      width: 88, height: 66, child: DrugImage(drugItemSeq:data.itemSeq))),
               Container(
                   padding: EdgeInsets.fromLTRB(15, 20, 5, 5),
                   child: Column(
