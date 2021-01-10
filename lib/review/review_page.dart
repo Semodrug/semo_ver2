@@ -19,19 +19,19 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
-  _ReviewPageState() {
-    _filter.addListener(() {
-      setState(() {
-        _searchText = _filter.text;
-        print('       filter == ${_filter.text}');
-      });
-    });
-  }
-
   final TextEditingController _filter = TextEditingController();
   FocusNode focusNode = FocusNode();
   String _searchText = "";
   FirebaseAuth auth = FirebaseAuth.instance;
+
+  _ReviewPageState() {
+    _filter.addListener(() {
+      setState(() {
+        _searchText = _filter.text;
+      });
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     //TODO EDIT num of reviews
-                    Text("##",
+                    Text("#"+"개",
                         style: TextStyle(
                           fontSize: 16.5,
                           fontWeight: FontWeight.bold,

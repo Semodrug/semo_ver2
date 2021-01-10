@@ -19,11 +19,13 @@ class _ReviewListState extends State<ReviewList> {
   @override
   Widget build(BuildContext context) {
     //TODO LIMIT!!
-    final reviews = Provider.of<List<Review>>(context, listen: true) ?? [];
+    final reviews = Provider.of<List<Review>>(context) ?? [];
     List<Review> searchResults = [];
     for (Review review in reviews) {
       if (review.toString().contains(widget.searchText)) {
+        print("SearchText: "+widget.searchText);
         searchResults.add(review);
+        print("0"+searchResults[0].effectText.toString());
       } else
         print('    RESULT Nothing     ');
     }

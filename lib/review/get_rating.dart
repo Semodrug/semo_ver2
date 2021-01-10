@@ -49,11 +49,10 @@ class _GetRatingState extends State<GetRating> {
           });
 
           ratingResult = sum / length;
-          print("SUM:" + sum.toString());
-          print("RANGTH:" + length.toString());
-          print("RATING RESULT:" + ratingResult.toString());
-//    ratingResult = sum/length;
-//    print(ratingResult);
+//          print("SUM:" + sum.toString());
+//          print("RANGTH:" + length.toString());
+//          print("RATING RESULT:" + ratingResult.toString());
+
           return Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               child: Column(
