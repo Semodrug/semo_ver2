@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -59,7 +60,8 @@ class _AllReveiewState extends State<AllReview> {
     );
   }
 
-  /*Widget _buildBody(BuildContext context) {
+  */
+/*Widget _buildBody(BuildContext context) {
     // TODO: get actual snapshot from Cloud Firestore
     return StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance.collection('user').snapshots(),
@@ -69,7 +71,8 @@ class _AllReveiewState extends State<AllReview> {
           return _buildList(context, snapshot.data.documents);
         }
     );
-  }*/
+  }*//*
+
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
@@ -214,12 +217,6 @@ class _AllReveiewState extends State<AllReview> {
                               //TODO removed next one line
 //                              'favoriteSelected': !record.favoriteSelected,
                             })
-                          /*//                          onTap: () => Firestore.instance.runTransaction((transaction) async {
-//                            final freshSnapshot = await transaction.get(record.reference);
-//                            final fresh = Record.fromSnapshot(freshSnapshot);
-//                            await transaction.update(record.reference, {'votes': fresh.votes + 1});
-//                          }),
-*/
                         )
                       ],
                     ),
@@ -410,12 +407,6 @@ class _AllReveiewState extends State<AllReview> {
 //                                                'favoriteSelected':
 //                                                !record.favoriteSelected,
                                               })
-                                        /*//                          onTap: () => Firestore.instance.runTransaction((transaction) async {
-//                            final freshSnapshot = await transaction.get(record.reference);
-//                            final fresh = Record.fromSnapshot(freshSnapshot);
-//                            await transaction.update(record.reference, {'votes': fresh.votes + 1});
-//                          }),
-*/
                                       )
                                     ],
                                   ),
@@ -434,14 +425,6 @@ class _AllReveiewState extends State<AllReview> {
         ),
       ],
     );
-    /*
-      ListView.builder(
-        scrollDirection: Axis.vertical ,
-        padding: EdgeInsets.all(20),
-        itemBuilder: (BuildContext context, int index) {
-          return Container(width: 200, height: 200, margin: EdgeInsets.only(bottom: 10), color: Colors.red);
-        },
-      )*/
   }
 
   Widget _starAndId(record, context) {
@@ -491,12 +474,6 @@ class _AllReveiewState extends State<AllReview> {
   }
 }
 
-Widget _reviewEffect(Size size, EffectColor) {}
-
-Widget _reviewSideEffect(Size size, sideEffectColor) {}
-
-Widget _reviewOverall(size) {}
-
 Widget _dateAndLike(record) {
   return Row(
     children: <Widget>[
@@ -536,27 +513,5 @@ Widget _dateAndLike(record) {
   );
 }
 
-/*import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AllReview extends StatefulWidget {
-  @override
-  _AllReviewState createState() => _AllReviewState();
-}
-
-class _AllReviewState extends State<AllReview> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-            child: RaisedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Go back'))));
-  }
-}*/
-
+*/
