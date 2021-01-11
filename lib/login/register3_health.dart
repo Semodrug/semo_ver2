@@ -3,21 +3,10 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:semo_ver2/bottom_bar.dart';
-
-final fireInstance = FirebaseFirestore.instance;
-
-final FirebaseAuth auth = FirebaseAuth.instance;
-final User user = FirebaseAuth.instance.currentUser;
-final uid = user.uid;
-
-void createRecode(Map<String, dynamic> data) async {
-  await fireInstance.collection('users').doc(uid).update(data);
-
-//  DocumentReference ref = await
-//  //fireInstance.collection('privacy').add(data);
-//  print(ref.documentID);
-}
+import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/services/db.dart';
 
 class RegisterThirdPage extends StatefulWidget {
   @override
@@ -132,23 +121,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '건강 정보 설정',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    height: 6,
-                  ),
-                  Text(
-                    '맞춤형 주의사항을 알려드려요.',
-                    style: TextStyle(
-                        color: Colors.grey[700],
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w200),
-                  ),
+                  topInfo(),
                   SizedBox(
                     height: 30,
                   ),
@@ -165,48 +138,11 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('임산부이신가요?',
-                                  style: TextStyle(fontSize: 14.0)),
-                              SizedBox(
-                                height: 4.0,
-                              ),
-                              Row(
-                                children: [
-                                  _ExclusiveButton(0, isPregnant, '해당없음'),
-                                  SizedBox(width: 10),
-                                  _ExclusiveButton(1, isPregnant, '임산부'),
-                                ],
-                              ),
+                              pregnant(),
                               SizedBox(
                                 height: 20.0,
                               ),
-                              Text('특이사항', style: TextStyle(fontSize: 14.0)),
-                              SizedBox(
-                                height: 4.0,
-                              ),
-                              Row(
-                                children: [
-                                  _MultiButton(0, isDisease, '고혈압'),
-                                  SizedBox(width: 6),
-                                  _MultiButton(1, isDisease, '심장질환'),
-                                  SizedBox(width: 6),
-                                  _MultiButton(2, isDisease, '고지혈증'),
-                                  SizedBox(width: 6),
-                                  _MultiButton(3, isDisease, '당뇨병'),
-                                ],
-                              ),
-                              Container(
-                                height: 36.0,
-                                child: Row(
-                                  children: [
-                                    _MultiButton(4, isDisease, '간장애'),
-                                    SizedBox(width: 6),
-                                    _MultiButton(5, isDisease, '콩팥장애'),
-                                    SizedBox(width: 6),
-                                    _MultiButton(6, isDisease, '신장'),
-                                  ],
-                                ),
-                              ),
+                              disease(),
                               SizedBox(
                                 height: 10,
                               ),
@@ -222,35 +158,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
                               SizedBox(
                                 height: 50.0,
                               ),
-                              Container(
-                                alignment: Alignment.center,
-                                child: SizedBox(
-                                  width: 400.0,
-                                  height: 45.0,
-                                  //padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                  //alignment: Alignment.center,
-                                  child: RaisedButton(
-                                    onPressed: () {
-                                      createRecode(
-                                        {
-                                          'isPregnant': isPregnant[1],
-                                          'disease_list': disease_list,
-                                        },
-                                      );
-                                      Navigator.pushReplacementNamed(
-                                          context, '/login');
-                                    },
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            new BorderRadius.circular(10.0)),
-                                    child: const Text(
-                                      '이약모약 시작하기',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    color: Colors.teal[400],
-                                  ),
-                                ),
-                              ),
+                              submit()
                             ],
                           )))
                 ],
@@ -258,5 +166,111 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
             ),
           );
         }));
+  }
+
+  Widget topInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '건강 정보 설정',
+          style: TextStyle(
+              color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(
+          height: 6,
+        ),
+        Text(
+          '맞춤형 주의사항을 알려드려요.',
+          style: TextStyle(
+              color: Colors.grey[700],
+              fontSize: 12.0,
+              fontWeight: FontWeight.w200),
+        ),
+      ],
+    );
+  }
+
+  Widget pregnant() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('임산부이신가요?', style: TextStyle(fontSize: 14.0)),
+        SizedBox(
+          height: 4.0,
+        ),
+        Row(
+          children: [
+            _ExclusiveButton(0, isPregnant, '해당없음'),
+            SizedBox(width: 10),
+            _ExclusiveButton(1, isPregnant, '임산부'),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget disease() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('특이사항', style: TextStyle(fontSize: 14.0)),
+        SizedBox(
+          height: 4.0,
+        ),
+        Row(
+          children: [
+            _MultiButton(0, isDisease, '고혈압'),
+            SizedBox(width: 6),
+            _MultiButton(1, isDisease, '심장질환'),
+            SizedBox(width: 6),
+            _MultiButton(2, isDisease, '고지혈증'),
+            SizedBox(width: 6),
+            _MultiButton(3, isDisease, '당뇨병'),
+          ],
+        ),
+        Container(
+          height: 36.0,
+          child: Row(
+            children: [
+              _MultiButton(4, isDisease, '간장애'),
+              SizedBox(width: 6),
+              _MultiButton(5, isDisease, '콩팥장애'),
+              SizedBox(width: 6),
+              _MultiButton(6, isDisease, '신장'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget submit() {
+    TheUser user = Provider.of<TheUser>(context);
+
+    return Container(
+      alignment: Alignment.center,
+      child: SizedBox(
+        width: 400.0,
+        height: 45.0,
+        //padding: const EdgeInsets.symmetric(vertical: 16.0),
+        //alignment: Alignment.center,
+        child: RaisedButton(
+          onPressed: () async {
+            await DatabaseService(uid: user.uid)
+                .updateUser(isPregnant[1], disease_list);
+
+            Navigator.pushReplacementNamed(context, '/login');
+          },
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(10.0)),
+          child: const Text(
+            '이약모약 시작하기',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Colors.teal[400],
+        ),
+      ),
+    );
   }
 }

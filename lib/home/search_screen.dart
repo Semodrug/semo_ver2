@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
-import 'home.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -29,12 +28,72 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  Widget _buildBodyOfAll(BuildContext context) {
+  Widget _buildBodyOfAll(BuildContext context, String searchVal) {
     return StreamBuilder<QuerySnapshot>(
       //현재 2만개 정도 들어와있는 데이터 //todo:안먹음 그래서 조치가 필요 검색어에 따른 정보만 보여주게끔 해야한다.
-      stream: FirebaseFirestore.instance.collection('drug').snapshots(),
-      builder: (context, snapshot) {
+      stream: FirebaseFirestore.instance
+          .collection('Drugs')
+          .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
+          .limit(10)
+          .snapshots(),
+      builder: (context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
+        if (searchVal == '') {
+          return StreamBuilder<QuerySnapshot>(
+            stream: userSearchList.snapshots(),
+            builder: (context, snapshot){
+              if (!snapshot.hasData || snapshot.data.docs.length == 0) return Container(
+                padding: EdgeInsets.only(top: 30),
+                child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      '찾고자 하는 약을 검색해주세요',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[400]),
+                    )),
+              );
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //SizedBox(width: 20,),
+                      Container(
+                          height: 30,
+                          child: Center(child: Text('    최근검색어', style: TextStyle(fontWeight: FontWeight.bold),))
+                      ),
+                      FlatButton(
+                        child: Text('전체삭제'),
+                        onPressed: (){
+                          print('삭제되었음');
+                          FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(_auth.currentUser.uid)
+                              .collection('searchList')
+                              .get().then((snapshot) {
+                            for (DocumentSnapshot ds in snapshot.documents){
+                              ds.reference.delete();
+                            }
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                  Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      children: snapshot.data.docs
+                          .map((data) => _buildRecentSearchList(context, data))
+                          .toList(),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        }
         return _buildListOfAll(context, snapshot.data.docs);
       },
     );
@@ -62,7 +121,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   color: Colors.grey[400]),
             )),
       );
-    } else if (searchResults.length != 0) {
+    }
+    else if (searchResults.length != 0) {
       return ListView(
         padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
         children: searchResults
@@ -75,19 +135,95 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildListItemOfAll(BuildContext context, DocumentSnapshot data) {
     final drug_snapshot = Drugs.fromSnapshot(data);
 
-    return ListDrugOfAll(drug_snapshot.item_name, drug_snapshot.category,
-        drug_snapshot.item_seq);
+    //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
+    String _checkLongName(String data) {
+      String newName = data;
+      List splitName = [];
+      if (data.contains('(')) {
+        newName = data.replaceAll('(', '(');
+        if (newName.contains('')) {
+          splitName = newName.split('(');
+          // print(splitName);
+          newName = splitName[0];
+        }
+      }
+      return newName;
+    }
+
+    String cutName = _checkLongName(drug_snapshot.item_name);
+
+    return ListDrugOfAll(
+        cutName, drug_snapshot.category, drug_snapshot.item_seq);
   }
 
-  Widget _buildBodyOfUser(BuildContext context) {
+  Widget _buildBodyOfUser(BuildContext context, String searchVal) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('users')
           .doc(_auth.currentUser.uid)
           .collection('savedList')
+          .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
+          .limit(10)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
+        if (searchVal == '') {
+          return StreamBuilder<QuerySnapshot>(
+            stream: userSearchList.snapshots(),
+            builder: (context, snapshot){
+              if (!snapshot.hasData || snapshot.data.docs.length == 0) return Container(
+                padding: EdgeInsets.only(top: 30),
+                child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      '찾고자 하는 약을 검색해주세요',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[400]),
+                    )),
+              );
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //SizedBox(width: 20,),
+                      Container(
+                          height: 30,
+                          child: Center(child: Text('    최근검색어', style: TextStyle(fontWeight: FontWeight.bold),))
+                      ),
+                      FlatButton(
+                        child: Text('전체삭제'),
+                        onPressed: (){
+                          print('삭제되었음');
+                          FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(_auth.currentUser.uid)
+                              .collection('searchList')
+                              .get().then((snapshot) {
+                            for (DocumentSnapshot ds in snapshot.documents){
+                              ds.reference.delete();
+                            }
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                  Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      children: snapshot.data.docs
+                          .map((data) => _buildRecentSearchList(context, data))
+                          .toList(),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+
         return _buildListOfUser(context, snapshot.data.docs);
       },
     );
@@ -146,7 +282,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
         userSearchList.add({'searchList': searchList});
 
-        print('DONE !!!! saved searchList');
+        print('DONE !!!! saved searchList $searchList');
       } catch (e) {
         print('Error: $e');
       }
@@ -163,12 +299,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
+                    Color(0xFFE9FFFB),
+                    Color(0xFFE9FFFB),
+                    Color(0xFFFFFFFF),
+                  ])),
         ),
       ),
+      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -202,67 +339,67 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Row(
                         children: [
                           Expanded(
-                              //flex: 5,
+                            //flex: 5,
                               child: TextField(
-                            focusNode: focusNode,
-                            style: TextStyle(fontSize: 15),
-                            autofocus: true,
-                            controller: _filter,
-                            decoration: InputDecoration(
-                              fillColor: Colors.white12,
-                              filled: true,
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                                size: 20,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.cancel, size: 20),
-                                onPressed: () {
-                                  setState(() {
-                                    _filter.clear();
-                                    _searchText = "";
-                                  });
-                                },
-                              ),
-                              hintText: '어떤 약을 찾고 계세요?',
-                              labelStyle: TextStyle(color: Colors.grey),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide:
+                                focusNode: focusNode,
+                                style: TextStyle(fontSize: 15),
+                                autofocus: true,
+                                controller: _filter,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white12,
+                                  filled: true,
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                    color: Colors.grey,
+                                    size: 20,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.cancel, size: 20),
+                                    onPressed: () {
+                                      setState(() {
+                                        _filter.clear();
+                                        _searchText = "";
+                                      });
+                                    },
+                                  ),
+                                  hintText: '어떤 약을 찾고 계세요?',
+                                  labelStyle: TextStyle(color: Colors.grey),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
                                       BorderSide(color: Colors.transparent)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius:
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius:
                                       BorderRadius.all(Radius.circular(10)),
-                                  borderSide:
+                                      borderSide:
                                       BorderSide(color: Colors.transparent)),
-                            ),
-                          )),
+                                ),
+                              )),
                         ],
                       ),
                     ),
                     focusNode.hasFocus
                         ? Expanded(
-                            child: FlatButton(
-                              child: Text(
-                                '확인', //TODO: 확인 눌렀을 때, 결과 값 보여주기
-                                style: TextStyle(fontSize: 13),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  //_searchText = "";
-                                  //TODO: Update the recentSearchList[]
-                                  addRecentSearchList();
-                                  print(searchList);
-                                  _filter.clear();
-                                  focusNode.unfocus();
-                                });
-                              },
-                            ),
-                          )
+                      child: FlatButton(
+                        child: Text(
+                          '확인', //TODO: 확인 눌렀을 때, 결과 값 보여주기
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            //_searchText = "";
+                            //TODO: Update the recentSearchList[]
+                            addRecentSearchList();
+                            //print(searchList);
+                            //_filter.clear();
+                            focusNode.unfocus();
+                          });
+                        },
+                      ),
+                    )
                         : Expanded(
-                            flex: 0,
-                            child: Container(),
-                          )
+                      flex: 0,
+                      child: Container(),
+                    )
                   ],
                 ),
                 SizedBox(
@@ -272,56 +409,27 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           SliverToBoxAdapter(
-            child: _myTab(),
+            child: _myTab(_searchText),
           )
         ],
       ),
     );
   }
 
-  Widget _myTab() {
+  Widget _myTab(String searchVal) {
     return DefaultTabController(
         length: 2,
         child: Column(
           children: [
             TabBar(
               labelStyle:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               unselectedLabelStyle:
-                  TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
-              //indicatorSize: TabBarIndicatorSize.label,
+              TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
               tabs: [
-                /*여기는 일단 버튼 형식처럼 해놓은 TabBar
-                Tab(
-                    child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: Text('전체 검색',
-                                style: TextStyle(color: Colors.black))))),
-                Tab(
-                    child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Align(
-                            alignment: Alignment.center,
-                            child: Text('나의 상비약 검색 ',
-                                style: TextStyle(color: Colors.black))))),
-                indicator: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  Color(0xFFE9FFFB),
-                  Color(0xFFE9FFFB),
-                ]),
-                color: Colors.white70,
-                borderRadius: BorderRadius.circular(5),
-              ),
-                */
                 Tab(
                     child:
-                        Text('전체 검색', style: TextStyle(color: Colors.black))),
+                    Text('전체 검색', style: TextStyle(color: Colors.black))),
                 Tab(
                     child: Text('나의 상비약 검색',
                         style: TextStyle(color: Colors.black))),
@@ -333,12 +441,68 @@ class _SearchScreenState extends State<SearchScreen> {
               width: double.infinity,
               height: 500.0,
               child: TabBarView(
-                children: [_buildBodyOfAll(context), _buildBodyOfUser(context)],
+                children: [
+                  _buildBodyOfAll(context, searchVal),
+                  _buildBodyOfUser(context, searchVal)
+                ],
               ),
             )
           ],
         ));
   }
+
+  Widget _buildRecentSearchList(BuildContext context, DocumentSnapshot data) {
+    final searchSnapshot = RecentSearch.fromSnapshot(data);
+
+
+    return
+      Column(
+        children: [
+          GestureDetector(
+            onTap: () => {
+              print('search ==> ${searchSnapshot.recent}'),
+              _searchText = searchSnapshot.recent,
+              _filter.text = _searchText
+            },
+            child: Container(
+              width: double.infinity,
+              height: 50.0,
+              child: Material(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Container(
+                          padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(children: [
+                                Text(
+                                  searchSnapshot.recent,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                )
+                              ]),
+                              SizedBox(
+                                height: 3,
+                              ),
+                            ],
+                          )),
+                    ],
+                  )),
+            ),
+          ),
+          Divider(thickness: 1,)
+        ],
+      );
+
+  }
+
 }
 
 class ListDrugOfAll extends StatefulWidget {
@@ -347,11 +511,11 @@ class ListDrugOfAll extends StatefulWidget {
   final String item_seq;
 
   const ListDrugOfAll(
-    this.item_name,
-    this.category,
-    this.item_seq, {
-    Key key,
-  }) : super(key: key);
+      this.item_name,
+      this.category,
+      this.item_seq, {
+        Key key,
+      }) : super(key: key);
 
   @override
   _ListDrugState createState() => _ListDrugState();
@@ -363,11 +527,11 @@ class ListDrugOfUser extends StatefulWidget {
   final String expiration;
 
   const ListDrugOfUser(
-    this.item_name,
-    this.item_seq,
-    this.expiration, {
-    Key key,
-  }) : super(key: key);
+      this.item_name,
+      this.item_seq,
+      this.expiration, {
+        Key key,
+      }) : super(key: key);
 
   @override
   _ListDrugUserState createState() => _ListDrugUserState();
@@ -474,9 +638,6 @@ class _ListDrugUserState extends State<ListDrugOfUser> {
   }
 }
 
-
-
-
 class DrugFromUser {
   final String item_name;
   final String item_seq;
@@ -506,8 +667,7 @@ class Drugs {
   final DocumentReference reference;
 
   Drugs.fromMap(Map<String, dynamic> map, {this.reference})
-      :
-        item_name = map['ITEM_NAME'],
+      : item_name = map['ITEM_NAME'],
         image = map['image'],
         entp_name = map['ENTP_NAME'],
         item_seq = map['ITEM_SEQ'],
@@ -516,4 +676,17 @@ class Drugs {
 
   Drugs.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
+}
+
+class RecentSearch{
+  final String recent;
+
+  final DocumentReference reference;
+
+  RecentSearch.fromMap(Map<String, dynamic> map, {this.reference})
+      : recent = map['searchList'];
+
+  RecentSearch.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+
 }

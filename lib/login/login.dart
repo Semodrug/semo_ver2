@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/login/register.dart';
 import 'package:semo_ver2/shared/loading.dart';
 
 import 'package:semo_ver2/login/find_id.dart';
 import 'package:semo_ver2/login/find_password.dart';
-import 'package:semo_ver2/login/register_step1.dart';
+import 'package:semo_ver2/login/register1_email.dart';
 // import 'package:semo_ver2/login/login_provider.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/shared/constants.dart';
@@ -107,7 +108,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                 setState(() => password = value);
               },
             ),
-            SizedBox(height: 50.0),
+            SizedBox(height: 40.0),
             SizedBox(
               //padding: const EdgeInsets.symmetric(vertical: 16.0),
               //alignment: Alignment.center,
@@ -119,7 +120,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                   if (_formKey.currentState.validate()) {
                     setState(() => loading = true);
                     dynamic result =
-                        await _auth.signInWithEmailAndPassword(email, password);
+                        await _auth.signInWithEmail(email, password);
                     if (result == null) {
                       setState(() {
                         loading = false;
@@ -140,7 +141,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
             // SizedB
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               FlatButton(
-                padding: EdgeInsets.all(0),
+                padding: EdgeInsets.zero,
                 child: Text(
                   '아이디 찾기',
                   style: TextStyle(
@@ -160,7 +161,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                 style: TextStyle(fontSize: 13.0, color: Colors.grey[400]),
               ),
               FlatButton(
-                padding: EdgeInsets.all(0),
+                padding: EdgeInsets.zero,
                 child: Text(
                   '비밀번호 찾기',
                   style: TextStyle(
@@ -176,32 +177,28 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                 },
               ),
             ]),
-            Container(
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(
-                  '혹시 이약모약 사용이 처음이신가요?',
-                  style: TextStyle(fontSize: 12.0, color: Colors.grey[400]),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                '혹시, 이약모약 사용이 처음이신가요?',
+                style: TextStyle(fontSize: 12.0, color: Colors.grey[400]),
+              ),
+              FlatButton(
+                child: Text(
+                  '회원가입',
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 12.0,
+                      color: Colors.black),
                 ),
-                FlatButton(
-                  child: Text(
-                    '회원가입',
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontSize: 12.0,
-                        color: Colors.black),
-                  ),
-                  onPressed: () {
-                    // register page로 이동
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RegisterFirstPage()),
-                    );
-                  },
-                ),
-              ]),
-            ),
+                onPressed: () {
+                  // register page로 이동
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterPage()),
+                  );
+                },
+              ),
+            ]),
           ],
         ),
       ),
@@ -223,9 +220,22 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
       children: <Widget>[
         Container(
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-              '구글 아이디가 있으신가요?',
-              style: TextStyle(fontSize: 12.0, color: Colors.grey[400]),
+            FlatButton(
+              onPressed: () async {
+                setState(() => loading = true);
+                dynamic result = await _auth.signInWithGoogle();
+                if (result == null) {
+                  setState(() {
+                    loading = false;
+                    error = 'Could not sign in with those credentials';
+                  });
+                }
+              },
+              child: SizedBox(
+                child: Image.asset('assets/login/google.png'),
+                width: 42,
+                height: 42,
+              ),
             ),
             FlatButton(
               onPressed: () async {
@@ -238,12 +248,27 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
                   });
                 }
               },
-              child: Text(
-                '구글 아이디로 로그인',
-                style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontSize: 12.0,
-                    color: Colors.black),
+              child: SizedBox(
+                child: Image.asset('assets/login/kakao.png'),
+                width: 42,
+                height: 42,
+              ),
+            ),
+            FlatButton(
+              onPressed: () async {
+                setState(() => loading = true);
+                dynamic result = await _auth.signInWithGoogle();
+                if (result == null) {
+                  setState(() {
+                    loading = false;
+                    error = 'Could not sign in with those credentials';
+                  });
+                }
+              },
+              child: SizedBox(
+                child: Image.asset('assets/login/apple.png'),
+                width: 42,
+                height: 42,
               ),
             ),
           ]),

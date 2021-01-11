@@ -1,6 +1,7 @@
 import 'package:semo_ver2/models/drug.dart';
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
+import 'package:semo_ver2/shared/image.dart';
 
 class DrugTile extends StatelessWidget {
   final Drug drug;
@@ -10,6 +11,24 @@ class DrugTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
+    String _checkLongName(String data) {
+      String newName = data;
+      List splitName = [];
+      if (data.contains('(')) {
+        newName = data.replaceAll('(', '(');
+        if (newName.contains('')) {
+          splitName = newName.split('(');
+          // print(splitName);
+          newName = splitName[0];
+        }
+      }
+      return newName;
+    }
+
+
+
     return Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: GestureDetector(
@@ -47,7 +66,10 @@ class DrugTile extends StatelessWidget {
                       child: AspectRatio(
                         aspectRatio: 2 / 2,
                         // TODO: show storage image - if null, defalut image
-                        child: Container(),
+                        child: Container(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+                            child: SizedBox(
+                                width: 88, height: 66, child: DrugImage(drugItemSeq:drug.itemSeq))),
                         // Image.network(
                         //   drug.image,
                         // )
@@ -68,7 +90,7 @@ class DrugTile extends StatelessWidget {
                             Expanded(
                               child: Row(children: [
                                 Text(
-                                  drug.itemName,
+                                  _checkLongName(drug.itemName),
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold),

@@ -70,9 +70,12 @@ class TestRanking extends StatelessWidget {
                     ])),
               ),
             ),
-            body: StreamProvider<List<Drug>>.value(
+            body:
+            StreamProvider<List<Drug>>.value(
               value: DatabaseService().drugs, //데이타를 여기서 불러옴
-              child: DrugList(),
-            ));
+              child:
+            DrugList(categoryName: categoryName),
+            )
+        );
   }
 }
