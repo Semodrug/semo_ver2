@@ -22,13 +22,17 @@ class _ReviewListState extends State<ReviewList> {
     final reviews = Provider.of<List<Review>>(context) ?? [];
     List<Review> searchResults = [];
     for (Review review in reviews) {
-      if (review.toString().contains(widget.searchText)) {
-        print("SearchText: "+widget.searchText);
+      if (review.effectText.toString().contains(widget.searchText) ||
+          review.sideEffectText.toString().contains(widget.searchText) ||
+          review.overallText.toString().contains(widget.searchText)
+      ) {
+        print("review: "+review.effectText);
         searchResults.add(review);
-        print("0"+searchResults[0].effectText.toString());
       } else
         print('    RESULT Nothing     ');
     }
+    print("HERE##"+searchResults.length.toString());
+//    print("HERE!!"+searchResults[1].effectText.toString());
     return Expanded(
       child: ListView(
         physics: const ClampingScrollPhysics(),
