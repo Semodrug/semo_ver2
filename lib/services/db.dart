@@ -131,7 +131,7 @@ class DatabaseService {
     );
   }
 
-  // get user doc stream
+  // get drug doc stream
   Stream<Drug> get drugData {
     return drugCollection.doc(itemSeq).snapshots().map(_drugFromSnapshot);
   }
@@ -149,7 +149,8 @@ class DatabaseService {
       sex: snapshot.data()['sex'] ?? '',
       phone: snapshot.data()['phone'] ?? '',
       birth: snapshot.data()['birth'] ?? '',
-      diseaseList: snapshot.data()['diseaseList'] ?? '',
+      diseaseList: snapshot.data()['diseaseList'] ?? [],
+      isPregnant: snapshot.data()['isPregnant'] ?? false,
     );
   }
 
@@ -158,7 +159,23 @@ class DatabaseService {
     return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
 
+  // add user doc
+  Future<void> addUser(name, sex, nickname, birth) async {
+    return await userCollection.doc(uid).set({
+      'name': name ?? '',
+      'sex': sex ?? '',
+      'nickname': nickname ?? '',
+      'birth': birth ?? '',
+    });
+  }
 
+  // update user doc
+  Future<void> updateUser(isPregnant, disease_list) async {
+    return await userCollection.doc(uid).update({
+      'isPregnant': isPregnant ?? '',
+      'disease_list': disease_list ?? [],
+    });
+  }
 
   /* Favorite List */
   // List data from snapshots
@@ -221,5 +238,33 @@ class DatabaseService {
       'category': category ?? '',
       'expiration': expiration ?? '',
     });
+  }
+
+  /* Policy */
+  // collection reference
+  final CollectionReference policyCollection =
+      FirebaseFirestore.instance.collection('Policy');
+
+  // privacy from snapshots
+  String _termsFromSnapshot(DocumentSnapshot snapshot) {
+    return snapshot.data()['terms'] ?? '';
+  }
+
+  // get privacy stream
+  Stream<String> get terms {
+    return policyCollection.doc('terms').snapshots().map(_termsFromSnapshot);
+  }
+
+  // privacy from snapshots
+  String _privacyFromSnapshot(DocumentSnapshot snapshot) {
+    return snapshot.data()['privacy'] ?? '';
+  }
+
+  // get privacy stream
+  Stream<String> get privacy {
+    return policyCollection
+        .doc('privacy')
+        .snapshots()
+        .map(_privacyFromSnapshot);
   }
 }
