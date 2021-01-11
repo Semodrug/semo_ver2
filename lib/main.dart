@@ -28,7 +28,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           routes: {
             // TODO: Add route
-            '/login': (context) => LoginPage(),
+            '/login': (context) => LoginPage(
+
+            ),
             '/home': (context) => HomePage(),
             '/camera': (context) => CameraPage(),
             '/ranking': (context) => RankingPage(),
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
           },
           theme: ThemeData(
               // TODO: Add Theme Data
-              )),
+          )),
     );
   }
 }
