@@ -1,31 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/login/register3_health.dart';
 
-import 'register3_health.dart';
-
-final fireInstance = FirebaseFirestore.instance;
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final User user = _auth.currentUser;
-final uid = user.uid;
-
-var phoneMaskFormatter = new MaskTextInputFormatter(
-    mask: '###-####-####', filter: {"#": RegExp(r'[0-9]')});
+// var phoneMaskFormatter = new MaskTextInputFormatter(
+//     mask: '###-####-####', filter: {"#": RegExp(r'[0-9]')});
 var birthMaskFormatter = new MaskTextInputFormatter(
     mask: '####.##.##', filter: {"#": RegExp(r'[0-9]')});
 
 //print(maskFormatter.getMaskedText()); // -> "+0 (123) 456-78-90"
 //print(maskFormatter.getUnmaskedText()); // -> 01234567890
-
-void createRecode(Map<String, dynamic> data) async {
-  await fireInstance.collection('users').doc(uid).set(data);
-
-//  DocumentReference ref = await fireInstance.collection('privacy').add(data);
-//  print(ref.documentID);
-}
 
 class RegisterSecondPage extends StatefulWidget {
   final String title = '회원가입';
@@ -38,12 +25,16 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
   List<bool> isSelected = List.generate(2, (_) => false);
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   TextEditingController nameController = TextEditingController();
+  TextEditingController nicknameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController birthController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    TheUser user = Provider.of<TheUser>(context);
+
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -98,145 +89,18 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                       SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        controller: nameController,
-                        cursorColor: Colors.teal[400],
-                        decoration: InputDecoration(
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.teal),
-                            ),
-                            hintText: '이름',
-                            hintStyle:
-                                TextStyle(color: Colors.grey, fontSize: 16.0)),
-                        keyboardType: TextInputType.text,
-                        validator: (String value) {
-                          if (value.isEmpty) return "이름을 입력하세요.";
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      Text('성별',
-                          style: TextStyle(color: Colors.grey, fontSize: 16.0)),
-                      SizedBox(
-                        height: 15.0,
-                      ),
-                      ToggleButtons(
-                        constraints: BoxConstraints(
-                          minWidth: 40,
-                          minHeight: 20,
-                        ),
-                        children: [Text('남'), Text('여')],
-                        //selectedColor: Colors.teal[400],
-                        //fillColor: Colors.teal[100],
-                        onPressed: (int index) {
-                          setState(() {
-                            for (int buttonIndex = 0;
-                                buttonIndex < isSelected.length;
-                                buttonIndex++) {
-                              if (buttonIndex == index) {
-                                isSelected[buttonIndex] = true;
-                              } else {
-                                isSelected[buttonIndex] = false;
-                              }
-                            }
-                          });
-                        },
-                        isSelected: isSelected,
-                      ),
+                      nameGender(),
                       SizedBox(
                         height: 10.0,
                       ),
-                      TextFormField(
-                        controller: birthController,
-                        cursorColor: Colors.teal[400],
-                        decoration: InputDecoration(
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.teal),
-                            ),
-                            hintText: '생년월일',
-                            hintStyle:
-                                TextStyle(color: Colors.grey, fontSize: 16.0)),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [birthMaskFormatter],
-                        validator: (String value) {
-                          if (value.isEmpty) return "생년월일을 입력하세요.";
-                          return null;
-                        },
-                      ),
+                      nickname(),
                       SizedBox(
                         height: 10.0,
                       ),
-                      TextFormField(
-                        controller: phoneController,
-                        cursorColor: Colors.teal[400],
-                        decoration: InputDecoration(
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.teal),
-                            ),
-                            hintText: '전화번호',
-                            hintStyle:
-                                TextStyle(color: Colors.grey, fontSize: 16.0)),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [phoneMaskFormatter],
-                        validator: (String value) {
-                          if (value.isEmpty) return "전화번호를 입력하세요.";
-                          return null;
-                        },
-                      ),
+                      birth(),
                       SizedBox(height: 50.0),
-                      Container(
-                        alignment: Alignment.center,
-                        child: SizedBox(
-                          width: 400.0,
-                          height: 45.0,
-                          //padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          //alignment: Alignment.center,
-                          child: RaisedButton(
-                            onPressed: () async {
-                              if (phoneMaskFormatter.getUnmaskedText().length !=
-                                      11 ||
-                                  birthMaskFormatter.getUnmaskedText().length !=
-                                      8)
-                                showSnackBar(context);
-                              else {
-                                if (isSelected[0] = true)
-                                  createRecode(
-                                    {
-                                      'name': nameController.text,
-                                      'sex': 'male',
-                                      'phone': phoneController.text,
-                                      'birth': birthController.text
-                                    },
-                                  );
-                                else
-                                  createRecode(
-                                    {
-                                      'name': nameController.text,
-                                      'sex': 'female',
-                                      'phone': phoneController.text,
-                                      'birth': birthController.text
-                                    },
-                                  );
+                      submit(context),
 
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            RegisterThirdPage()));
-                              }
-                            },
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10.0)),
-                            child: const Text(
-                              '다음',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            color: Colors.teal[400],
-                          ),
-                        ),
-                      ),
                       /* 로그인 뛰어넘기 */
                       IconButton(
                         icon: Icon(Icons.skip_next),
@@ -253,10 +117,144 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                   ),
                 ),
               ),
-//
             ),
           );
         }));
+  }
+
+  Widget nameGender() {
+    return Row(
+      children: [
+        Container(
+          width: 200,
+          child: TextFormField(
+            controller: nameController,
+            cursorColor: Colors.teal[400],
+            decoration: InputDecoration(
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.teal),
+                ),
+                hintText: '이름',
+                hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0)),
+            keyboardType: TextInputType.text,
+            validator: (String value) {
+              if (value.isEmpty) return "이름을 입력하세요.";
+              return null;
+            },
+          ),
+        ),
+        SizedBox(
+          width: 40.0,
+        ),
+        Row(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('성별', style: TextStyle(color: Colors.grey, fontSize: 16.0)),
+            SizedBox(
+              width: 10,
+            ),
+            ToggleButtons(
+              constraints: BoxConstraints(
+                minWidth: 40,
+                minHeight: 20,
+              ),
+              children: [Text('남'), Text('여')],
+              selectedColor: Colors.teal[400],
+              fillColor: Colors.teal[100],
+              onPressed: (int index) {
+                setState(() {
+                  for (int buttonIndex = 0;
+                      buttonIndex < isSelected.length;
+                      buttonIndex++) {
+                    if (buttonIndex == index) {
+                      isSelected[buttonIndex] = true;
+                    } else {
+                      isSelected[buttonIndex] = false;
+                    }
+                  }
+                });
+              },
+              isSelected: isSelected,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget nickname() {
+    return TextFormField(
+      controller: nicknameController,
+      cursorColor: Colors.teal[400],
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.teal),
+          ),
+          hintText: '닉네임',
+          hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0)),
+      keyboardType: TextInputType.text,
+      validator: (String value) {
+        if (value.isEmpty) return "닉네임을 입력하세요.";
+        return null;
+      },
+    );
+  }
+
+  Widget birth() {
+    return TextFormField(
+      controller: birthController,
+      cursorColor: Colors.teal[400],
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.teal),
+          ),
+          hintText: '생년월일',
+          hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0)),
+      keyboardType: TextInputType.number,
+      inputFormatters: [birthMaskFormatter],
+      validator: (String value) {
+        if (value.isEmpty) return "생년월일을 입력하세요.";
+        return null;
+      },
+    );
+  }
+
+  Widget submit(context) {
+    TheUser user = Provider.of<TheUser>(context);
+
+    return Container(
+      alignment: Alignment.center,
+      child: SizedBox(
+        width: 400.0,
+        height: 45.0,
+        //padding: const EdgeInsets.symmetric(vertical: 16.0),
+        //alignment: Alignment.center,
+        child: RaisedButton(
+          onPressed: () async {
+            // phoneMaskFormatter.getUnmaskedText().length != 11 ||
+            if (birthMaskFormatter.getUnmaskedText().length != 8)
+              showSnackBar(context);
+            else {
+              await DatabaseService(uid: user.uid).addUser(
+                  nameController.text,
+                  isSelected[0] ? 'male' : 'female',
+                  nicknameController.text,
+                  birthController.text);
+
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RegisterThirdPage()));
+            }
+          },
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(10.0)),
+          child: const Text(
+            '다음',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Colors.teal[400],
+        ),
+      ),
+    );
   }
 }
 

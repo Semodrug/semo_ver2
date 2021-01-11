@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/login/login_provider.dart';
 import 'package:semo_ver2/login/register2_name.dart';
+import 'package:semo_ver2/services/auth.dart';
 
 bool _isSecret = true;
 bool _isIdFilled = false;
 bool _isPasswordFilled = false;
 
 class RegisterFirstPage extends StatefulWidget {
-  final String title = '회원가입';
-
   @override
   State<StatefulWidget> createState() => RegisterFirstPageState();
 }
@@ -28,7 +26,7 @@ class RegisterFirstPageState extends State<RegisterFirstPage> {
         ),
         centerTitle: true,
         title: Text(
-          widget.title,
+          '회원가입',
           style: TextStyle(
               fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -47,15 +45,12 @@ class RegisterFirstPageState extends State<RegisterFirstPage> {
       ),
       backgroundColor: Colors.white,
       body: Builder(builder: (context) {
-        return ChangeNotifierProvider<UserProvider>(
-          create: (context) => UserProvider(),
-          child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: SingleChildScrollView(
-              child: RegisterForm(),
-            ),
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: SingleChildScrollView(
+            child: RegisterForm(),
           ),
         );
       }),
@@ -72,6 +67,7 @@ class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -193,8 +189,6 @@ class _RegisterFormState extends State<RegisterForm> {
       child: SizedBox(
         width: 400.0,
         height: 45.0,
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-        //alignment: Alignment.center,
         child: RaisedButton(
           child: const Text(
             '확인',
@@ -207,16 +201,19 @@ class _RegisterFormState extends State<RegisterForm> {
           onPressed: () async {
             if (_isIdFilled && _isPasswordFilled) {
               if (_formKey.currentState.validate()) {
-                // _register();
-                await Provider.of<UserProvider>(context, listen: false)
-                        .signUpWithEmail(
-                            _emailController.text, _passwordController.text)
-                    ? Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegisterSecondPage()),
-                      )
-                    : Container();
+                dynamic result = await _auth.signUpWithEmail(
+                    _emailController.text, _passwordController.text);
+                if (result == null) {
+                  setState(() {
+                    print('유효한 이메일인지, 적절한 비밀번호인지 확인해주세요');
+                  });
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RegisterSecondPage()),
+                  );
+                }
               }
             }
           },

@@ -120,7 +120,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                   if (_formKey.currentState.validate()) {
                     setState(() => loading = true);
                     dynamic result =
-                        await _auth.signInWithEmailAndPassword(email, password);
+                        await _auth.signInWithEmail(email, password);
                     if (result == null) {
                       setState(() {
                         loading = false;

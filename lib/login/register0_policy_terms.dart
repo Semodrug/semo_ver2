@@ -36,7 +36,6 @@ class PolicyTerms extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         body: Padding(
-          padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
           child: Text(''),
         ));
   }

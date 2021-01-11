@@ -130,7 +130,7 @@ class DatabaseService {
     );
   }
 
-  // get user doc stream
+  // get drug doc stream
   Stream<Drug> get drugData {
     return drugCollection.doc(itemSeq).snapshots().map(_drugFromSnapshot);
   }
@@ -155,9 +155,25 @@ class DatabaseService {
 
   // get user doc stream
   Stream<UserData> get userData {
-    print("** SUMI's TEST: ${uid}");
-
     return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
+  }
+
+  // add user doc
+  Future<void> addUser(name, sex, nickname, birth) async {
+    return await userCollection.doc(uid).set({
+      'name': name ?? '',
+      'sex': sex ?? '',
+      'nickname': nickname ?? '',
+      'birth': birth ?? '',
+    });
+  }
+
+  // update user doc
+  Future<void> updateUser(isPregnant, disease_list) async {
+    return await userCollection.doc(uid).update({
+      'isPregnant': isPregnant ?? '',
+      'disease_list': disease_list ?? [],
+    });
   }
 
   /* Favorite List */
