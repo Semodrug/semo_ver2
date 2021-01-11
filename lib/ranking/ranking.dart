@@ -64,7 +64,7 @@ class RankingPage extends StatelessWidget {
                         builder: (context) =>
                             TestRanking(categoryName: categories[index])),
                   );
-                  //print('${root.name}');
+                  print(categories[index]);
                 },
               );
             },
@@ -75,4 +75,6 @@ class RankingPage extends StatelessWidget {
   }
 }
 
+//분류번호 나오면 다시 설정해야함
+//약사님에게도 맡겨보기
 final categories = ['감기', '소화', '진통제'];

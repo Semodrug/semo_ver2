@@ -6,8 +6,9 @@ import 'package:semo_ver2/models/user.dart';
 class DatabaseService {
   final String uid;
   final String itemSeq;
-
-  DatabaseService({this.uid, this.itemSeq});
+  final String categoryName;
+  //다은 카테고리 추가
+  DatabaseService({this.uid, this.itemSeq, this.categoryName});
 
   /* Drug List */
   // collection reference
@@ -156,6 +157,8 @@ class DatabaseService {
   Stream<UserData> get userData {
     return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
+
+
 
   /* Favorite List */
   // List data from snapshots
