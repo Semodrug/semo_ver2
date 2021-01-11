@@ -6,6 +6,11 @@ import 'package:semo_ver2/services/db.dart';
 import 'test_tile.dart';
 
 class DrugList extends StatefulWidget {
+  final String categoryName;
+
+  DrugList({this.categoryName});
+
+
   @override
   _DrugListState createState() => _DrugListState();
 }
@@ -17,8 +22,8 @@ class _DrugListState extends State<DrugList> {
   @override
   Widget build(BuildContext context) {
     //일단 total num을 위해 임시로 열어둔 프로바이더
-    List<Drug> drugs = Provider.of<List<Drug>>(context) ?? [];
-    totalNum = drugs.length;
+    //List<Drug> drugs = Provider.of<List<Drug>>(context) ?? [];
+    //totalNum = drugs.length;
 
     return Column(
       children: [
@@ -38,7 +43,7 @@ class _DrugListState extends State<DrugList> {
 
   Widget _buildBody(BuildContext context, String _filterOrSort) {
     return StreamBuilder<List<Drug>>(
-      stream: DatabaseService().setter(_filterOrSort),
+      stream: DatabaseService(categoryName: widget.categoryName).setter(_filterOrSort),
       builder: (context, stream){
         return _buildList(context, _filterOrSort, stream.data);
       }
@@ -49,13 +54,16 @@ class _DrugListState extends State<DrugList> {
    Widget _buildList  (BuildContext context,  String _filterOrSort, List<Drug> drugs )  {
     //print('길이 알려주기 !! '+ '${drugs.length}');
     //totalNum = drugs.length;
+     List<Drug> drugList = [];
+     drugList = drugs;
+    print('   길이  ${drugList.length.toString()}');
 
     return Expanded (
           child:
         ListView.builder (
-          itemCount:  drugs.length,
+          itemCount:  drugList.length,
           itemBuilder: (context, index){
-            return DrugTile(drug: drugs[index], index: (index+1));
+            return DrugTile(drug: drugList[index], index: (index+1));
           },
         ),
       );
