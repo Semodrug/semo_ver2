@@ -35,6 +35,8 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
+//    <List<Review>> rev = Provider.of<List<Review>>(context);
+//    final reviews = Provider.of<List<Review>>(context);
     return StreamProvider<List<Review>>.value(
       value: ReviewService().getReviews(widget.drugItemSeq),
       child: Scaffold(
@@ -53,7 +55,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     //TODO EDIT num of reviews
-                    Text("#"+"개",
+                    Text("#",
                         style: TextStyle(
                           fontSize: 16.5,
                           fontWeight: FontWeight.bold,

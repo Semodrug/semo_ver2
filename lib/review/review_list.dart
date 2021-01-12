@@ -26,12 +26,12 @@ class _ReviewListState extends State<ReviewList> {
           review.sideEffectText.toString().contains(widget.searchText) ||
           review.overallText.toString().contains(widget.searchText)
       ) {
-        print("review: "+review.effectText);
+//        print("review: "+review.effectText);
         searchResults.add(review);
       } else
         print('    RESULT Nothing     ');
     }
-    print("HERE##"+searchResults.length.toString());
+//    print("HERE##"+searchResults.length.toString());
 //    print("HERE!!"+searchResults[1].effectText.toString());
     return Expanded(
       child: ListView(
@@ -113,7 +113,7 @@ class _ReviewListState extends State<ReviewList> {
                                       Navigator.pop(context);
                                       Navigator.push(context, MaterialPageRoute(
                                         //TODO
-                                          builder: (context) => EditReview(review)
+                                          builder: (context) => EditReview(review, "edit")
                                       ));
                                     },
                                     child: Center(child: Text("수정하기",
@@ -160,6 +160,7 @@ class _ReviewListState extends State<ReviewList> {
       children: <Widget>[
         //effect
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
                 height: 28,

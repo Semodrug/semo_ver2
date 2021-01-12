@@ -10,7 +10,8 @@ import 'package:semo_ver2/shared/image.dart';
 
 class EditReview extends StatefulWidget {
   Review review;
-  EditReview(this.review);
+  String editOrWrite;
+  EditReview(this.review, this.editOrWrite);
 
   _EditReviewState createState() => _EditReviewState();
 }
@@ -41,6 +42,8 @@ class _EditReviewState extends State<EditReview> {
   static const _green = Color(0xff57C8B8);
   static const _grey = Color(0x95C4C4C4);
 
+//  String editOrWrite = 'edit'; // 'write'
+
   @override
   Widget build(BuildContext context) {
 //    TheUser user = Provider.of<TheUser>(context);
@@ -49,6 +52,7 @@ class _EditReviewState extends State<EditReview> {
         builder: (context, snapshot) {
           if(snapshot.hasData) {
             Review review = snapshot.data;
+
             if(effect == '') effect = review.effect;
             if(sideEffect == '') sideEffect = review.sideEffect;
             myControllerEffect.text = review.effectText;
@@ -61,7 +65,7 @@ class _EditReviewState extends State<EditReview> {
             return Scaffold(
                 resizeToAvoidBottomInset: true,
                 appBar: AppBar(
-                  title: Text('Edit Review',
+                  title: Text(widget.editOrWrite == 'edit'? 'Edit Review': "Write Review",
                       style: GoogleFonts.roboto(
                           fontSize: 16.5,
                           fontWeight: FontWeight.bold,
@@ -164,7 +168,7 @@ class _EditReviewState extends State<EditReview> {
               RatingBar.builder(
                 itemSize: 48,
                 glow: false,
-                initialRating: review.starRating*1.0,
+                initialRating: widget.editOrWrite == 'edit'? review.starRating*1.0 : 0,
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: false,
@@ -472,7 +476,6 @@ class _EditReviewState extends State<EditReview> {
         effectText = myControllerEffect.text;
         sideEffectText = myControllerSideEffect.text;
         overallText = myControllerOverall.text;
-        //_registerReview();
         await ReviewService(documentId: widget.review.documentId).updateReviewData(
             effect /*?? review.effect*/,
             sideEffect /*?? review.sideEffect*/,
