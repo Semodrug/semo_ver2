@@ -28,9 +28,8 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           routes: {
             // TODO: Add route
-            '/login': (context) => LoginPage(
-
-            ),
+            '/start': (context) => Wrapper(),
+            '/login': (context) => LoginPage(),
             '/home': (context) => HomePage(),
             '/camera': (context) => CameraPage(),
             '/ranking': (context) => RankingPage(),
