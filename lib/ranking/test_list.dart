@@ -21,6 +21,8 @@ class _DrugListState extends State<DrugList> {
 
   @override
   Widget build(BuildContext context) {
+    print('build');
+    print(' ');
     //일단 total num을 위해 임시로 열어둔 프로바이더
     //List<Drug> drugs = Provider.of<List<Drug>>(context) ?? [];
     //totalNum = drugs.length;
@@ -42,10 +44,30 @@ class _DrugListState extends State<DrugList> {
 
 
   Widget _buildBody(BuildContext context, String _filterOrSort) {
+    print('BODY');
+    print(' ');
     return StreamBuilder<List<Drug>>(
       stream: DatabaseService(categoryName: widget.categoryName).setter(_filterOrSort),
       builder: (context, stream){
-        return _buildList(context, _filterOrSort, stream.data);
+        if (!stream.hasData) {
+          print('데이터가 없다니까요');
+          return Container(
+            padding: EdgeInsets.only(top: 30),
+            child: Align(
+                alignment: Alignment.topCenter,
+                child: Text(
+                  '데이터가 없음??',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[400]),
+                )),
+          );
+          //return LinearProgressIndicator();
+        }
+        else {
+          print('데이터 있음');
+          return _buildList(context, _filterOrSort, stream.data);}
       }
     );
 
@@ -57,7 +79,10 @@ class _DrugListState extends State<DrugList> {
      List<Drug> drugList = [];
      drugList = drugs;
     print('   길이  ${drugList.length.toString()}');
+    print(drugList[0].itemName);
+    print(drugList[0].itemSeq);
 
+     print('  ');
     return Expanded (
           child:
         ListView.builder (

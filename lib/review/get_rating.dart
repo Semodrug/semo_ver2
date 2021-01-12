@@ -1,10 +1,18 @@
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/loading.dart';
+import 'edit_review.dart';
 import 'pie_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import 'write_review.dart';
+
 class GetRating extends StatefulWidget {
+  String drugItemSeq;
+  GetRating(this.drugItemSeq);
+
   @override
   _GetRatingState createState() => _GetRatingState();
 }
@@ -12,92 +20,102 @@ class GetRating extends StatefulWidget {
 class _GetRatingState extends State<GetRating> {
   @override
   Widget build(BuildContext context) {
+//    final reviews = Provider.of<List<Review>>(context) ?? [];
+    double tapToRatingResult = 0.0;
 
-    int length = 0 ;
-    num sum = 0;
-    num ratingResult = 0;
-    double effectGood = 0;
-    double effectSoso = 0;
-    double effectBad = 0;
-    double sideEffectYes = 0;
-    double sideEffectNo = 0;
+    return StreamBuilder<List<Review>>(
+      stream: ReviewService().getReviews(widget.drugItemSeq),
+      builder: (context, snapshot) {
+        List<Review> reviews = snapshot.data;
+        int length = 0 ;
+        num sum = 0;
+        num ratingResult = 0;
+        double effectGood = 0;
+        double effectSoso = 0;
+        double effectBad = 0;
+        double sideEffectYes = 0;
+        double sideEffectNo = 0;
 
-    final reviews = Provider.of<List<Review>>(context) ?? [];
-    length = reviews.length;
+        if(snapshot.hasData) {
+          length = reviews.length;
 
-    reviews.forEach((review) {
-      sum += review.starRating;
+          reviews.forEach((review) {
+            sum += review.starRating;
 
-      review.effect == "good" ? effectGood++ :
-      review.effect == "soso" ? effectSoso++ : effectBad++;
+            review.effect == "good" ? effectGood++ :
+            review.effect == "soso" ? effectSoso++ : effectBad++;
 
-      review.sideEffect == "yes" ? sideEffectYes++ : sideEffectNo++;
-    });
+            review.sideEffect == "yes" ? sideEffectYes++ : sideEffectNo++;
+          });
 
-    ratingResult = sum / length;
-    print("SUM:" + sum.toString());
-    print("RANGTH:" + length.toString());
-    print("RATING RESULT:" + ratingResult.toString());
-//    ratingResult = sum/length;
-//    print(ratingResult);
+          ratingResult = sum / length;
+//          print("SUM:" + sum.toString());
+//          print("RANGTH:" + length.toString());
+//          print("RATING RESULT:" + ratingResult.toString());
 
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("총 평점",
-                style: TextStyle(
-                    fontSize: 16.5, fontWeight: FontWeight.bold)),
-            //Container(height: size.height * 0.02),
-            Padding(padding: EdgeInsets.only(top: 14.0)),
+          return Container(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("총 평점",
+                      style: TextStyle(
+                          fontSize: 16.5, fontWeight: FontWeight.bold)),
+                  //Container(height: size.height * 0.02),
+                  Padding(padding: EdgeInsets.only(top: 14.0)),
 //            _rate(context),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Icon(Icons.star, color: Colors.amber[300], size: 35),
-                //Todo : Rating
-                Text(ratingResult.toStringAsFixed(1), style: TextStyle(fontSize: 35)),
-                Text("/5",
-                    style: TextStyle(
-                        fontSize: 20, color: Colors.grey[500])),
-                SizedBox(
-                    width:30
-                ),
-                //pie chart
-                Column(
-                  children: [
-                    Text("효과"),
-                    MyPieChart("effect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Icon(Icons.star, color: Colors.amber[300], size: 35),
+                      //Todo : Rating
+                      Text(ratingResult.toStringAsFixed(1), style: TextStyle(fontSize: 35)),
+                      Text("/5",
+                          style: TextStyle(
+                              fontSize: 20, color: Colors.grey[500])),
+                      SizedBox(
+                          width:30
+                      ),
+                      //pie chart
+                      Column(
+                        children: [
+                          Text("효과"),
+                          MyPieChart("effect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
 //            _effectPieChart(effectGood, effectSoso, effectBad),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text("부작용"),
-                    MyPieChart("sideEffect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text("부작용"),
+                          MyPieChart("sideEffect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
 //            _sideEffectPieChart(sideEffectYes, sideEffectNo),
-                  ],
-                ),
+                        ],
+                      ),
 
-              ],
-            ),
-            Padding(padding: EdgeInsets.only(top: 14.0)),
-            Text("탭해서 평가하기",
-                style: TextStyle(
-                    fontSize: 14.0, color: Colors.grey[700])),
-            Padding(padding: EdgeInsets.only(top: 7.0)),
-            _tapToRate()
-          ],
-        ));
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 14.0)),
+                  Text("탭해서 평가하기",
+                      style: TextStyle(
+                          fontSize: 14.0, color: Colors.grey[700])),
+                  Padding(padding: EdgeInsets.only(top: 7.0)),
+                  _tapToRate(tapToRatingResult)
+                ],
+              ));
+        }
+        else {
+          return Loading();
+        }
+      }
+    );
 
 
 
   }
 
-  Widget _tapToRate() {
+  Widget _tapToRate(tapToRatingResult) {
     return RatingBar.builder(
-      initialRating:3,
+      initialRating:0,
       minRating: 1,
       direction: Axis.horizontal,
       allowHalfRating: false,
@@ -111,14 +129,13 @@ class _GetRatingState extends State<GetRating> {
         color: Colors.amberAccent,
       ),
       onRatingUpdate: (rating) {
-        //TODO: add rating!!!!!!!!!!!!!!!!!!!!!!!!
-        _showMyDialog();
+        _showMyDialog(rating);
       },
     );
   }
 
 
-  Future<void> _showMyDialog() async {
+  Future<void> _showMyDialog(rating) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -146,6 +163,10 @@ class _GetRatingState extends State<GetRating> {
                       child: Text('확인', style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
                       onPressed: () {
                         //TODO: GOTO Edit Review
+                        Navigator.of(context).pop();
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => WriteReview(widget.drugItemSeq, rating)
+                        ));
                       },
                     ),
                   ],

@@ -7,6 +7,7 @@ class DatabaseService {
   final String uid;
   final String itemSeq;
   final String categoryName;
+
   //다은 카테고리 추가
   DatabaseService({this.uid, this.itemSeq, this.categoryName});
 
@@ -16,6 +17,7 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('Drugs');
 
   Query drugQuery = FirebaseFirestore.instance.collection('Drugs');
+
 
   //drugSnapshot 값 get이랑 set에서 해주기
   Stream<List<Drug>> drugsSnapshots;
@@ -30,17 +32,27 @@ class DatabaseService {
   }
 
   Stream<List<Drug>> setter(String _filterOrSort) {
+    //애초에 쿼리가 카테고리가 같아야 한다.//카테고리가 생기면 카테고리를 담은 쿼리를 짜주기!!
+    Query multiQuery;
+
     switch (_filterOrSort) {
+      //쿼리가 이중으로 안된느 거 같아서 쪼개서 해보니까 먹는다 하지만 제대로 알아보자 분명 있을텐데
       case "이름순":
-        drugQuery = drugQuery.orderBy('ITEM_NAME', descending: false);
+        drugQuery = drugQuery.where('ITEM_NAME', isGreaterThan: '이지');
+
+        multiQuery =
+            drugQuery.orderBy('ITEM_NAME', descending: false).limit(10);
+
         break;
 
       case "리뷰 많은 순":
-        drugQuery = drugQuery.orderBy('review', descending: true);
+        drugQuery = drugQuery.where('ITEM_NAME', isGreaterThan: '타이레');
+
+        multiQuery = drugQuery.orderBy('ITEM_NAME', descending: false).limit(10);
         break;
     }
 
-    drugsSnapshots = drugQuery.snapshots().map(_drugListFromSnapshot);
+    drugsSnapshots = multiQuery.snapshots().map(_drugListFromSnapshot);
 
     return drugsSnapshots;
   }
@@ -48,6 +60,8 @@ class DatabaseService {
   //drug list from snapshot
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
+      // print('이게 바로 이름이다  ==  ${doc.data()['ITEM_NAME']}\n');
+
       return Drug(
         barCode: doc.data()['BAR_CODE'] ?? '',
         // cancelName: doc.data()['CANCEL_NAME'] ?? '',

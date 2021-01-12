@@ -64,19 +64,19 @@ class _MyPieChartState extends State<MyPieChart> {
     ];
 
     List<PieChartSectionData> sideEffect = [
-      if(widget.effectGood != 0)
+      if(widget.sideEffectYes != 0)
         PieChartSectionData(
-          color: green,
+          color: red,
           value: sideEffectYes,
-          title: 'good',
+          title: 'yes',
           radius: 20,
           titleStyle: TextStyle(color: Colors.white, fontSize:12),
         ),
-      if(widget.effectBad != 0)
+      if(widget.sideEffectNo != 0)
         PieChartSectionData(
-          color: red,
+          color: green,
           value: sideEffectNo,
-          title: 'bad',
+          title: 'no',
           radius: 20,
           titleStyle: TextStyle(color: Colors.white, fontSize:12),
         )

@@ -12,6 +12,7 @@ class TestRanking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('TEST ranking build');
     //return StreamProvider<List<Drug>>.value(
     return
 //      StreamProvider<List<Drug>>.value(
@@ -71,11 +72,11 @@ class TestRanking extends StatelessWidget {
               ),
             ),
             body:
-            StreamProvider<List<Drug>>.value(
-              value: DatabaseService().drugs, //데이타를 여기서 불러옴
-              child:
+//            StreamProvider<List<Drug>>.value(
+//              value: DatabaseService().drugs, //데이타를 여기서 불러옴
+//              child:
             DrugList(categoryName: categoryName),
-            )
+           // )
         );
   }
 }
