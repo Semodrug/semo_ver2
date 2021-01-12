@@ -21,9 +21,19 @@ class ReviewService {
   }
 
 
-  Future<void> updateEffect(String text) async {
+  Future<void> tapToRate(num rating, String uid) async {
     return await reviewCollection.doc(documentId).update({
-      'effect': text
+      'starRating': rating,
+      'seqNum': documentId,
+      'uid': uid
+    });
+  }
+
+  Future<void> getRate(num rating, String uid) async {
+    return await reviewCollection.doc(documentId).update({
+      'starRating': rating,
+      'seqNum': documentId,
+      'uid': uid
     });
   }
 

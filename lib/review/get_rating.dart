@@ -1,4 +1,5 @@
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'edit_review.dart';
@@ -18,10 +19,13 @@ class GetRating extends StatefulWidget {
 }
 
 class _GetRatingState extends State<GetRating> {
+
   @override
   Widget build(BuildContext context) {
+    TheUser user = Provider.of<TheUser>(context);
 //    final reviews = Provider.of<List<Review>>(context) ?? [];
-    double tapToRatingResult = 0.0;
+    double _tapToRatingResult = 0.0;
+    bool _isRated = false;
 
     return StreamBuilder<List<Review>>(
       stream: ReviewService().getReviews(widget.drugItemSeq),
@@ -99,7 +103,7 @@ class _GetRatingState extends State<GetRating> {
                       style: TextStyle(
                           fontSize: 14.0, color: Colors.grey[700])),
                   Padding(padding: EdgeInsets.only(top: 7.0)),
-                  _tapToRate(tapToRatingResult)
+                  _tapToRate(_tapToRatingResult, user)
                 ],
               ));
         }
@@ -113,7 +117,7 @@ class _GetRatingState extends State<GetRating> {
 
   }
 
-  Widget _tapToRate(tapToRatingResult) {
+  Widget _tapToRate(tapToRatingResult, user) {
     return RatingBar.builder(
       initialRating:0,
       minRating: 1,
@@ -128,8 +132,9 @@ class _GetRatingState extends State<GetRating> {
         Icons.star,
         color: Colors.amberAccent,
       ),
-      onRatingUpdate: (rating) {
+      onRatingUpdate: (rating) async {
         _showMyDialog(rating);
+        await ReviewService(documentId: widget.drugItemSeq).tapToRate(rating, user);
       },
     );
   }

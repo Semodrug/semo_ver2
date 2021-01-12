@@ -46,7 +46,6 @@ class _EditReviewState extends State<EditReview> {
 
   @override
   Widget build(BuildContext context) {
-//    TheUser user = Provider.of<TheUser>(context);
     return StreamBuilder<Review>(
         stream: ReviewService().getSingleReview(widget.review.documentId),
         builder: (context, snapshot) {
