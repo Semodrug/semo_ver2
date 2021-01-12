@@ -6,8 +6,13 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  String get userEmail {
+    return _auth.currentUser.email;
+  }
+
   // create user obj based on firebase user
   TheUser _userFromFirebaseUser(User user) {
+    print('check: $user');
     return user != null ? TheUser(uid: user.uid) : null;
   }
 
@@ -36,7 +41,7 @@ class AuthService {
   }
 
   // login with email and password
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future signInWithEmail(String email, String password) async {
     try {
       var result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
