@@ -258,7 +258,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
         child: RaisedButton(
           onPressed: () async {
             await DatabaseService(uid: user.uid)
-                .updateUser(isPregnant[1], disease_list);
+                .updateUserHealth(isPregnant[1], disease_list);
 
             Navigator.pushReplacementNamed(context, '/login');
           },

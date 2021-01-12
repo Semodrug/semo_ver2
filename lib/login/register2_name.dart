@@ -235,7 +235,7 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
             if (birthMaskFormatter.getUnmaskedText().length != 8)
               showSnackBar(context);
             else {
-              await DatabaseService(uid: user.uid).addUser(
+              await DatabaseService(uid: user.uid).updateUserInfo(
                   nameController.text,
                   isSelected[0] ? 'male' : 'female',
                   nicknameController.text,
