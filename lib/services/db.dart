@@ -84,6 +84,9 @@ class DatabaseService {
         category: doc.data()['category'] ?? '',
         // image: doc.data()['image'] ?? '',
         // review: doc.data()['review'],
+
+        totalRating: doc.data()['totalRating'] ?? 0,
+        numOfReview: doc.data()['numOfReview'] ?? 0,
       );
     }).toList();
   }
@@ -129,7 +132,8 @@ class DatabaseService {
       // image: snapshot.data()['image'] ?? '',
       // review: snapshot.data()['review'],
 
-      totalRating: snapshot.data()['totalRating'] ?? 0
+      totalRating: snapshot.data()['totalRating'] ?? 0,
+      numOfReview: snapshot.data()['numOfReview'] ?? 0,
     );
   }
 
@@ -137,6 +141,7 @@ class DatabaseService {
   Stream<Drug> get drugData {
     return drugCollection.doc(itemSeq).snapshots().map(_drugFromSnapshot);
   }
+
 
   /* User */
   // collection reference
@@ -270,23 +275,35 @@ class DatabaseService {
         .map(_privacyFromSnapshot);
   }
 
-  Future<String> getTotalRating(DocumentSnapshot snapshot) {
-//    drugCollection.doc(itemSeq).get(FieldPath(['address', 'postcode'])).toString();
-    dynamic nested = snapshot.get(FieldPath(['address', 'postcode']));
-//    return a;
 
+  // get privacy stream
+  Future<num> getTotalRating() async {
+    DocumentSnapshot ds = await drugCollection.doc(itemSeq).get();
+    return ds.data()["totalRating"];
   }
 
-  Future<void> updateTotalRating(formalTotalRating, newTotalRating ) async {
+
+  Future<void> updateTotalRating(num rating) async {
+//    DocumentSnapshot ds = await drugCollection.doc(itemSeq).get();
+//    num formerTotalRating =  ds.data()["totalRating"];
+//    num formerNumOfReview = ds.data()["numOfReview"];
+
+
     return await drugCollection.doc(itemSeq).update({
-      'totalRating': newTotalRating ?? 0,
+//      'totalRating': (formerTotalRating + rating) / (formerNumOfReview + 1) ?? 0,
+      'numOfReview' : FieldValue.increment(1),
     });
   }
 
-//  Stream<num> get totalRating {
-//    //  final CollectionReference drugCollection =
-//    //      FirebaseFirestore.instance.collection('Drugs');
-//    return drugCollection.doc('itemSeq').snapshots().map;
+
+  //final CollectionReference drugCollection = FirebaseFirestore.instance.collection('Drugs');
+
+//  Future<void> increaseFavorite(String docId, String currentUserUid) async {
+//  final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
+//    return await reviewCollection.doc(docId).update({
+//      'favoriteSelected': FieldValue.arrayUnion([currentUserUid]),
+//      'noFavorite': FieldValue.increment(1),
+//    });
 //  }
 
 

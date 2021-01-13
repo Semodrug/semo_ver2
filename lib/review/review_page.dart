@@ -335,16 +335,14 @@ class _ReviewPageState extends State<ReviewPage> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Row(children: <Widget>[
-                                      // TODO: firebase connection
                                       Text(
-                                        '4.5',
+                                        drug.totalRating.toStringAsFixed(1),
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      // TODO: firebase connection
                                       Text(
-                                        ' (305개)',
+                                        " ("+drug.numOfReview.toStringAsFixed(0)+'개)',
                                         style: TextStyle(color: Colors.grey[600]),
                                       )
                                     ]),

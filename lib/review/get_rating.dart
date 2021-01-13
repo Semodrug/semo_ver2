@@ -61,9 +61,7 @@ class _GetRatingState extends State<GetRating> {
                     Text("총 평점",
                         style: TextStyle(
                             fontSize: 16.5, fontWeight: FontWeight.bold)),
-                    //Container(height: size.height * 0.02),
                     Padding(padding: EdgeInsets.only(top: 14.0)),
-//            _rate(context),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[

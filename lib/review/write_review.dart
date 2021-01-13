@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'review.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -693,37 +694,6 @@ class _WriteReviewState extends State<WriteReview> {
     );
   }
 
-  Widget _edit() {
-    return Container(
-        height: 300,
-        decoration: BoxDecoration(
-            border: Border(
-                bottom:
-                BorderSide(width: 0.8, color: Colors.grey[300], ))),
-        child: GestureDetector(
-          child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  color: Colors.teal[300]
-              ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
-              width: 350,
-              height: 50,
-              child: Center(
-                  child: Text("등록하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
-              )
-          ),
-          onTap: () {
-            effectText = myControllerEffect.text;
-            sideEffectText = myControllerSideEffect.text;
-            overallText = myControllerOverall.text;
-            _registerReview();
-            Navigator.pop(context);
-
-          },
-        )
-
-    );
-  }
 
   Widget _write() {
     return GestureDetector(
@@ -738,13 +708,13 @@ class _WriteReviewState extends State<WriteReview> {
               child: Text("등록하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
           )
       ),
-        onTap: () {
+        onTap: () async {
           effectText = myControllerEffect.text;
           sideEffectText = myControllerSideEffect.text;
           overallText = myControllerOverall.text;
           _registerReview();
+          await DatabaseService().updateTotalRating(starRating);
           Navigator.pop(context);
-
         },
     );
   }

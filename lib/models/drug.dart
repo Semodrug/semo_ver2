@@ -31,6 +31,7 @@ class Drug {
   final String udDocId;
   final String validTerm;
   final num totalRating;
+  final num numOfReview;
 
   // TODO : category
   final String category;
@@ -62,7 +63,8 @@ class Drug {
     this.udDocId,
     this.validTerm,
     this.category,
-    this.totalRating
+    this.totalRating,
+    this.numOfReview
   });
 }
 
