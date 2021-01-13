@@ -128,6 +128,8 @@ class DatabaseService {
       category: snapshot.data()['category'] ?? '',
       // image: snapshot.data()['image'] ?? '',
       // review: snapshot.data()['review'],
+
+      totalRating: snapshot.data()['totalRating'] ?? 0
     );
   }
 
@@ -267,4 +269,12 @@ class DatabaseService {
         .snapshots()
         .map(_privacyFromSnapshot);
   }
+
+//  Stream<num> get totalRating {
+//    //  final CollectionReference drugCollection =
+//    //      FirebaseFirestore.instance.collection('Drugs');
+//    return drugCollection.doc('itemSeq').snapshots().map;
+//  }
+
+
 }

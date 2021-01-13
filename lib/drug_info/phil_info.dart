@@ -468,8 +468,9 @@ Widget _underInfo(BuildContext context, String drugItemSeq) {
                           Text('자세히 보기'),
                           Icon(Icons.keyboard_arrow_right)
                         ],
-                      ))
-                ]),
+                      )),
+                ]
+            ),
           );
         } else {
           return Loading();
