@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
+import 'package:semo_ver2/review/review_page.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -545,8 +546,10 @@ class _ListDrugState extends State<ListDrugOfAll> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    PhilInfoPage(drugItemSeq: widget.item_seq))),
+//                builder: (context) =>
+//                    PhilInfoPage(drugItemSeq: widget.item_seq)
+              builder: (context) => ReviewPage(widget.item_seq),
+            )),
       },
       child: Container(
         width: double.infinity,
@@ -592,8 +595,10 @@ class _ListDrugUserState extends State<ListDrugOfUser> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    PhilInfoPage(drugItemSeq: widget.item_seq))),
+//                builder: (context) =>
+//                    PhilInfoPage(drugItemSeq: widget.item_seq)
+              builder: (context) => ReviewPage(widget.item_seq),
+            )),
       },
       child: Container(
         width: double.infinity,

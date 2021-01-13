@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/review/review_page.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/models/drug.dart';
 
@@ -144,7 +145,8 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PhilInfoPage(drugItemSeq: data.itemSeq),
+//            builder: (context) => PhilInfoPage(drugItemSeq: data.itemSeq),
+            builder: (context) => ReviewPage(data.itemSeq),
           ),
         ),
       },

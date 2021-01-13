@@ -270,6 +270,19 @@ class DatabaseService {
         .map(_privacyFromSnapshot);
   }
 
+  Future<String> getTotalRating(DocumentSnapshot snapshot) {
+//    drugCollection.doc(itemSeq).get(FieldPath(['address', 'postcode'])).toString();
+    dynamic nested = snapshot.get(FieldPath(['address', 'postcode']));
+//    return a;
+
+  }
+
+  Future<void> updateTotalRating(formalTotalRating, newTotalRating ) async {
+    return await drugCollection.doc(itemSeq).update({
+      'totalRating': newTotalRating ?? 0,
+    });
+  }
+
 //  Stream<num> get totalRating {
 //    //  final CollectionReference drugCollection =
 //    //      FirebaseFirestore.instance.collection('Drugs');
