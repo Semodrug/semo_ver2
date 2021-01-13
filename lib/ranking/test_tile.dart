@@ -49,14 +49,14 @@ class DrugTile extends StatelessWidget {
 //          }
 //
 //        });
-
+    //이부분은 그냥 놔두고 Drug DB 수정 되면 그 때 맞춰서 보여주기!!
     return StreamBuilder(
         stream: ReviewService().getReviews(drug.itemSeq),
         builder: (context, snapshot) {
           List<Review> reviews = snapshot.data;
           int len = 0;
           num sum = 0;
-          num ratingResult = 0;
+          double ratingResult = 0;
 
           if (snapshot.hasData) {
             len = reviews.length;
