@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
+
 import 'package:intl/intl.dart';
 
 class AuthService {
@@ -109,21 +110,21 @@ class AuthService {
   }
 
   // // 사용자에게 비밀번호 재설정 메일을 전송
-  // void sendPasswordResetEmail() async {
-  //   _auth.sendPasswordResetEmail(email: getUser().email);
-  // }
-  //
+  void sendPasswordResetEmail(email) async {
+    _auth.sendPasswordResetEmail(email: email);
+  }
+
   // // Firebase로부터 회원 탈퇴
   // void withdrawalAccount() async {
   //   await getUser().delete();
   //   setUser(null);
   // }
-  //
+
   // // Firebase로부터 수신한 메시지 설정
   // void setLastFBMessage(String msg) {
   //   _lastFirebaseResponse = msg;
   // }
-  //
+
   // // Firebase로부터 수신한 메시지를 반환하고 삭제
   // String getLastFBMessage() {
   //   String returnValue = _lastFirebaseResponse;
