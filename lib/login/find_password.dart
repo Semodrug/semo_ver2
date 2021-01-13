@@ -83,9 +83,20 @@ class _FindPasswordState extends State<FindPassword> {
                         hintStyle:
                             TextStyle(color: Colors.grey, fontSize: 16.0),
                       ),
+                      onChanged: (value) {
+                        if (value.isNotEmpty) {
+                          setState(() {
+                            _isFilled = true;
+                          });
+                        } else {
+                          setState(() {
+                            _isFilled = false;
+                          });
+                        }
+                      },
                       validator: (String value) {
                         if (value.isEmpty) {
-                          return '아이디(이메일)을 입력해주세요';
+                          return '이메일을 입력해주세요';
                         }
                         return null;
                       },
@@ -101,17 +112,6 @@ class _FindPasswordState extends State<FindPassword> {
                         //padding: const EdgeInsets.symmetric(vertical: 16.0),
                         //alignment: Alignment.center,
                         child: RaisedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              _auth.sendPasswordResetEmail(
-                                  _emailController.text);
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FindPasswordResult()),
-                            );
-                          },
                           shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(10.0)),
                           child: Text(
@@ -119,6 +119,23 @@ class _FindPasswordState extends State<FindPassword> {
                             style: TextStyle(color: Colors.white),
                           ),
                           color: Colors.teal[400],
+                          onPressed: () async {
+                            if (_isFilled && _formKey.currentState.validate()) {
+                              dynamic result =
+                                  await _auth.sendPasswordResetEmail(
+                                      _emailController.text);
+                              if (result is String) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(result)));
+                              }
+                              if (result == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('이메일이 전송되었습니다.')));
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    '/start', (Route<dynamic> route) => false);
+                              }
+                            }
+                          },
                         ),
                       ),
                     ),

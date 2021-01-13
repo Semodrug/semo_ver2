@@ -109,9 +109,21 @@ class AuthService {
     }
   }
 
-  // // 사용자에게 비밀번호 재설정 메일을 전송
-  void sendPasswordResetEmail(email) async {
-    _auth.sendPasswordResetEmail(email: email);
+  // 사용자에게 비밀번호 재설정 메일을 전송
+  Future sendPasswordResetEmail(email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      print('ecode is ${e}');
+      if (e.code == 'user-not-found') {
+        return '회원이 아니시거나 아이디를 잘못입력하셨습니다';
+      } else if (e.code == 'invalid-email') {
+        return '잘못된 이메일 형식입니다';
+      } else if (e.code == 'wrong-password') {
+        return '비밀번호를 잘못입력하셨습니다';
+      }
+    }
   }
 
   // // Firebase로부터 회원 탈퇴
