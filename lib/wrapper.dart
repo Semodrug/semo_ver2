@@ -10,16 +10,11 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: check an auto-login
-    // final AuthService _auth = AuthService();
-    // _auth.signOut();
-
     final TheUser user = Provider.of<TheUser>(context);
 
     if (user == null) {
-      print('user is null!');
       return LoginPage();
     } else {
-      print('user is not null!');
       return BottomBar();
     }
   }
