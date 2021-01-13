@@ -1,10 +1,8 @@
+import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
-
-import 'package:intl/intl.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -37,7 +35,6 @@ class AuthService {
 
       String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
 
-      // TODO: add to database
       await DatabaseService(uid: user.uid).addUser(nowDT, nowDT);
 
       return _userFromFirebaseUser(user);
@@ -75,6 +72,7 @@ class AuthService {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
+
     final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
