@@ -15,7 +15,6 @@ class DatabaseService {
   // collection reference
   final CollectionReference drugCollection =
       FirebaseFirestore.instance.collection('Drugs');
-
   Query drugQuery = FirebaseFirestore.instance.collection('Drugs');
 
 
@@ -60,7 +59,6 @@ class DatabaseService {
   //drug list from snapshot
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      // print('이게 바로 이름이다  ==  ${doc.data()['ITEM_NAME']}\n');
 
       return Drug(
         barCode: doc.data()['BAR_CODE'] ?? '',
