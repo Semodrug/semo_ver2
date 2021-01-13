@@ -27,23 +27,6 @@ class ReviewService {
     });
   }
 
-  Future<void> updateSideEffect(String text) async {
-    return await reviewCollection.doc(documentId).update({
-      'sideEffect': text
-    });
-  }
-
-  Future<void> getEffect(String documentId) async {
-    return await reviewCollection.doc(documentId).get().then((DocumentSnapshot ds) {
-      return ds.data()["effect"];
-    });
-  }
-
-  Future<void> getSideEffect1(String documentId) async {
-    return await reviewCollection.doc(documentId).snapshots().listen((DocumentSnapshot ds) {
-      ds.data()["effect"];
-    });
-  }
 
   Future<void> decreaseFavorite(String docId, String currentUserUid) async {
     return await reviewCollection.doc(docId).update({
@@ -86,26 +69,17 @@ class ReviewService {
 
 
   Stream<List<Review>> getReviews(String seqNum) {
-    reviewCollection.where("seqNum", isEqualTo: seqNum).get().then((QuerySnapshot ds) {
-      ds.docs.map((doc) {
-        return Review(
-          effect: doc.data()['effect'] ?? '',
-          sideEffect: doc.data()['sideEffect'] ?? '',
-          effectText: doc.data()['effectText'] ?? '',
-          sideEffectText: doc.data()['sideEffectText'] ?? '',
-          overallText: doc.data()['overallText'] ?? '',
-          //List<String> favoriteSelected = List<String>();
-        favoriteSelected: doc.data()['favoriteSelected'] ?? '',
-          starRating: doc.data()['starRating'] ?? 0,
-          noFavorite: doc.data()['noFavorite'] ?? 0,
-          uid: doc.data()['uid'] ?? '',
-          id: doc.data()['id'] ?? '',
-          documentId: doc.id ?? '',
-          registrationDate: doc.data()['registrationDate'],
-        );
-      }).toList();
-    });
+    return reviewCollection.where("seqNum", isEqualTo: seqNum).snapshots()
+        .map(_reviewListFromSnapshot);
   }
+
+
+
+//  Stream<List<Review>> getMyReviews(String seqNum) {
+//    return getReviews(seqNum)
+//        .map(_reviewListFromSnapshot);
+//  }
+
 
 //  Stream<List<Review>> getReviews(String seqNum) {
 //    reviewCollection.where("seqNum", isEqualTo: seqNum).snapshots().listen((data) {

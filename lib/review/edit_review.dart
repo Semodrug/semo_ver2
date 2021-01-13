@@ -1,18 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/loading.dart';
+import 'package:semo_ver2/shared/image.dart';
 
 class EditReview extends StatefulWidget {
-//  String docId;
-//  EditReview(this.docId, {Key key}) : super(key: key);
-
   Review review;
   EditReview(this.review);
 
@@ -40,6 +36,8 @@ class _EditReviewState extends State<EditReview> {
   String effectText = '';
   String sideEffectText = '';
   String overallText = '';
+
+  String starRatingText = '';
   static const _green = Color(0xff57C8B8);
   static const _grey = Color(0x95C4C4C4);
 
@@ -85,43 +83,7 @@ class _EditReviewState extends State<EditReview> {
                   },
                   child: ListView(
                     children: <Widget>[
-                      //TODO: Bring pill information
-                      //pill information
-                      Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom:
-                                  BorderSide(width: 0.8, color: Colors.grey[300], ))),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                width: 100, height: 100,
-                                color: Colors.teal[100],
-                              ),
-                              Padding(padding: EdgeInsets.only(left: 15)),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text("00제약", style: TextStyle(fontSize: 14, color: Colors.grey[400])),
-                                  Text("타이레놀", style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold)),
-                                  Row(
-                                    children: <Widget>[
-                                      Padding(padding: EdgeInsets.only(top: 3)),
-                                      Container(
-                                        width: 17, height:17,
-                                        color: Colors.teal[100],
-                                      ),
-                                      Padding(padding: EdgeInsets.only(right: 3)),
-                                      //TODO!!!
-                                      Text("4.26 (3개) ", style: TextStyle(fontSize: 15, color: Colors.black)),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ],
-                          )
-                      ),
+                      _pillInfo(review),
                       _rating(review),
                       _effect(review),
                       _sideEffect(review),
@@ -137,6 +99,50 @@ class _EditReviewState extends State<EditReview> {
             return Loading();
           }
         }
+    );
+  }
+
+  Widget _pillInfo(review) {
+    //TODO: Bring pill information
+    return Container(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom:
+                BorderSide(width: 0.8, color: Colors.grey[300], ))),
+        child: Row(
+          children: <Widget>[
+//            Container(
+//              width: 100, height: 100,
+//              color: Colors.teal[100],
+//            ),
+            SizedBox(
+              child: DrugImage(drugItemSeq: review.seqNum),
+              width: 100.0,
+              height: 100.0,
+            ),
+            Padding(padding: EdgeInsets.only(left: 15)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+//                Text("00제약", style: TextStyle(fontSize: 14, color: Colors.grey[400])),
+                Text("타이레놀", style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold)),
+                Row(
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.only(top: 3)),
+                    Container(
+                      width: 17, height:17,
+                      color: Colors.teal[100],
+                    ),
+                    Padding(padding: EdgeInsets.only(right: 3)),
+                    //TODO!!!
+                    Text("4.26 (3개) ", style: TextStyle(fontSize: 15, color: Colors.black)),
+                  ],
+                ),
+              ],
+            )
+          ],
+        )
     );
   }
 
@@ -173,11 +179,24 @@ class _EditReviewState extends State<EditReview> {
                 ),
                 onRatingUpdate: (rating) {
                   starRating = rating;
+                  setState(() {
+                    if(starRating == 0)
+                      starRatingText = "선택하세요.";
+                    if(starRating == 1)
+                      starRatingText =  "1점 (별로에요)";
+                    if(starRating == 2)
+                      starRatingText =  "2점 (그저그래요)";
+                    if(starRating == 3)
+                      starRatingText =  "3점 (괜찮아요)";
+                    if(starRating == 4)
+                      starRatingText =  "4점 (좋아요)";
+                    if(starRating == 5)
+                      starRatingText =  "5점 (최고예요)";
+                  });
                 },
               ),
               SizedBox(height: 10),
-              //TODO!!!!!!!!!!!!!!!!!!!!!!to changible state.
-              Text("4점(좋아요)")
+              Text(starRatingText)
             ],
           )
       ),
