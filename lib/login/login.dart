@@ -6,7 +6,6 @@ import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/login/find_id.dart';
 import 'package:semo_ver2/login/find_password.dart';
 import 'package:semo_ver2/login/register1_email.dart';
-// import 'package:semo_ver2/login/login_provider.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/shared/constants.dart';
 
@@ -19,7 +18,10 @@ import 'package:semo_ver2/shared/constants.dart';
 
 // TODO: 구글 로그인 후, 개인 정보 받아야한다
 
-bool loading = false;
+bool _isSecret = true;
+bool _isIdFilled = false;
+bool _isPasswordFilled = false;
+
 final AuthService _auth = AuthService();
 
 class LoginPage extends StatefulWidget {
@@ -30,27 +32,25 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? Loading()
-        : Scaffold(
-            body: Builder(builder: (BuildContext context) {
-              return ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  _EmailPasswordForm(),
-                  _GoogleSignInSection(),
-                  /* 로그인 뛰어넘기 */
-                  IconButton(
-                    icon: Icon(Icons.skip_next),
-                    color: Colors.redAccent,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/bottom_bar');
-                    },
-                  ),
-                ],
-              );
-            }),
-          );
+    return Scaffold(
+      body: Builder(builder: (BuildContext context) {
+        return ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            _EmailPasswordForm(),
+            _GoogleSignInSection(),
+            /* 로그인 뛰어넘기 */
+            IconButton(
+              icon: Icon(Icons.skip_next),
+              color: Colors.redAccent,
+              onPressed: () {
+                Navigator.pushNamed(context, '/bottom_bar');
+              },
+            ),
+          ],
+        );
+      }),
+    );
   }
 }
 
@@ -61,11 +61,10 @@ class _EmailPasswordForm extends StatefulWidget {
 
 class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String error = '';
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  // text field state
-  String email = '';
-  String password = '';
+  String error = '';
 
   @override
   Widget build(BuildContext context) {
@@ -89,24 +88,61 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
               height: 20,
             ),
             TextFormField(
+              controller: _emailController,
               cursorColor: Colors.teal[400],
-              decoration: textInputDecoration.copyWith(hintText: '아이디(이메일)'),
-              validator: (value) => value.isEmpty ? '아이디(이메일)을 입력해주세요' : null,
+              decoration: textInputDecoration.copyWith(hintText: '이메일'),
               onChanged: (value) {
-                setState(() => email = value);
+                if (value.isNotEmpty) {
+                  setState(() {
+                    _isIdFilled = true;
+                  });
+                } else {
+                  setState(() {
+                    _isIdFilled = false;
+                  });
+                }
+              },
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return '아이디(이메일)을 입력해주세요';
+                } else if (!value.contains('@')) {
+                  return '올바른 이메일을 입력해주세요';
+                }
+                return null;
               },
             ),
             SizedBox(
               height: 10,
             ),
             TextFormField(
+              controller: _passwordController,
               cursorColor: Colors.teal[400],
-              decoration: textInputDecoration.copyWith(hintText: '비밀번호'),
-              obscureText: true,
-              validator: (value) => value.isEmpty ? '비밀번호를 입력해주세요' : null,
+              decoration: textInputDecoration.copyWith(
+                  hintText: '비밀번호',
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      Icons.visibility,
+                      color: _isSecret ? Colors.grey : Colors.black87,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isSecret = !_isSecret;
+                      });
+                    },
+                  )),
+              obscureText: _isSecret ? true : false,
               onChanged: (value) {
-                setState(() => password = value);
+                if (value.isNotEmpty) {
+                  setState(() {
+                    _isPasswordFilled = true;
+                  });
+                } else {
+                  setState(() {
+                    _isPasswordFilled = false;
+                  });
+                }
               },
+              validator: (value) => value.isEmpty ? '비밀번호를 입력해주세요' : null,
             ),
             SizedBox(height: 40.0),
             SizedBox(
@@ -115,55 +151,46 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
               width: 400.0,
               height: 45.0,
               child: RaisedButton(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: Text(
+                  '로그인',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: _isIdFilled && _isPasswordFilled
+                    ? Colors.teal[400]
+                    : Colors.grey,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    setState(() => loading = true);
-                    dynamic result =
-                        await _auth.signInWithEmail(email, password);
-                    if (result == null) {
+                  if (_isIdFilled &&
+                      _isPasswordFilled &&
+                      _formKey.currentState.validate()) {
+                    // setState(() => loading = true);
+                    dynamic result = await _auth.signInWithEmail(
+                        _emailController.text, _passwordController.text);
+
+                    if (result is String) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(result)));
+                    } else if (result == null) {
                       setState(() {
-                        loading = false;
+                        // loading = false;
                         error = 'Could not sign in with those credentials';
                       });
                     }
                   }
                 },
-                shape: RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(10.0)),
-                child: const Text(
-                  '로그인',
-                  style: TextStyle(color: Colors.white),
-                ),
-                color: Colors.teal[400],
               ),
             ),
             // SizedB
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              FlatButton(
-                padding: EdgeInsets.zero,
-                child: Text(
-                  '아이디 찾기',
-                  style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 13.0,
-                      color: Colors.grey[400]),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => FindId()),
-                  );
-                },
-              ),
               Text(
-                ' |  ',
+                '비밀번호를 잊으셨나요? ',
                 style: TextStyle(fontSize: 13.0, color: Colors.grey[400]),
               ),
               FlatButton(
                 padding: EdgeInsets.zero,
                 child: Text(
-                  '비밀번호 찾기',
+                  '비밀번호 재설정',
                   style: TextStyle(
                       decoration: TextDecoration.underline,
                       fontSize: 13.0,
@@ -222,11 +249,11 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             FlatButton(
               onPressed: () async {
-                setState(() => loading = true);
+                // setState(() => loading = true);
                 dynamic result = await _auth.signInWithGoogle();
                 if (result == null) {
                   setState(() {
-                    loading = false;
+                    // loading = false;
                     error = 'Could not sign in with those credentials';
                   });
                 }
@@ -239,11 +266,11 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
             ),
             FlatButton(
               onPressed: () async {
-                setState(() => loading = true);
+                // setState(() => loading = true);
                 dynamic result = await _auth.signInWithGoogle();
                 if (result == null) {
                   setState(() {
-                    loading = false;
+                    // loading = false;
                     error = 'Could not sign in with those credentials';
                   });
                 }
@@ -256,11 +283,11 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
             ),
             FlatButton(
               onPressed: () async {
-                setState(() => loading = true);
+                // setState(() => loading = true);
                 dynamic result = await _auth.signInWithGoogle();
                 if (result == null) {
                   setState(() {
-                    loading = false;
+                    // loading = false;
                     error = 'Could not sign in with those credentials';
                   });
                 }
