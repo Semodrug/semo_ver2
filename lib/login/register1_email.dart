@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:semo_ver2/login/register2_name.dart';
 import 'package:semo_ver2/services/auth.dart';
 
-bool _isSecret = false;
+bool _isSecret = true;
 bool _isIdFilled = false;
 bool _isPasswordFilled = false;
 bool _isLoginFailed = false;

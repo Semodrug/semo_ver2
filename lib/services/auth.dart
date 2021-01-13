@@ -113,7 +113,6 @@ class AuthService {
       await _auth.sendPasswordResetEmail(email: email);
       return null;
     } on FirebaseAuthException catch (e) {
-      print('ecode is ${e}');
       if (e.code == 'user-not-found') {
         return '회원이 아니시거나 아이디를 잘못입력하셨습니다';
       } else if (e.code == 'invalid-email') {
