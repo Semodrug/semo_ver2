@@ -23,7 +23,7 @@ class _GetRatingState extends State<GetRating> {
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
-//    double _tapToRatingResult = 0.0;
+    double _tapToRatingResult = 0.0;
     bool _isRated = false;
 
     return StreamBuilder<List<Review>>(
@@ -32,7 +32,7 @@ class _GetRatingState extends State<GetRating> {
           List<Review> reviews = snapshot.data;
           int length = 0 ;
           num sum = 0;
-//          num ratingResult = 0;
+          num ratingResult = 0;
           double effectGood = 0;
           double effectSoso = 0;
           double effectBad = 0;
@@ -51,7 +51,7 @@ class _GetRatingState extends State<GetRating> {
               review.sideEffect == "yes" ? sideEffectYes++ : sideEffectNo++;
             });
 
-//            ratingResult = sum / length;
+            ratingResult = sum / length;
 
             return Container(
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -67,7 +67,7 @@ class _GetRatingState extends State<GetRating> {
                       children: <Widget>[
                         Icon(Icons.star, color: Colors.amber[300], size: 35),
                         //Todo : Rating
-//                        Text(ratingResult.toStringAsFixed(1), style: TextStyle(fontSize: 35)),
+                        Text(ratingResult.toStringAsFixed(1), style: TextStyle(fontSize: 35)),
                         Text("/5",
                             style: TextStyle(
                                 fontSize: 20, color: Colors.grey[500])),
@@ -99,7 +99,7 @@ class _GetRatingState extends State<GetRating> {
                     Padding(padding: EdgeInsets.only(top: 7.0)),
 
                     //TODO Save tap to RATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#######################
-//                    _tapToRate(_tapToRatingResult, user)
+                    _tapToRate(_tapToRatingResult, user)
                   ],
                 ));
           }
@@ -114,8 +114,10 @@ class _GetRatingState extends State<GetRating> {
   }
 
   Widget _tapToRate(tapToRatingResult, user) {
+    var rating =0;
     return RatingBar.builder(
-      initialRating:0,
+
+      initialRating: 0,
       minRating: 1,
       direction: Axis.horizontal,
       allowHalfRating: false,
@@ -129,9 +131,17 @@ class _GetRatingState extends State<GetRating> {
         color: Colors.amberAccent,
       ),
       onRatingUpdate: (rating) async {
-        _showMyDialog(rating);
+        rating =3;
+        if(ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(user.toString()) == true){
+          _dialogIfAlreadyExist();
+          //TODO:############################ Update rating###############################
+        }
+
+        else
+          _showMyDialog(rating);
         await ReviewService(documentId: widget.drugItemSeq).tapToRate(rating, user);
       },
+
     );
   }
 
@@ -166,10 +176,54 @@ class _GetRatingState extends State<GetRating> {
                         //TODO: GOTO Edit Review
                         Navigator.of(context).pop();
                         Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => WriteReview(widget.drugItemSeq, rating)
+                            builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq, tapToRatingResult: rating)
                         ));
                       },
                     ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _dialogIfAlreadyExist()  {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Center(child: Icon(Icons.star, size: 30, color: Colors.amberAccent)),
+                SizedBox(height: 5),
+//                Center(child: Text('별점이 반영되었습니다.', style: TextStyle(color: Colors.black45, fontSize: 14))),
+                SizedBox(height: 20),
+                Center(child: Text('Rating updated', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+//                    TextButton(
+//                      child: Text('확인', style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+//                      onPressed: () {
+//                        //TODO: GOTO Edit Review
+//                        Navigator.of(context).pop();
+//                        Navigator.push(context, MaterialPageRoute(
+//                            builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq, tapToRatingResult: rating)
+//                        ));
+//                      },
+//                    ),
                   ],
                 )
               ],

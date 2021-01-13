@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/models/user.dart';
 
 
 class ReviewService {
 
   final String documentId;
   ReviewService({ this.documentId });
+
 
   final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
 
@@ -83,6 +85,14 @@ class ReviewService {
         .map(_reviewListFromSnapshot);
   }
 
+
+  bool findUserWroteReview(String user) {
+    if(reviewCollection.where("seqNum", isEqualTo: documentId).where("uid", isEqualTo:user).snapshots()
+      .map(_reviewListFromSnapshot) != null)
+      return true;
+    else
+      return false;
+  }
 
 
 //  Stream<List<Review>> getMyReviews(String seqNum) {

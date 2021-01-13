@@ -284,13 +284,14 @@ class DatabaseService {
 
 
   Future<void> updateTotalRating(num rating) async {
-//    DocumentSnapshot ds = await drugCollection.doc(itemSeq).get();
-//    num formerTotalRating =  ds.data()["totalRating"];
-//    num formerNumOfReview = ds.data()["numOfReview"];
+    DocumentSnapshot drugSnapshot = await drugCollection.doc(itemSeq).get();
+    num formerTotalRating =  drugSnapshot.data()["totalRating"];
+    num formerNumOfReview = drugSnapshot.data()["numOfReview"];
 
+//    DocumentSnapshot reviewSnapshot = FirebaseFirestore.instance.collection('Reviews').doc
 
     return await drugCollection.doc(itemSeq).update({
-//      'totalRating': (formerTotalRating + rating) / (formerNumOfReview + 1) ?? 0,
+      'totalRating': (formerTotalRating * formerNumOfReview + rating) / (formerNumOfReview + 1) ?? 0,
       'numOfReview' : FieldValue.increment(1),
     });
   }

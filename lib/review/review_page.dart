@@ -45,6 +45,7 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget build(BuildContext context) {
 //    <List<Review>> rev = Provider.of<List<Review>>(context);
 //    final reviews = Provider.of<List<Review>>(context);
+    TheUser user = Provider.of<TheUser>(context);
     return StreamProvider<List<Review>>.value(
         value: ReviewService().getReviews(widget.drugItemSeq),
         child: Scaffold(
@@ -81,10 +82,12 @@ class _ReviewPageState extends State<ReviewPage> {
                 child: Icon(Icons.create),
                 backgroundColor: Colors.teal[200],
                 elevation: 0.0,
-                onPressed: () {
-//            rating();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WriteReview(widget.drugItemSeq)));
+                onPressed: () async {
+                  if(ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(user.toString()) == true)
+                    _dialogIfAlreadyExist();
+                  else
+                    Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq)));
                 }),
 //            backgroundColor: Colors.white,
             body: CustomScrollView(
@@ -434,6 +437,52 @@ class _ReviewPageState extends State<ReviewPage> {
           }
         });
   }
+
+
+  Future<void> _dialogIfAlreadyExist()  {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Center(child: Icon(Icons.star, size: 30, color: Colors.amberAccent)),
+                SizedBox(height: 5),
+//                Center(child: Text('별점이 반영되었습니다.', style: TextStyle(color: Colors.black45, fontSize: 14))),
+                SizedBox(height: 20),
+                Center(child: Text('you already wrote a review', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+//                    TextButton(
+//                      child: Text('확인', style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+//                      onPressed: () {
+//                        //TODO: GOTO Edit Review
+//                        Navigator.of(context).pop();
+//                        Navigator.push(context, MaterialPageRoute(
+//                            builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq, tapToRatingResult: rating)
+//                        ));
+//                      },
+//                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 
   Future<void> _myDialog(
       context, dialogTitle, dialogContent, tail1, tail2) async {
