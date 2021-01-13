@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:semo_ver2/login/register2_name.dart';
 import 'package:semo_ver2/services/auth.dart';
 
-bool _isSecret = true;
+bool _isSecret = false;
 bool _isIdFilled = false;
 bool _isPasswordFilled = false;
 bool _isLoginFailed = false;
@@ -118,16 +118,15 @@ class _RegisterFormState extends State<RegisterForm> {
     return TextFormField(
       controller: _emailController,
       cursorColor: Colors.teal[400],
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.teal),
         ),
         hintText: '아이디 (이메일)',
         hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
-        // errorText: _isLoginFailed ? 'hs' : null,
       ),
-      onChanged: (text) {
-        if (text.isNotEmpty) {
+      onChanged: (value) {
+        if (value.isNotEmpty) {
           setState(() {
             _isIdFilled = true;
           });
@@ -160,19 +159,18 @@ class _RegisterFormState extends State<RegisterForm> {
           hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
           suffixIcon: IconButton(
             icon: Icon(
-              _isSecret ? Icons.visibility_off : Icons.visibility,
-              color: Colors.grey,
+              Icons.visibility,
+              color: _isSecret ? Colors.grey : Colors.black87,
             ),
             onPressed: () {
               setState(() {
                 _isSecret = !_isSecret;
-                print(_isSecret);
               });
             },
           )),
       obscureText: _isSecret ? true : false,
-      onChanged: (text) {
-        if (text.length >= 8) {
+      onChanged: (value) {
+        if (value.length >= 8) {
           setState(() {
             _isPasswordFilled = true;
           });
@@ -199,18 +197,19 @@ class _RegisterFormState extends State<RegisterForm> {
           width: 400.0,
           height: 45.0,
           child: RaisedButton(
-            child: const Text(
-              '확인',
-              style: TextStyle(color: Colors.white),
-            ),
-            color: _isIdFilled && _isPasswordFilled
-                ? Colors.teal[400]
-                : Colors.grey,
-            shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(10.0)),
-            onPressed: () async {
-              if (_isIdFilled && _isPasswordFilled) {
-                if (_formKey.currentState.validate()) {
+              child: Text(
+                '확인',
+                style: TextStyle(color: Colors.white),
+              ),
+              color: _isIdFilled && _isPasswordFilled
+                  ? Colors.teal[400]
+                  : Colors.grey,
+              shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(10.0)),
+              onPressed: () async {
+                if (_isIdFilled &&
+                    _isPasswordFilled &&
+                    _formKey.currentState.validate()) {
                   dynamic result = await _auth.signUpWithEmail(
                       _emailController.text, _passwordController.text);
 
@@ -237,9 +236,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 } else {
                   // 바로바로?
                 }
-              }
-            },
-          ),
+              }),
         ),
       );
     });
