@@ -118,7 +118,10 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                     // setState(() => loading = true);
                     dynamic result =
                         await _auth.signInWithEmail(email, password);
-                    if (result == null) {
+                    if (result is String) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(result)));
+                    } else if (result == null) {
                       setState(() {
                         // loading = false;
                         error = 'Could not sign in with those credentials';

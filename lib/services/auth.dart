@@ -42,13 +42,10 @@ class AuthService {
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        print('이미 사용 중인 이메일 입니다');
         return '이미 사용 중인 이메일 입니다';
       } else if (e.code == 'invalid-email') {
-        print('유효한 이메일 형식이 아닙니다');
         return '유효한 이메일 형식이 아닙니다';
       } else if (e.code == 'weak-password') {
-        print('입력한 비밀번호가 너무 약합니다');
         return '입력한 비밀번호가 너무 약합니다';
       }
     }
@@ -61,9 +58,14 @@ class AuthService {
           email: email, password: password);
       User user = result.user;
       return user;
-    } catch (error) {
-      print(error.toString());
-      return null;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return '회원이 아니시거나 아이디를 잘못입력하셨습니다';
+      } else if (e.code == 'invalid-email') {
+        return '잘못된 이메일 형식입니다';
+      } else if (e.code == 'wrong-password') {
+        return '비밀번호를 잘못입력하셨습니다';
+      }
     }
   }
 
