@@ -19,7 +19,6 @@ import 'package:semo_ver2/shared/constants.dart';
 
 // TODO: 구글 로그인 후, 개인 정보 받아야한다
 
-bool loading = false;
 final AuthService _auth = AuthService();
 
 class LoginPage extends StatefulWidget {
@@ -30,27 +29,25 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? Loading()
-        : Scaffold(
-            body: Builder(builder: (BuildContext context) {
-              return ListView(
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  _EmailPasswordForm(),
-                  _GoogleSignInSection(),
-                  /* 로그인 뛰어넘기 */
-                  IconButton(
-                    icon: Icon(Icons.skip_next),
-                    color: Colors.redAccent,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/bottom_bar');
-                    },
-                  ),
-                ],
-              );
-            }),
-          );
+    return Scaffold(
+      body: Builder(builder: (BuildContext context) {
+        return ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            _EmailPasswordForm(),
+            _GoogleSignInSection(),
+            /* 로그인 뛰어넘기 */
+            IconButton(
+              icon: Icon(Icons.skip_next),
+              color: Colors.redAccent,
+              onPressed: () {
+                Navigator.pushNamed(context, '/bottom_bar');
+              },
+            ),
+          ],
+        );
+      }),
+    );
   }
 }
 
@@ -118,12 +115,12 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                 padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
-                    setState(() => loading = true);
+                    // setState(() => loading = true);
                     dynamic result =
                         await _auth.signInWithEmail(email, password);
                     if (result == null) {
                       setState(() {
-                        loading = false;
+                        // loading = false;
                         error = 'Could not sign in with those credentials';
                       });
                     }
@@ -222,11 +219,11 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             FlatButton(
               onPressed: () async {
-                setState(() => loading = true);
+                // setState(() => loading = true);
                 dynamic result = await _auth.signInWithGoogle();
                 if (result == null) {
                   setState(() {
-                    loading = false;
+                    // loading = false;
                     error = 'Could not sign in with those credentials';
                   });
                 }
@@ -239,11 +236,11 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
             ),
             FlatButton(
               onPressed: () async {
-                setState(() => loading = true);
+                // setState(() => loading = true);
                 dynamic result = await _auth.signInWithGoogle();
                 if (result == null) {
                   setState(() {
-                    loading = false;
+                    // loading = false;
                     error = 'Could not sign in with those credentials';
                   });
                 }
@@ -256,11 +253,11 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
             ),
             FlatButton(
               onPressed: () async {
-                setState(() => loading = true);
+                // setState(() => loading = true);
                 dynamic result = await _auth.signInWithGoogle();
                 if (result == null) {
                   setState(() {
-                    loading = false;
+                    // loading = false;
                     error = 'Could not sign in with those credentials';
                   });
                 }

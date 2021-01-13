@@ -260,7 +260,8 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
             await DatabaseService(uid: user.uid)
                 .updateUserHealth(isPregnant[1], disease_list);
 
-            Navigator.pushReplacementNamed(context, '/login');
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/start', (Route<dynamic> route) => false);
           },
           shape: RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(10.0)),
