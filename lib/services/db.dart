@@ -17,6 +17,7 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('Drugs');
   Query drugQuery = FirebaseFirestore.instance.collection('Drugs');
 
+
   //drugSnapshot 값 get이랑 set에서 해주기
   Stream<List<Drug>> drugsSnapshots;
 
@@ -172,8 +173,16 @@ class DatabaseService {
   }
 
   // add user doc
-  Future<void> addUser(name, sex, nickname, birth) async {
+  Future<void> addUser(registerDate, agreeDate) async {
     return await userCollection.doc(uid).set({
+      'registerDate': registerDate ?? '',
+      'agreeDate': agreeDate ?? '',
+    });
+  }
+
+  // update user doc
+  Future<void> updateUserInfo(name, sex, nickname, birth) async {
+    return await userCollection.doc(uid).update({
       'name': name ?? '',
       'sex': sex ?? '',
       'nickname': nickname ?? '',
@@ -181,8 +190,7 @@ class DatabaseService {
     });
   }
 
-  // update user doc
-  Future<void> updateUser(isPregnant, disease_list) async {
+  Future<void> updateUserHealth(isPregnant, disease_list) async {
     return await userCollection.doc(uid).update({
       'isPregnant': isPregnant ?? '',
       'disease_list': disease_list ?? [],

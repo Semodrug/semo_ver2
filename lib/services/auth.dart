@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/services/db.dart';
+import 'package:intl/intl.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -30,13 +33,24 @@ class AuthService {
       var result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
+
+      String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
+
       // TODO: add to database
-      // await DatabaseService(uid: user.uid)
-      //     .updateUserData('0', 'new crew member', 100);
+      await DatabaseService(uid: user.uid).addUser(nowDT, nowDT);
+
       return _userFromFirebaseUser(user);
-    } catch (error) {
-      print(error.toString());
-      return null;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        print('이미 사용 중인 이메일 입니다');
+        return '이미 사용 중인 이메일 입니다';
+      } else if (e.code == 'invalid-email') {
+        print('유효한 이메일 형식이 아닙니다');
+        return '유효한 이메일 형식이 아닙니다';
+      } else if (e.code == 'weak-password') {
+        print('입력한 비밀번호가 너무 약합니다');
+        return '입력한 비밀번호가 너무 약합니다';
+      }
     }
   }
 

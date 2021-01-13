@@ -156,8 +156,13 @@ class _MyPageState extends State<MyPage> {
                           onPressed: () async {
                             // TODO: when log-out, we should go to login page by Wrapper
                             await _auth.signOut();
-                            Navigator.pop(context);
+
+                            // Navigator.pushNamedAndRemoveUntil(context, "/start",
+                            //     (Route<dynamic> route) => false);
+                            // Navigator.of(context)
+                            //     .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
                             // Navigator.pushReplacementNamed(context, '/login');
+                            // Navigator.pop(context);
                           }),
                     ],
                   ),
