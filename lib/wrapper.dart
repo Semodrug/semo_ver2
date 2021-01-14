@@ -7,7 +7,7 @@ import 'package:semo_ver2/login/login.dart';
 import 'package:semo_ver2/bottom_bar.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/loading.dart';
-// import 'package:semo_ver2/services/auth.dart';
+import 'package:semo_ver2/services/auth.dart';
 
 class Wrapper extends StatelessWidget {
   @override

@@ -149,7 +149,7 @@ class _MyPageState extends State<MyPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${userData.name}님, \n오늘도 건강하세요!',
+                      '${userData.nickname}님, \n오늘도 건강하세요!',
                       style: TextStyle(fontSize: 20),
                     ),
                     SizedBox(

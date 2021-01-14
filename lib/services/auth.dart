@@ -81,6 +81,12 @@ class AuthService {
     try {
       final User user = (await _auth.signInWithCredential(credential)).user;
 
+      if (googleAuth == null) {
+        // 회원가입 시 가입 날짜 저장
+        String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
+        await DatabaseService(uid: user.uid).addUser(nowDT);
+      }
+
       // If first login, need to check
       // String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
       // await DatabaseService(uid: user.uid).addUser(nowDT, nowDT);
