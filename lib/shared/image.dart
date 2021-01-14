@@ -36,6 +36,7 @@ Future<String> downloadURLExample(String itemSeq) async {
 
     return downloadURL;
   } catch (e) {
+    print(e);
     String downloadURL = await firebase_storage.FirebaseStorage.instance
         .ref('noImage.png')
         .getDownloadURL();
@@ -43,4 +44,16 @@ Future<String> downloadURLExample(String itemSeq) async {
 
     return downloadURL;
   }
+
+  // String downloadURL = await firebase_storage.FirebaseStorage.instance
+  //   //     .ref('Image/$itemSeq.png')
+  //   //     .getDownloadURL();
+  //   //
+  //   // if (downloadURL == null) {
+  //   //   downloadURL = await firebase_storage.FirebaseStorage.instance
+  //   //       .ref('noImage.png')
+  //   //       .getDownloadURL();
+  //   // }
+  //   //
+  //   // return downloadURL;
 }

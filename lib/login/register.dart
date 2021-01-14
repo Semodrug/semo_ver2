@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/login/register0_policy.dart';
 import 'package:semo_ver2/login/register1_email.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -60,7 +59,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RegisterPolicy()),
+                    MaterialPageRoute(
+                        builder: (context) => RegisterFirstPage()),
                   );
                 },
               ),

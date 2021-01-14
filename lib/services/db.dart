@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
@@ -16,7 +15,6 @@ class DatabaseService {
   final CollectionReference drugCollection =
       FirebaseFirestore.instance.collection('Drugs');
   Query drugQuery = FirebaseFirestore.instance.collection('Drugs');
-
 
   //drugSnapshot 값 get이랑 set에서 해주기
   Stream<List<Drug>> drugsSnapshots;
@@ -47,7 +45,8 @@ class DatabaseService {
       case "리뷰 많은 순":
         drugQuery = drugQuery.where('ITEM_NAME', isGreaterThan: '타이레');
 
-        multiQuery = drugQuery.orderBy('ITEM_NAME', descending: false).limit(10);
+        multiQuery =
+            drugQuery.orderBy('ITEM_NAME', descending: false).limit(10);
         break;
     }
 
@@ -59,7 +58,6 @@ class DatabaseService {
   //drug list from snapshot
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-
       return Drug(
         barCode: doc.data()['BAR_CODE'] ?? '',
         // cancelName: doc.data()['CANCEL_NAME'] ?? '',
@@ -180,10 +178,9 @@ class DatabaseService {
   }
 
   // add user doc
-  Future<void> addUser(registerDate, agreeDate) async {
+  Future<void> addUser(registerDate) async {
     return await userCollection.doc(uid).set({
       'registerDate': registerDate ?? '',
-      'agreeDate': agreeDate ?? '',
     });
   }
 

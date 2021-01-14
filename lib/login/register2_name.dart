@@ -230,6 +230,13 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
         //padding: const EdgeInsets.symmetric(vertical: 16.0),
         //alignment: Alignment.center,
         child: RaisedButton(
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(10.0)),
+          child: Text(
+            '다음',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Colors.teal[400],
           onPressed: () async {
             // phoneMaskFormatter.getUnmaskedText().length != 11 ||
             if (birthMaskFormatter.getUnmaskedText().length != 8)
@@ -245,13 +252,6 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                   MaterialPageRoute(builder: (context) => RegisterThirdPage()));
             }
           },
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-          child: const Text(
-            '다음',
-            style: TextStyle(color: Colors.white),
-          ),
-          color: Colors.teal[400],
         ),
       ),
     );
