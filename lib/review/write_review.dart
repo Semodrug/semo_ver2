@@ -482,7 +482,7 @@ class _WriteReviewState extends State<WriteReview> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal:0),
       child: Container(
-        width: 400,
+//        width: 400,
 //                height: 100,
         child: TextField(
             controller: myControllerEffect,
@@ -624,7 +624,7 @@ class _WriteReviewState extends State<WriteReview> {
                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
                 color: Colors.teal[300]
             ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
-            width: 350,
+//            width: 350,
             height: 50,
             child: Center(
                 child: Text("등록하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))

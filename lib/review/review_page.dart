@@ -231,9 +231,10 @@ class _ReviewPageState extends State<ReviewPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
-        width: 370,
+//        width: 370,
+//        width: MediaQuery.of(context).size.width*0.9,
         height: 45,
-        margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
+        margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
           color: Colors.grey[200],
