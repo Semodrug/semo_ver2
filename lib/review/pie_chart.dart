@@ -42,7 +42,7 @@ class _MyPieChartState extends State<MyPieChart> {
           color: green,
           value: effectGood,
           title: 'good',
-          radius: 20,
+          radius: 18,
           titleStyle: TextStyle(color: Colors.white, fontSize:12),
         ),
       if(widget.effectSoso != 0)
@@ -50,7 +50,7 @@ class _MyPieChartState extends State<MyPieChart> {
           color: yellow,
           value: effectSoso,
           title: 'soso',
-          radius: 20,
+          radius: 18,
           titleStyle: TextStyle(color: Colors.white, fontSize:12),
         ),
       if(widget.effectBad != 0)
@@ -58,7 +58,7 @@ class _MyPieChartState extends State<MyPieChart> {
           color: red,
           value: effectBad,
           title: 'bad',
-          radius: 20,
+          radius: 18,
           titleStyle: TextStyle(color: Colors.white, fontSize:12),
         )
     ];
@@ -69,7 +69,7 @@ class _MyPieChartState extends State<MyPieChart> {
           color: red,
           value: sideEffectYes,
           title: 'yes',
-          radius: 20,
+          radius: 18,
           titleStyle: TextStyle(color: Colors.white, fontSize:12),
         ),
       if(widget.sideEffectNo != 0)
@@ -77,14 +77,14 @@ class _MyPieChartState extends State<MyPieChart> {
           color: green,
           value: sideEffectNo,
           title: 'no',
-          radius: 20,
+          radius: 18,
           titleStyle: TextStyle(color: Colors.white, fontSize:12),
         )
     ];
 
     return  Container(
-      width: 110,
-      height: 110,
+      width: 100,
+      height: 100,
       child: AspectRatio(
           aspectRatio: 1,
           child: PieChart(

@@ -92,7 +92,7 @@ class _EditReviewState extends State<EditReview> {
                       _sideEffect(review),
                       _overallReview(review),
                       _edit(review),
-                      Padding(padding: EdgeInsets.only(top: 35)),
+//                      Padding(padding: EdgeInsets.only(top: 35)),
                     ],
                   ),
                 )
@@ -108,7 +108,7 @@ class _EditReviewState extends State<EditReview> {
   Widget _pillInfo(review) {
     //TODO: Bring pill information
     return Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.fromLTRB(20,10,20,10),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -152,7 +152,7 @@ class _EditReviewState extends State<EditReview> {
   Widget _rating(Review review) {
     return Container(
 //          height: 150,
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 25),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -207,7 +207,7 @@ class _EditReviewState extends State<EditReview> {
   Widget _effect(Review review) {
     return Container(
 //          height: 280,
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -302,7 +302,7 @@ class _EditReviewState extends State<EditReview> {
 
   Widget _textField(TextEditingController myControllerEffect) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 2.5),
+      padding: EdgeInsets.symmetric(vertical: 20,),
       child: Container(
         width: 400,
 //                height: 100,
@@ -329,7 +329,7 @@ class _EditReviewState extends State<EditReview> {
   Widget _sideEffect(Review review) {
     return Container(
 //          height: 280,
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -414,7 +414,7 @@ class _EditReviewState extends State<EditReview> {
 
   Widget _overallReview(Review review) {
     return Container(
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
 //          height: 300,
         decoration: BoxDecoration(
             border: Border(

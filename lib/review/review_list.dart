@@ -18,6 +18,8 @@ class ReviewList extends StatefulWidget {
 class _ReviewListState extends State<ReviewList> {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     //TODO LIMIT!!
     final reviews = Provider.of<List<Review>>(context) ?? [];
     List<Review> searchResults = [];
@@ -26,17 +28,14 @@ class _ReviewListState extends State<ReviewList> {
           review.sideEffectText.toString().contains(widget.searchText) ||
           review.overallText.toString().contains(widget.searchText)
       ) {
-//        print("review: "+review.effectText);
         searchResults.add(review);
       } else
         print('    RESULT Nothing     ');
     }
-//    print("HERE##"+searchResults.length.toString());
-//    print("HERE!!"+searchResults[1].effectText.toString());
     return Expanded(
       child: ListView(
         physics: const ClampingScrollPhysics(),
-        padding: EdgeInsets.all(16.0),
+//        padding: EdgeInsets.all(20.0),
         children: searchResults.map((data) => _buildListItem(context, data)).toList(),
       ),
     );
@@ -61,6 +60,7 @@ class _ReviewListState extends State<ReviewList> {
     String regDate =  year + "." + month + "." + day;
 
     return Container(
+      padding: EdgeInsets.fromLTRB(20,0,4,12),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -98,6 +98,8 @@ class _ReviewListState extends State<ReviewList> {
 //            SizedBox(width: 145),
         Expanded(child: Container()),
         IconButton(
+//          padding: EdgeInsets.only(right:0),
+//          constraints: BoxConstraints(),
           icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
           onPressed: () {
             if(auth.currentUser.uid == review.uid) {
@@ -176,7 +178,6 @@ class _ReviewListState extends State<ReviewList> {
                   children: <Widget>[
                     Text("효과", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
                     Padding(padding: EdgeInsets.all(2.5)),
-                    //Container(width: size.width * 0.015),
                     Container(
                         width: 17,
                         height: 17,
@@ -186,13 +187,12 @@ class _ReviewListState extends State<ReviewList> {
                             shape: BoxShape.circle)),
                   ],
                 )),
-            //Container(width: size.width * 0.025),
-            Padding(padding: EdgeInsets.all(5)),
+            Container(width: MediaQuery.of(context).size.width * 0.025),
             Text(review.effectText, style: TextStyle(fontSize: 17.0)),
           ],
         ),
-
-        SizedBox(height:13),
+        Container(height: MediaQuery.of(context).size.height * 0.01),
+//        SizedBox(height:13),
 
         //side effect
         Row(
@@ -211,7 +211,7 @@ class _ReviewListState extends State<ReviewList> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text("부작용", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
-                    Padding(padding: EdgeInsets.all(2.5)),
+                    Container(width: MediaQuery.of(context).size.width * 0.0125),
                     Container(
                         width: 17,
                         height: 17,
@@ -221,13 +221,12 @@ class _ReviewListState extends State<ReviewList> {
                             shape: BoxShape.circle)),
                   ],
                 )),
-            Padding(padding: EdgeInsets.all(5)),
+            Container(width: MediaQuery.of(context).size.width * 0.025),
             Text(review.sideEffectText, style: TextStyle(fontSize: 17.0)),
           ],
         ),
-
-
-        SizedBox(height:13),
+        Container(height: MediaQuery.of(context).size.height * 0.01),
+//        SizedBox(height:13),
         Row(
           children: <Widget>[
             Container(
@@ -244,11 +243,15 @@ class _ReviewListState extends State<ReviewList> {
                     Text("총평", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
                   ],
                 )),
-            Padding(padding: EdgeInsets.all(5)),
+//            Padding(padding: EdgeInsets.all(5)),
+            Container(width: MediaQuery.of(context).size.width * 0.0145),
             Text(review.overallText, style: TextStyle(fontSize: 17.0)),
+//            Container(width: MediaQuery.of(context).size.width * 0.03),
           ],
         ),
-        Padding(padding: EdgeInsets.only(top: 6.0)),
+        Container(height: MediaQuery.of(context).size.height * 0.02),
+//        Padding(padding: EdgeInsets.only(top: 6.0)),
+
       ],
     );
   }
@@ -258,7 +261,7 @@ class _ReviewListState extends State<ReviewList> {
       children: <Widget>[
         Text(regDate,
             style: TextStyle(color: Colors.grey[500], fontSize: 13)),
-        Padding(padding: EdgeInsets.all(18)),
+//        Padding(padding: EdgeInsets.all(18)),
         Expanded(child: Container( )),
         Container(
           child: new Row(
