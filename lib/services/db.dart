@@ -153,7 +153,6 @@ class DatabaseService {
     return drugCollection.doc(itemSeq).snapshots().map(_drugFromSnapshot);
   }
 
-
   /* User */
   // collection reference
   final CollectionReference userCollection =
@@ -163,12 +162,13 @@ class DatabaseService {
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
       uid: uid,
-      name: snapshot.data()['name'] ?? '',
+      registerDate: snapshot.data()['registerDate'] ?? '',
+      agreeDate: snapshot.data()['agreeDate'] ?? '',
       sex: snapshot.data()['sex'] ?? '',
-      phone: snapshot.data()['phone'] ?? '',
-      birth: snapshot.data()['birth'] ?? '',
-      diseaseList: snapshot.data()['diseaseList'] ?? [],
+      nickname: snapshot.data()['nickname'] ?? '',
+      birthYear: snapshot.data()['birthYear'] ?? '',
       isPregnant: snapshot.data()['isPregnant'] ?? false,
+      diseaseList: snapshot.data()['diseaseList'] ?? [],
     );
   }
 
@@ -184,20 +184,25 @@ class DatabaseService {
     });
   }
 
-  // update user doc
-  Future<void> updateUserInfo(name, sex, nickname, birth) async {
+  Future<void> updateAgreeDate(aggreeDate) async {
     return await userCollection.doc(uid).update({
-      'name': name ?? '',
-      'sex': sex ?? '',
-      'nickname': nickname ?? '',
-      'birth': birth ?? '',
+      'aggreeDate': aggreeDate ?? '',
     });
   }
 
-  Future<void> updateUserHealth(isPregnant, disease_list) async {
+  // update user doc
+  Future<void> updateUserPrivacy(sex, birthYear, nickname) async {
+    return await userCollection.doc(uid).update({
+      'sex': sex ?? '',
+      'birthYear': birthYear ?? '',
+      'nickname': nickname ?? '',
+    });
+  }
+
+  Future<void> updateUserHealth(isPregnant, diseaseList) async {
     return await userCollection.doc(uid).update({
       'isPregnant': isPregnant ?? '',
-      'disease_list': disease_list ?? [],
+      'disease_list': diseaseList ?? [],
     });
   }
 
@@ -292,27 +297,26 @@ class DatabaseService {
         .map(_privacyFromSnapshot);
   }
 
-
   // get privacy stream
   Future<num> getTotalRating() async {
     DocumentSnapshot ds = await drugCollection.doc(itemSeq).get();
     return ds.data()["totalRating"];
   }
 
-
   Future<void> updateTotalRating(num rating) async {
     DocumentSnapshot drugSnapshot = await drugCollection.doc(itemSeq).get();
-    num formerTotalRating =  drugSnapshot.data()["totalRating"];
+    num formerTotalRating = drugSnapshot.data()["totalRating"];
     num formerNumOfReview = drugSnapshot.data()["numOfReview"];
 
 //    DocumentSnapshot reviewSnapshot = FirebaseFirestore.instance.collection('Reviews').doc
 
     return await drugCollection.doc(itemSeq).update({
-      'totalRating': (formerTotalRating * formerNumOfReview + rating) / (formerNumOfReview + 1) ?? 0,
-      'numOfReview' : FieldValue.increment(1),
+      'totalRating': (formerTotalRating * formerNumOfReview + rating) /
+              (formerNumOfReview + 1) ??
+          0,
+      'numOfReview': FieldValue.increment(1),
     });
   }
-
 
   //final CollectionReference drugCollection = FirebaseFirestore.instance.collection('Drugs');
 
@@ -323,6 +327,5 @@ class DatabaseService {
 //      'noFavorite': FieldValue.increment(1),
 //    });
 //  }
-
 
 }

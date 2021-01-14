@@ -10,12 +10,12 @@ import 'package:semo_ver2/services/db.dart';
 
 bool _isFind = false;
 
-class RegisterThirdPage extends StatefulWidget {
+class GetHealthPage extends StatefulWidget {
   @override
-  _RegisterThirdPageState createState() => _RegisterThirdPageState();
+  _GetHealthPageState createState() => _GetHealthPageState();
 }
 
-class _RegisterThirdPageState extends State<RegisterThirdPage> {
+class _GetHealthPageState extends State<GetHealthPage> {
   TextEditingController selfWritingController = TextEditingController();
 
   List<bool> isPregnant = List.generate(2, (_) => false);

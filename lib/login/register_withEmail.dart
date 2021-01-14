@@ -215,6 +215,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   } else {
                     dynamic result = await _auth.signInWithEmail(
                         _emailController.text, _passwordController.text);
+
                     if (result == null) {
                       print('알 수 없는 오류 발생');
                       // setState(() {
@@ -222,12 +223,8 @@ class _RegisterFormState extends State<RegisterForm> {
                       //   error = 'Could not sign in with those credentials';
                       // });
                     }
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RegisterSecondPage()),
-                    );
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/start', (Route<dynamic> route) => false);
                   }
                 } else {
                   // 바로바로?

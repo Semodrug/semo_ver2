@@ -4,24 +4,26 @@ import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'package:semo_ver2/initial/initial3_health.dart';
+import 'package:semo_ver2/initial/get_health.dart';
 
 // var phoneMaskFormatter = new MaskTextInputFormatter(
 //     mask: '###-####-####', filter: {"#": RegExp(r'[0-9]')});
-var birthMaskFormatter = new MaskTextInputFormatter(
-    mask: '####.##.##', filter: {"#": RegExp(r'[0-9]')});
+// var birthMaskFormatter = new MaskTextInputFormatter(
+//     mask: '####.##.##', filter: {"#": RegExp(r'[0-9]')});
+var birthYearMaskFormatter =
+    new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
 
 //print(maskFormatter.getMaskedText()); // -> "+0 (123) 456-78-90"
 //print(maskFormatter.getUnmaskedText()); // -> 01234567890
 
-class RegisterSecondPage extends StatefulWidget {
+class GetPrivacyPage extends StatefulWidget {
   final String title = '회원가입';
 
   @override
-  _RegisterSecondPageState createState() => _RegisterSecondPageState();
+  _GetPrivacyPageState createState() => _GetPrivacyPageState();
 }
 
-class _RegisterSecondPageState extends State<RegisterSecondPage> {
+class _GetPrivacyPageState extends State<GetPrivacyPage> {
   List<bool> isSelected = List.generate(2, (_) => false);
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -29,7 +31,7 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController nicknameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController birthController = TextEditingController();
+  TextEditingController birthYearController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -79,40 +81,21 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        child: Text('이제 곧 회원가입이 \n완료됩니다 :)',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ),
+                      topTitle(),
                       SizedBox(
-                        height: 20,
+                        height: 40,
                       ),
-                      nameGender(),
+                      gender(),
                       SizedBox(
-                        height: 10.0,
+                        height: 20.0,
+                      ),
+                      birthYear(),
+                      SizedBox(
+                        height: 20.0,
                       ),
                       nickname(),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      birth(),
                       SizedBox(height: 50.0),
                       submit(context),
-
-                      /* 로그인 뛰어넘기 */
-                      IconButton(
-                        icon: Icon(Icons.skip_next),
-                        color: Colors.redAccent,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RegisterThirdPage()),
-                          );
-                        },
-                      ),
                     ],
                   ),
                 ),
@@ -122,63 +105,80 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
         }));
   }
 
-  Widget nameGender() {
-    return Row(
+  Widget topTitle() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 200,
-          child: TextFormField(
-            controller: nameController,
-            cursorColor: Colors.teal[400],
-            decoration: InputDecoration(
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.teal),
-                ),
-                hintText: '이름',
-                hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0)),
-            keyboardType: TextInputType.text,
-            validator: (String value) {
-              if (value.isEmpty) return "이름을 입력하세요.";
-              return null;
-            },
-          ),
+        Text(
+          '개인 정보 설정',
+          style: TextStyle(
+              color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.w600),
         ),
         SizedBox(
-          width: 40.0,
+          height: 6,
         ),
-        Row(
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('성별', style: TextStyle(color: Colors.grey, fontSize: 16.0)),
-            SizedBox(
-              width: 10,
-            ),
-            ToggleButtons(
-              constraints: BoxConstraints(
-                minWidth: 40,
-                minHeight: 20,
-              ),
-              children: [Text('남'), Text('여')],
-              selectedColor: Colors.teal[400],
-              fillColor: Colors.teal[100],
-              onPressed: (int index) {
-                setState(() {
-                  for (int buttonIndex = 0;
-                      buttonIndex < isSelected.length;
-                      buttonIndex++) {
-                    if (buttonIndex == index) {
-                      isSelected[buttonIndex] = true;
-                    } else {
-                      isSelected[buttonIndex] = false;
-                    }
-                  }
-                });
-              },
-              isSelected: isSelected,
-            ),
-          ],
+        Text(
+          '서비스 이용을 도와드려요.',
+          style: TextStyle(
+              color: Colors.grey[700],
+              fontSize: 12.0,
+              fontWeight: FontWeight.w200),
         ),
       ],
+    );
+  }
+
+  Widget gender() {
+    return Row(
+      // crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('성별', style: TextStyle(color: Colors.grey, fontSize: 16.0)),
+        SizedBox(
+          width: 20,
+        ),
+        ToggleButtons(
+          constraints: BoxConstraints(
+            minWidth: 40,
+            minHeight: 20,
+          ),
+          children: [Text('남'), Text('여')],
+          selectedColor: Colors.teal[400],
+          fillColor: Colors.teal[100],
+          onPressed: (int index) {
+            setState(() {
+              for (int buttonIndex = 0;
+                  buttonIndex < isSelected.length;
+                  buttonIndex++) {
+                if (buttonIndex == index) {
+                  isSelected[buttonIndex] = true;
+                } else {
+                  isSelected[buttonIndex] = false;
+                }
+              }
+            });
+          },
+          isSelected: isSelected,
+        ),
+      ],
+    );
+  }
+
+  Widget birthYear() {
+    return TextFormField(
+      controller: birthYearController,
+      cursorColor: Colors.teal[400],
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.teal),
+          ),
+          hintText: '출생년도',
+          hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0)),
+      keyboardType: TextInputType.number,
+      inputFormatters: [birthYearMaskFormatter],
+      validator: (String value) {
+        if (value.isEmpty) return "생년월일을 입력하세요.";
+        return null;
+      },
     );
   }
 
@@ -195,25 +195,6 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
       keyboardType: TextInputType.text,
       validator: (String value) {
         if (value.isEmpty) return "닉네임을 입력하세요.";
-        return null;
-      },
-    );
-  }
-
-  Widget birth() {
-    return TextFormField(
-      controller: birthController,
-      cursorColor: Colors.teal[400],
-      decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.teal),
-          ),
-          hintText: '생년월일',
-          hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0)),
-      keyboardType: TextInputType.number,
-      inputFormatters: [birthMaskFormatter],
-      validator: (String value) {
-        if (value.isEmpty) return "생년월일을 입력하세요.";
         return null;
       },
     );
@@ -239,17 +220,17 @@ class _RegisterSecondPageState extends State<RegisterSecondPage> {
           color: Colors.teal[400],
           onPressed: () async {
             // phoneMaskFormatter.getUnmaskedText().length != 11 ||
-            if (birthMaskFormatter.getUnmaskedText().length != 8)
+            if (birthYearMaskFormatter.getUnmaskedText().length != 4)
               showSnackBar(context);
             else {
-              await DatabaseService(uid: user.uid).updateUserInfo(
-                  nameController.text,
-                  isSelected[0] ? 'male' : 'female',
-                  nicknameController.text,
-                  birthController.text);
+              await DatabaseService(uid: user.uid).updateUserPrivacy(
+                isSelected[0] ? 'male' : 'female',
+                birthYearController.text,
+                nicknameController.text,
+              );
 
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RegisterThirdPage()));
+                  MaterialPageRoute(builder: (context) => GetHealthPage()));
             }
           },
         ),
