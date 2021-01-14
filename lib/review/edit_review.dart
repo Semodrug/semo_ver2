@@ -444,7 +444,7 @@ class _EditReviewState extends State<EditReview> {
 //
 //              ),
             _textField(myControllerOverall),
-            Padding(padding: EdgeInsets.only(top: 25)),
+//            Padding(padding: EdgeInsets.only(top: 25)),
           ],
         )
     );
@@ -452,16 +452,19 @@ class _EditReviewState extends State<EditReview> {
 
   Widget _edit(Review review) {
     return GestureDetector(
-      child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              color: Colors.teal[300]
-          ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
-          width: 350,
-          height: 50,
-          child: Center(
-              child: Text("수정하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
-          )
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20,20,20,40),
+        child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                color: Colors.teal[300]
+            ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
+//          width: 50,
+            height: 50,
+            child: Center(
+                child: Text("수정하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
+            )
+        ),
       ),
       onTap: () async {
         effectText = myControllerEffect.text;

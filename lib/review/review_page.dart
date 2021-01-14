@@ -83,9 +83,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   //TODO##################################################
                   print("##");
                   print(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.toString()));
-                  if(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.toString()) == true)
-                    _dialogIfAlreadyExist();
-                  else
+//                  if(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.toString()) == true)
+//                    _dialogIfAlreadyExist();
+//                  else
                     Navigator.push(context,
                       MaterialPageRoute(builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq)));
                 }),
