@@ -258,10 +258,12 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
         // setState(() => loading = true);
         dynamic result = await _auth.signInWithGoogle();
         if (result == null) {
-          setState(() {
-            // loading = false;
-            error = 'Could not sign in with those credentials';
-          });
+          // setState(() {
+          //   // loading = false;
+          //   // error = 'Could not sign in with those credentials';
+          print('Could not sign in with those credentials');
+          //   }
+          // );
         }
       },
       child: SizedBox(

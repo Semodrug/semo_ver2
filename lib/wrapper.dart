@@ -21,22 +21,15 @@ class Wrapper extends StatelessWidget {
     if (user == null) {
       return LoginPage();
     } else {
-      return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: user.uid).userData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            UserData userData = snapshot.data;
-            print(userData.agreeDate);
-            if (userData.agreeDate == null)
-              return PolicyAgreePage();
-            else
+      return FutureBuilder<bool>(
+          future: DatabaseService(uid: user.uid).checkIfDocExists(user.uid),
+          builder: (context, snapshot) {
+            if (snapshot.data == true) {
               return BottomBar();
-          } else {
-            return Loading();
-          }
-        },
-      );
-      //
+            } else {
+              return PolicyAgreePage();
+            }
+          });
     }
   }
 }

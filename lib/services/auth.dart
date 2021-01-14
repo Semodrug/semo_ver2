@@ -14,7 +14,6 @@ class AuthService {
 
   // create user obj based on firebase user
   TheUser _userFromFirebaseUser(User user) {
-    print('check: $user');
     return user != null ? TheUser(uid: user.uid) : null;
   }
 
@@ -32,10 +31,6 @@ class AuthService {
       var result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
-
-      // 회원가입 시 가입 날짜 저장
-      String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
-      await DatabaseService(uid: user.uid).addUser(nowDT);
 
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
@@ -80,16 +75,6 @@ class AuthService {
 
     try {
       final User user = (await _auth.signInWithCredential(credential)).user;
-
-      if (googleAuth == null) {
-        // 회원가입 시 가입 날짜 저장
-        String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
-        await DatabaseService(uid: user.uid).addUser(nowDT);
-      }
-
-      // If first login, need to check
-      // String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
-      // await DatabaseService(uid: user.uid).addUser(nowDT, nowDT);
 
       print("signed in " + user.displayName);
       assert(user.email != null);

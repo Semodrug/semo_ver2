@@ -178,15 +178,15 @@ class DatabaseService {
   }
 
   // add user doc
-  Future<void> addUser(registerDate) async {
-    return await userCollection.doc(uid).set({
-      'registerDate': registerDate ?? '',
-    });
-  }
+  // Future<void> updateAgreeDate(registerDate) async {
+  //   return await userCollection.doc(uid).set({
+  //     'registerDate': registerDate ?? '',
+  //   });
+  // }
 
-  Future<void> updateAgreeDate(aggreeDate) async {
-    return await userCollection.doc(uid).update({
-      'aggreeDate': aggreeDate ?? '',
+  Future<void> addUser(agreeDate) async {
+    return await userCollection.doc(uid).set({
+      'agreeDate': agreeDate ?? '',
     });
   }
 
@@ -316,6 +316,15 @@ class DatabaseService {
           0,
       'numOfReview': FieldValue.increment(1),
     });
+  }
+
+  Future<bool> checkIfDocExists(String docId) async {
+    try {
+      var doc = await userCollection.doc(docId).get();
+      return doc.exists;
+    } catch (e) {
+      throw e;
+    }
   }
 
   //final CollectionReference drugCollection = FirebaseFirestore.instance.collection('Drugs');

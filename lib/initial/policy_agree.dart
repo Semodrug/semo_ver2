@@ -227,7 +227,7 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
             if (_isTermsAgreed && _isPrivacyAgreed) {
               // 이용약관 동의 날짜 저장
               String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
-              await DatabaseService(uid: user.uid).updateAgreeDate(nowDT);
+              await DatabaseService(uid: user.uid).addUser(nowDT);
 
               Navigator.push(
                 context,

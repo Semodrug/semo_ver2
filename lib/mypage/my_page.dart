@@ -218,7 +218,7 @@ Widget _myMenu(String name, String count, BuildContext context, var nextPage) {
 Widget _myPageMenu(String name, BuildContext context, var nextPage) {
   return Container(
     color: Colors.white,
-    padding: EdgeInsets.fromLTRB(20.0, 0, 10.0, 0),
+    padding: EdgeInsets.fromLTRB(20.0, 0, 12.0, 0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
