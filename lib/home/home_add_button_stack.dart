@@ -48,6 +48,7 @@ class _AddButtonState extends State<AddButton> {
                       padding: EdgeInsets.fromLTRB(0, 11, 0, 0),
                       height: height/18,
                       child: FlatButton(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Text(
                             "X",
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
@@ -67,7 +68,7 @@ class _AddButtonState extends State<AddButton> {
                   padding: EdgeInsets.symmetric(horizontal: 16),
 
                   //width: width/10,
-                  height: height/22,
+                  height: height/44,
                   child: Text("검색해서 약 추가하기",
                       style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
@@ -160,7 +161,6 @@ class MenuWidget extends StatelessWidget {
                   width: width / 4,
                   height: height / 5,
                   child: FlatButton(
-                    color: Colors.lime,
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 10),

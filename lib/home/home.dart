@@ -296,7 +296,7 @@ class SearchBar extends StatelessWidget {
     return Row(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
           child: SizedBox(
               width: searchWidth,
               height: searchHeight,
