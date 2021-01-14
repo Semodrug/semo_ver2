@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:semo_ver2/login/find_password_result.dart';
 import 'package:semo_ver2/services/auth.dart';
 
 bool _isFilled = false;

@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/login/register2_name.dart';
 import 'package:semo_ver2/services/auth.dart';
 
 bool _isSecret = true;
 bool _isIdFilled = false;
 bool _isPasswordFilled = false;
-bool _isLoginFailed = false;
 
-class RegisterFirstPage extends StatefulWidget {
+class RegisterWithEmailPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => RegisterFirstPageState();
+  State<StatefulWidget> createState() => RegisterWithEmailPageState();
 }
 
-class RegisterFirstPageState extends State<RegisterFirstPage> {
+class RegisterWithEmailPageState extends State<RegisterWithEmailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/login/register0_policy_privacy.dart';
-import 'package:semo_ver2/login/register0_policy_terms.dart';
-import 'package:semo_ver2/login/register1_email.dart';
+import 'package:semo_ver2/mypage/policy_privacy.dart';
+import 'package:semo_ver2/mypage/policy_terms.dart';
+import 'package:semo_ver2/login/register_withEmail.dart';
 
 bool _isTermsAgreed = false;
 bool _isPrivacyAgreed = false;
