@@ -44,7 +44,7 @@ class _RegisterPolicyState extends State<RegisterPolicy> {
       ),
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+        padding: EdgeInsets.fromLTRB(16, 40, 16, 0),
         child: Column(
           children: [
             allCheckbox(),

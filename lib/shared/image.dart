@@ -36,7 +36,7 @@ Future<String> downloadURLExample(String itemSeq) async {
 
     return downloadURL;
   } catch (e) {
-    print(e);
+    // print(e);
     String downloadURL = await firebase_storage.FirebaseStorage.instance
         .ref('noImage.png')
         .getDownloadURL();
