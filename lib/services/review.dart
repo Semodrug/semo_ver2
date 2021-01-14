@@ -89,6 +89,7 @@ class ReviewService {
   Future<bool> findUserWroteReview(String seqNum, String user) async {
     if(reviewCollection.where("seqNum", isEqualTo: seqNum).where("uid", isEqualTo:user).snapshots()
       .map(_reviewListFromSnapshot) != null)
+
       return true;
     else
       return false;
