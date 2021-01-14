@@ -83,7 +83,10 @@ class _ReviewPageState extends State<ReviewPage> {
                 backgroundColor: Colors.teal[200],
                 elevation: 0.0,
                 onPressed: () async {
-                  if(ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(user.toString()) == true)
+                  //TODO##################################################
+                  print("##");
+                  print(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.toString()));
+                  if(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.toString()) == true)
                     _dialogIfAlreadyExist();
                   else
                     Navigator.push(context,

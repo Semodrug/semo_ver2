@@ -132,7 +132,8 @@ class _GetRatingState extends State<GetRating> {
       ),
       onRatingUpdate: (rating) async {
         rating =3;
-        if(ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(user.toString()) == true){
+
+        if(ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(widget.drugItemSeq, user.toString()) == true){
           _dialogIfAlreadyExist();
           //TODO:############################ Update rating###############################
         }
