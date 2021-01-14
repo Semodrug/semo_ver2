@@ -104,117 +104,24 @@ class _WriteReviewState extends State<WriteReview> {
         ),
 
         body: ChangeNotifierProvider(
-          create: (context) => Review(),
-          child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: ListView(
-              children: <Widget>[
-                //TODO: Bring pill information
-                _pillInfo(),
-                _rating(),
-                _effect(),
-                _sideEffect(),
-                _overallReview(),
-                _write(),
-//                Consumer<Review>(
-//                  builder: (context, value, child){
-//                    return _effect(context, value, child);
-//                  }
-//                ),
+            create: (context) => Review(),
+            child: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: ListView(
+                children: <Widget>[
+                  //TODO: Bring pill information
+                  _pillInfo(),
+                  _rating(),
+                  _effect(),
+                  _sideEffect(),
+                  _overallReview(),
+                  _write(),
 
-//                Consumer<Review>(
-//                  builder: (context, value, child) {
-//                    return Container(
-//                        height: 280,
-//                        padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-//                        decoration: BoxDecoration(
-//                            border: Border(
-//                                bottom:
-//                                BorderSide(width: 0.6, color: Colors.grey[300], ))),
-//                        child: Column(
-//                          mainAxisAlignment: MainAxisAlignment.center,
-////              crossAxisAlignment: CrossAxisAlignment.center,
-//                          children: <Widget>[
-//                            Text("약의 부작용은 어떤가요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
-//                            Padding(padding: EdgeInsets.only(top: 15)),
-//                            Row(
-//                              mainAxisAlignment: MainAxisAlignment.center,
-//                              children: <Widget>[
-//                                Column(
-//                                  children: <Widget>[
-//                                    GestureDetector(
-//                                        child: Container(
-//                                            width: 35,
-//                                            height: 35,
-//                                            decoration: BoxDecoration(
-//                                                color: value.getSideEffect() == "yes" ? _green: Colors.grey[300],
-////                                                color: seYesSelected == true ? Colors.greenAccent[100]: Colors.grey[300],
-//                                                shape: BoxShape.circle)),
-//                                        onTap: () {
-////                                          value.switchSideEffect();
-//                                          value.sideEffectToYes();
-//                                          sideEffect = "yes";
-//                                        }
-//                                    ),
-//                                    Padding(padding: EdgeInsets.only(top: 10)),
-//                                    Text("있어요", style: value.getSideEffect() == "yes"?
-//                                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-//                                    TextStyle(color:Colors.black87)),
-//                                  ],
-//                                ),
-////                      Padding(padding: EdgeInsets.only(left: 40)),
-//                                Padding(padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
-//                                    child: Text("VS", style: TextStyle(color: Colors.grey[700]))),
-//                                Column(
-//                                  children: <Widget>[
-//                                    GestureDetector(
-//                                        child: Container(
-//                                            width: 35,
-//                                            height: 35,
-//                                            decoration: BoxDecoration(
-//                                                color: value.getSideEffect() == "no" ? _green: Colors.grey[300],
-////                                                color: seNoSelected == true ? Colors.greenAccent[100]: Colors.grey[300],
-//                                                shape: BoxShape.circle)),
-//                                        onTap: () {
-//                                          value.sideEffectToNo();
-//                                          sideEffect = "no";
-//                                        }
-//                                    ),
-//                                    Padding(padding: EdgeInsets.only(top: 10)),
-//                                    Text("없어요", style: value.getSideEffect() == "no"?
-//                                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-//                                    TextStyle(color:Colors.black87)),
-//                                  ],
-//                                ),
-//                              ],
-//                            ),
-//                            Padding(padding: EdgeInsets.only(top: 25)),
-//                            Padding(
-//                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-//                              child: Container(
-//                                width: 400,
-//                                height: 100,
-//                                child: TextField(
-//                                    controller: myControllerSideEffect,
-////                          keyboardType: TextInputType.multiline,
-//                                    maxLines: null,
-//                                    decoration: new InputDecoration(
-//                                        hintText: "이 제품을 복용하시면서 만족도(효과, 효능,성분 등)\n에 대한 후기를 남겨주세요 (최소 10자 이상)",
-//                                        border: InputBorder.none
-//                                    )),
-//                              ),
-//                            )
-//                          ],
-//                        )
-//                    );
-//                  }
-//                ),
-
-              ],
-            ),
-          )
+                ],
+              ),
+            )
         )
     );
   }
@@ -223,7 +130,7 @@ class _WriteReviewState extends State<WriteReview> {
   Widget _pillInfo() {
     //TODO: Bring pill information
     return Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.fromLTRB(20,10,20,10),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -415,7 +322,7 @@ class _WriteReviewState extends State<WriteReview> {
     String starRatingText = '';
     return Container(
 //          height: 150,
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 25),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -470,7 +377,7 @@ class _WriteReviewState extends State<WriteReview> {
   Widget _effect() {
     return Container(
 //          height: 280,
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -557,24 +464,32 @@ class _WriteReviewState extends State<WriteReview> {
             ),
 //              SizedBox(height: 20),
 //              Padding(padding: EdgeInsets.only(top: 25)),
-            _textField()
+            _textField("effect")
           ],
         )
     );
   }
 
-  Widget _textField() {
+  Widget _textField(String type) {
+    String hintText;
+    if (type == "effect")
+      hintText =  "효과에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
+    else if(type == "sideEffect")
+      hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
+    else if(type == "overall")
+      hintText = "전체적인 만족도에 대한 후기를 남겨주세요 \n(최소 10자 이상)\n";
+
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 2.5),
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal:0),
       child: Container(
-        width: 400,
+//        width: 400,
 //                height: 100,
         child: TextField(
             controller: myControllerEffect,
             keyboardType: TextInputType.multiline,
             maxLines: null,
             decoration: new InputDecoration(
-              hintText: "이 제품을 복용하시면서 만족도(효과, 효능,성분 등)\n에 대한 후기를 남겨주세요 (최소 10자 이상)",
+              hintText: hintText,
               border: InputBorder.none,
 //                        border: OutlineInputBorder(
 //                          borderRadius: const BorderRadius.all(
@@ -593,7 +508,7 @@ class _WriteReviewState extends State<WriteReview> {
   Widget _sideEffect() {
     return Container(
 //          height: 280,
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -655,7 +570,7 @@ class _WriteReviewState extends State<WriteReview> {
                 ),
               ],
             ),
-            _textField()
+            _textField("sideEffect")
           ],
         )
     );
@@ -663,7 +578,7 @@ class _WriteReviewState extends State<WriteReview> {
 
   Widget _overallReview() {
     return Container(
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
 //          height: 300,
         decoration: BoxDecoration(
             border: Border(
@@ -692,7 +607,7 @@ class _WriteReviewState extends State<WriteReview> {
 //                ),
 //
 //              ),
-            _textField(),
+            _textField("overall"),
             Padding(padding: EdgeInsets.only(top: 25)),
           ],
         )
@@ -702,27 +617,30 @@ class _WriteReviewState extends State<WriteReview> {
 
   Widget _write() {
     return GestureDetector(
-      child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              color: Colors.teal[300]
-          ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
-          width: 350,
-          height: 50,
-          child: Center(
-              child: Text("등록하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
-          )
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20,20,20,40),
+        child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                color: Colors.teal[300]
+            ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
+//            width: 350,
+            height: 50,
+            child: Center(
+                child: Text("등록하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
+            )
+        ),
       ),
-        onTap: () async {
-          effectText = myControllerEffect.text;
-          sideEffectText = myControllerSideEffect.text;
-          overallText = myControllerOverall.text;
-          _registerReview();
-          await DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(starRating);
+      onTap: () async {
+        effectText = myControllerEffect.text;
+        sideEffectText = myControllerSideEffect.text;
+        overallText = myControllerOverall.text;
+        _registerReview();
+        await DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(starRating);
 //          await findUserWroteReview(itemSeq: widget.drugItemSeq).updateTotalRating(starRating);
 //          print("HERE"+ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(user.toString()).toString());
-          Navigator.pop(context);
-        },
+        Navigator.pop(context);
+      },
     );
   }
 

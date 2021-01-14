@@ -7,6 +7,7 @@ import 'pie_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 import 'write_review.dart';
 
@@ -54,7 +55,7 @@ class _GetRatingState extends State<GetRating> {
             ratingResult = sum / length;
 
             return Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -71,9 +72,10 @@ class _GetRatingState extends State<GetRating> {
                         Text("/5",
                             style: TextStyle(
                                 fontSize: 20, color: Colors.grey[500])),
-                        SizedBox(
-                            width:30
-                        ),
+//                        SizedBox(
+//                            width:30
+//                        ),
+                        Expanded(child: Container()),
                         //pie chart
                         Column(
                           children: [
@@ -89,7 +91,6 @@ class _GetRatingState extends State<GetRating> {
 //            _sideEffectPieChart(sideEffectYes, sideEffectNo),
                           ],
                         ),
-
                       ],
                     ),
                     Padding(padding: EdgeInsets.only(top: 14.0)),
@@ -114,36 +115,55 @@ class _GetRatingState extends State<GetRating> {
   }
 
   Widget _tapToRate(tapToRatingResult, user) {
-    var rating =0;
-    return RatingBar.builder(
-
-      initialRating: 0,
-      minRating: 1,
-      direction: Axis.horizontal,
+    double rating = 1.0;
+    return SmoothStarRating(
+//      rating: 5,
+      rating: 1,
+      isReadOnly: false,
+      size: 30,
+      filledIconData: Icons.star,
       allowHalfRating: false,
-      itemCount: 5,
-      itemSize: 30,
-      glow: false,
-      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-      unratedColor: Colors.grey[300],
-      itemBuilder: (context, _) => Icon(
-        Icons.star,
-        color: Colors.amberAccent,
-      ),
-      onRatingUpdate: (rating) async {
-        rating =3;
-
-        if(ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(widget.drugItemSeq, user.toString()) == true){
-          _dialogIfAlreadyExist();
-          //TODO:############################ Update rating###############################
-        }
-
-        else
-          _showMyDialog(rating);
-        await ReviewService(documentId: widget.drugItemSeq).tapToRate(rating, user);
+      color: Colors.amberAccent,
+      borderColor: Colors.amberAccent,
+//      defaultIconData: Icons.star,
+      starCount: 5,
+      spacing: 2.0,
+      onRated: (value) {
+        print("rating value -> $value");
+        rating = value;
+        // print("rating value dd -> ${value.truncate()}");
       },
-
     );
+
+//    return RatingBar.builder(
+//
+//      initialRating: 0,
+//      minRating: 1,
+//      direction: Axis.horizontal,
+//      allowHalfRating: false,
+//      itemCount: 5,
+//      itemSize: 30,
+//      glow: false,
+//      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+//      unratedColor: Colors.grey[300],
+//      itemBuilder: (context, _) => Icon(
+//        Icons.star,
+//        color: Colors.amberAccent,
+//      ),
+//      onRatingUpdate: (rating) async {
+//        rating =3;
+//
+//        if(ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(widget.drugItemSeq, user.toString()) == true){
+//          _dialogIfAlreadyExist();
+//          //TODO:############################ Update rating###############################
+//        }
+//
+//        else
+//          _showMyDialog(rating);
+//        await ReviewService(documentId: widget.drugItemSeq).tapToRate(rating, user);
+//      },
+//
+//    );
   }
 
 

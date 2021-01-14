@@ -92,7 +92,7 @@ class _EditReviewState extends State<EditReview> {
                       _sideEffect(review),
                       _overallReview(review),
                       _edit(review),
-                      Padding(padding: EdgeInsets.only(top: 35)),
+//                      Padding(padding: EdgeInsets.only(top: 35)),
                     ],
                   ),
                 )
@@ -108,7 +108,7 @@ class _EditReviewState extends State<EditReview> {
   Widget _pillInfo(review) {
     //TODO: Bring pill information
     return Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.fromLTRB(20,10,20,10),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -152,7 +152,7 @@ class _EditReviewState extends State<EditReview> {
   Widget _rating(Review review) {
     return Container(
 //          height: 150,
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 25),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -207,7 +207,7 @@ class _EditReviewState extends State<EditReview> {
   Widget _effect(Review review) {
     return Container(
 //          height: 280,
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -302,7 +302,7 @@ class _EditReviewState extends State<EditReview> {
 
   Widget _textField(TextEditingController myControllerEffect) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 2.5),
+      padding: EdgeInsets.symmetric(vertical: 20,),
       child: Container(
         width: 400,
 //                height: 100,
@@ -329,7 +329,7 @@ class _EditReviewState extends State<EditReview> {
   Widget _sideEffect(Review review) {
     return Container(
 //          height: 280,
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -414,7 +414,7 @@ class _EditReviewState extends State<EditReview> {
 
   Widget _overallReview(Review review) {
     return Container(
-        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
 //          height: 300,
         decoration: BoxDecoration(
             border: Border(
@@ -444,7 +444,7 @@ class _EditReviewState extends State<EditReview> {
 //
 //              ),
             _textField(myControllerOverall),
-            Padding(padding: EdgeInsets.only(top: 25)),
+//            Padding(padding: EdgeInsets.only(top: 25)),
           ],
         )
     );
@@ -452,16 +452,19 @@ class _EditReviewState extends State<EditReview> {
 
   Widget _edit(Review review) {
     return GestureDetector(
-      child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              color: Colors.teal[300]
-          ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
-          width: 350,
-          height: 50,
-          child: Center(
-              child: Text("수정하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
-          )
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20,20,20,40),
+        child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                color: Colors.teal[300]
+            ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
+//          width: 50,
+            height: 50,
+            child: Center(
+                child: Text("수정하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
+            )
+        ),
       ),
       onTap: () async {
         effectText = myControllerEffect.text;
