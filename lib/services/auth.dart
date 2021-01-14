@@ -26,16 +26,16 @@ class AuthService {
     // .map(_userFromFirebaseUser);
   }
 
-  // sign up with email and password
+  // register with email and password
   Future signUpWithEmail(String email, String password) async {
     try {
       var result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
 
+      // 회원가입 시 가입 날짜 저장
       String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
-
-      await DatabaseService(uid: user.uid).addUser(nowDT, nowDT);
+      await DatabaseService(uid: user.uid).addUser(nowDT);
 
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
@@ -80,6 +80,10 @@ class AuthService {
 
     try {
       final User user = (await _auth.signInWithCredential(credential)).user;
+
+      // If first login, need to check
+      // String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
+      // await DatabaseService(uid: user.uid).addUser(nowDT, nowDT);
 
       print("signed in " + user.displayName);
       assert(user.email != null);

@@ -8,15 +8,19 @@ import 'package:semo_ver2/bottom_bar.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 
+bool _isFind = false;
+
 class RegisterThirdPage extends StatefulWidget {
   @override
   _RegisterThirdPageState createState() => _RegisterThirdPageState();
 }
 
 class _RegisterThirdPageState extends State<RegisterThirdPage> {
+  TextEditingController selfWritingController = TextEditingController();
+
   List<bool> isPregnant = List.generate(2, (_) => false);
   List<bool> isDisease = List.generate(7, (_) => false);
-  List<String> disease_list = [];
+  List<String> diseaseList = [];
 
   Widget _ExclusiveButton(index, isPressed, buttonName) {
     return ButtonTheme(
@@ -67,8 +71,8 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
           setState(() {
             isPressed[index] = !isPressed[index];
             isPressed[index]
-                ? disease_list.add(buttonName)
-                : disease_list.remove(buttonName);
+                ? diseaseList.add(buttonName)
+                : diseaseList.remove(buttonName);
           });
         },
         child: Text(
@@ -121,7 +125,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  topInfo(),
+                  topTitle(),
                   SizedBox(
                     height: 30,
                   ),
@@ -146,17 +150,25 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
                               SizedBox(
                                 height: 10,
                               ),
-                              Text(
-                                '찾으시는 질병이 없으신가요?',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.w400,
-                                  decoration: TextDecoration.underline,
+                              TextButton(
+                                child: Text(
+                                  '찾으시는 질병이 없으신가요?',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w400,
+                                    decoration: TextDecoration.underline,
+                                  ),
                                 ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isFind = true;
+                                  });
+                                },
                               ),
+                              _isFind ? selfWrite() : Container(),
                               SizedBox(
-                                height: 50.0,
+                                height: 40.0,
                               ),
                               submit()
                             ],
@@ -168,7 +180,7 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
         }));
   }
 
-  Widget topInfo() {
+  Widget topTitle() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -245,6 +257,20 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
     );
   }
 
+  Widget selfWrite() {
+    return TextFormField(
+      controller: selfWritingController,
+      cursorColor: Colors.teal[400],
+      decoration: InputDecoration(
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.teal),
+          ),
+          hintText: '질병명',
+          hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0)),
+      keyboardType: TextInputType.text,
+    );
+  }
+
   Widget submit() {
     TheUser user = Provider.of<TheUser>(context);
 
@@ -256,20 +282,22 @@ class _RegisterThirdPageState extends State<RegisterThirdPage> {
         //padding: const EdgeInsets.symmetric(vertical: 16.0),
         //alignment: Alignment.center,
         child: RaisedButton(
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(10.0)),
+          child: Text(
+            '완료',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Colors.teal[400],
           onPressed: () async {
+            diseaseList.add(selfWritingController.text);
+
             await DatabaseService(uid: user.uid)
-                .updateUserHealth(isPregnant[1], disease_list);
+                .updateUserHealth(isPregnant[1], diseaseList);
 
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/start', (Route<dynamic> route) => false);
           },
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-          child: const Text(
-            '이약모약 시작하기',
-            style: TextStyle(color: Colors.white),
-          ),
-          color: Colors.teal[400],
         ),
       ),
     );

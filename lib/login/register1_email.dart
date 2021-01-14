@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/login/register2_name.dart';
 import 'package:semo_ver2/services/auth.dart';
@@ -82,7 +80,7 @@ class _RegisterFormState extends State<RegisterForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              child: Text('환영합니다\n기본정보를 입력해주세요',
+              child: Text('이메일과 비밀번호를 입력하여\n이약모약 서비스를 이용해보세요',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -198,7 +196,7 @@ class _RegisterFormState extends State<RegisterForm> {
           height: 45.0,
           child: RaisedButton(
               child: Text(
-                '확인',
+                '이약모약 시작하기',
                 style: TextStyle(color: Colors.white),
               ),
               color: _isIdFilled && _isPasswordFilled
