@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:semo_ver2/login/register.dart';
-import 'package:semo_ver2/shared/loading.dart';
 
-import 'package:semo_ver2/login/find_id.dart';
+import 'package:semo_ver2/login/register.dart';
 import 'package:semo_ver2/login/find_password.dart';
-import 'package:semo_ver2/login/register1_email.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/shared/constants.dart';
 
@@ -262,10 +258,12 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
         // setState(() => loading = true);
         dynamic result = await _auth.signInWithGoogle();
         if (result == null) {
-          setState(() {
-            // loading = false;
-            error = 'Could not sign in with those credentials';
-          });
+          // setState(() {
+          //   // loading = false;
+          //   // error = 'Could not sign in with those credentials';
+          print('Could not sign in with those credentials');
+          //   }
+          // );
         }
       },
       child: SizedBox(

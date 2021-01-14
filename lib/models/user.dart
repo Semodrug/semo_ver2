@@ -7,22 +7,23 @@ class TheUser {
 class UserData {
   final String uid;
 
-  final String name;
-  final String sex;
-  final String birth;
-  // final String nickname;
+  final String registerDate;
+  final String agreeDate;
 
-  final String phone;
+  final String sex;
+  final String nickname;
+  final String birthYear;
 
   final bool isPregnant;
   final List diseaseList;
 
   UserData(
       {this.uid,
-      this.name,
       this.sex,
-      this.birth,
-      this.phone,
+      this.registerDate,
+      this.agreeDate,
+      this.nickname,
+      this.birthYear,
       this.isPregnant,
       this.diseaseList});
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/login/register1_email.dart';
+import 'package:semo_ver2/login/register_withEmail.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -60,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => RegisterFirstPage()),
+                        builder: (context) => RegisterWithEmailPage()),
                   );
                 },
               ),

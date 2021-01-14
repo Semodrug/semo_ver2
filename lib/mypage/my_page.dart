@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:semo_ver2/login/register2_name.dart';
-import 'package:semo_ver2/login/register3_health.dart';
+import 'package:semo_ver2/initial/get_privacy.dart';
+import 'package:semo_ver2/initial/get_health.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -66,28 +66,28 @@ class _MyPageState extends State<MyPage> {
                         SizedBox(
                           height: 10,
                         ),
-                        _myPageMenu('회원정보 수정', context, RegisterSecondPage()),
+                        _myPageMenu('회원정보 수정', context, GetPrivacyPage()),
                         SizedBox(
                           height: 2,
                         ),
-                        _myPageMenu('나의 건강정보 관리', context, RegisterThirdPage()),
+                        _myPageMenu('나의 건강정보 관리', context, GetPrivacyPage()),
                         SizedBox(
                           height: 10,
                         ),
                         // TODO: 공지사항, 1:1문의, 이용약관, 환경설정 페이지
-                        _myPageMenu('공지사항', context, RegisterSecondPage()),
+                        _myPageMenu('공지사항', context, GetPrivacyPage()),
                         SizedBox(
                           height: 2,
                         ),
-                        _myPageMenu('1:1 문의', context, RegisterThirdPage()),
+                        _myPageMenu('1:1 문의', context, GetPrivacyPage()),
                         SizedBox(
                           height: 2,
                         ),
-                        _myPageMenu('이용약관', context, RegisterThirdPage()),
+                        _myPageMenu('이용약관', context, GetPrivacyPage()),
                         SizedBox(
                           height: 10,
                         ),
-                        _myPageMenu('환경설정', context, RegisterSecondPage()),
+                        _myPageMenu('환경설정', context, GetPrivacyPage()),
                         SizedBox(
                           height: 2,
                         ),
@@ -149,7 +149,7 @@ class _MyPageState extends State<MyPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${userData.name}님, \n오늘도 건강하세요!',
+                      '${userData.nickname}님, \n오늘도 건강하세요!',
                       style: TextStyle(fontSize: 20),
                     ),
                     SizedBox(
@@ -218,7 +218,7 @@ Widget _myMenu(String name, String count, BuildContext context, var nextPage) {
 Widget _myPageMenu(String name, BuildContext context, var nextPage) {
   return Container(
     color: Colors.white,
-    padding: EdgeInsets.fromLTRB(20.0, 0, 10.0, 0),
+    padding: EdgeInsets.fromLTRB(20.0, 0, 12.0, 0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

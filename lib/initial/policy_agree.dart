@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/login/register0_policy_privacy.dart';
-import 'package:semo_ver2/login/register0_policy_terms.dart';
-import 'package:semo_ver2/login/register1_email.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:semo_ver2/initial/get_privacy.dart';
+import 'package:semo_ver2/models/user.dart';
+
+import 'package:semo_ver2/mypage/policy_privacy.dart';
+import 'package:semo_ver2/mypage/policy_terms.dart';
+import 'package:semo_ver2/login/register_withEmail.dart';
+import 'package:semo_ver2/services/db.dart';
 
 bool _isTermsAgreed = false;
 bool _isPrivacyAgreed = false;
 
-class RegisterPolicy extends StatefulWidget {
+class PolicyAgreePage extends StatefulWidget {
   @override
-  _RegisterPolicyState createState() => _RegisterPolicyState();
+  _PolicyAgreePageState createState() => _PolicyAgreePageState();
 }
 
-class _RegisterPolicyState extends State<RegisterPolicy> {
+class _PolicyAgreePageState extends State<PolicyAgreePage> {
   @override
   Widget build(BuildContext context) {
+    TheUser user = Provider.of<TheUser>(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -65,7 +73,7 @@ class _RegisterPolicyState extends State<RegisterPolicy> {
             SizedBox(
               height: 50,
             ),
-            submitField()
+            submitField(user)
           ],
         ),
       ),
@@ -197,7 +205,7 @@ class _RegisterPolicyState extends State<RegisterPolicy> {
     );
   }
 
-  Widget submitField() {
+  Widget submitField(user) {
     return Container(
       alignment: Alignment.center,
       child: SizedBox(
@@ -206,20 +214,24 @@ class _RegisterPolicyState extends State<RegisterPolicy> {
         //padding: const EdgeInsets.symmetric(vertical: 16.0),
         //alignment: Alignment.center,
         child: RaisedButton(
-          child: const Text(
+          child: Text(
             '확인',
             style: TextStyle(color: Colors.white),
           ),
           color: _isTermsAgreed && _isPrivacyAgreed
               ? Colors.teal[400]
               : Colors.grey,
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           onPressed: () async {
             if (_isTermsAgreed && _isPrivacyAgreed) {
+              // 이용약관 동의 날짜 저장
+              String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
+              await DatabaseService(uid: user.uid).addUser(nowDT);
+
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RegisterFirstPage()),
+                MaterialPageRoute(builder: (context) => GetPrivacyPage()),
               );
             }
           },

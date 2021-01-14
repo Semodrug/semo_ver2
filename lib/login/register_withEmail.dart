@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/login/register2_name.dart';
 import 'package:semo_ver2/services/auth.dart';
 
 bool _isSecret = true;
 bool _isIdFilled = false;
 bool _isPasswordFilled = false;
-bool _isLoginFailed = false;
 
-class RegisterFirstPage extends StatefulWidget {
+class RegisterWithEmailPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => RegisterFirstPageState();
+  State<StatefulWidget> createState() => RegisterWithEmailPageState();
 }
 
-class RegisterFirstPageState extends State<RegisterFirstPage> {
+class RegisterWithEmailPageState extends State<RegisterWithEmailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -217,6 +215,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   } else {
                     dynamic result = await _auth.signInWithEmail(
                         _emailController.text, _passwordController.text);
+
                     if (result == null) {
                       print('알 수 없는 오류 발생');
                       // setState(() {
@@ -224,12 +223,8 @@ class _RegisterFormState extends State<RegisterForm> {
                       //   error = 'Could not sign in with those credentials';
                       // });
                     }
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RegisterSecondPage()),
-                    );
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/start', (Route<dynamic> route) => false);
                   }
                 } else {
                   // 바로바로?
