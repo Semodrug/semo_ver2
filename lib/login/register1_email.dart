@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:semo_ver2/login/register2_name.dart';
 import 'package:semo_ver2/services/auth.dart';
 
-bool _isSecret = true;
+bool _isSecret = false;
 bool _isIdFilled = false;
 bool _isPasswordFilled = false;
+bool _isLoginFailed = false;
 
 class RegisterFirstPage extends StatefulWidget {
   @override
@@ -65,6 +67,7 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _auth = AuthService();
@@ -79,7 +82,7 @@ class _RegisterFormState extends State<RegisterForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              child: Text('환영합니다\n기본정보를 입력해 주세요',
+              child: Text('환영합니다\n기본정보를 입력해주세요',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -94,7 +97,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             passwordField(),
             SizedBox(height: 50.0),
-            submitField(),
+            submitField(context),
           ],
         ),
       ),
@@ -110,18 +113,20 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   Widget emailField() {
+    String _emailErrorMsg;
+
     return TextFormField(
       controller: _emailController,
       cursorColor: Colors.teal[400],
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.teal),
         ),
-        hintText: '아이디(이메일)',
+        hintText: '아이디 (이메일)',
         hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
       ),
-      onChanged: (text) {
-        if (text.isNotEmpty) {
+      onChanged: (value) {
+        if (value.isNotEmpty) {
           setState(() {
             _isIdFilled = true;
           });
@@ -134,6 +139,8 @@ class _RegisterFormState extends State<RegisterForm> {
       validator: (String value) {
         if (value.isEmpty) {
           return '아이디(이메일)을 입력해주세요';
+        } else if (!value.contains('@')) {
+          return '올바른 이메일을 입력해주세요';
         }
         return null;
       },
@@ -148,23 +155,22 @@ class _RegisterFormState extends State<RegisterForm> {
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.teal),
           ),
-          hintText: '비밀번호',
+          hintText: '비밀번호 (8자리 이상)',
           hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
           suffixIcon: IconButton(
             icon: Icon(
-              _isSecret ? Icons.visibility_off : Icons.visibility,
-              color: Colors.grey,
+              Icons.visibility,
+              color: _isSecret ? Colors.grey : Colors.black87,
             ),
             onPressed: () {
               setState(() {
                 _isSecret = !_isSecret;
-                print(_isSecret);
               });
             },
           )),
       obscureText: _isSecret ? true : false,
-      onChanged: (text) {
-        if (text.length > 8) {
+      onChanged: (value) {
+        if (value.length >= 8) {
           setState(() {
             _isPasswordFilled = true;
           });
@@ -175,7 +181,7 @@ class _RegisterFormState extends State<RegisterForm> {
         }
       },
       validator: (String value) {
-        if (value.isEmpty) {
+        if (value.isEmpty || value.length < 8) {
           return '8자리 이상 입력해주세요';
         }
         return null;
@@ -183,42 +189,56 @@ class _RegisterFormState extends State<RegisterForm> {
     );
   }
 
-  Widget submitField() {
-    return Container(
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 400.0,
-        height: 45.0,
-        child: RaisedButton(
-          child: const Text(
-            '확인',
-            style: TextStyle(color: Colors.white),
-          ),
-          color:
-              _isIdFilled && _isPasswordFilled ? Colors.teal[400] : Colors.grey,
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-          onPressed: () async {
-            if (_isIdFilled && _isPasswordFilled) {
-              if (_formKey.currentState.validate()) {
-                dynamic result = await _auth.signUpWithEmail(
-                    _emailController.text, _passwordController.text);
-                if (result == null) {
-                  setState(() {
-                    print('유효한 이메일인지, 적절한 비밀번호인지 확인해주세요');
-                  });
+  Widget submitField(context) {
+    return Builder(builder: (BuildContext context) {
+      return Container(
+        alignment: Alignment.center,
+        child: SizedBox(
+          width: 400.0,
+          height: 45.0,
+          child: RaisedButton(
+              child: Text(
+                '확인',
+                style: TextStyle(color: Colors.white),
+              ),
+              color: _isIdFilled && _isPasswordFilled
+                  ? Colors.teal[400]
+                  : Colors.grey,
+              shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(10.0)),
+              onPressed: () async {
+                if (_isIdFilled &&
+                    _isPasswordFilled &&
+                    _formKey.currentState.validate()) {
+                  dynamic result = await _auth.signUpWithEmail(
+                      _emailController.text, _passwordController.text);
+
+                  if (result is String) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(result)));
+                  } else {
+                    dynamic result = await _auth.signInWithEmail(
+                        _emailController.text, _passwordController.text);
+                    if (result == null) {
+                      print('알 수 없는 오류 발생');
+                      // setState(() {
+                      //   loading = false;
+                      //   error = 'Could not sign in with those credentials';
+                      // });
+                    }
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RegisterSecondPage()),
+                    );
+                  }
                 } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RegisterSecondPage()),
-                  );
+                  // 바로바로?
                 }
-              }
-            }
-          },
+              }),
         ),
-      ),
-    );
+      );
+    });
   }
 }

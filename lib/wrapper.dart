@@ -11,19 +11,11 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: check an auto-login
     final TheUser user = Provider.of<TheUser>(context);
+
     if (user == null) {
       return LoginPage();
     } else {
       return BottomBar();
     }
-
-    // return either the Home or Authenticate widget
-    // return StreamBuilder<TheUser>(
-    //   stream: AuthService().user,
-    //   builder: (context, snapshot) {
-    //     TheUser user = snapshot.data;
-    //     return (user == null) ? LoginPage() : BottomBar();
-    //   },
-    // );
   }
 }

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:semo_ver2/login/find_password_result.dart';
+import 'package:semo_ver2/services/auth.dart';
+
+bool _isFilled = false;
+final AuthService _auth = AuthService();
 
 class FindPassword extends StatefulWidget {
   @override
@@ -11,9 +15,6 @@ class FindPassword extends StatefulWidget {
 class _FindPasswordState extends State<FindPassword> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _birthController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _phoneCheckController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class _FindPasswordState extends State<FindPassword> {
         ),
         centerTitle: true,
         title: Text(
-          '비밀번호 찾기',
+          '비밀번호 재설정',
           style: TextStyle(
               fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -59,6 +60,18 @@ class _FindPasswordState extends State<FindPassword> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Text('비밀번호 재설정\n이메일을 보내드려요',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('가입 시 입력한 이메일 주소를 입력해주세요.'),
+                    SizedBox(
+                      height: 20,
+                    ),
                     TextFormField(
                       controller: _emailController,
                       cursorColor: Colors.teal[400],
@@ -70,110 +83,27 @@ class _FindPasswordState extends State<FindPassword> {
                         hintStyle:
                             TextStyle(color: Colors.grey, fontSize: 16.0),
                       ),
+                      onChanged: (value) {
+                        if (value.isNotEmpty) {
+                          setState(() {
+                            _isFilled = true;
+                          });
+                        } else {
+                          setState(() {
+                            _isFilled = false;
+                          });
+                        }
+                      },
                       validator: (String value) {
                         if (value.isEmpty) {
-                          return '아이디(이메일)을 입력해주세요';
+                          return '이메일을 입력해주세요';
                         }
                         return null;
                       },
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 60,
                     ),
-                    TextFormField(
-                      controller: _emailController,
-                      cursorColor: Colors.teal[400],
-                      decoration: const InputDecoration(
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.teal),
-                        ),
-                        hintText: '생년월일 (6자리)',
-                        hintStyle:
-                            TextStyle(color: Colors.grey, fontSize: 16.0),
-                      ),
-                      validator: (String value) {
-                        if (value.isEmpty) {
-                          return '생년월일을 입력해주세요';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      controller: _phoneController,
-                      cursorColor: Colors.teal[400],
-                      decoration: InputDecoration(
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.teal),
-                        ),
-                        hintText: '휴대폰 번호 (-제외)',
-                        hintStyle:
-                            TextStyle(color: Colors.grey, fontSize: 16.0),
-                        suffixIcon: ButtonTheme(
-                          // TODO: height 조절ㅠㅠ
-                          // TODO: 이 부분은 눌렸을 때 텍스트 필드로 인식되면 안되는데 인식이 된다!
-                          // TODO: 인증번호 발송 눌렀을 때 인증보내 보내고, '재전송'으로 내용이 바뀌게 해야한다
-                          height: 10,
-                          child: FlatButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6.0),
-                                side: BorderSide(
-                                    // TODO: 전화번호가 채워지면 색깔이 바뀌게
-                                    color: Colors.teal[200])),
-                            // color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
-                            color: Colors.white,
-                            textColor: Colors.teal[200],
-                            // textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
-                            // padding: EdgeInsets.symmetric(
-                            //     vertical: 8.0, horizontal: 12.0),
-                            padding: EdgeInsets.all(1),
-                            child: Text(
-                              '인증번호 발송',
-                              style: TextStyle(
-                                fontSize: 13.0,
-                              ),
-                            ),
-                            onPressed: () {
-                              null;
-                            }, //아이디 비밀번호 찾기 페이지로 이동
-                          ),
-                        ),
-                      ),
-                      validator: (String value) {
-                        if (value.isEmpty) {
-                          return '전화번호를 입력해주세요';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      controller: _phoneCheckController,
-                      cursorColor: Colors.teal[400],
-                      decoration: InputDecoration(
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.teal),
-                        ),
-                        hintText: '인증번호',
-                        hintStyle:
-                            TextStyle(color: Colors.grey, fontSize: 16.0),
-                        // filled: true,
-                        // fillColor: Colors.white,
-                        // hintText: '8자리 이상',
-                      ),
-                      obscureText: true,
-                      validator: (String value) {
-                        if (value.isEmpty) {
-                          return '인증번호를 입력해주세요';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 50.0),
                     Container(
                       alignment: Alignment.center,
                       child: SizedBox(
@@ -182,23 +112,30 @@ class _FindPasswordState extends State<FindPassword> {
                         //padding: const EdgeInsets.symmetric(vertical: 16.0),
                         //alignment: Alignment.center,
                         child: RaisedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              // _register();
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FindPasswordResult()),
-                            );
-                          },
                           shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(10.0)),
-                          child: const Text(
-                            '확인',
+                          child: Text(
+                            '전송하기',
                             style: TextStyle(color: Colors.white),
                           ),
                           color: Colors.teal[400],
+                          onPressed: () async {
+                            if (_isFilled && _formKey.currentState.validate()) {
+                              dynamic result =
+                                  await _auth.sendPasswordResetEmail(
+                                      _emailController.text);
+                              if (result is String) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(result)));
+                              }
+                              if (result == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('이메일이 전송되었습니다.')));
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    '/start', (Route<dynamic> route) => false);
+                              }
+                            }
+                          },
                         ),
                       ),
                     ),

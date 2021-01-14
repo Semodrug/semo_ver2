@@ -16,6 +16,10 @@ import 'package:semo_ver2/shared/image.dart';
 int check = 0;
 
 class HomePage extends StatefulWidget {
+  String appBarForSearch;
+
+  HomePage({this.appBarForSearch});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -23,10 +27,54 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: _buildBody(context),
-    );
+    //widget.appBarForSearch = false;
+
+    if(widget.appBarForSearch == 'search'){
+      return Scaffold(
+        appBar: AppBar(
+          // centerTitle: true,
+          automaticallyImplyLeading: false,
+          title: Text(
+            '이약모약',
+            style: TextStyle(
+                fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.person,
+                color: Colors.teal[200],
+              ),
+            ),
+            //for test home
+          ],
+
+          backgroundColor: Colors.white,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: <Color>[
+                      Color(0xFFE9FFFB),
+                      Color(0xFFE9FFFB),
+                      Color(0xFFFFFFFF),
+                    ])),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        body: _buildBody(context),
+      );
+    }
+    else {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: _buildBody(context),
+      );
+    }
+
+
   }
 
   Widget _buildBody(BuildContext context) {
@@ -86,7 +134,7 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
             padding: EdgeInsets.all(10.0),
             children:
-                snapshot.map((data) => _buildListItem(context, data)).toList(),
+            snapshot.map((data) => _buildListItem(context, data)).toList(),
           ),
         ),
         ButtonTheme(
@@ -154,52 +202,52 @@ class _HomePageState extends State<HomePage> {
         width: double.infinity,
         height: 100.0,
         child: Material(
-            color: Colors.white,
-            child:
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 15,
-                      child: Center(
-                        child: Text(check.toString()),
-                      ),
-                    ),
-                    Container(
-                        padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-                        child: SizedBox(
-                            width: 88, height: 66, child: DrugImage(drugItemSeq: data.itemSeq))),
-                    Container(
-                        padding: EdgeInsets.fromLTRB(15, 20, 5, 5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(children: [
-                              Text(
-                                _checkLongName(data),
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              )
-                            ]),
-                            Expanded(
-                                child:
-                                Row(
-                                  children: [_categoryButton((_checkCategory(data)))],
-                            )),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Expanded(
-                              child: Text(
-                                data.expiration,
-                                style: TextStyle(
-                                    color: Colors.grey[600], fontSize: 13),
-                              ),
-                            )
-                          ],
-                        )),
-                  ],
+          color: Colors.white,
+          child:
+          Row(
+            children: [
+              SizedBox(
+                width: 15,
+                child: Center(
+                  child: Text(check.toString()),
                 ),
+              ),
+              Container(
+                  padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+                  child: SizedBox(
+                      width: 88, height: 66, child: DrugImage(drugItemSeq: data.itemSeq))),
+              Container(
+                  padding: EdgeInsets.fromLTRB(15, 20, 5, 5),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(children: [
+                        Text(
+                          _checkLongName(data),
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        )
+                      ]),
+                      Expanded(
+                          child:
+                          Row(
+                            children: [_categoryButton((_checkCategory(data)))],
+                          )),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      Expanded(
+                        child: Text(
+                          data.expiration,
+                          style: TextStyle(
+                              color: Colors.grey[600], fontSize: 13),
+                        ),
+                      )
+                    ],
+                  )),
+            ],
+          ),
         ),
       ),
     );
