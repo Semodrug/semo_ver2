@@ -20,9 +20,10 @@ class _BottomBarState extends State<BottomBar> {
     HomePage(),
     //CameraPage(),
     RankingPage(),
-    PhilInfoPage(
-      drugItemSeq: '199303108',
-    )
+//    PhilInfoPage(
+//      drugItemSeq: '199303108',
+//    )
+    ReviewPage("199303108")
 //    ReviewPage(),
   ];
 

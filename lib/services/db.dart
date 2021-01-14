@@ -97,6 +97,9 @@ class DatabaseService {
         category: doc.data()['category'] ?? '',
         // image: doc.data()['image'] ?? '',
         // review: doc.data()['review'],
+
+        totalRating: doc.data()['totalRating'] ?? 0,
+        numOfReview: doc.data()['numOfReview'] ?? 0,
       );
     }).toList();
   }
@@ -141,6 +144,9 @@ class DatabaseService {
       category: snapshot.data()['category'] ?? '',
       // image: snapshot.data()['image'] ?? '',
       // review: snapshot.data()['review'],
+
+      totalRating: snapshot.data()['totalRating'] ?? 0,
+      numOfReview: snapshot.data()['numOfReview'] ?? 0,
     );
   }
 
@@ -148,6 +154,7 @@ class DatabaseService {
   Stream<Drug> get drugData {
     return drugCollection.doc(itemSeq).snapshots().map(_drugFromSnapshot);
   }
+
 
   /* User */
   // collection reference
@@ -287,4 +294,38 @@ class DatabaseService {
         .snapshots()
         .map(_privacyFromSnapshot);
   }
+
+
+  // get privacy stream
+  Future<num> getTotalRating() async {
+    DocumentSnapshot ds = await drugCollection.doc(itemSeq).get();
+    return ds.data()["totalRating"];
+  }
+
+
+  Future<void> updateTotalRating(num rating) async {
+    DocumentSnapshot drugSnapshot = await drugCollection.doc(itemSeq).get();
+    num formerTotalRating =  drugSnapshot.data()["totalRating"];
+    num formerNumOfReview = drugSnapshot.data()["numOfReview"];
+
+//    DocumentSnapshot reviewSnapshot = FirebaseFirestore.instance.collection('Reviews').doc
+
+    return await drugCollection.doc(itemSeq).update({
+      'totalRating': (formerTotalRating * formerNumOfReview + rating) / (formerNumOfReview + 1) ?? 0,
+      'numOfReview' : FieldValue.increment(1),
+    });
+  }
+
+
+  //final CollectionReference drugCollection = FirebaseFirestore.instance.collection('Drugs');
+
+//  Future<void> increaseFavorite(String docId, String currentUserUid) async {
+//  final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
+//    return await reviewCollection.doc(docId).update({
+//      'favoriteSelected': FieldValue.arrayUnion([currentUserUid]),
+//      'noFavorite': FieldValue.increment(1),
+//    });
+//  }
+
+
 }

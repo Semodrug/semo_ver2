@@ -55,10 +55,10 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: <Color>[
-                  Color(0xFFE9FFFB),
-                  Color(0xFFE9FFFB),
-                  Color(0xFFFFFFFF),
-                ])),
+                      Color(0xFFE9FFFB),
+                      Color(0xFFE9FFFB),
+                      Color(0xFFFFFFFF),
+                    ])),
           ),
         ),
         floatingActionButton: FloatingActionButton(
@@ -68,7 +68,7 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
             onPressed: () {
 //            rating();
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => WriteReview(widget.drugItemSeq)));
+                  MaterialPageRoute(builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq)));
             }),
         backgroundColor: Colors.white,
         body: CustomScrollView(
@@ -88,20 +88,19 @@ class _PhilInfoPageState extends State<PhilInfoPage> {
                 ),
               ),
             ),
-            /* FROM HERE: TAB */
+//             FROM HERE: TAB
             SliverToBoxAdapter(
               child: _myTab(context, widget.drugItemSeq),
             )
           ],
-        ));
+        )
+    );
   }
 }
 
-/* 약 이름, 회사 등 위쪽에 위치한 정보들 */
-Widget _topInfo(
-  BuildContext context,
-  String drugItemSeq,
-) {
+// 약 이름, 회사 등 위쪽에 위치한 정보들
+Widget _topInfo(BuildContext context, String drugItemSeq,
+    ) {
   TheUser user = Provider.of<TheUser>(context);
 
   //TODO: how to control the state management better?
@@ -227,8 +226,8 @@ Widget _topInfo(
                                         MaterialPageRoute(
                                             fullscreenDialog: true,
                                             builder: (context) => Expiration(
-                                                  drugItemSeq: drugItemSeq,
-                                                )));
+                                              drugItemSeq: drugItemSeq,
+                                            )));
 
 //                                     _myDialog(context, '약 보관함',
 //                                         '이미 보관함에 저장되어있습니다.', '', '확인');
@@ -299,7 +298,7 @@ Future<void> _myDialog(
   );
 }
 
-/* warning */
+// warning
 void _showWarning(context) {
   showDialog(
     context: context,
@@ -329,7 +328,7 @@ void _showWarning(context) {
   );
 }
 
-/* add favorite list */
+// add favorite list
 void _question(context) {
   showDialog(
     context: context,
@@ -359,7 +358,7 @@ void _question(context) {
   );
 }
 
-/* 카테고리전용 buttion*/
+// 카테고리전용 buttion
 Widget _categoryButton(str) {
   return Container(
     width: 24 + str.length.toDouble() * 10,
@@ -381,7 +380,7 @@ Widget _categoryButton(str) {
   );
 }
 
-/* tab 구현 */
+// tab 구현
 Widget _myTab(BuildContext context, String drugItemSeq) {
   return DefaultTabController(
       length: 2,
@@ -389,9 +388,9 @@ Widget _myTab(BuildContext context, String drugItemSeq) {
         children: [
           TabBar(
             labelStyle:
-                TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             unselectedLabelStyle:
-                TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
+            TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
             tabs: [
               Tab(child: Text('약 정보', style: TextStyle(color: Colors.black))),
               Tab(child: Text('리뷰', style: TextStyle(color: Colors.black))),
@@ -404,7 +403,7 @@ Widget _myTab(BuildContext context, String drugItemSeq) {
             width: double.infinity,
             height: 6000.0,
             child: TabBarView(
-              /* 여기에 은영학우님 page 넣기! */
+//               여기에 은영학우님 page 넣기!
               children: [
                 _underInfo(context, drugItemSeq),
                 ReviewPage(drugItemSeq)
@@ -416,7 +415,7 @@ Widget _myTab(BuildContext context, String drugItemSeq) {
 }
 
 //TODO: After controller data, I have to re-touch this widget
-/* 약의 자세한 정보들 */
+// 약의 자세한 정보들
 Widget _underInfo(BuildContext context, String drugItemSeq) {
   return StreamBuilder<Drug>(
       stream: DatabaseService(itemSeq: drugItemSeq).drugData,
@@ -459,8 +458,8 @@ Widget _underInfo(BuildContext context, String drugItemSeq) {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => DetailInfo(
-                                      drugItemSeq: drugItemSeq,
-                                    )));
+                                  drugItemSeq: drugItemSeq,
+                                )));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -468,8 +467,9 @@ Widget _underInfo(BuildContext context, String drugItemSeq) {
                           Text('자세히 보기'),
                           Icon(Icons.keyboard_arrow_right)
                         ],
-                      ))
-                ]),
+                      )),
+                ]
+            ),
           );
         } else {
           return Loading();
@@ -477,7 +477,7 @@ Widget _underInfo(BuildContext context, String drugItemSeq) {
       });
 }
 
-/* 약의 자세한 정보들 */
+// 약의 자세한 정보들
 Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
   return StreamBuilder<Drug>(
       stream: DatabaseService(itemSeq: drugItemSeq).drugData,

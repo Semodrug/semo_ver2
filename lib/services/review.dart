@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/models/user.dart';
 
 
 class ReviewService {
 
   final String documentId;
   ReviewService({ this.documentId });
+
 
   final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
 
@@ -21,9 +23,19 @@ class ReviewService {
   }
 
 
-  Future<void> updateEffect(String text) async {
+  Future<void> tapToRate(num rating, String uid) async {
     return await reviewCollection.doc(documentId).update({
-      'effect': text
+      'starRating': rating,
+      'seqNum': documentId,
+      'uid': uid
+    });
+  }
+
+  Future<void> getRate(num rating, String uid) async {
+    return await reviewCollection.doc(documentId).update({
+      'starRating': rating,
+      'seqNum': documentId,
+      'uid': uid
     });
   }
 
@@ -73,6 +85,15 @@ class ReviewService {
         .map(_reviewListFromSnapshot);
   }
 
+
+  Future<bool> findUserWroteReview(String seqNum, String user) async {
+    if(reviewCollection.where("seqNum", isEqualTo: seqNum).where("uid", isEqualTo:user).snapshots()
+      .map(_reviewListFromSnapshot) != null)
+
+      return true;
+    else
+      return false;
+  }
 
 
 //  Stream<List<Review>> getMyReviews(String seqNum) {

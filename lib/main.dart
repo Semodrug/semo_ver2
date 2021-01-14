@@ -37,6 +37,27 @@ class MyApp extends StatelessWidget {
           },
           theme: ThemeData(
               // TODO: Add Theme Data
+            textTheme: TextTheme(
+              headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+              headline2: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+              headline3: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+              headline4: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+              headline5: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+              headline6: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+
+              bodyText1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+              bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+
+              subtitle1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+              subtitle2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+
+              caption: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+              button: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+              overline: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+//              TextStyle? caption,
+//              TextStyle? button,
+//              TextStyle? overline,
+            ),
           )),
     );
   }

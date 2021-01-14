@@ -191,7 +191,7 @@ class DrugTile extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PhilInfoPage(drugItemSeq: drug.itemSeq),
+                builder: (context) => ReviewPage(drug.itemSeq),
               ),
             ),
             print('===> pushed'),

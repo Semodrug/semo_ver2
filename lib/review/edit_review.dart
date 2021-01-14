@@ -10,7 +10,8 @@ import 'package:semo_ver2/shared/image.dart';
 
 class EditReview extends StatefulWidget {
   Review review;
-  EditReview(this.review);
+  String editOrWrite;
+  EditReview(this.review, this.editOrWrite);
 
   _EditReviewState createState() => _EditReviewState();
 }
@@ -41,14 +42,16 @@ class _EditReviewState extends State<EditReview> {
   static const _green = Color(0xff57C8B8);
   static const _grey = Color(0x95C4C4C4);
 
+//  String editOrWrite = 'edit'; // 'write'
+
   @override
   Widget build(BuildContext context) {
-//    TheUser user = Provider.of<TheUser>(context);
     return StreamBuilder<Review>(
         stream: ReviewService().getSingleReview(widget.review.documentId),
         builder: (context, snapshot) {
           if(snapshot.hasData) {
             Review review = snapshot.data;
+
             if(effect == '') effect = review.effect;
             if(sideEffect == '') sideEffect = review.sideEffect;
             myControllerEffect.text = review.effectText;
@@ -61,7 +64,7 @@ class _EditReviewState extends State<EditReview> {
             return Scaffold(
                 resizeToAvoidBottomInset: true,
                 appBar: AppBar(
-                  title: Text('Edit Review',
+                  title: Text(widget.editOrWrite == 'edit'? 'Edit Review': "Write Review",
                       style: GoogleFonts.roboto(
                           fontSize: 16.5,
                           fontWeight: FontWeight.bold,
@@ -147,157 +150,153 @@ class _EditReviewState extends State<EditReview> {
   }
 
   Widget _rating(Review review) {
-    return Expanded(
-      child: Container(
+    return Container(
 //          height: 150,
-          padding: EdgeInsets.fromLTRB(15, 25, 15, 25),
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom:
-                  BorderSide(width: 0.8, color: Colors.grey[300], ))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        padding: EdgeInsets.fromLTRB(15, 25, 15, 25),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom:
+                BorderSide(width: 0.8, color: Colors.grey[300], ))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text("약을 사용해보셨나요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
-              SizedBox(height: 10),
-              RatingBar.builder(
-                itemSize: 48,
-                glow: false,
-                initialRating: review.starRating*1.0,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: false,
-                itemCount: 5,
+          children: <Widget>[
+            Text("약을 사용해보셨나요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+            SizedBox(height: 10),
+            RatingBar.builder(
+              itemSize: 48,
+              glow: false,
+              initialRating: widget.editOrWrite == 'edit'? review.starRating*1.0 : 0,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: false,
+              itemCount: 5,
 //              unratedColor: Colors.grey[500],
-                unratedColor: _grey,
-                itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
-                itemBuilder: (context, _) => Icon(
+              unratedColor: _grey,
+              itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
+              itemBuilder: (context, _) => Icon(
                   Icons.star,
 //                color: Colors.amber[300],
                   color: _green
-                ),
-                onRatingUpdate: (rating) {
-                  starRating = rating;
-                  setState(() {
-                    if(starRating == 0)
-                      starRatingText = "선택하세요.";
-                    if(starRating == 1)
-                      starRatingText =  "1점 (별로에요)";
-                    if(starRating == 2)
-                      starRatingText =  "2점 (그저그래요)";
-                    if(starRating == 3)
-                      starRatingText =  "3점 (괜찮아요)";
-                    if(starRating == 4)
-                      starRatingText =  "4점 (좋아요)";
-                    if(starRating == 5)
-                      starRatingText =  "5점 (최고예요)";
-                  });
-                },
               ),
-              SizedBox(height: 10),
-              Text(starRatingText)
-            ],
-          )
-      ),
+              onRatingUpdate: (rating) {
+                starRating = rating;
+                setState(() {
+                  if(starRating == 0)
+                    starRatingText = "선택하세요.";
+                  if(starRating == 1)
+                    starRatingText =  "1점 (별로에요)";
+                  if(starRating == 2)
+                    starRatingText =  "2점 (그저그래요)";
+                  if(starRating == 3)
+                    starRatingText =  "3점 (괜찮아요)";
+                  if(starRating == 4)
+                    starRatingText =  "4점 (좋아요)";
+                  if(starRating == 5)
+                    starRatingText =  "5점 (최고예요)";
+                });
+              },
+            ),
+            SizedBox(height: 10),
+            Text(starRatingText)
+          ],
+        )
     );
   }
 
   Widget _effect(Review review) {
-    return Expanded(
-      child: Container(
+    return Container(
 //          height: 280,
-          padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom:
-                  BorderSide(width: 0.8, color: Colors.grey[300], ))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom:
+                BorderSide(width: 0.8, color: Colors.grey[300], ))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text("약의 효과는 어땠나요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
-              Padding(padding: EdgeInsets.only(top: 15)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      GestureDetector(
-                          child: Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  color: effect == "bad" ? _green: Colors.grey[300],
-                                  shape: BoxShape.circle)),
-                          onTap: ()  {
-                            setState(()  {
-                              effect = "bad";
-                            });
-                          }
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      Text("별로에요", style: effect == "bad"?
-                      TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                      TextStyle(color:Colors.black87)),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.only(left: 20)),
-                  Column(
-                    children: <Widget>[
-                      GestureDetector(
-                          child: Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  color: effect == "soso" ? _green : Colors.grey[300],
-                                  shape: BoxShape.circle)),
-                          onTap: ()  {
+          children: <Widget>[
+            Text("약의 효과는 어땠나요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+            Padding(padding: EdgeInsets.only(top: 15)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    GestureDetector(
+                        child: Container(
+                            width: 35,
+                            height: 35,
+                            decoration: BoxDecoration(
+                                color: effect == "bad" ? _green: Colors.grey[300],
+                                shape: BoxShape.circle)),
+                        onTap: ()  {
+                          setState(()  {
+                            effect = "bad";
+                          });
+                        }
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Text("별로에요", style: effect == "bad"?
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
+                    TextStyle(color:Colors.black87)),
+                  ],
+                ),
+                Padding(padding: EdgeInsets.only(left: 20)),
+                Column(
+                  children: <Widget>[
+                    GestureDetector(
+                        child: Container(
+                            width: 35,
+                            height: 35,
+                            decoration: BoxDecoration(
+                                color: effect == "soso" ? _green : Colors.grey[300],
+                                shape: BoxShape.circle)),
+                        onTap: ()  {
+                          effect = "soso";
+                          setState(()  {
                             effect = "soso";
-                            setState(()  {
-                              effect = "soso";
-                              print(effect);
-                            });
-                          }
-                      ),
+                            print(effect);
+                          });
+                        }
+                    ),
 
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      Text("보통이에요", style: effect == "soso"?
-                      TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                      TextStyle(color:Colors.black87)),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.only(left: 20)),
-                  Column(
-                    children: <Widget>[
-                      GestureDetector(
-                          child: Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  color: effect == "good" ? _green : Colors.grey[300],
-                                  shape: BoxShape.circle)),
-                          onTap: ()  {
-                            setState(()  {
-                              effect = "good";
-                            });
-                          }
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      Text("좋아요", style: effect == "good"?
-                      TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                      TextStyle(color:Colors.black87)),
-                    ],
-                  ),
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Text("보통이에요", style: effect == "soso"?
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
+                    TextStyle(color:Colors.black87)),
+                  ],
+                ),
+                Padding(padding: EdgeInsets.only(left: 20)),
+                Column(
+                  children: <Widget>[
+                    GestureDetector(
+                        child: Container(
+                            width: 35,
+                            height: 35,
+                            decoration: BoxDecoration(
+                                color: effect == "good" ? _green : Colors.grey[300],
+                                shape: BoxShape.circle)),
+                        onTap: ()  {
+                          setState(()  {
+                            effect = "good";
+                          });
+                        }
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Text("좋아요", style: effect == "good"?
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
+                    TextStyle(color:Colors.black87)),
+                  ],
+                ),
 
-                ],
-              ),
+              ],
+            ),
 //              SizedBox(height: 20),
 //              Padding(padding: EdgeInsets.only(top: 25)),
-              _textField(myControllerEffect)
-            ],
-          )
-      ),
+            _textField(myControllerEffect)
+          ],
+        )
     );
   }
 
@@ -328,71 +327,70 @@ class _EditReviewState extends State<EditReview> {
   }
 
   Widget _sideEffect(Review review) {
-    return Expanded(
-      child: Container(
+    return Container(
 //          height: 280,
-          padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom:
-                  BorderSide(width: 0.6, color: Colors.grey[300], ))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom:
+                BorderSide(width: 0.6, color: Colors.grey[300], ))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text("약의 부작용은 어떤가요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
-              Padding(padding: EdgeInsets.only(top: 15)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      GestureDetector(
-                          child: Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
+          children: <Widget>[
+            Text("약의 부작용은 어떤가요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+            Padding(padding: EdgeInsets.only(top: 15)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    GestureDetector(
+                        child: Container(
+                            width: 35,
+                            height: 35,
+                            decoration: BoxDecoration(
 //                                                    color: widget.review.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
-                                  color: sideEffect == "yes" ? _green : Colors.grey[300],
-                                  shape: BoxShape.circle)),
-                          onTap: ()  {
-                            setState(() {
-                              sideEffect = "yes";
-                            });
-                          }
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      Text("있어요", style: sideEffect == "yes"?
-                      TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                      TextStyle(color:Colors.black87)),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
-                      child: Text("VS", style: TextStyle(color: Colors.grey[700]))),
-                  Column(
-                    children: <Widget>[
-                      GestureDetector(
-                          child: Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
+                                color: sideEffect == "yes" ? _green : Colors.grey[300],
+                                shape: BoxShape.circle)),
+                        onTap: ()  {
+                          setState(() {
+                            sideEffect = "yes";
+                          });
+                        }
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Text("있어요", style: sideEffect == "yes"?
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
+                    TextStyle(color:Colors.black87)),
+                  ],
+                ),
+                Padding(padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
+                    child: Text("VS", style: TextStyle(color: Colors.grey[700]))),
+                Column(
+                  children: <Widget>[
+                    GestureDetector(
+                        child: Container(
+                            width: 35,
+                            height: 35,
+                            decoration: BoxDecoration(
 //                                                    color: widget.review.sideEffect == "no" ? Colors.greenAccent[100]: Colors.grey[300],
-                                  color: sideEffect == "no" ? _green : Colors.grey[300],
-                                  shape: BoxShape.circle)),
-                          onTap: ()  {
-                            setState(() {
-                              sideEffect = "no";
-                            });
-                          }
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      Text("없어요", style: sideEffect == "no"?
-                      TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                      TextStyle(color:Colors.black87)),
-                    ],
-                  ),
-                ],
-              ),
+                                color: sideEffect == "no" ? _green : Colors.grey[300],
+                                shape: BoxShape.circle)),
+                        onTap: ()  {
+                          setState(() {
+                            sideEffect = "no";
+                          });
+                        }
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Text("없어요", style: sideEffect == "no"?
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
+                    TextStyle(color:Colors.black87)),
+                  ],
+                ),
+              ],
+            ),
 //              Padding(padding: EdgeInsets.only(top: 25)),
 //              Padding(
 //                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -408,27 +406,25 @@ class _EditReviewState extends State<EditReview> {
 //                      )),
 //                ),
 //              )
-              _textField(myControllerSideEffect)
-            ],
-          )
-      ),
+            _textField(myControllerSideEffect)
+          ],
+        )
     );
   }
 
   Widget _overallReview(Review review) {
-    return Expanded(
-      child: Container(
-          padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
+    return Container(
+        padding: EdgeInsets.fromLTRB(15, 25, 15, 15),
 //          height: 300,
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom:
-                  BorderSide(width: 0.8, color: Colors.grey[300], ))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        decoration: BoxDecoration(
+            border: Border(
+                bottom:
+                BorderSide(width: 0.8, color: Colors.grey[300], ))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text("약에 대한 총평", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+          children: <Widget>[
+            Text("약에 대한 총평", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
 //              Padding(padding: EdgeInsets.only(top: 25)),
 //              Padding(
 //                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
@@ -447,11 +443,10 @@ class _EditReviewState extends State<EditReview> {
 //                ),
 //
 //              ),
-              _textField(myControllerOverall),
-              Padding(padding: EdgeInsets.only(top: 25)),
-            ],
-          )
-      ),
+            _textField(myControllerOverall),
+            Padding(padding: EdgeInsets.only(top: 25)),
+          ],
+        )
     );
   }
 
@@ -472,7 +467,6 @@ class _EditReviewState extends State<EditReview> {
         effectText = myControllerEffect.text;
         sideEffectText = myControllerSideEffect.text;
         overallText = myControllerOverall.text;
-        //_registerReview();
         await ReviewService(documentId: widget.review.documentId).updateReviewData(
             effect /*?? review.effect*/,
             sideEffect /*?? review.sideEffect*/,
