@@ -36,6 +36,7 @@ dependencies:
 
   #login
   google_sign_in: ^4.5.1
+  flutter_kakao_login: ^1.2.0
   mask_text_input_formatter: ^1.0.7
   shared_preferences: ^0.5.12+4
   logger: ^0.9.4  #optional

@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_kakao_login/flutter_kakao_login.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 
@@ -89,6 +90,28 @@ class AuthService {
     } catch (error) {
       print(error.toString());
       return null;
+    }
+  }
+
+  // login with kakao
+  Future signInWithKakao() async {
+    try {
+      final FlutterKakaoLogin kakaoSignIn = new FlutterKakaoLogin();
+      final result = await kakaoSignIn.logIn();
+      print(result);
+      // To-do Someting ...
+    } catch (e) {
+      print("${e.code} ${e.message}");
+    }
+  }
+
+  Future signOutWithKakao() async {
+    try {
+      final FlutterKakaoLogin kakaoSignIn = new FlutterKakaoLogin();
+      final result = await kakaoSignIn.logOut();
+      // To-do Someting ...
+    } catch (e) {
+      print("${e.code} ${e.message}");
     }
   }
 
