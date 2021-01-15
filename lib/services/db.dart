@@ -327,6 +327,12 @@ class DatabaseService {
     }
   }
 
+  Future<bool> isUnique(newNickname) async {
+    final QuerySnapshot result =
+        await userCollection.where('nickname', isEqualTo: newNickname).get();
+    return result.docs.isEmpty;
+  }
+
   //final CollectionReference drugCollection = FirebaseFirestore.instance.collection('Drugs');
 
 //  Future<void> increaseFavorite(String docId, String currentUserUid) async {
