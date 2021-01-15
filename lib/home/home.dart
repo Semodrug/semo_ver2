@@ -168,15 +168,16 @@ class _HomePageState extends State<HomePage> {
       String newName = data.itemName;
       List splitName = [];
       if (data.itemName.contains('(') || data.itemName.contains('(군납') ) {
-        newName = data.itemName.replaceAll('(', '(');
-        if (newName.contains('')) {
-          splitName = newName.split('(');
-          print(splitName);
-          newName = splitName[0];
-        }
+        newName = data.itemName.replaceAll('(', '\n(');
+//        if (newName.contains('')) {
+//          splitName = newName.split('(');
+//          print(splitName);
+//          newName = splitName[0];
+//        }
       }
       return newName;
     }
+
 
     /*혹시라도 카테고리가 없는 애들을 위해서 임시로 만들어 놓음*/
     String _checkCategory(SavedDrug data) {
@@ -197,68 +198,74 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       },
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            width: double.infinity,
-            height: 100.0,
-            child: Material(
-              color: Colors.white,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: width / 20,
-                    child: Center(
-                      child: Text(num.toString()),
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border(
+                bottom:
+                BorderSide(width: 0.6, color: Colors.grey[300]))),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              width: double.infinity,
+              height: height/6,
+              child: Material(
+                color: Colors.white,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: width / 20,
+                      child: Center(
+                        child: Text(num.toString()),
+                      ),
                     ),
-                  ),
-                  Container(
-                      //이미지는 고정값
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      child: SizedBox(
-                          height: 70,
-                          width: 88,
-                          child: AspectRatio(
-                              aspectRatio: 2.3 / 2,
-                              child: DrugImage(drugItemSeq: data.itemSeq)))),
-                  Container(
-                      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(children: [
+                    Container(
+                        //이미지는 고정값
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        child: SizedBox(
+                            height: 70,
+                            width: 88,
+                            child: AspectRatio(
+                                aspectRatio: 2.3 / 2,
+                                child: DrugImage(drugItemSeq: data.itemSeq)))),
+                    Container(
+                        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: width/3 * 1.6,
+                              child: Text(
+                                _checkLongName(data),
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                                child: Row(
+                              children: [_categoryButton((_checkCategory(data)))],
+                            )),
+                            SizedBox(
+                              height: 3,
+                            ),
                             Text(
-                              _checkLongName(data),
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            )
-                          ]),
-                          Expanded(
-                              child: Row(
-                            children: [_categoryButton((_checkCategory(data)))],
-                          )),
-                          SizedBox(
-                            height: 3,
-                          ),
-                          Expanded(
-                            child: Text(
                               data.expiration,
                               style: TextStyle(
                                   color: Colors.grey[600], fontSize: 13),
-                            ),
-                          )
-                        ],
-                      )),
-                ],
+                            )
+                          ],
+                        )),
+                  ],
+                ),
               ),
             ),
-          ),
-          Divider(
-            thickness: 1,
-          )
-        ],
+//            Divider(
+//              thickness: 1,
+//            )
+          ],
+        ),
       ),
     );
   }

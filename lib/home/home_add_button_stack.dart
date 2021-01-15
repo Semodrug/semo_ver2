@@ -68,7 +68,7 @@ class _AddButtonState extends State<AddButton> {
                   padding: EdgeInsets.symmetric(horizontal: 16),
 
                   //width: width/10,
-                  height: height/44,
+                  height: height/33,
                   child: Text("검색해서 약 추가하기",
                       style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
