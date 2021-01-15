@@ -251,7 +251,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 child: TextField(
                   focusNode: focusNode,
                   style: TextStyle(fontSize: 15),
-                  autofocus: true,
+//                  autofocus: true,
                   controller: _filter,
                   decoration: InputDecoration(
                       fillColor: Colors.white12,
