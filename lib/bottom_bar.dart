@@ -18,12 +18,12 @@ class _BottomBarState extends State<BottomBar> {
 
   final List<Widget> _widgetOptions = [
     HomePage(),
-    //CameraPage(),
+    CameraPage(),
     RankingPage(),
 //    PhilInfoPage(
 //      drugItemSeq: '199303108',
 //    )
-    ReviewPage("199303108")
+//     ReviewPage("199303108")
 //    ReviewPage(),
   ];
 
@@ -98,11 +98,11 @@ class _BottomBarState extends State<BottomBar> {
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
-//              BottomNavigationBarItem(
-//                  icon: Icon(Icons.camera_alt), label: 'camera'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.camera_alt), label: 'camera'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_today), label: 'ranking'),
-            BottomNavigationBarItem(icon: Icon(Icons.create), label: 'review'),
+            // BottomNavigationBarItem(icon: Icon(Icons.create), label: 'review'),
           ],
           currentIndex: _selectedIndex,
 //          selectedItemColor: Theme.of(context).bottomAppBarColor,

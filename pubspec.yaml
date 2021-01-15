@@ -36,7 +36,7 @@ dependencies:
 
   #login
   google_sign_in: ^4.5.1
-  flutter_kakao_login: ^1.2.0
+#  flutter_kakao_login: ^1.2.0
   mask_text_input_formatter: ^1.0.7
   shared_preferences: ^0.5.12+4
   logger: ^0.9.4  #optional
@@ -46,6 +46,7 @@ dependencies:
 
   #functions
   flappy_search_bar: ^1.7.2
+  smooth_star_rating: ^1.1.1
   flutter_rating_bar: ^3.2.0+1
   fl_chart: ^0.12.2
   flutter_datetime_picker:
