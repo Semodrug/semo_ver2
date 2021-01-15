@@ -6,9 +6,8 @@ import 'edit_review.dart';
 import 'pie_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+//import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-
 import 'write_review.dart';
 
 class GetRating extends StatefulWidget {
@@ -98,9 +97,16 @@ class _GetRatingState extends State<GetRating> {
                         style: TextStyle(
                             fontSize: 14.0, color: Colors.grey[700])),
                     Padding(padding: EdgeInsets.only(top: 7.0)),
-
+                    StreamBuilder<Review>(
+                      stream: ReviewService().getSingleReview("7nXbIzuWESZhHFEcRwyv"),
+                      builder: (context, snapshot) {
+                        Review review = snapshot.data;
+                        print("*******"+review.starRating.toString());
+                        return _tapToRate(review.starRating, user);
+                      }
+                    ),
                     //TODO Save tap to RATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#######################
-                    _tapToRate(_tapToRatingResult, user)
+
                   ],
                 ));
           }
@@ -115,10 +121,21 @@ class _GetRatingState extends State<GetRating> {
   }
 
   Widget _tapToRate(tapToRatingResult, user) {
+    print("HERE!!!!!!!!!!!!"+tapToRatingResult.toString());
+//    return RatingBar(
+//      onRatingChanged: (rating) => setState(() => rating =3),
+//      filledIcon: Icons.star,
+//      emptyIcon: Icons.star_border,
+//      halfFilledIcon: Icons.star_half,
+//      isHalfAllowed: false,
+//      filledColor: Colors.green,
+//      emptyColor: Colors.redAccent,
+//      size: 30,
+//    );
     double rating = 1.0;
     return SmoothStarRating(
 //      rating: 5,
-      rating: 1,
+      rating: tapToRatingResult,
       isReadOnly: false,
       size: 30,
       filledIconData: Icons.star,
