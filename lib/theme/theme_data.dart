@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'colors.dart';
 
-final ThemeData _kShrineTheme = _buildShrineTheme();
+final ThemeData _IYMYTheme = _buildIYMYTheme();
 
-
-ThemeData _buildShrineTheme() {
+ThemeData _buildIYMYTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
 //    accentColor: kShrineBrown900,
@@ -36,31 +34,29 @@ ThemeData _buildShrineTheme() {
 //      ),
 //      border: CutCornersBorder(),
 //    ),
-    textTheme: _buildShrineTextTheme(base.textTheme),
-    primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
-    accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
+    textTheme: _buildTextTheme(base.textTheme),
+//    primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
+//    accentTextTheme: _buildTextTheme(base.accentTextTheme),
   );
 }
 
-TextTheme _buildShrineTextTheme(TextTheme base) {
+TextTheme _buildTextTheme(TextTheme base) {
   return base.copyWith(
-    headline5: base.headline5.copyWith(
-      fontWeight: FontWeight.w500,
-    ),
-    headline6: base.headline6.copyWith(
-        fontSize: 18.0
-    ),
-    caption: base.caption.copyWith(
-      fontWeight: FontWeight.w400,
-      fontSize: 14.0,
-    ),
-    bodyText1: base.bodyText1.copyWith(
-      fontWeight: FontWeight.w500,
-      fontSize: 16.0,
-    ),
+    headline1: TextStyle(fontSize: 28,  fontWeight: FontWeight.w500),
+    headline2: TextStyle(fontSize: 24,  fontWeight: FontWeight.bold),
+    headline3: TextStyle(fontSize: 20,  fontWeight: FontWeight.bold),
+    headline4: TextStyle(fontSize: 20,  fontWeight: FontWeight.normal),
+    headline5: TextStyle(fontSize: 16,  fontWeight: FontWeight.bold),
+    headline6: TextStyle(fontSize: 16,  fontWeight: FontWeight.w500),
+
+    subtitle1: TextStyle(fontSize: 14,  fontWeight: FontWeight.bold),
+    subtitle2: TextStyle(fontSize: 14,  fontWeight: FontWeight.w500),
+
+    body1: TextStyle(fontSize: 16,  fontWeight: FontWeight.normal),
+    body2: TextStyle(fontSize: 14,  fontWeight: FontWeight.normal),
   ).apply(
-    fontFamily: 'Rubik',
-//    displayColor: kShrineBrown900,
+    fontFamily: 'NotoSansKR',
+    displayColor: black87,
 //    bodyColor: kShrineBrown900,
   );
 }
