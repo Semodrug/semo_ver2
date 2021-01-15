@@ -46,27 +46,20 @@ class _BottomBarState extends State<BottomBar> {
               fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.person,
-              color: Colors.teal[200],
-            ),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyPage()),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: IconButton(
+              icon: Icon(
+                Icons.person,
+                color: Colors.teal[200],
+              ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyPage()),
+              ),
             ),
           ),
           //for test home
-          IconButton(
-            icon: Icon(
-              Icons.map,
-              color: Colors.teal[200],
-            ),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TestRanking()),
-            ),
-          ),
         ],
 
         backgroundColor: Colors.white,

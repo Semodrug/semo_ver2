@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/services/auth.dart';
 
 import 'bottom_bar.dart';
@@ -34,6 +35,8 @@ class MyApp extends StatelessWidget {
             '/camera': (context) => CameraPage(),
             '/ranking': (context) => RankingPage(),
             '/bottom_bar': (context) => BottomBar(),
+            '/search': (context) => SearchScreen(),
+
           },
           theme: ThemeData(
               // TODO: Add Theme Data
