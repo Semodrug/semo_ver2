@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/home/home_add_button_stack.dart';
 import 'package:semo_ver2/ranking/test_ranking.dart';
 
 import 'camera/camera.dart';
@@ -18,7 +19,7 @@ class _BottomBarState extends State<BottomBar> {
 
   final List<Widget> _widgetOptions = [
     HomePage(),
-    CameraPage(),
+    AddButton(),
     RankingPage(),
 //    PhilInfoPage(
 //      drugItemSeq: '199303108',
