@@ -57,6 +57,7 @@ TextTheme _buildTextTheme(TextTheme base) {
   ).apply(
     fontFamily: 'NotoSansKR',
     displayColor: black87,
+
 //    bodyColor: kShrineBrown900,
   );
 }
