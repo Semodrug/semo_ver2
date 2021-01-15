@@ -16,7 +16,7 @@ class GetHealthPage extends StatefulWidget {
 }
 
 class _GetHealthPageState extends State<GetHealthPage> {
-  TextEditingController selfWritingController = TextEditingController();
+  TextEditingController _selfWritingController = TextEditingController();
 
   List<bool> isPregnant = List.generate(2, (_) => false);
   List<bool> isDisease = List.generate(7, (_) => false);
@@ -259,7 +259,7 @@ class _GetHealthPageState extends State<GetHealthPage> {
 
   Widget selfWrite() {
     return TextFormField(
-      controller: selfWritingController,
+      controller: _selfWritingController,
       cursorColor: Colors.teal[400],
       decoration: InputDecoration(
           focusedBorder: UnderlineInputBorder(
@@ -290,7 +290,7 @@ class _GetHealthPageState extends State<GetHealthPage> {
           ),
           color: Colors.teal[400],
           onPressed: () async {
-            diseaseList.add(selfWritingController.text);
+            if (_isFind) diseaseList.add(_selfWritingController.text);
 
             await DatabaseService(uid: user.uid)
                 .updateUserHealth(isPregnant[1], diseaseList);
