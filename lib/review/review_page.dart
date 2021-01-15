@@ -90,95 +90,100 @@ class _ReviewPageState extends State<ReviewPage> {
                       MaterialPageRoute(builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq)));
                 }),
 //            backgroundColor: Colors.white,
-            body: CustomScrollView(
-              slivers: <Widget>[
-                SliverToBoxAdapter(
-                  child: _topInfo(context, widget.drugItemSeq),
-                ),
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 10.0,
-                    child: Container(color: Colors.grey[200],),
+            body: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  SliverToBoxAdapter(
+                    child: _topInfo(context, widget.drugItemSeq),
                   ),
-                ),
-                SliverAppBar(
-                  flexibleSpace: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: width/2,
-                        child: Center(child: Text("약정보", )),
-                      ),
-                      Container(
-                        width: width/2,
-                        child: Center(child: Text("리뷰", )),
-                      ),
-                    ],
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 10.0,
+                      child: Container(color: Colors.grey[200],),
+                    ),
                   ),
-                  leading: Container(),
-                  pinned: true,
-                  backgroundColor: Colors.white,
-                ),
+                  SliverAppBar(
+                    flexibleSpace: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: width/2,
+                          child: Center(child: Text("약정보", )),
+                        ),
+                        Container(
+                          width: width/2,
+                          child: Center(child: Text("리뷰", )),
+                        ),
+                      ],
+                    ),
+                    leading: Container(),
+                    pinned: true,
+                    backgroundColor: Colors.white,
+                  ),
 
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 3000,
-                      child:Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          SizedBox(height:10),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      height: 3000,
+                        child:Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SizedBox(height:10),
 //                          _topInfo(context, widget.drugItemSeq),
 //                          SizedBox(
 //                            width: double.infinity,
 //                            height: 10.0,
 //                            child: Container(color: Colors.grey[200],),
 //                          ),
-                          _underInfo(context, widget.drugItemSeq),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 10.0,
-                            child: Container(color: Colors.grey[200],),
-                          ),
+                            _underInfo(context, widget.drugItemSeq),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 10.0,
+                              child: Container(color: Colors.grey[200],),
+                            ),
 
-                          GetRating(widget.drugItemSeq),
-                          Container(
-                            height: 4,
-                            color: Colors.grey[200],
-                          ),
-                          Container(
-                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  //TODO EDIT num of reviews
-                                  Text("#",
-                                      style: TextStyle(
-                                        fontSize: 16.5,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  InkWell(
-                                      child: Text('전체리뷰 보기',
-                                          style: TextStyle(
-                                            fontSize: 14.5,
-                                          )),
-                                      onTap: () {
-                                        //TODO GET ALL REVIEW
+                            GetRating(widget.drugItemSeq),
+                            Container(
+                              height: 4,
+                              color: Colors.grey[200],
+                            ),
+                            Container(
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    //TODO EDIT num of reviews
+                                    Text("#",
+                                        style: TextStyle(
+                                          fontSize: 16.5,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    InkWell(
+                                        child: Text('전체리뷰 보기',
+                                            style: TextStyle(
+                                              fontSize: 14.5,
+                                            )),
+                                        onTap: () {
+                                          //TODO GET ALL REVIEW
 //                          Navigator.push(
 //                              context,
 //                              MaterialPageRoute(
 //                                  builder: (context) => AllReview()));
-                                      }),
-                                ],
-                              )),
-                          _searchBar(),
-                          ReviewList(_searchText),
+                                        }),
+                                  ],
+                                )),
+                            _searchBar(),
+                            ReviewList(_searchText),
 
-                        ],
-                      )
-                  ),
-                )
-              ],
+                          ],
+                        )
+                    ),
+                  )
+                ],
+              ),
             )
 
 
