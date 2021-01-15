@@ -38,7 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
           .limit(10)
           .snapshots(),
       builder: (context, AsyncSnapshot snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
+       // if (!snapshot.hasData) return LinearProgressIndicator();
         if (searchVal == '') {
           return StreamBuilder<QuerySnapshot>(
             stream: userSearchList.snapshots(),
@@ -74,7 +74,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               .doc(_auth.currentUser.uid)
                               .collection('searchList')
                               .get().then((snapshot) {
-                            for (DocumentSnapshot ds in snapshot.documents){
+                            for (DocumentSnapshot ds in snapshot.docs){
                               ds.reference.delete();
                             }
                           });
@@ -263,8 +263,26 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildListItemOfUser(BuildContext context, DocumentSnapshot data) {
     final drugFromUser = DrugFromUser.fromSnapshot(data);
+
+    //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
+    String _checkLongName(String data) {
+      String newName = data;
+      List splitName = [];
+      if (data.contains('(')) {
+        newName = data.replaceAll('(', '(');
+        if (newName.contains('')) {
+          splitName = newName.split('(');
+          // print(splitName);
+          newName = splitName[0];
+        }
+      }
+      return newName;
+    }
+
+    String cutName = _checkLongName(drugFromUser.item_name);
+
     return ListDrugOfUser(
-      drugFromUser.item_name,
+      cutName,
       drugFromUser.item_seq,
       drugFromUser.expiration,
     );
@@ -272,6 +290,11 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    double searchWidth =  width / 33 * 24;
+    double searchHeight =  height / 17;
+
     String searchList;
 
     Future<void> addRecentSearchList() async {
@@ -314,25 +337,22 @@ class _SearchScreenState extends State<SearchScreen> {
               children: [
                 Row(
                   children: [
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: IconButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/bottom_bar');
-                          },
-                          icon: Icon(
-                            Icons.arrow_back,
-                            size: 20,
-                          )),
-                    ),
+                    IconButton(
+                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/bottom_bar');
+                        },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 20,
+                        )),
                     Container(
-                      width: 320,
-                      height: 35,
+                      width: searchWidth,
+                      height: searchHeight,
                       padding: EdgeInsets.only(
                         top: 0,
                       ),
-                      margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                      //margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(8.0)),
                         color: Colors.grey[200],
@@ -341,38 +361,47 @@ class _SearchScreenState extends State<SearchScreen> {
                         children: [
                           Expanded(
                             //flex: 5,
-                              child: TextField(
-                                focusNode: focusNode,
-                                style: TextStyle(fontSize: 15),
-                                autofocus: true,
-                                controller: _filter,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white12,
-                                  filled: true,
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Colors.grey,
-                                    size: 20,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  focusNode: focusNode,
+                                  style: TextStyle(fontSize: 15),
+                                  autofocus: true,
+                                  controller: _filter,
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.white12,
+                                    filled: true,
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsets.all(0),
+                                      child: Icon(
+                                        Icons.search,
+                                        color: Colors.grey,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    suffixIcon: IconButton(
+                                      padding: EdgeInsets.fromLTRB(0,0,0,0),
+                                      icon: Icon(Icons.cancel, size: 20, color: Colors.teal,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _filter.clear();
+                                          _searchText = "";
+                                        });
+                                      },
+                                    ),
+                                    hintText: '어떤 약을 찾고 계세요?',
+                                    contentPadding: EdgeInsets.fromLTRB(0,0,0,0),
+                                    labelStyle: TextStyle(color: Colors.grey),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                        borderSide:
+                                        BorderSide(color: Colors.transparent)),
                                   ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(Icons.cancel, size: 20),
-                                    onPressed: () {
-                                      setState(() {
-                                        _filter.clear();
-                                        _searchText = "";
-                                      });
-                                    },
-                                  ),
-                                  hintText: '어떤 약을 찾고 계세요?',
-                                  labelStyle: TextStyle(color: Colors.grey),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                      BorderSide(color: Colors.transparent)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                      borderSide:
-                                      BorderSide(color: Colors.transparent)),
                                 ),
                               )),
                         ],
@@ -381,6 +410,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     focusNode.hasFocus
                         ? Expanded(
                       child: FlatButton(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: Text(
                           '확인', //TODO: 확인 눌렀을 때, 결과 값 보여주기
                           style: TextStyle(fontSize: 13),

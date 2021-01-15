@@ -39,36 +39,44 @@ class _AddButtonState extends State<AddButton> {
                     }),
               ),
             ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(15, 48, 0, 0),
-                child: Text("검색해서 약 추가하기",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-              ),
-            ),
-            Align(
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.fromLTRB(330, 10, 0, 0),
-                    child: FlatButton(
-                      child: Text(
-                          "X",
-                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
-                      onPressed: () {
-                        print('눌렸나확인해보자');
-                        Navigator.pushNamed(context, '/bottom_bar');
-                      },
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(0, 11, 0, 0),
+                      height: height/18,
+                      child: FlatButton(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text(
+                            "X",
+                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+                        onPressed: () {
+                          print('눌렸나확인해보자');
+                          Navigator.pushNamed(context, '/bottom_bar');
+                        },
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 60, 0, 0),
-                    child: _goToSearchBar(context),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+
+            Align(
+              alignment: Alignment.bottomLeft,
+              child:
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+
+                  //width: width/10,
+                  height: height/33,
+                  child: Text("검색해서 약 추가하기",
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                ),
+                 ),
+                _goToSearchBar(context),
+              ],
             ),
+
             //스낵바처럼 왔따갔따 만들어주는 친구 제스처 디텍트 함
             AnimatedPositioned(
                 curve: Curves.easeInOut,
@@ -83,17 +91,20 @@ class _AddButtonState extends State<AddButton> {
   }
 
   Widget _goToSearchBar(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
     return Container(
-      padding: EdgeInsets.fromLTRB(13, 0, 13, 0),
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
       decoration: BoxDecoration(
         color: Colors.transparent,
       ),
       child: Align(
         alignment: Alignment.topCenter,
         child: Container(
-          margin: const EdgeInsets.only(top: 11, bottom: 4),
-          height: 36,
-          width: 400,
+          //margin: const EdgeInsets.only(top: 11, bottom: 4),
+          width: width / 33 * 30.1,
+          height: height / 20,
           decoration: BoxDecoration(
             // Color does not matter but must not be transparent
             color: Colors.black,
@@ -140,157 +151,153 @@ class MenuWidget extends StatelessWidget {
             painter: CurvePainter(),
           ),
         ),
-        Center(
-          child: Padding(
-              padding:
-              const EdgeInsets.symmetric(vertical: 50.0, horizontal: 20.0),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: height / 8),
-                  Row(children: [
-                    Container(
-                      //margin: const EdgeInsets.all(15.0),
-                      width: width / 4,
-                      height: height / 5,
-                      child: FlatButton(
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(height: 10),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: SizedBox(
-                                height: 30,
-                                width: 30,
-                                child: Image.asset(
-                                    'assets/icons/barcode_icon.png'),
-                              ),
-                            ),
-                            SizedBox(height: 15),
-                            Container(
-                              child: Text(
-                                "바코드 인식",
-                                style: TextStyle(
-                                    fontSize: 17, color: Color(0XFF327A70)),
-                                textAlign: TextAlign.center,
-                              ),
-                            )
-                          ],
-                        ),
-                        onPressed: () {
-                          print(
-                              "바코드 인식 페이지로!!"); // 여기는 바코드 인식 페이지가 어떤 약인지 알려주는 바코드 페이지
-                        },
-                      ),
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: Colors.white60,
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 22, right: 22),
-                      width: width / 4,
-                      height: height / 5,
-                      child: FlatButton(
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(height: 10),
-                            SizedBox(
-                              height: 40,
-                              width: 40,
-                              child: Image.asset('assets/icons/case_icon.png'),
-                            ),
-                            SizedBox(height: 15),
-                            Container(
-                              child: Text(
-                                "케이스 인식",
-                                style: TextStyle(
-                                    fontSize: 17, color: Color(0XFF327A70)),
-                                textAlign: TextAlign.center,
-                              ),
-                            )
-                          ],
-                        ),
-                        onPressed: () {
-                          print("CASE 인식");
-                        },
-                      ),
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: Colors.white60,
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                    ),
-                    Container(
-                      //margin: const EdgeInsets.all(15.0),
-                      width: width / 4,
-                      height: height / 5,
-                      child: FlatButton(
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(height: 10),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: SizedBox(
-                                height: 30,
-                                width: 30,
-                                child: Image.asset(
-                                    'assets/icons/one_drug_icon.png'),
-                              ),
-                            ),
-                            SizedBox(height: 15),
-                            Container(
-                              child: Text(
-                                "한 알   인식",
-                                style: TextStyle(
-                                    fontSize: 17, color: Color(0XFF327A70)),
-                                textAlign: TextAlign.center,
-                              ),
-                            )
-                          ],
-                        ),
-                        onPressed: () {
-                          print("한 알 인식 페이지로!!");
-                        },
-                      ),
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: Colors.white60,
-                          borderRadius: BorderRadius.all(Radius.circular(4))),
-                    ),
-                  ]),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 20),
-                    width: 330,
-                    height: height / 7,
-                    child: FlatButton(
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(height: 10),
-                          SizedBox(
-                            height: 35,
-                            width: 35,
-                            child: Image.asset('assets/icons/camera_icon.png'),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: height / 4.5),
+              Row(children: [
+                Container(
+                  width: width / 4,
+                  height: height / 5,
+                  child: FlatButton(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: Image.asset(
+                                'assets/icons/barcode_icon.png'),
                           ),
-                          Container(
-                            child: Text(
-                              "촬영해서 약 추가하기",
-                              style: TextStyle(
-                                  fontSize: 14, color: Color(0XFFA4A4A4)),
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        ],
-                      ),
-                      onPressed: () {
-                        print('약을 추가하는 페이지!! 인식이 아님!!');
-                      },
+                        ),
+                        SizedBox(height: 15),
+                        Container(
+                          child: Text(
+                            "바코드 인식",
+                            style: TextStyle(
+                                fontSize: 15, color: Color(0XFF327A70)),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
                     ),
+                    onPressed: () {
+                      print(
+                          "바코드 인식 페이지로!!"); // 여기는 바코드 인식 페이지가 어떤 약인지 알려주는 바코드 페이지
+                    },
                   ),
-                ],
-              )),
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      color: Colors.white60,
+                      borderRadius: BorderRadius.all(Radius.circular(4))),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 22, right: 22),
+                  width: width / 4,
+                  height: height / 5,
+                  child: FlatButton(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        SizedBox(
+                          height: 35,
+                          width: 35,
+                          child: Image.asset('assets/icons/case_icon.png'),
+                        ),
+                        SizedBox(height: 15),
+                        Container(
+                          child: Text(
+                            "케이스 인식",
+                            style: TextStyle(
+                                fontSize: 17, color: Color(0XFF327A70)),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
+                    ),
+                    onPressed: () {
+                      print("CASE 인식");
+                    },
+                  ),
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      color: Colors.white60,
+                      borderRadius: BorderRadius.all(Radius.circular(4))),
+                ),
+                Container(
+                  //margin: const EdgeInsets.all(15.0),
+                  width: width / 4,
+                  height: height / 5,
+                  child: FlatButton(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: Image.asset(
+                                'assets/icons/one_drug_icon.png'),
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        Container(
+                          child: Text(
+                            "한 알   인식",
+                            style: TextStyle(
+                                fontSize: 17, color: Color(0XFF327A70)),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
+                    ),
+                    onPressed: () {
+                      print("한 알 인식 페이지로!!");
+                    },
+                  ),
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      color: Colors.white60,
+                      borderRadius: BorderRadius.all(Radius.circular(4))),
+                ),
+              ]),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                //margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                width: width/4*3.8,
+                height: height / 7,
+                child: FlatButton(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 10),
+                      SizedBox(
+                        height: 35,
+                        width: 35,
+                        child: Image.asset('assets/icons/camera_icon.png'),
+                      ),
+                      Container(
+                        child: Text(
+                          "촬영해서 약 추가하기",
+                          style: TextStyle(
+                              fontSize: 14, color: Color(0XFFA4A4A4)),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                  onPressed: () {
+                    print('약을 추가하는 페이지!! 인식이 아님!!');
+                  },
+                ),
+              ),
+            ],
+          ),
         )
       ],
     );
@@ -306,15 +313,15 @@ class CurvePainter extends CustomPainter {
 
     var path = Path();
 
-    path.moveTo(0, size.height * 0.15); //A
-    path.quadraticBezierTo((size.width / 4) * 0.8, 0, size.width / 2, 0); //BC
+    path.moveTo(0, size.height * 0.3); //A
+    path.quadraticBezierTo((size.width / 4) * 0.8, size.height/10, size.width / 2, size.height/10); //BC
 
     path.quadraticBezierTo(
       //DE
         (size.width / 4) * 3.2,
-        0, //size.height / 2,
+        size.height/10, //size.height / 2,
         size.width,
-        size.height * 0.15);
+        size.height * 0.3);
 
     path.lineTo(size.width, size.height); //F
     path.lineTo(0, size.height); //G
