@@ -33,3 +33,17 @@ class Wrapper extends StatelessWidget {
     }
   }
 }
+
+// return StreamBuilder<UserData>(
+// stream: DatabaseService(uid: user.uid).userData,
+// builder: (context, snapshot) {
+// UserData userData = snapshot.data;
+//
+// if (userData.agreeDate == null)
+// return PolicyAgreePage();
+// else if (userData.nickname == null)
+// return GetPrivacyPage();
+// else if (userData.isPregnant == null) return GetHealthPage();
+//
+// return BottomBar();
+// });
