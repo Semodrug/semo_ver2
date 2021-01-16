@@ -1,7 +1,10 @@
+import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/loading.dart';
+import 'package:semo_ver2/services/db.dart';
 import 'edit_review.dart';
 import 'pie_chart.dart';
 import 'package:flutter/material.dart';
@@ -25,94 +28,105 @@ class _GetRatingState extends State<GetRating> {
     TheUser user = Provider.of<TheUser>(context);
     double _tapToRatingResult = 0.0;
     bool _isRated = false;
+    return StreamBuilder<Drug> (
+      stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
+          Drug drug = snapshot.data;
+          return StreamBuilder<List<Review>>(
+              stream: ReviewService().getReviews(widget.drugItemSeq),
+              builder: (context, snapshot) {
+                List<Review> reviews = snapshot.data;
+                int length = 0 ;
+                num sum = 0;
+                num ratingResult = 0;
+                double effectGood = 0;
+                double effectSoso = 0;
+                double effectBad = 0;
+                double sideEffectYes = 0;
+                double sideEffectNo = 0;
 
-    return StreamBuilder<List<Review>>(
-        stream: ReviewService().getReviews(widget.drugItemSeq),
-        builder: (context, snapshot) {
-          List<Review> reviews = snapshot.data;
-          int length = 0 ;
-          num sum = 0;
-          num ratingResult = 0;
-          double effectGood = 0;
-          double effectSoso = 0;
-          double effectBad = 0;
-          double sideEffectYes = 0;
-          double sideEffectNo = 0;
+                if(snapshot.hasData) {
+                  length = reviews.length;
 
-          if(snapshot.hasData) {
-            length = reviews.length;
+                  reviews.forEach((review) {
+                    sum += review.starRating;
 
-            reviews.forEach((review) {
-              sum += review.starRating;
+                    review.effect == "good" ? effectGood++ :
+                    review.effect == "soso" ? effectSoso++ : effectBad++;
 
-              review.effect == "good" ? effectGood++ :
-              review.effect == "soso" ? effectSoso++ : effectBad++;
+                    review.sideEffect == "yes" ? sideEffectYes++ : sideEffectNo++;
+                  });
 
-              review.sideEffect == "yes" ? sideEffectYes++ : sideEffectNo++;
-            });
+                  ratingResult = sum / length;
+//                  drug.totalRating = ratingResult;
+//                  updateTotalRating
+                  DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(ratingResult, length);
 
-            ratingResult = sum / length;
+                  return Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text("총 평점",
+                              style: TextStyle(
+                                  fontSize: 16.5, fontWeight: FontWeight.bold)),
+                          Padding(padding: EdgeInsets.only(top: 14.0)),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Icon(Icons.star, color: Colors.amber[300], size: 35),
+                              //Todo : Rating
+                              Text(ratingResult.toStringAsFixed(1), style: TextStyle(fontSize: 35)),
+                              Text("/5",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.grey[500])),
+      //                        SizedBox(
+      //                            width:30
+      //                        ),
+                              Expanded(child: Container()),
+                              //pie chart
+                              Column(
+                                children: [
+                                  Text("효과"),
+                                  MyPieChart("effect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
+      //            _effectPieChart(effectGood, effectSoso, effectBad),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Text("부작용"),
+                                  MyPieChart("sideEffect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
+      //            _sideEffectPieChart(sideEffectYes, sideEffectNo),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Padding(padding: EdgeInsets.only(top: 20.0)),
+      //                    Text("탭해서 평가하기",
+      //                        style: TextStyle(
+      //                            fontSize: 14.0, color: Colors.grey[700])),
+      //                    StreamBuilder<Review>(
+      //                      stream: ReviewService().getSingleReview("7nXbIzuWESZhHFEcRwyv"),
+      //                      builder: (context, snapshot) {
+      //                        Review review = snapshot.data;
+      //                        print("*******"+review.starRating.toString());
+      //                        return _tapToRate(review.starRating, user);
+      //                      }
+      //                    ),
+                          //TODO Save tap to RATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#######################
 
-            return Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("총 평점",
-                        style: TextStyle(
-                            fontSize: 16.5, fontWeight: FontWeight.bold)),
-                    Padding(padding: EdgeInsets.only(top: 14.0)),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Icon(Icons.star, color: Colors.amber[300], size: 35),
-                        //Todo : Rating
-                        Text(ratingResult.toStringAsFixed(1), style: TextStyle(fontSize: 35)),
-                        Text("/5",
-                            style: TextStyle(
-                                fontSize: 20, color: Colors.grey[500])),
-//                        SizedBox(
-//                            width:30
-//                        ),
-                        Expanded(child: Container()),
-                        //pie chart
-                        Column(
-                          children: [
-                            Text("효과"),
-                            MyPieChart("effect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
-//            _effectPieChart(effectGood, effectSoso, effectBad),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text("부작용"),
-                            MyPieChart("sideEffect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
-//            _sideEffectPieChart(sideEffectYes, sideEffectNo),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 20.0)),
-//                    Text("탭해서 평가하기",
-//                        style: TextStyle(
-//                            fontSize: 14.0, color: Colors.grey[700])),
-//                    StreamBuilder<Review>(
-//                      stream: ReviewService().getSingleReview("7nXbIzuWESZhHFEcRwyv"),
-//                      builder: (context, snapshot) {
-//                        Review review = snapshot.data;
-//                        print("*******"+review.starRating.toString());
-//                        return _tapToRate(review.starRating, user);
-//                      }
-//                    ),
-                    //TODO Save tap to RATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#######################
-
-                  ],
-                ));
-          }
-          else {
-            return Loading();
-          }
+                        ],
+                      ));
+                }
+                else {
+                  return Loading();
+                }
+              }
+          );
         }
+        else return Loading();
+      }
     );
 
 

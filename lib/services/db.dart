@@ -8,7 +8,7 @@ class DatabaseService {
   final String categoryName;
 
   //다은 카테고리 추가
-  DatabaseService({this.uid, this.itemSeq, this.categoryName});
+  DatabaseService({this.uid, this.itemSeq, this.categoryName, Itemseq});
 
   /* Drug List */
   // collection reference
@@ -303,18 +303,20 @@ class DatabaseService {
     return ds.data()["totalRating"];
   }
 
-  Future<void> updateTotalRating(num rating) async {
-    DocumentSnapshot drugSnapshot = await drugCollection.doc(itemSeq).get();
-    num formerTotalRating = drugSnapshot.data()["totalRating"];
-    num formerNumOfReview = drugSnapshot.data()["numOfReview"];
-
-//    DocumentSnapshot reviewSnapshot = FirebaseFirestore.instance.collection('Reviews').doc
+  Future<void> updateTotalRating(num rating, num length) async {
+//    DocumentSnapshot drugSnapshot = await drugCollection.doc(itemSeq).get();
+//    num formerTotalRating = drugSnapshot.data()["totalRating"];
+//    num formerNumOfReview = drugSnapshot.data()["numOfReview"];
 
     return await drugCollection.doc(itemSeq).update({
-      'totalRating': (formerTotalRating * formerNumOfReview + rating) /
-              (formerNumOfReview + 1) ??
-          0,
-      'numOfReview': FieldValue.increment(1),
+//      'totalRating': (formerTotalRating * formerNumOfReview + rating) /
+//              (formerNumOfReview + 1) ??
+//          0,
+//      'numOfReview': FieldValue.increment(1),
+
+      'totalRating': rating,
+      'numOfReview': length,
+
     });
   }
 
@@ -332,15 +334,5 @@ class DatabaseService {
         await userCollection.where('nickname', isEqualTo: newNickname).get();
     return result.docs.isEmpty;
   }
-
-  //final CollectionReference drugCollection = FirebaseFirestore.instance.collection('Drugs');
-
-//  Future<void> increaseFavorite(String docId, String currentUserUid) async {
-//  final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
-//    return await reviewCollection.doc(docId).update({
-//      'favoriteSelected': FieldValue.arrayUnion([currentUserUid]),
-//      'noFavorite': FieldValue.increment(1),
-//    });
-//  }
 
 }

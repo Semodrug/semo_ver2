@@ -156,11 +156,22 @@ class _ReviewPageState extends State<ReviewPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     //TODO EDIT num of reviews
-                                    Text("#",
-                                        style: TextStyle(
-                                          fontSize: 16.5,
-                                          fontWeight: FontWeight.bold,
-                                        )),
+                                    
+                                    StreamBuilder<Drug>(
+                                      stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+                                      builder: (context, snapshot) {
+                                        if(snapshot.hasData) {
+                                          Drug drug = snapshot.data;
+                                          return Text(drug.numOfReview.toStringAsFixed(0)+"개",
+                                              style: TextStyle(
+                                                fontSize: 16.5,
+                                                fontWeight: FontWeight.bold,
+                                              ));
+                                        }
+                                        else return Loading();
+                                      }
+                                    ),
+                                    
                                     InkWell(
                                         child: Text('전체리뷰 보기',
                                             style: TextStyle(
