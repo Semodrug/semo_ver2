@@ -92,19 +92,18 @@ class _GetRatingState extends State<GetRating> {
                         ),
                       ],
                     ),
-                    Padding(padding: EdgeInsets.only(top: 14.0)),
-                    Text("탭해서 평가하기",
-                        style: TextStyle(
-                            fontSize: 14.0, color: Colors.grey[700])),
-                    Padding(padding: EdgeInsets.only(top: 7.0)),
-                    StreamBuilder<Review>(
-                      stream: ReviewService().getSingleReview("7nXbIzuWESZhHFEcRwyv"),
-                      builder: (context, snapshot) {
-                        Review review = snapshot.data;
-                        print("*******"+review.starRating.toString());
-                        return _tapToRate(review.starRating, user);
-                      }
-                    ),
+                    Padding(padding: EdgeInsets.only(top: 20.0)),
+//                    Text("탭해서 평가하기",
+//                        style: TextStyle(
+//                            fontSize: 14.0, color: Colors.grey[700])),
+//                    StreamBuilder<Review>(
+//                      stream: ReviewService().getSingleReview("7nXbIzuWESZhHFEcRwyv"),
+//                      builder: (context, snapshot) {
+//                        Review review = snapshot.data;
+//                        print("*******"+review.starRating.toString());
+//                        return _tapToRate(review.starRating, user);
+//                      }
+//                    ),
                     //TODO Save tap to RATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#######################
 
                   ],
@@ -120,68 +119,68 @@ class _GetRatingState extends State<GetRating> {
 
   }
 
-  Widget _tapToRate(tapToRatingResult, user) {
-    print("HERE!!!!!!!!!!!!"+tapToRatingResult.toString());
-//    return RatingBar(
-//      onRatingChanged: (rating) => setState(() => rating =3),
-//      filledIcon: Icons.star,
-//      emptyIcon: Icons.star_border,
-//      halfFilledIcon: Icons.star_half,
-//      isHalfAllowed: false,
-//      filledColor: Colors.green,
-//      emptyColor: Colors.redAccent,
+//  Widget _tapToRate(tapToRatingResult, user) {
+//    print("HERE!!!!!!!!!!!!"+tapToRatingResult.toString());
+////    return RatingBar(
+////      onRatingChanged: (rating) => setState(() => rating =3),
+////      filledIcon: Icons.star,
+////      emptyIcon: Icons.star_border,
+////      halfFilledIcon: Icons.star_half,
+////      isHalfAllowed: false,
+////      filledColor: Colors.green,
+////      emptyColor: Colors.redAccent,
+////      size: 30,
+////    );
+//    double rating = 1.0;
+//    return SmoothStarRating(
+////      rating: 5,
+//      rating: tapToRatingResult,
+//      isReadOnly: false,
 //      size: 30,
-//    );
-    double rating = 1.0;
-    return SmoothStarRating(
-//      rating: 5,
-      rating: tapToRatingResult,
-      isReadOnly: false,
-      size: 30,
-      filledIconData: Icons.star,
-      allowHalfRating: false,
-      color: Colors.amberAccent,
-      borderColor: Colors.amberAccent,
-//      defaultIconData: Icons.star,
-      starCount: 5,
-      spacing: 2.0,
-      onRated: (value) {
-        print("rating value -> $value");
-        rating = value;
-        // print("rating value dd -> ${value.truncate()}");
-      },
-    );
-
-//    return RatingBar.builder(
-//
-//      initialRating: 0,
-//      minRating: 1,
-//      direction: Axis.horizontal,
+//      filledIconData: Icons.star,
 //      allowHalfRating: false,
-//      itemCount: 5,
-//      itemSize: 30,
-//      glow: false,
-//      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-//      unratedColor: Colors.grey[300],
-//      itemBuilder: (context, _) => Icon(
-//        Icons.star,
-//        color: Colors.amberAccent,
-//      ),
-//      onRatingUpdate: (rating) async {
-//        rating =3;
-//
-//        if(ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(widget.drugItemSeq, user.toString()) == true){
-//          _dialogIfAlreadyExist();
-//          //TODO:############################ Update rating###############################
-//        }
-//
-//        else
-//          _showMyDialog(rating);
-//        await ReviewService(documentId: widget.drugItemSeq).tapToRate(rating, user);
+//      color: Colors.amberAccent,
+//      borderColor: Colors.amberAccent,
+////      defaultIconData: Icons.star,
+//      starCount: 5,
+//      spacing: 2.0,
+//      onRated: (value) {
+//        print("rating value -> $value");
+//        rating = value;
+//        // print("rating value dd -> ${value.truncate()}");
 //      },
-//
 //    );
-  }
+//
+////    return RatingBar.builder(
+////
+////      initialRating: 0,
+////      minRating: 1,
+////      direction: Axis.horizontal,
+////      allowHalfRating: false,
+////      itemCount: 5,
+////      itemSize: 30,
+////      glow: false,
+////      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+////      unratedColor: Colors.grey[300],
+////      itemBuilder: (context, _) => Icon(
+////        Icons.star,
+////        color: Colors.amberAccent,
+////      ),
+////      onRatingUpdate: (rating) async {
+////        rating =3;
+////
+////        if(ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(widget.drugItemSeq, user.toString()) == true){
+////          _dialogIfAlreadyExist();
+////          //TODO:############################ Update rating###############################
+////        }
+////
+////        else
+////          _showMyDialog(rating);
+////        await ReviewService(documentId: widget.drugItemSeq).tapToRate(rating, user);
+////      },
+////
+////    );
+//  }
 
 
   Future<void> _showMyDialog(rating) async {
