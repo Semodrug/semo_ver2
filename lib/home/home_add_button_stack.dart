@@ -44,8 +44,8 @@ class _AddButtonState extends State<AddButton> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(0, 11, 0, 0),
+                    Container(//이부분은 핸드폰 마다 건드릴 수 있는 부분!!
+                      padding: EdgeInsets.fromLTRB(0, (height / 11), 0, 0),
                       height: height/18,
                       child: FlatButton(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
@@ -176,7 +176,7 @@ class MenuWidget extends StatelessWidget {
                         SizedBox(height: 15),
                         Container(
                           child: Text(
-                            "바코드 인식",
+                            "바코드\n인식",
                             style: TextStyle(
                                 fontSize: 15, color: Color(0XFF327A70)),
                             textAlign: TextAlign.center,
@@ -210,7 +210,7 @@ class MenuWidget extends StatelessWidget {
                         SizedBox(height: 15),
                         Container(
                           child: Text(
-                            "케이스 인식",
+                            "케이스\n인식",
                             style: TextStyle(
                                 fontSize: 17, color: Color(0XFF327A70)),
                             textAlign: TextAlign.center,
@@ -247,7 +247,7 @@ class MenuWidget extends StatelessWidget {
                         SizedBox(height: 15),
                         Container(
                           child: Text(
-                            "한 알   인식",
+                            "한 알\n인식",
                             style: TextStyle(
                                 fontSize: 17, color: Color(0XFF327A70)),
                             textAlign: TextAlign.center,
@@ -314,12 +314,12 @@ class CurvePainter extends CustomPainter {
     var path = Path();
 
     path.moveTo(0, size.height * 0.3); //A
-    path.quadraticBezierTo((size.width / 4) * 0.8, size.height/10, size.width / 2, size.height/10); //BC
+    path.quadraticBezierTo((size.width / 4) * 0.8, size.height/6, size.width / 2, size.height/6); //BC
 
     path.quadraticBezierTo(
       //DE
         (size.width / 4) * 3.2,
-        size.height/10, //size.height / 2,
+        size.height/6, //size.height / 2,
         size.width,
         size.height * 0.3);
 

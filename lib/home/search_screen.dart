@@ -38,23 +38,24 @@ class _SearchScreenState extends State<SearchScreen> {
           .limit(10)
           .snapshots(),
       builder: (context, AsyncSnapshot snapshot) {
-       // if (!snapshot.hasData) return LinearProgressIndicator();
+        // if (!snapshot.hasData) return LinearProgressIndicator();
         if (searchVal == '') {
           return StreamBuilder<QuerySnapshot>(
             stream: userSearchList.snapshots(),
-            builder: (context, snapshot){
-              if (!snapshot.hasData || snapshot.data.docs.length == 0) return Container(
-                padding: EdgeInsets.only(top: 30),
-                child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Text(
-                      '찾고자 하는 약을 검색해주세요',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[400]),
-                    )),
-              );
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || snapshot.data.docs.length == 0)
+                return Container(
+                  padding: EdgeInsets.only(top: 30),
+                  child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        '찾고자 하는 약을 검색해주세요',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[400]),
+                      )),
+                );
               return Column(
                 children: [
                   Row(
@@ -63,18 +64,22 @@ class _SearchScreenState extends State<SearchScreen> {
                       //SizedBox(width: 20,),
                       Container(
                           height: 30,
-                          child: Center(child: Text('    최근검색어', style: TextStyle(fontWeight: FontWeight.bold),))
-                      ),
+                          child: Center(
+                              child: Text(
+                            '    최근검색어',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ))),
                       FlatButton(
                         child: Text('전체삭제'),
-                        onPressed: (){
+                        onPressed: () {
                           print('삭제되었음');
                           FirebaseFirestore.instance
                               .collection('users')
                               .doc(_auth.currentUser.uid)
                               .collection('searchList')
-                              .get().then((snapshot) {
-                            for (DocumentSnapshot ds in snapshot.docs){
+                              .get()
+                              .then((snapshot) {
+                            for (DocumentSnapshot ds in snapshot.docs) {
                               ds.reference.delete();
                             }
                           });
@@ -122,8 +127,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   color: Colors.grey[400]),
             )),
       );
-    }
-    else if (searchResults.length != 0) {
+    } else if (searchResults.length != 0) {
       return ListView(
         padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
         children: searchResults
@@ -171,19 +175,20 @@ class _SearchScreenState extends State<SearchScreen> {
         if (searchVal == '') {
           return StreamBuilder<QuerySnapshot>(
             stream: userSearchList.snapshots(),
-            builder: (context, snapshot){
-              if (!snapshot.hasData || snapshot.data.docs.length == 0) return Container(
-                padding: EdgeInsets.only(top: 30),
-                child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Text(
-                      '찾고자 하는 약을 검색해주세요',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[400]),
-                    )),
-              );
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || snapshot.data.docs.length == 0)
+                return Container(
+                  padding: EdgeInsets.only(top: 30),
+                  child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        '찾고자 하는 약을 검색해주세요',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[400]),
+                      )),
+                );
               return Column(
                 children: [
                   Row(
@@ -192,18 +197,22 @@ class _SearchScreenState extends State<SearchScreen> {
                       //SizedBox(width: 20,),
                       Container(
                           height: 30,
-                          child: Center(child: Text('    최근검색어', style: TextStyle(fontWeight: FontWeight.bold),))
-                      ),
+                          child: Center(
+                              child: Text(
+                            '    최근검색어',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ))),
                       FlatButton(
                         child: Text('전체삭제'),
-                        onPressed: (){
+                        onPressed: () {
                           print('삭제되었음');
                           FirebaseFirestore.instance
                               .collection('users')
                               .doc(_auth.currentUser.uid)
                               .collection('searchList')
-                              .get().then((snapshot) {
-                            for (DocumentSnapshot ds in snapshot.documents){
+                              .get()
+                              .then((snapshot) {
+                            for (DocumentSnapshot ds in snapshot.documents) {
                               ds.reference.delete();
                             }
                           });
@@ -292,8 +301,8 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    double searchWidth =  width / 33 * 24;
-    double searchHeight =  height / 17;
+    double searchWidth = width / 33 * 24;
+    double searchHeight = height / 17;
 
     String searchList;
 
@@ -323,10 +332,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: <Color>[
-                    Color(0xFFE9FFFB),
-                    Color(0xFFE9FFFB),
-                    Color(0xFFFFFFFF),
-                  ])),
+                Color(0xFFE9FFFB),
+                Color(0xFFE9FFFB),
+                Color(0xFFFFFFFF),
+              ])),
         ),
       ),
       backgroundColor: Colors.white,
@@ -338,7 +347,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Row(
                   children: [
                     IconButton(
-                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                         onPressed: () {
                           Navigator.pushNamed(context, '/bottom_bar');
                         },
@@ -360,77 +369,80 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Row(
                         children: [
                           Expanded(
-                            //flex: 5,
+                              //flex: 5,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  focusNode: focusNode,
-                                  style: TextStyle(fontSize: 15),
-                                  autofocus: true,
-                                  controller: _filter,
-                                  decoration: InputDecoration(
-                                    fillColor: Colors.white12,
-                                    filled: true,
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.all(0),
-                                      child: Icon(
-                                        Icons.search,
-                                        color: Colors.grey,
-                                        size: 20,
-                                      ),
-                                    ),
-                                    suffixIcon: IconButton(
-                                      padding: EdgeInsets.fromLTRB(0,0,0,0),
-                                      icon: Icon(Icons.cancel, size: 20, color: Colors.teal,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _filter.clear();
-                                          _searchText = "";
-                                        });
-                                      },
-                                    ),
-                                    hintText: '어떤 약을 찾고 계세요?',
-                                    contentPadding: EdgeInsets.fromLTRB(0,0,0,0),
-                                    labelStyle: TextStyle(color: Colors.grey),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide:
-                                        BorderSide(color: Colors.transparent)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                        borderSide:
-                                        BorderSide(color: Colors.transparent)),
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              focusNode: focusNode,
+                              style: TextStyle(fontSize: 15),
+                              autofocus: true,
+                              controller: _filter,
+                              decoration: InputDecoration(
+                                fillColor: Colors.white12,
+                                filled: true,
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(0),
+                                  child: Icon(
+                                    Icons.search,
+                                    color: Colors.grey,
+                                    size: 20,
                                   ),
                                 ),
-                              )),
+                                suffixIcon: IconButton(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  icon: Icon(
+                                    Icons.cancel,
+                                    size: 20,
+                                    color: Colors.teal,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _filter.clear();
+                                      _searchText = "";
+                                    });
+                                  },
+                                ),
+                                hintText: '어떤 약을 찾고 계세요?',
+                                contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                labelStyle: TextStyle(color: Colors.grey),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                              ),
+                            ),
+                          )),
                         ],
                       ),
                     ),
                     focusNode.hasFocus
                         ? Expanded(
-                      child: FlatButton(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: Text(
-                          '확인', //TODO: 확인 눌렀을 때, 결과 값 보여주기
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            //_searchText = "";
-                            //TODO: Update the recentSearchList[]
-                            addRecentSearchList();
-                            //print(searchList);
-                            //_filter.clear();
-                            focusNode.unfocus();
-                          });
-                        },
-                      ),
-                    )
+                            child: FlatButton(
+                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: Text(
+                                '확인', //TODO: 확인 눌렀을 때, 결과 값 보여주기
+                                style: TextStyle(fontSize: 13),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  //_searchText = "";
+                                  //TODO: Update the recentSearchList[]
+                                  addRecentSearchList();
+                                  //print(searchList);
+                                  //_filter.clear();
+                                  focusNode.unfocus();
+                                });
+                              },
+                            ),
+                          )
                         : Expanded(
-                      flex: 0,
-                      child: Container(),
-                    )
+                            flex: 0,
+                            child: Container(),
+                          )
                   ],
                 ),
                 SizedBox(
@@ -454,13 +466,13 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             TabBar(
               labelStyle:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               unselectedLabelStyle:
-              TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
+                  TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
               tabs: [
                 Tab(
                     child:
-                    Text('전체 검색', style: TextStyle(color: Colors.black))),
+                        Text('전체 검색', style: TextStyle(color: Colors.black))),
                 Tab(
                     child: Text('나의 상비약 검색',
                         style: TextStyle(color: Colors.black))),
@@ -484,56 +496,57 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildRecentSearchList(BuildContext context, DocumentSnapshot data) {
     final searchSnapshot = RecentSearch.fromSnapshot(data);
+    final docID = data.id;
 
-
-    return
-      Column(
-        children: [
-          GestureDetector(
-            onTap: () => {
-              print('search ==> ${searchSnapshot.recent}'),
-              _searchText = searchSnapshot.recent,
-              _filter.text = _searchText
-            },
-            child: Container(
-              width: double.infinity,
-              height: 50.0,
-              child: Material(
-                  color: Colors.white,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Container(
-                          padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(children: [
-                                Text(
-                                  searchSnapshot.recent,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  ),
-                                )
-                              ]),
-                              SizedBox(
-                                height: 3,
-                              ),
-                            ],
-                          )),
-                    ],
-                  )),
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () => {
+            print('search ==> ${searchSnapshot.recent}'),
+            _searchText = searchSnapshot.recent,
+            _filter.text = _searchText
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(width: 0.4, color: Colors.grey[400]))),
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            width: double.infinity,
+            height: 45.0,
+            child: Row(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    searchSnapshot.recent,
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                Spacer(),
+                SizedBox(
+                  width: 25,
+                  child: FlatButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        //print(docID);
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(_auth.currentUser.uid)
+                            .collection('searchList')
+                            .doc(docID)
+                            .delete();
+                      },
+                      child: Text('X')),
+                )
+              ],
             ),
           ),
-          Divider(thickness: 1,)
-        ],
-      );
-
+        ),
+      ],
+    );
   }
-
 }
 
 class ListDrugOfAll extends StatefulWidget {
@@ -542,11 +555,11 @@ class ListDrugOfAll extends StatefulWidget {
   final String item_seq;
 
   const ListDrugOfAll(
-      this.item_name,
-      this.category,
-      this.item_seq, {
-        Key key,
-      }) : super(key: key);
+    this.item_name,
+    this.category,
+    this.item_seq, {
+    Key key,
+  }) : super(key: key);
 
   @override
   _ListDrugState createState() => _ListDrugState();
@@ -558,11 +571,11 @@ class ListDrugOfUser extends StatefulWidget {
   final String expiration;
 
   const ListDrugOfUser(
-      this.item_name,
-      this.item_seq,
-      this.expiration, {
-        Key key,
-      }) : super(key: key);
+    this.item_name,
+    this.item_seq,
+    this.expiration, {
+    Key key,
+  }) : super(key: key);
 
   @override
   _ListDrugUserState createState() => _ListDrugUserState();
@@ -576,42 +589,29 @@ class _ListDrugState extends State<ListDrugOfAll> {
         Navigator.push(
             context,
             MaterialPageRoute(
-//                builder: (context) =>
-//                    PhilInfoPage(drugItemSeq: widget.item_seq)
               builder: (context) => ReviewPage(widget.item_seq),
             )),
       },
       child: Container(
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(width: 0.4, color: Colors.grey[400]))),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         width: double.infinity,
-        height: 50.0,
-        child: Material(
-            color: Colors.white,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 15,
+        height: 45.0,
+        child: Row(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                widget.item_name,
+                style: TextStyle(
+                  fontSize: 15,
                 ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          Text(
-                            widget.item_name,
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          )
-                        ]),
-                        SizedBox(
-                          height: 3,
-                        ),
-                      ],
-                    )),
-              ],
-            )),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -625,49 +625,38 @@ class _ListDrugUserState extends State<ListDrugOfUser> {
         Navigator.push(
             context,
             MaterialPageRoute(
-//                builder: (context) =>
-//                    PhilInfoPage(drugItemSeq: widget.item_seq)
               builder: (context) => ReviewPage(widget.item_seq),
             )),
       },
       child: Container(
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(width: 0.4, color: Colors.grey[400]))),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         width: double.infinity,
-        height: 50.0,
-        child: Material(
-            color: Colors.white,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 15,
+        height: 45.0,
+        child: Row(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                widget.item_name,
+                style: TextStyle(
+                  fontSize: 15,
                 ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(5, 20, 5, 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          Text(
-                            widget.item_name,
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            widget.expiration,
-                            style: TextStyle(fontSize: 11, color: Colors.grey),
-                          ),
-                        ]),
-                        SizedBox(
-                          height: 3,
-                        ),
-                      ],
-                    )),
-              ],
-            )),
+              ),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            SizedBox(
+              child: Text(
+                widget.expiration,
+                style: TextStyle(color: Colors.grey),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -682,7 +671,7 @@ class DrugFromUser {
 
   DrugFromUser.fromMap(Map<String, dynamic> map, {this.reference})
       :
-  //assert(map['expiration'] != null),
+        //assert(map['expiration'] != null),
         item_name = map['ITEM_NAME'],
         item_seq = map['ITEM_SEQ'],
         expiration = map['expiration'];
@@ -713,7 +702,7 @@ class Drugs {
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
 }
 
-class RecentSearch{
+class RecentSearch {
   final String recent;
 
   final DocumentReference reference;
@@ -723,5 +712,4 @@ class RecentSearch{
 
   RecentSearch.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
-
 }

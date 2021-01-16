@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/drug_info/set_expiration.dart';
 import 'package:semo_ver2/review/review_page.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/models/drug.dart';
@@ -98,60 +99,53 @@ class _HomePageState extends State<HomePage> {
       children: [
         SearchBar(),
         Container(
+          height: 45,
           margin: EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 16),
-          child: Row(
-            children: <Widget>[
-              Row(
-                children: [
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15.0),
+            child: Container(
+              child: Row(
+                children: <Widget>[
                   Text('나의 상비약'),
-                  SizedBox(width: 10),
-                  Text(count.toString())
+                  SizedBox(width: 8),
+                  Container(
+                      width: 20,
+                      height: 17,
+                      decoration: BoxDecoration(
+                          border:
+                              Border.all(width: 0.6, color: Colors.grey[400])
+                          // //bottom:BorderSide(width: 0.6, color: Colors.grey[500]))
+                          ),
+                      child: Center(
+                        child: Text(count.toString(),
+                            style: TextStyle(
+                              color: Colors.tealAccent[700],
+                            )),
+                      )),
+                  // theme 추가
+                  Spacer(),
+                  FlatButton(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text('+ 추가하기',
+                        style: TextStyle(color: Colors.tealAccent[700])),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => AddButton()));
+                    },
+                  )
                 ],
               ),
-              // theme 추가
-
-//              SizedBox(
-//                width: width/2.3
-//              ),
-              Spacer(),
-              TextButton(
-                child: Text(
-                  '편집',
-                ),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeEditPage()));
-                },
-              )
-            ],
+            ),
           ),
         ),
         Divider(
           thickness: 1,
         ),
         Expanded(
-          child:
-
-          ListView(
+          child: ListView(
             //padding: EdgeInsets.symmetric(horizontal : 20.0),
             children:
                 snapshot.map((data) => _buildListItem(context, data)).toList(),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-          width: double.infinity, //width/33 * 28.7,
-          height: height / 10,
-          //buttonColor: Colors.redAccent,
-          child: FlatButton.icon(
-            color: Color(0XFFEEEEEE),
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddButton()));
-            },
-            //padding: EdgeInsets.fromLTRB(20, 5, 5, 15),
-            label: Text('상비약 추가하기'),
           ),
         ),
       ],
@@ -159,6 +153,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildListItem(BuildContext context, SavedDrug data) {
+    TheUser user = Provider.of<TheUser>(context);
+
+
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     num++;
@@ -167,17 +164,25 @@ class _HomePageState extends State<HomePage> {
     String _checkLongName(SavedDrug data) {
       String newName = data.itemName;
       List splitName = [];
-      if (data.itemName.contains('(') || data.itemName.contains('(군납') ) {
-        newName = data.itemName.replaceAll('(', '\n(');
-//        if (newName.contains('')) {
-//          splitName = newName.split('(');
-//          print(splitName);
-//          newName = splitName[0];
-//        }
+
+      if (data.itemName.contains('(수출') || data.itemName.contains('(군납')) {
+        newName = data.itemName.replaceAll('(', '(');
+        if (newName.contains('')) {
+          splitName = newName.split('(');
+          print(splitName);
+          newName = splitName[0];
+        }
+      }
+
+      print('$newName 의 길이는? ');
+      print(newName.length);
+
+      if (newName.length > 15) {
+        newName = newName.substring(0, 12);
+        newName = newName + '...';
       }
       return newName;
     }
-
 
     /*혹시라도 카테고리가 없는 애들을 위해서 임시로 만들어 놓음*/
     String _checkCategory(SavedDrug data) {
@@ -201,52 +206,63 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         decoration: BoxDecoration(
             border: Border(
-                bottom:
-                BorderSide(width: 0.6, color: Colors.grey[300]))),
+                bottom: BorderSide(width: 0.6, color: Colors.grey[300]))),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.only(left: 16.0),
               width: double.infinity,
-              height: height/6,
+              height: 90,
               child: Material(
                 color: Colors.white,
                 child: Row(
                   children: [
                     SizedBox(
-                      width: width / 20,
+                      width: 20,
                       child: Center(
-                        child: Text(num.toString()),
+                        child: Text(
+                          num.toString(),
+                          style: TextStyle(fontSize: 12),
+                        ),
                       ),
                     ),
                     Container(
                         //이미지는 고정값
                         padding: EdgeInsets.symmetric(horizontal: 5),
-                        child: SizedBox(
-                            height: 70,
-                            width: 88,
+                        child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.8, color: Colors.grey[300])),
+                            width: 75,
                             child: AspectRatio(
                                 aspectRatio: 2.3 / 2,
                                 child: DrugImage(drugItemSeq: data.itemSeq)))),
                     Container(
-                        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              width: width/3 * 1.6,
                               child: Text(
                                 _checkLongName(data),
                                 maxLines: 2,
                                 style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
+                                    fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            Expanded(
-                                child: Row(
-                              children: [_categoryButton((_checkCategory(data)))],
-                            )),
+                            Container(
+                              height: 20,
+                              child: OutlineButton(
+                                padding: EdgeInsets.all(2),
+                                child: Text(
+                                  _checkCategory(data),
+                                  style: TextStyle(
+                                      fontSize: 11, color: Colors.grey),
+                                ),
+                              ),
+                            ),
                             SizedBox(
                               height: 3,
                             ),
@@ -257,13 +273,52 @@ class _HomePageState extends State<HomePage> {
                             )
                           ],
                         )),
+                    Spacer(),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: PopupMenuButton(
+                        onSelected: (result) {
+                          if (result == 0) {
+                            print('수정하기');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    fullscreenDialog: true,
+                                    builder: (context) => Expiration(
+                                      drugItemSeq: data.itemSeq,
+                                    )));
+                          }
+                          if (result == 1) {
+                            print('삭제하기');
+                            FirebaseFirestore.instance //user가 가지고 있는 약 data
+                                .collection('users')
+                                .doc(user.uid)
+                                .collection('savedList')
+                                .doc(data.itemSeq)
+                                .delete();
+                          }
+                        },
+                        icon: Icon(Icons.more_vert, size: 20,),
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                          const PopupMenuItem(
+                            child: ListTile(
+                              title: Text('수정하기'),
+                            ),
+                            value: 0,
+                          ),
+                          const PopupMenuItem(
+                            child: ListTile(
+                              title: Text('삭제하기'),
+                            ),
+                            value: 1,
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
-//            Divider(
-//              thickness: 1,
-//            )
           ],
         ),
       ),
@@ -280,7 +335,7 @@ class _HomePageState extends State<HomePage> {
         height: 22,
         child: RaisedButton(
           child: Text(
-            '#$str',
+            '$str',
             style: TextStyle(color: Colors.grey[600], fontSize: 12.0),
           ),
           onPressed: () => print('$str!'),
@@ -296,50 +351,39 @@ class SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    double searchWidth =  width / 33 * 30.1;
-    double searchHeight =  height / 20;
 
     //이 search bar에서 바로 검색을 하게 할 것인가?
-    return Row(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-          child: SizedBox(
-              width: searchWidth,
-              height: searchHeight,
-              child: FlatButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Center(child: Icon(Icons.search, size: 20)),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text("어떤 약을 찾고 계세요? "),
-                  ],
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: SizedBox(
+          //width: searchWidth,
+          height: 35,
+          child: FlatButton(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Center(child: Icon(Icons.search, size: 20)),
+                SizedBox(
+                  width: 10,
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => SearchScreen(),
-                    ),
-                  );
-                },
-                textColor: Colors.grey[500],
-                color: Colors.grey[200],
-                shape: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        style: BorderStyle.solid,
-                        width: 1.0,
-                        color: Colors.white),
-                    borderRadius: new BorderRadius.circular(8.0)),
-              )),
-        ),
-//        SizedBox(
-//          width: 10,
-//        ),
-      ],
+                Text("어떤 약을 찾고 계세요? "),
+              ],
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => SearchScreen(),
+                ),
+              );
+            },
+            textColor: Colors.grey[500],
+            color: Colors.grey[200],
+            shape: OutlineInputBorder(
+                borderSide: BorderSide(
+                    style: BorderStyle.solid, width: 1.0, color: Colors.white),
+                borderRadius: new BorderRadius.circular(8.0)),
+          )),
     );
   }
 }
