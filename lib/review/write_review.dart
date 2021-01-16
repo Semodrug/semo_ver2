@@ -636,7 +636,7 @@ class _WriteReviewState extends State<WriteReview> {
         sideEffectText = myControllerSideEffect.text;
         overallText = myControllerOverall.text;
         _registerReview();
-        await DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(starRating);
+//        await DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(starRating);
 //          await findUserWroteReview(itemSeq: widget.drugItemSeq).updateTotalRating(starRating);
 //          print("HERE"+ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(user.toString()).toString());
         Navigator.pop(context);
