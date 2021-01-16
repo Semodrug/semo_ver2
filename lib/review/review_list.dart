@@ -396,4 +396,40 @@ class _ReviewListState extends State<ReviewList> {
 //    );
 //  }
 
+/*  final _reviewSnapshot = <DocumentSnpashot>[];
+
+
+  Future fecthNextRevies() async {
+    String _errorMessage = '';
+
+    try {
+      final snap = await ReviewService.newgetReviews();
+      _
+    }
+  }*/
+
+
+//  Future fetchNextUsers() async {
+//    if (_isFetchingUsers) return;
+//
+//    _errorMessage = '';
+//    _isFetchingUsers = true;
+//
+//    try {
+//      final snap = await FirebaseApi.getUsers(
+//        documentLimit,
+//        startAfter: _usersSnapshot.isNotEmpty ? _usersSnapshot.last : null,
+//      );
+//      _usersSnapshot.addAll(snap.docs);
+//
+//      if (snap.docs.length < documentLimit) _hasNext = false;
+//      notifyListeners();
+//    } catch (error) {
+//      _errorMessage = error.toString();
+//      notifyListeners();
+//    }
+//
+//    _isFetchingUsers = false;
+//  }
+
 }

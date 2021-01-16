@@ -162,12 +162,26 @@ class ReviewService {
     });
   }
 
-
-
   Future<void> deleteReviewData() async {
     return await reviewCollection.doc(documentId).delete();
   }
 
+  static Future<QuerySnapshot> newgetReviews(int limit) async {
+    final refReviews = FirebaseFirestore.instance.collection('Reviews').orderBy('registrationDate').limit(limit);
+//        .orderBy("registrationDate", "asc")
+
+    return refReviews.get();
+  }
+
+  static Future<QuerySnapshot> getReviewData(int limit, {DocumentSnapshot startAfter,}) async {
+    final refReviews = FirebaseFirestore.instance.collection('Reviews').orderBy('registrationDate').limit(limit);
+
+    if (startAfter == null) {
+      return refReviews.get();
+    } else {
+      return refReviews.startAfterDocument(startAfter).get();
+    }
+  }
 
 }
 
