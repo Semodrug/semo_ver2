@@ -11,6 +11,7 @@ import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'review.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class WriteReview extends StatefulWidget {
   String drugItemSeq;
@@ -85,6 +86,7 @@ class _WriteReviewState extends State<WriteReview> {
 
   @override
   Widget build(BuildContext context) {
+    TheUser user = Provider.of<TheUser>(context);
     return Scaffold(
         appBar: AppBar(
           title: Text('Write Review',
@@ -464,13 +466,13 @@ class _WriteReviewState extends State<WriteReview> {
             ),
 //              SizedBox(height: 20),
 //              Padding(padding: EdgeInsets.only(top: 25)),
-            _textField("effect")
+            _textField("effect", myControllerEffect)
           ],
         )
     );
   }
 
-  Widget _textField(String type) {
+  Widget _textField(String type, txtController) {
     String hintText;
     if (type == "effect")
       hintText =  "효과에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
@@ -485,7 +487,7 @@ class _WriteReviewState extends State<WriteReview> {
 //        width: 400,
 //                height: 100,
         child: TextField(
-            controller: myControllerEffect,
+            controller: txtController,
             keyboardType: TextInputType.multiline,
             maxLines: null,
             decoration: new InputDecoration(
@@ -570,7 +572,7 @@ class _WriteReviewState extends State<WriteReview> {
                 ),
               ],
             ),
-            _textField("sideEffect")
+            _textField("sideEffect", myControllerSideEffect)
           ],
         )
     );
@@ -607,7 +609,7 @@ class _WriteReviewState extends State<WriteReview> {
 //                ),
 //
 //              ),
-            _textField("overall"),
+            _textField("overall", myControllerOverall),
             Padding(padding: EdgeInsets.only(top: 25)),
           ],
         )
@@ -616,6 +618,8 @@ class _WriteReviewState extends State<WriteReview> {
 
 
   Widget _write() {
+    TheUser user = Provider.of<TheUser>(context);
+    String _warning = '';
     return GestureDetector(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20,20,20,40),
@@ -635,11 +639,29 @@ class _WriteReviewState extends State<WriteReview> {
         effectText = myControllerEffect.text;
         sideEffectText = myControllerSideEffect.text;
         overallText = myControllerOverall.text;
-        _registerReview();
-//        await DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(starRating);
+        if(overallText.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
+        if(sideEffectText.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+        if(effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
+
+
+
+        if(effectText.length < 10 || sideEffectText.length < 10 || overallText.length < 10)
+          Fluttertoast.showToast(
+              msg: _warning,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        else {
+          _registerReview();
+          Navigator.pop(context);
+        }
 //          await findUserWroteReview(itemSeq: widget.drugItemSeq).updateTotalRating(starRating);
-//          print("HERE"+ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(user.toString()).toString());
-        Navigator.pop(context);
+//          print("HERE"+ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(widget.drugItemSeq, user.toString()).toString());
+
       },
     );
   }

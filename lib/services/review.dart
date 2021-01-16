@@ -54,6 +54,7 @@ class ReviewService {
     });
   }
 
+
   List<Review> _reviewListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return Review(
@@ -74,7 +75,15 @@ class ReviewService {
     }).toList();
   }
 
+  Query reviewQuery = FirebaseFirestore.instance.collection('Reviews');
+  Stream<List<Review>> reviewsSnapshots;
+
   Stream<List<Review>> get reviews {
+//    reviewQuery = reviewQuery.orderBy('registrationDate', descending: false);
+//
+//    reviewsSnapshots = reviewQuery.snapshots().map(_reviewListFromSnapshot);
+//    return reviewsSnapshots;
+
     return reviewCollection.snapshots()
         .map(_reviewListFromSnapshot);
   }
@@ -87,13 +96,22 @@ class ReviewService {
 
 
   Future<bool> findUserWroteReview(String seqNum, String user) async {
-    if(reviewCollection.where("seqNum", isEqualTo: seqNum).where("uid", isEqualTo:user).snapshots()
-      .map(_reviewListFromSnapshot) != null)
+    final QuerySnapshot result =
+      await reviewCollection.where("seqNum", isEqualTo: seqNum).where("uid", isEqualTo: user).get();
+    return result.docs.isEmpty;
 
-      return true;
-    else
-      return false;
+//    if(reviewCollection.where("seqNum", isEqualTo: seqNum).where("uid", isEqualTo:user).snapshots()
+//      .map(_reviewListFromSnapshot) != null)
+//      return true;
+//    else
+//      return false;
   }
+
+//  Future<bool> isUnique(newNickname) async {
+//    final QuerySnapshot result =
+//    await userCollection.where('nickname', isEqualTo: newNickname).get();
+//    return result.docs.isEmpty;
+//  }
 
 
 //  Stream<List<Review>> getMyReviews(String seqNum) {
@@ -144,12 +162,26 @@ class ReviewService {
     });
   }
 
-
-
   Future<void> deleteReviewData() async {
     return await reviewCollection.doc(documentId).delete();
   }
 
+  static Future<QuerySnapshot> newgetReviews(int limit) async {
+    final refReviews = FirebaseFirestore.instance.collection('Reviews').orderBy('registrationDate').limit(limit);
+//        .orderBy("registrationDate", "asc")
+
+    return refReviews.get();
+  }
+
+  static Future<QuerySnapshot> getReviewData(int limit, {DocumentSnapshot startAfter,}) async {
+    final refReviews = FirebaseFirestore.instance.collection('Reviews').orderBy('registrationDate').limit(limit);
+
+    if (startAfter == null) {
+      return refReviews.get();
+    } else {
+      return refReviews.startAfterDocument(startAfter).get();
+    }
+  }
 
 }
 

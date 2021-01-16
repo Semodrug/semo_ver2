@@ -41,8 +41,8 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    TheUser user = Provider.of<TheUser>(context);
     final width = MediaQuery.of(context).size.width;
+    TheUser user = Provider.of<TheUser>(context);
     return StreamProvider<List<Review>>.value(
         value: ReviewService().getReviews(widget.drugItemSeq),
         child: Scaffold(
@@ -80,14 +80,11 @@ class _ReviewPageState extends State<ReviewPage> {
                 backgroundColor: Colors.teal[200],
                 elevation: 0.0,
                 onPressed: () async {
-                  //TODO##################################################
-                  print("##");
-                  print(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.toString()));
-//                  if(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.toString()) == true)
-//                    _dialogIfAlreadyExist();
-//                  else
+                  if(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.uid) == false)
+                    _dialogIfAlreadyExist();
+                  else
                     Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq)));
+                        MaterialPageRoute(builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq)));
                 }),
 //            backgroundColor: Colors.white,
             body: GestureDetector(
@@ -127,7 +124,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
                   SliverToBoxAdapter(
                     child: Container(
-                      height: 3000,
+                        height: 3000,
                         child:Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
@@ -156,22 +153,22 @@ class _ReviewPageState extends State<ReviewPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     //TODO EDIT num of reviews
-                                    
+
                                     StreamBuilder<Drug>(
-                                      stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
-                                      builder: (context, snapshot) {
-                                        if(snapshot.hasData) {
-                                          Drug drug = snapshot.data;
-                                          return Text(drug.numOfReview.toStringAsFixed(0)+"개",
-                                              style: TextStyle(
-                                                fontSize: 16.5,
-                                                fontWeight: FontWeight.bold,
-                                              ));
+                                        stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+                                        builder: (context, snapshot) {
+                                          if(snapshot.hasData) {
+                                            Drug drug = snapshot.data;
+                                            return Text(drug.numOfReview.toStringAsFixed(0)+"개",
+                                                style: TextStyle(
+                                                  fontSize: 16.5,
+                                                  fontWeight: FontWeight.bold,
+                                                ));
+                                          }
+                                          else return Loading();
                                         }
-                                        else return Loading();
-                                      }
                                     ),
-                                    
+
                                     InkWell(
                                         child: Text('전체리뷰 보기',
                                             style: TextStyle(
@@ -417,7 +414,12 @@ class _ReviewPageState extends State<ReviewPage> {
                                       Icons.announcement,
                                       color: Colors.amber[700],
                                     ),
-                                    onPressed: () => _showWarning(context)),
+                                    onPressed: () {
+                                      _showWarning(context);
+                                      Navigator.of(context).pop();
+                                    })
+//                                    onPressed: () => _showWarning(context) ),
+//                                  Navigator.of(context).pop();
                               ),
                               Positioned(
                                   bottom: 70,
@@ -613,7 +615,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 SizedBox(height: 5),
 //                Center(child: Text('별점이 반영되었습니다.', style: TextStyle(color: Colors.black45, fontSize: 14))),
                 SizedBox(height: 20),
-                Center(child: Text('you already wrote a review', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                Center(child: Text('해당 약에 대한 리뷰를 \n이미 작성하셨습니다.', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
