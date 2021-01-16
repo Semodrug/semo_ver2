@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/report_review.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'edit_review.dart';
@@ -18,8 +19,6 @@ class ReviewList extends StatefulWidget {
 class _ReviewListState extends State<ReviewList> {
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
     //TODO LIMIT!!
     final reviews = Provider.of<List<Review>>(context) ?? [];
     List<Review> searchResults = [];
@@ -76,6 +75,7 @@ class _ReviewListState extends State<ReviewList> {
   }
 
   Widget _starAndIdAndMore(review, context, auth) {
+    TheUser user = Provider.of<TheUser>(context);
     return Row(
       children: <Widget>[
         RatingBar.builder(
@@ -102,7 +102,8 @@ class _ReviewListState extends State<ReviewList> {
 //          constraints: BoxConstraints(),
           icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
           onPressed: () {
-            if(auth.currentUser.uid == review.uid) {
+//            if(auth.currentUser.uid == review.uid) {
+            if(user.uid == review.uid) {
               showModalBottomSheet(
                   context: context,
                   builder: (BuildContext context) {
@@ -319,10 +320,8 @@ class _ReviewListState extends State<ReviewList> {
                     TextButton(
                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
                       onPressed: () async {
-
-                        await ReviewService(documentId: record.documentId).deleteReviewData();
-//                        record.reference.delete();
                         Navigator.of(context).pop();
+                        await ReviewService(documentId: record.documentId).deleteReviewData();
                       },
                     ),
                   ],

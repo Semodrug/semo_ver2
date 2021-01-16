@@ -83,9 +83,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   //TODO##################################################
                   print("##");
                   print(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.toString()));
-//                  if(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.toString()) == true)
-//                    _dialogIfAlreadyExist();
-//                  else
+                  if(await ReviewService().findUserWroteReview(widget.drugItemSeq, user.toString()) == false)
+                    _dialogIfAlreadyExist();
+                  else
                     Navigator.push(context,
                       MaterialPageRoute(builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq)));
                 }),
@@ -417,7 +417,12 @@ class _ReviewPageState extends State<ReviewPage> {
                                       Icons.announcement,
                                       color: Colors.amber[700],
                                     ),
-                                    onPressed: () => _showWarning(context)),
+                                    onPressed: () {
+                                      _showWarning(context);
+                                      Navigator.of(context).pop();
+                                    })
+//                                    onPressed: () => _showWarning(context) ),
+//                                  Navigator.of(context).pop();
                               ),
                               Positioned(
                                   bottom: 70,
