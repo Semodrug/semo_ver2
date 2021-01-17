@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'test_list.dart';
+import 'ranking_list.dart';
 
 class TestRanking extends StatelessWidget {
   final String categoryName;
@@ -12,16 +12,9 @@ class TestRanking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('TEST ranking build');
-    //return StreamProvider<List<Drug>>.value(
     return
-//      StreamProvider<List<Drug>>.value(
-//    value: DatabaseService().drugs,//데이타를 여기서 불러옴
-//    child:
-
         Scaffold(
             appBar: AppBar(
-              // centerTitle: true,
               automaticallyImplyLeading: false,
               leading: IconButton(
                 icon: Icon(

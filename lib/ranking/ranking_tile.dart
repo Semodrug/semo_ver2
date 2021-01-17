@@ -1,9 +1,13 @@
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/image.dart';
+
+import 'package:smooth_star_rating/smooth_star_rating.dart';
+
 
 class DrugTile extends StatelessWidget {
   final Drug drug;
@@ -17,39 +21,26 @@ class DrugTile extends StatelessWidget {
     String _checkLongName(String data) {
       String newName = data;
       List splitName = [];
-      if (data.contains('(')) {
+
+      if (data.contains('(수출') || data.contains('(군납')) {
         newName = data.replaceAll('(', '(');
         if (newName.contains('')) {
           splitName = newName.split('(');
-          // print(splitName);
+          print(splitName);
           newName = splitName[0];
         }
+      }
+
+      print('$newName 의 길이는? ');
+      print(newName.length);
+
+      if (newName.length > 15) {
+        newName = newName.substring(0, 12);
+        newName = newName + '...';
       }
       return newName;
     }
 
-    //리뷰 개수를 받아오기 위한 스트림
-//    return StreamBuilder <List<Review>>(
-//        stream: ReviewService().getReviews(drug.itemSeq),
-//        builder: (context, snapshot) {
-//          List<Review> reviews = snapshot.data;
-//          int length = 0 ;
-//          num sum = 0;
-//          num ratingResult = 0;
-//
-//          if(snapshot.hasData){
-//            length = reviews.length;
-//
-//            reviews.forEach((review) {
-//              sum += review.starRating;
-//            });
-//
-//            ratingResult = sum / length;
-//
-//          }
-//
-//        });
-    //이부분은 그냥 놔두고 Drug DB 수정 되면 그 때 맞춰서 보여주기!!
     return StreamBuilder(
         stream: ReviewService().getReviews(drug.itemSeq),
         builder: (context, snapshot) {
@@ -142,20 +133,15 @@ class DrugTile extends StatelessWidget {
                                     Expanded(
                                       child: Row(
                                         children: [
+                                          _getRateStar(drug.totalRating),
                                           Text(
-                                            '별 아이콘',
+                                            '${drug.totalRating}',
                                             style: TextStyle(
                                                 color: Colors.grey[600],
                                                 fontSize: 13),
                                           ),
                                           Text(
-                                            '별점 $ratingResult',
-                                            style: TextStyle(
-                                                color: Colors.grey[600],
-                                                fontSize: 13),
-                                          ),
-                                          Text(
-                                            '( $len 개)',
+                                            '( ${drug.numOfReview} 개)',
                                             style: TextStyle(
                                                 color: Colors.grey[600],
                                                 fontSize: 10),
@@ -178,115 +164,38 @@ class DrugTile extends StatelessWidget {
                         )),
                   ),
                 ));
-          } else {
-            return Center(child: CircularProgressIndicator());
+          }
+
+          else {
+          return Container();// Center(child: CircularProgressIndicator());
           }
         });
 
-    /*
-    return Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: GestureDetector(
-          onTap: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ReviewPage(drug.itemSeq),
-              ),
-            ),
-            print('===> pushed'),
-            print(drug.itemSeq),
-            // TODO: 리뷰개수
-            // print(' 리뷰 개수 잘 받아오는 확인 ${drug.review.toString()} ')
-          },
-          child: Container(
-            width: double.infinity,
-            height: 100.0,
-            child: Material(
-                color: Colors.white,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 40,
-                      child: Container(
-                          margin: EdgeInsets.only(left: 10, right: 5),
-                          //padding: EdgeInsets.only(left: 0, right: 5),
-                          child: Text(
-                            ' ${index.toString()}위',
-                            style: TextStyle(fontSize: 12),
-                          )),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-                      child: AspectRatio(
-                        aspectRatio: 2 / 2,
-                        // TODO: show storage image - if null, defalut image
-                        child: Container(
-                            padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-                            child: SizedBox(
-                                width: 88, height: 66, child: DrugImage(drugItemSeq:drug.itemSeq))),
-                        // Image.network(
-                        //   drug.image,
-                        // )
-                      ),
-                    ),
-                    Container(
-                        margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
-                        //padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              drug.entpName,
-                              style:
-                              TextStyle(fontSize: 11, color: Colors.grey),
-                            ),
-                            Expanded(
-                              child: Row(children: [
-                                Text(
-                                  _checkLongName(drug.itemName),
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ]),
-                            ),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Text(
-                                    '별 아이콘',
-                                    style: TextStyle(
-                                        color: Colors.grey[600], fontSize: 13),
-                                  ),
-                                  Text(
-                                    '별점 4.5',
-                                    style: TextStyle(
-                                        color: Colors.grey[600], fontSize: 13),
-                                  ),
-                                  Text(
-                                    '( 4 개)',
-                                    style: TextStyle(
-                                        color: Colors.grey[600], fontSize: 10),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Expanded(
-                                child: Row(
-                                  children: [_categoryButton((drug.category))],
-                                )),
-                          ],
-                        )),
-                  ],
-                )),
-          ),
-        ));
-    */
+  }
+
+  Widget _getRateStar(RatingResult) {
+    print('  별정믄?   ');
+    print(RatingResult.toString());
+    //double rating = 1.0;
+    //if(RatingResult == 0){
+      return RatingBar.builder(
+        initialRating: RatingResult*1.0,
+        minRating: 1,
+        ignoreGestures: true,
+        direction: Axis.horizontal,
+        allowHalfRating: false,
+        itemCount: 5,
+        itemSize: 14,
+        glow: false,
+        itemPadding: EdgeInsets.symmetric(horizontal: 0),
+        unratedColor: Colors.grey[300],
+        itemBuilder: (context, _) => Icon(
+          Icons.star,
+          color: Colors.amberAccent,
+        ),
+      );
+
+
   }
 
   Widget _categoryButton(str) {
@@ -310,10 +219,3 @@ class DrugTile extends StatelessWidget {
   }
 }
 
-/*App theme*/
-/*MDC 103 theme 적용하는 거
-MDC 104는 custom 하는 작업임
-style 에 있는 애들이 다 달라가고
-app theme에 있는 이름으로 불러올 수 있게끔 해둠
-
-* */
