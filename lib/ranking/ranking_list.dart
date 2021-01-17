@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'test_tile.dart';
+import 'ranking_tile.dart';
 
 class DrugList extends StatefulWidget {
   final String categoryName;
@@ -49,7 +49,8 @@ class _DrugListState extends State<DrugList> {
             .setter(_filterOrSort),
         builder: (context, stream) {
           if (!stream.hasData) {
-            print('데이터를 불러오는 중입니다.');
+            return Center(child: CircularProgressIndicator());
+            /*
             return Container(
               padding: EdgeInsets.only(top: 30),
               child: Align(
@@ -62,7 +63,7 @@ class _DrugListState extends State<DrugList> {
                         color: Colors.grey[400]),
                   )),
             );
-            //return LinearProgressIndicator();
+            */
           } else {
             print('데이터 있음');
             return _buildList(context, _filterOrSort, stream.data);
