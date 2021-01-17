@@ -35,7 +35,7 @@ class _SearchScreenState extends State<SearchScreen> {
       stream: FirebaseFirestore.instance
           .collection('Drugs')
           .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
-          .limit(10)
+          .limit(10) //
           .snapshots(),
       builder: (context, AsyncSnapshot snapshot) {
         // if (!snapshot.hasData) return LinearProgressIndicator();
@@ -354,7 +354,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         icon: Icon(
                           Icons.arrow_back,
                           size: 20,
-                        )),
+                        )
+                    ),
                     Container(
                       width: searchWidth,
                       height: searchHeight,
