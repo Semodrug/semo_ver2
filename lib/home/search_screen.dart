@@ -35,10 +35,10 @@ class _SearchScreenState extends State<SearchScreen> {
       stream: FirebaseFirestore.instance
           .collection('Drugs')
           .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
-          .limit(10) //
+          .limit(20) //
           .snapshots(),
       builder: (context, AsyncSnapshot snapshot) {
-        // if (!snapshot.hasData) return LinearProgressIndicator();
+        if (!snapshot.hasData) return LinearProgressIndicator();
         if (searchVal == '') {
           return StreamBuilder<QuerySnapshot>(
             stream: userSearchList.snapshots(),
@@ -99,8 +99,8 @@ class _SearchScreenState extends State<SearchScreen> {
               );
             },
           );
-        }
-        return _buildListOfAll(context, snapshot.data.docs);
+        } else
+          return _buildListOfAll(context, snapshot.data.docs);
       },
     );
   }
@@ -129,6 +129,7 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     } else if (searchResults.length != 0) {
       return ListView(
+        physics: const ClampingScrollPhysics(),
         padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
         children: searchResults
             .map((data) => _buildListItemOfAll(context, data))
@@ -168,7 +169,7 @@ class _SearchScreenState extends State<SearchScreen> {
           .doc(_auth.currentUser.uid)
           .collection('savedList')
           .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
-          .limit(10)
+          .limit(20)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
@@ -222,6 +223,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   Expanded(
                     child: ListView(
+                      //physics: const ClampingScrollPhysics(),
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       children: snapshot.data.docs
                           .map((data) => _buildRecentSearchList(context, data))
@@ -262,6 +264,7 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     } else {
       return ListView(
+        physics: const ClampingScrollPhysics(),
         padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
         children: searchResults
             .map((data) => _buildListItemOfUser(context, data))
@@ -346,109 +349,87 @@ class _SearchScreenState extends State<SearchScreen> {
               children: [
                 Row(
                   children: [
-                    IconButton(
-                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/bottom_bar');
-                        },
-                        icon: Icon(
-                          Icons.arrow_back,
-                          size: 20,
-                        )
-                    ),
-                    Container(
-                      width: searchWidth,
-                      height: searchHeight,
-                      padding: EdgeInsets.only(
-                        top: 0,
-                      ),
-                      //margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        color: Colors.grey[200],
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              //flex: 5,
-                              child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              focusNode: focusNode,
-                              style: TextStyle(fontSize: 15),
-                              autofocus: true,
-                              controller: _filter,
-                              decoration: InputDecoration(
-                                fillColor: Colors.white12,
-                                filled: true,
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.all(0),
-                                  child: Icon(
-                                    Icons.search,
-                                    color: Colors.grey,
-                                    size: 20,
-                                  ),
-                                ),
-                                suffixIcon: IconButton(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  icon: Icon(
-                                    Icons.cancel,
-                                    size: 20,
-                                    color: Colors.teal,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _filter.clear();
-                                      _searchText = "";
-                                    });
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: Container(
+                        width: 310,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          color: Colors.grey[200],
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                //flex: 5,
+                                child: TextFormField(
+                                  onFieldSubmitted: (val) {
+                                    if (val != '') {
+                                      addRecentSearchList();
+                                      focusNode.unfocus();
+                                    }
                                   },
-                                ),
-                                hintText: '어떤 약을 찾고 계세요?',
-                                contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                labelStyle: TextStyle(color: Colors.grey),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide:
-                                        BorderSide(color: Colors.transparent)),
-                              ),
-                            ),
-                          )),
-                        ],
+                                  focusNode: focusNode,
+                                  style: TextStyle(fontSize: 15),
+                                  autofocus: true,
+                                  controller: _filter,
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.white12,
+                                    filled: true,
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsets.all(0),
+                                      child: Icon(
+                                        Icons.search,
+                                        color: Colors.grey,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    suffixIcon: IconButton(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                      icon: Icon(
+                                        Icons.cancel,
+                                        size: 20,
+                                        color: Colors.teal,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _filter.clear();
+                                          _searchText = "";
+                                        });
+                                      },
+                                    ),
+                                    hintText: '어떤 약을 찾고 계세요?',
+                                    contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    labelStyle: TextStyle(color: Colors.grey),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.transparent)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.all(Radius.circular(10)),
+                                        borderSide:
+                                            BorderSide(color: Colors.transparent)),
+                                  ),
+                                )),
+                          ],
+                        ),
                       ),
                     ),
-                    focusNode.hasFocus
-                        ? Expanded(
-                            child: FlatButton(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Text(
-                                '확인', //TODO: 확인 눌렀을 때, 결과 값 보여주기
-                                style: TextStyle(fontSize: 13),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  //_searchText = "";
-                                  //TODO: Update the recentSearchList[]
-                                  addRecentSearchList();
-                                  //print(searchList);
-                                  //_filter.clear();
-                                  focusNode.unfocus();
-                                });
-                              },
-                            ),
-                          )
-                        : Expanded(
-                            flex: 0,
-                            child: Container(),
-                          )
+                  Spacer(),
+                    SizedBox(
+                      width: 50,
+                      child: FlatButton(
+                          padding: EdgeInsets.only(right: 10),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/bottom_bar');
+                          },
+                          child: Text('취소')),
+                    )
                   ],
                 ),
-                SizedBox(
-                  height: 7,
-                ),
+//                SizedBox(
+//                  height: 7,
+//                ),
               ],
             ),
           ),
