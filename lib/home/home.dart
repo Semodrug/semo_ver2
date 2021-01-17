@@ -155,7 +155,6 @@ class _HomePageState extends State<HomePage> {
   Widget _buildListItem(BuildContext context, SavedDrug data) {
     TheUser user = Provider.of<TheUser>(context);
 
-
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     num++;
@@ -276,43 +275,62 @@ class _HomePageState extends State<HomePage> {
                     Spacer(),
                     Align(
                       alignment: Alignment.topRight,
-                      child: PopupMenuButton(
-                        onSelected: (result) {
-                          if (result == 0) {
-                            print('수정하기');
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    fullscreenDialog: true,
-                                    builder: (context) => Expiration(
-                                      drugItemSeq: data.itemSeq,
-                                    )));
-                          }
-                          if (result == 1) {
-                            print('삭제하기');
-                            FirebaseFirestore.instance //user가 가지고 있는 약 data
-                                .collection('users')
-                                .doc(user.uid)
-                                .collection('savedList')
-                                .doc(data.itemSeq)
-                                .delete();
-                          }
+                      child: IconButton(
+                        icon: Icon(Icons.more_vert, size: 20),
+                        onPressed: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SizedBox(
+                                    child: Container(
+                                        child: Wrap(
+                                  children: <Widget>[
+                                    MaterialButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  fullscreenDialog: true,
+                                                  builder: (context) =>
+                                                      Expiration(
+                                                        drugItemSeq:
+                                                            data.itemSeq,
+                                                      )));
+                                        },
+                                        child: Center(
+                                            child: Text("수정하기",
+                                                style: TextStyle(
+                                                    color: Colors.blue[700],
+                                                    fontSize: 16)))),
+                                    MaterialButton(
+                                        onPressed: () {
+                                          print('삭제하기');
+                                          FirebaseFirestore
+                                              .instance //user가 가지고 있는 약 data
+                                              .collection('users')
+                                              .doc(user.uid)
+                                              .collection('savedList')
+                                              .doc(data.itemSeq)
+                                              .delete();
+                                        },
+                                        child: Center(
+                                            child: Text("삭제하기",
+                                                style: TextStyle(
+                                                    color: Colors.red[600],
+                                                    fontSize: 16)))),
+                                    MaterialButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Center(
+                                            child: Text("취소",
+                                                style: TextStyle(
+                                                    color: Colors.grey[600],
+                                                    fontSize: 16))))
+                                  ],
+                                )));
+                              });
                         },
-                        icon: Icon(Icons.more_vert, size: 20,),
-                        itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                          const PopupMenuItem(
-                            child: ListTile(
-                              title: Text('수정하기'),
-                            ),
-                            value: 0,
-                          ),
-                          const PopupMenuItem(
-                            child: ListTile(
-                              title: Text('삭제하기'),
-                            ),
-                            value: 1,
-                          ),
-                        ],
                       ),
                     ),
                   ],
