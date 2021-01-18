@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/initial/get_privacy.dart';
 import 'package:semo_ver2/models/user.dart';
 
-import 'package:semo_ver2/mypage/policy_privacy.dart';
-import 'package:semo_ver2/mypage/policy_terms.dart';
+import 'package:semo_ver2/mypage/6_policy_privacy.dart';
+import 'package:semo_ver2/mypage/5_policy_terms.dart';
 import 'package:semo_ver2/login/register_withEmail.dart';
 import 'package:semo_ver2/services/db.dart';
 
