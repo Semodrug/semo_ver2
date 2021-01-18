@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:semo_ver2/initial/get_privacy.dart';
 import 'package:semo_ver2/initial/get_health.dart';
+import 'package:semo_ver2/mypage/1_edit_privacy.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -62,11 +63,11 @@ class _MyPageState extends State<MyPage> {
                     child: Column(
                       children: [
                         _topMyInfo(userData),
-                        // TODO: 회원정보 수정페이지==> 읽어와서 보여줘야함(기말 add page 처럼), 나의 건강정보 관리 페이지
                         SizedBox(
                           height: 10,
                         ),
-                        _myPageMenu('회원정보 수정', context, GetPrivacyPage()),
+                        _myPageMenu('회원정보 수정', context,
+                            EditPrivacyPage(userData: userData)),
                         SizedBox(
                           height: 2,
                         ),
@@ -84,6 +85,10 @@ class _MyPageState extends State<MyPage> {
                           height: 2,
                         ),
                         _myPageMenu('이용약관', context, GetPrivacyPage()),
+                        SizedBox(
+                          height: 2,
+                        ),
+                        _myPageMenu('개인정보 처리방침', context, GetPrivacyPage()),
                         SizedBox(
                           height: 10,
                         ),

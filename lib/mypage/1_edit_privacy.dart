@@ -3,39 +3,45 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/initial/get_health.dart';
 
-// var phoneMaskFormatter = new MaskTextInputFormatter(
-//     mask: '###-####-####', filter: {"#": RegExp(r'[0-9]')});
-// var birthMaskFormatter = new MaskTextInputFormatter(
-//     mask: '####.##.##', filter: {"#": RegExp(r'[0-9]')});
 var birthYearMaskFormatter =
-    new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
-bool _isGenderFilled = false;
-bool _isBirthYearFilled = false;
-bool _isNicknameFilled = false;
-//print(maskFormatter.getMaskedText()); // -> "+0 (123) 456-78-90"
-//print(maskFormatter.getUnmaskedText()); // -> 01234567890
+    MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
+bool _isGenderFilled = true;
+bool _isBirthYearFilled = true;
+bool _isNicknameFilled = true;
 
-class GetPrivacyPage extends StatefulWidget {
-  final String title = '회원가입';
+class EditPrivacyPage extends StatefulWidget {
+  final String title = '회원정보 수정';
+  final UserData userData;
 
+  const EditPrivacyPage({Key key, this.userData}) : super(key: key);
   @override
-  _GetPrivacyPageState createState() => _GetPrivacyPageState();
+  _EditPrivacyPageState createState() => _EditPrivacyPageState(userData);
 }
 
-class _GetPrivacyPageState extends State<GetPrivacyPage> {
-  List<bool> isSelected = List.generate(2, (_) => false);
+class _EditPrivacyPageState extends State<EditPrivacyPage> {
+  final UserData userData;
+  _EditPrivacyPageState(this.userData);
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   TextEditingController nicknameController = TextEditingController();
   TextEditingController birthYearController = TextEditingController();
+  List<bool> isSelected = List.generate(2, (_) => false);
 
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
+
+    @override
+    void initState() {
+      nicknameController.text = userData.nickname;
+      birthYearController.text = userData.birthYear;
+      isSelected = userData.sex == 'male' ? [true, false] : [false, true];
+      return super.initState();
+    }
 
     return Scaffold(
         appBar: AppBar(
@@ -205,30 +211,6 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
         ),
         hintText: '닉네임 (2자 이상)',
         hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
-        // suffixIcon: _checkButton('중복확인')
-        //    OutlineButton(
-        //   color: _isFilled ? Colors.teal : Colors.grey,
-        //   child: Text(
-        //     "중복확인",
-        //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
-        //   ),
-        //   onPressed: () async {
-        //     bool result =
-        //         await DatabaseService().isUnique(nicknameController.text);
-        //
-        //     setState(() {
-        //       if (result == true) _isError = true;
-        //     });
-        //   },
-        // )
-
-        //     TextButton(
-        //   child: Text(
-        //     "중복확인",
-        //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
-        //   ),
-        //   onPressed: () {},
-        // )
       ),
       keyboardType: TextInputType.text,
       onChanged: (value) {
@@ -263,7 +245,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
           shape: RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(10.0)),
           child: Text(
-            '다음',
+            '확인',
             style: TextStyle(color: Colors.white),
           ),
           color: (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled)
@@ -271,9 +253,9 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
               : Colors.grey,
           onPressed: () async {
             if (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled) {
-              // phoneMaskFormatter.getUnmaskedText().length != 11 ||
               if (birthYearMaskFormatter.getUnmaskedText().length != 4)
-                showSnackBar(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('입력하신 항목을 다시 확인해주세요')));
               else {
                 var result =
                     await DatabaseService().isUnique(nicknameController.text);
@@ -296,61 +278,4 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
       ),
     );
   }
-
-  // Widget _checkButton(str) {
-  //   return Container(
-  //     width: 24 + str.length.toDouble() * 10,
-  //     padding: EdgeInsets.symmetric(horizontal: 2),
-  //     child: ButtonTheme(
-  //       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
-  //       minWidth: 10,
-  //       height: 22,
-  //       child: FlatButton(
-  //         child: Text(
-  //           '#$str',
-  //           style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
-  //         ),
-  //         //padding: EdgeInsets.all(0),
-  //         onPressed: () => print('$str!'),
-  //         color: Colors.grey[200],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Widget _checkButton(str) {
-    return ButtonTheme(
-      minWidth: 40.0,
-      child: FlatButton(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6.0),
-            side: BorderSide(
-                color: _isNicknameFilled ? Colors.teal[200] : Colors.grey)),
-        color: Colors.white,
-        textColor: _isNicknameFilled ? Colors.teal[200] : Colors.grey,
-        onPressed: () async {
-          var result =
-              await DatabaseService().isUnique(nicknameController.text);
-          if (result == false) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
-          } else {}
-        },
-        child: Text(
-          str,
-          style: TextStyle(
-            fontSize: 14.0,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-void showSnackBar(BuildContext context) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    content: Text('입력하신 항목을 다시 확인해주세요', textAlign: TextAlign.center),
-    duration: Duration(seconds: 2),
-    backgroundColor: Colors.teal[100],
-  ));
 }
