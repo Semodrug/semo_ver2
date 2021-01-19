@@ -38,6 +38,26 @@ class _ReviewPageState extends State<ReviewPage> {
     });
   }
 
+  GlobalKey _key1 = GlobalKey();
+  GlobalKey _key2 = GlobalKey();
+
+  double _getSizes() {
+    final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
+    final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
+    double height = renderBox1.size.height + renderBox2.size.height+200;
+//    print("SIZE of Red: $sizeRedWidth");
+    print("SIZE of Red: $height");
+    return height;
+  }
+
+  var _scrollController = ScrollController();
+  void _onTapPillInfo() {
+    _scrollController.animateTo(0, duration: Duration(milliseconds: 100), curve: Curves.easeOut);
+  }
+
+  void _onTapReview() {
+    _scrollController.animateTo(_getSizes()-400, duration: Duration(milliseconds: 100), curve: Curves.easeOut);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +112,11 @@ class _ReviewPageState extends State<ReviewPage> {
                 FocusScope.of(context).unfocus();
               },
               child: CustomScrollView(
+                physics: PageScrollPhysics(),
+                controller: _scrollController,
                 slivers: <Widget>[
                   SliverToBoxAdapter(
+//                    key: _key1,
                     child: _topInfo(context, widget.drugItemSeq),
                   ),
                   SliverToBoxAdapter(
@@ -104,44 +127,51 @@ class _ReviewPageState extends State<ReviewPage> {
                     ),
                   ),
                   SliverAppBar(
+//                    key: _key2,
                     flexibleSpace: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Container(
-                          width: width/2,
-                          child: Center(child: Text("약정보", )),
+//                        Container(
+//                          width: width/2,
+//                          child: Center(child: Text("약정보", )),
+//                        ),
+                        Center(
+                          child: TextButton(
+                            child: Text("약정보", ),
+                            onPressed: _onTapPillInfo,
+                          ),
                         ),
-                        Container(
-                          width: width/2,
-                          child: Center(child: Text("리뷰", )),
+                        Center(
+                          child: TextButton(
+                            child: Text("리뷰", ),
+                            onPressed: _onTapReview,
+                          ),
                         ),
+
+//                        Container(
+//                          width: width/2,
+//                          child: Center(child: Text("리뷰", )),
+//                        ),
                       ],
                     ),
                     leading: Container(),
                     pinned: true,
                     backgroundColor: Colors.white,
                   ),
-
                   SliverToBoxAdapter(
                     child: Container(
+//                        key: _key1,
                         height: 3000,
                         child:Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             SizedBox(height:10),
-//                          _topInfo(context, widget.drugItemSeq),
-//                          SizedBox(
-//                            width: double.infinity,
-//                            height: 10.0,
-//                            child: Container(color: Colors.grey[200],),
-//                          ),
                             _underInfo(context, widget.drugItemSeq),
                             SizedBox(
                               width: double.infinity,
                               height: 10.0,
                               child: Container(color: Colors.grey[200],),
                             ),
-
                             GetRating(widget.drugItemSeq),
                             Container(
                               height: 4,
@@ -153,7 +183,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     //TODO EDIT num of reviews
-
                                     StreamBuilder<Drug>(
                                         stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
                                         builder: (context, snapshot) {
@@ -185,7 +214,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                 )),
                             _searchBar(),
                             ReviewList(_searchText),
-
                           ],
                         )
                     ),
@@ -334,6 +362,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
     //TODO: how to control the state management better?
     return StreamBuilder<Drug>(
+        key: _key1,
         stream: DatabaseService(itemSeq: drugItemSeq).drugData,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -361,7 +390,8 @@ class _ReviewPageState extends State<ReviewPage> {
 
                           return Padding(
                             padding: const EdgeInsets.fromLTRB(20,0, 20,0),
-                            child: Stack(children: [
+                            child: Stack(
+                                children: [
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
@@ -494,6 +524,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   Widget _underInfo(BuildContext context, String drugItemSeq) {
     return StreamBuilder<Drug>(
+        key: _key2,
         stream: DatabaseService(itemSeq: drugItemSeq).drugData,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -787,7 +818,6 @@ class _ReviewPageState extends State<ReviewPage> {
               width: double.infinity,
               height: 6000.0,
               child: TabBarView(
-//               여기에 은영학우님 page 넣기!
                 children: [
                   _underInfo(context, drugItemSeq),
                   ReviewPage(drugItemSeq)
