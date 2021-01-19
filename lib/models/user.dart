@@ -6,8 +6,6 @@ class TheUser {
 
 class UserData {
   final String uid;
-
-  final String registerDate;
   final String agreeDate;
 
   final String sex;
@@ -16,16 +14,19 @@ class UserData {
 
   final bool isPregnant;
   final List diseaseList;
+  final List favoriteList;
+  final List searchList;
 
   UserData(
       {this.uid,
-      this.sex,
-      this.registerDate,
       this.agreeDate,
+      this.sex,
       this.nickname,
       this.birthYear,
       this.isPregnant,
-      this.diseaseList});
+      this.diseaseList,
+      this.favoriteList,
+      this.searchList});
 }
 
 class Lists {

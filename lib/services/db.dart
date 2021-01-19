@@ -162,13 +162,14 @@ class DatabaseService {
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
       uid: uid,
-      registerDate: snapshot.data()['registerDate'] ?? '',
       agreeDate: snapshot.data()['agreeDate'] ?? '',
       sex: snapshot.data()['sex'] ?? '',
       nickname: snapshot.data()['nickname'] ?? '',
       birthYear: snapshot.data()['birthYear'] ?? '',
       isPregnant: snapshot.data()['isPregnant'] ?? false,
       diseaseList: snapshot.data()['diseaseList'] ?? [],
+      favoriteList: snapshot.data()['favoriteList'] ?? [],
+      searchList: snapshot.data()['searchList'] ?? [],
     );
   }
 
@@ -202,7 +203,7 @@ class DatabaseService {
   Future<void> updateUserHealth(isPregnant, diseaseList) async {
     return await userCollection.doc(uid).update({
       'isPregnant': isPregnant ?? '',
-      'disease_list': diseaseList ?? [],
+      'diseaseList': diseaseList ?? [],
     });
   }
 
@@ -316,7 +317,6 @@ class DatabaseService {
 
       'totalRating': rating,
       'numOfReview': length,
-
     });
   }
 
@@ -335,4 +335,15 @@ class DatabaseService {
     return result.docs.isEmpty;
   }
 
+  // Future<void> batchUpdate() {
+  //   WriteBatch batch = FirebaseFirestore.instance.batch();
+  //
+  //   return drugCollection.get().then((querySnapshot) {
+  //     querySnapshot.docs.forEach((myDoc) {
+  //       batch.update(myDoc.reference, {'numOfReview': 0, 'totalRating': 0});
+  //     });
+  //
+  //     return batch.commit();
+  //   });
+  // }
 }
