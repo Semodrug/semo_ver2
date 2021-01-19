@@ -17,6 +17,7 @@ class ReviewList extends StatefulWidget {
 }
 
 class _ReviewListState extends State<ReviewList> {
+
   @override
   Widget build(BuildContext context) {
     //TODO LIMIT!!
@@ -34,10 +35,11 @@ class _ReviewListState extends State<ReviewList> {
     return Expanded(
       child: ListView(
         physics: const ClampingScrollPhysics(),
-//        padding: EdgeInsets.all(20.0),
         children: searchResults.map((data) => _buildListItem(context, data)).toList(),
       ),
     );
+
+
 
 //    return ListView.builder(
 //      itemCount: reviews.length,
