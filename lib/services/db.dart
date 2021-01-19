@@ -209,31 +209,31 @@ class DatabaseService {
 
   /* Favorite List */
   // List data from snapshots
-  Lists _listsFromSnapshot(DocumentSnapshot snapshot) {
-    return Lists(
-      favoriteLists: snapshot.data()['favoriteLists'] ?? '',
-    );
-  }
-
-  // get favorite list stream
-  Stream<Lists> get lists {
-    return userCollection
-        .doc(uid)
-        .collection('OtherInfos')
-        .doc('Lists')
-        .snapshots()
-        .map(_listsFromSnapshot);
-  }
-
-  Future<void> updateLists(List newList) async {
-    return await userCollection
-        .doc(uid)
-        .collection('OtherInfos')
-        .doc('Lists')
-        .set({
-      'favoriteLists': newList,
-    });
-  }
+  // Lists _listsFromSnapshot(DocumentSnapshot snapshot) {
+  //   return Lists(
+  //     favoriteLists: snapshot.data()['favoriteLists'] ?? '',
+  //   );
+  // }
+  //
+  // // get favorite list stream
+  // Stream<Lists> get lists {
+  //   return userCollection
+  //       .doc(uid)
+  //       .collection('OtherInfos')
+  //       .doc('Lists')
+  //       .snapshots()
+  //       .map(_listsFromSnapshot);
+  // }
+  //
+  // Future<void> updateLists(List newList) async {
+  //   return await userCollection
+  //       .doc(uid)
+  //       .collection('OtherInfos')
+  //       .doc('Lists')
+  //       .set({
+  //     'favoriteLists': newList,
+  //   });
+  // }
 
   /* Saved List */
   //drug list from snapshot
@@ -346,4 +346,26 @@ class DatabaseService {
   //     return batch.commit();
   //   });
   // }
+
+  // Future<void> updateLists(List newList) async {
+  //   return await userCollection
+  //       .doc(uid)
+  //       .collection('OtherInfos')
+  //       .doc('Lists')
+  //       .set({
+  //     'favoriteLists': newList,
+  //   });
+  // }
+
+  Future<void> removeFromFavoriteList(String drugItemSeq) async {
+    return await userCollection.doc(uid).update({
+      'favoriteList': FieldValue.arrayRemove([drugItemSeq]),
+    });
+  }
+
+  Future<void> addToFavoriteList(String drugItemSeq) async {
+    return await userCollection.doc(uid).update({
+      'favoriteList': FieldValue.arrayUnion([drugItemSeq]),
+    });
+  }
 }

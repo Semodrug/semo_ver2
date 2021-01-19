@@ -45,7 +45,7 @@ class _ReviewPageState extends State<ReviewPage> {
   double _getSizes() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
     final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
-    double height = renderBox1.size.height + renderBox2.size.height+200;
+    double height = renderBox1.size.height + renderBox2.size.height + 200;
 //    print("SIZE of Red: $sizeRedWidth");
     print("SIZE of Red: $height");
     return height;
@@ -53,11 +53,13 @@ class _ReviewPageState extends State<ReviewPage> {
 
   var _scrollController = ScrollController();
   void _onTapPillInfo() {
-    _scrollController.animateTo(0, duration: Duration(milliseconds: 100), curve: Curves.easeOut);
+    _scrollController.animateTo(0,
+        duration: Duration(milliseconds: 100), curve: Curves.easeOut);
   }
 
   void _onTapReview() {
-    _scrollController.animateTo(_getSizes()-400, duration: Duration(milliseconds: 100), curve: Curves.easeOut);
+    _scrollController.animateTo(_getSizes() - 400,
+        duration: Duration(milliseconds: 100), curve: Curves.easeOut);
   }
 
   @override
@@ -145,13 +147,17 @@ class _ReviewPageState extends State<ReviewPage> {
 //                        ),
                         Center(
                           child: TextButton(
-                            child: Text("약정보", ),
+                            child: Text(
+                              "약정보",
+                            ),
                             onPressed: _onTapPillInfo,
                           ),
                         ),
                         Center(
                           child: TextButton(
-                            child: Text("리뷰", ),
+                            child: Text(
+                              "리뷰",
+                            ),
                             onPressed: _onTapReview,
                           ),
                         ),
@@ -173,7 +179,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(height:10),
+                            SizedBox(height: 10),
                             _underInfo(context, widget.drugItemSeq),
                             SizedBox(
                               width: double.infinity,
@@ -407,7 +413,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 builder: (context, snapshot2) {
                   if (snapshot2.hasData) {
                     UserData userData = snapshot2.data;
-                    bool isFavorite =
+                    bool _isFavorite =
                         userData.favoriteList.contains(drugItemSeq);
                     bool _isCareful = _carefulDiseaseList(
                             userData.diseaseList, drug.nbDocData)
@@ -505,20 +511,22 @@ class _ReviewPageState extends State<ReviewPage> {
                                   right: 0,
                                   child: IconButton(
                                       icon: Icon(
-                                        // Icons.favorite_border,
-                                        isFavorite
+                                        _isFavorite
                                             ? Icons.favorite
                                             : Icons.favorite_border,
-                                        color: isFavorite
+                                        color: _isFavorite
                                             ? Colors.redAccent
                                             : null,
                                       ),
                                       onPressed: () async {
-                                        // isFavorite
-                                        //     ? favoriteLists.remove(drugItemSeq)
-                                        //     : favoriteLists.add(drugItemSeq);
-                                        // await DatabaseService(uid: user.uid)
-                                        //     .updateLists(favoriteLists);
+                                        if (_isFavorite) {
+                                          await DatabaseService(uid: user.uid)
+                                              .removeFromFavoriteList(
+                                                  drugItemSeq);
+                                        } else {
+                                          await DatabaseService(uid: user.uid)
+                                              .addToFavoriteList(drugItemSeq);
+                                        }
                                       })),
                               Positioned(
                                 bottom: 0,
