@@ -306,7 +306,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               ),
                               Text(
                                 " (" +
-                                    drug.numOfReview.toStringAsFixed(0) +
+                                    drug.numOfReviews.toStringAsFixed(0) +
                                     '개)',
                                 style: TextStyle(color: Colors.grey[600]),
                               )
@@ -754,8 +754,9 @@ class _ReviewPageState extends State<ReviewPage> {
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             Drug drug = snapshot.data;
+
                             return Text(
-                                drug.numOfReview.toStringAsFixed(0) + "개",
+                                drug.numOfReviews.toStringAsFixed(0) + "개",
                                 style: TextStyle(
                                   fontSize: 16.5,
                                   fontWeight: FontWeight.bold,
@@ -770,11 +771,12 @@ class _ReviewPageState extends State<ReviewPage> {
                               fontSize: 14.5,
                             )),
                         onTap: () {
-                          // TODO GET ALL REVIEW
+                          //TODO GET ALL REVIEW
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AllReview()));
+                                  builder: (context) =>
+                                      AllReview(widget.drugItemSeq)));
                         }),
                   ],
                 )),

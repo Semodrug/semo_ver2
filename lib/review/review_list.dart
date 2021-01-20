@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 
 class ReviewList extends StatefulWidget {
   String searchText;
-  ReviewList(this.searchText);
+  String filter;
+  ReviewList(this.searchText, this.filter);
 
   @override
   _ReviewListState createState() => _ReviewListState();
@@ -164,6 +165,8 @@ class _ReviewListState extends State<ReviewList> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         //effect
+        widget.filter == "sideEffectOnly" ?
+        Container() :
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -193,11 +196,15 @@ class _ReviewListState extends State<ReviewList> {
             Container(width: MediaQuery.of(context).size.width * 0.025),
             Text(review.effectText, style: TextStyle(fontSize: 17.0)),
           ],
-        ),
+        ) ,
+        widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
+        Container() :
         Container(height: MediaQuery.of(context).size.height * 0.01),
 //        SizedBox(height:13),
 
         //side effect
+        widget.filter == "effectOnly" ?
+        Container() :
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -228,8 +235,14 @@ class _ReviewListState extends State<ReviewList> {
             Text(review.sideEffectText, style: TextStyle(fontSize: 17.0)),
           ],
         ),
+        widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
+        Container() :
         Container(height: MediaQuery.of(context).size.height * 0.01),
 //        SizedBox(height:13),
+
+        //overall
+        widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
+        Container() :
         Row(
           children: <Widget>[
             Container(
