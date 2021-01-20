@@ -3,6 +3,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/review/review_page.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/image.dart';
 
@@ -56,7 +57,8 @@ class DrugTile extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    PhilInfoPage(drugItemSeq: drug.itemSeq),
+                    ReviewPage(drug.itemSeq),
+                // PhilInfoPage(drugItemSeq: drug.itemSeq)
               ),
             ),
             print('===> pushed'),
