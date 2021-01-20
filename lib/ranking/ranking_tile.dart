@@ -124,7 +124,7 @@ class DrugTile extends StatelessWidget {
                                         color: Colors.grey[600], fontSize: 13),
                                   ),
                                   Text(
-                                    '( ${drug.numOfReview} 개)',
+                                    '( ${drug.numOfReviews} 개)',
                                     style: TextStyle(
                                         color: Colors.grey[600], fontSize: 10),
                                   ),
