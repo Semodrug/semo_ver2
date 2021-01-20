@@ -7,6 +7,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/loading.dart';
+import 'package:semo_ver2/shared/image.dart';
 
 class Expiration extends StatefulWidget {
   final String drugItemSeq;
@@ -51,17 +52,20 @@ class _ExpirationState extends State<Expiration> {
         ),
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          _topInfo(context, widget.drugItemSeq),
-          SizedBox(
-            height: 20,
-          ),
-          _okButton(context)
-        ],
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            _topInfo(context, widget.drugItemSeq),
+            SizedBox(
+              height: 20,
+            ),
+            _okButton(context)
+          ],
+        ),
       ),
     );
   }
@@ -80,10 +84,11 @@ class _ExpirationState extends State<Expiration> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  child: Image.asset('images/01.png'),
-                  width: 120.0,
-                  height: 60.0,
+                Container(
+                  width: 100,
+                  child: AspectRatio(
+                      aspectRatio: 3.5 / 2,
+                      child: DrugImage(drugItemSeq: drugItemSeq)),
                 ),
                 SizedBox(
                   height: 20,
@@ -189,17 +194,70 @@ class _ExpirationState extends State<Expiration> {
         //alignment: Alignment.center,
         child: RaisedButton(
           onPressed: () async {
-            Navigator.pop(context);
+            _showSaveWell(context);
+            // Navigator.pop(context);
           },
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-          child: const Text(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          child: Text(
             '추가하기',
             style: TextStyle(color: Colors.white),
           ),
           color: Colors.teal[400],
         ),
       ),
+    );
+  }
+
+  void _showSaveWell(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop(true);
+          Navigator.of(context).pop(true);
+        }); // return object of type Dialog
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Icon(
+            Icons.check_circle,
+            color: Colors.green,
+            size: 17,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: '약 보관함',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '에 추가되었습니다.'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '홈에서 확인하실 수 있습니다',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -225,5 +283,3 @@ Widget _categoryButton(str) {
     ),
   );
 }
-
-// 추가하시겠습니까? 추가되었습니다

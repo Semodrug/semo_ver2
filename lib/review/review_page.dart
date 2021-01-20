@@ -432,8 +432,6 @@ class _ReviewPageState extends State<ReviewPage> {
                             if (_isSaved == true) break;
                           }
 
-                          print('1111 is $_isSaved');
-
                           return Padding(
                             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                             child: Stack(children: [
@@ -444,12 +442,16 @@ class _ReviewPageState extends State<ReviewPage> {
                                       height: 20.0,
                                     ),
                                     Center(
-                                      child: SizedBox(
-                                        child:
-                                            DrugImage(drugItemSeq: drugItemSeq),
-                                        width: 200.0,
-                                        height: 100.0,
+                                      child: Container(
+                                        width: 200,
+                                        child: AspectRatio(
+                                            aspectRatio: 3.5 / 2,
+                                            child: DrugImage(
+                                                drugItemSeq: drugItemSeq)),
                                       ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
                                     ),
                                     Text(
                                       drug.entpName,
@@ -485,6 +487,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                         children: <Widget>[
                                           _categoryButton(drug.category)
                                         ]),
+                                    SizedBox(
+                                      height: 20,
+                                    )
                                   ]),
                               _isCareful
                                   ? Positioned(
@@ -509,7 +514,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                       )
                                   : Container(),
                               Positioned(
-                                  bottom: 70,
+                                  bottom: 110,
                                   right: 0,
                                   child: IconButton(
                                       icon: Icon(
@@ -526,13 +531,14 @@ class _ReviewPageState extends State<ReviewPage> {
                                               .removeFromFavoriteList(
                                                   drugItemSeq);
                                         } else {
+                                          // _showFavoriteWell(context);
                                           await DatabaseService(uid: user.uid)
                                               .addToFavoriteList(drugItemSeq);
                                           _showFavoriteWell(context);
                                         }
                                       })),
                               Positioned(
-                                bottom: 0,
+                                bottom: 20,
                                 right: 0,
                                 child: ButtonTheme(
                                   minWidth: 20,
@@ -545,24 +551,16 @@ class _ReviewPageState extends State<ReviewPage> {
                                     ),
                                     onPressed: () {
                                       if (_isSaved) {
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         fullscreenDialog: true,
-                                        //         builder: (context) =>
-                                        //             Expiration(
-                                        //               drugItemSeq: drugItemSeq,
-                                        //             )));
-
-                                        _myDialog(context, '약 보관함',
-                                            '이미 보관함에 저장되어있습니다.', '', '확인');
-
-                                        // MyDialog(
-                                        //     contents: '이미 보관함에 저장되어있습니다.',
-                                        //     tail1: '확인');
+                                        _alreadyExist(context);
                                       } else {
-                                        _myDialog(context, '약 보관함',
-                                            '나의 보관함에 저장하시겠습니까?', '예', '아니요');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                fullscreenDialog: true,
+                                                builder: (context) =>
+                                                    Expiration(
+                                                      drugItemSeq: drugItemSeq,
+                                                    )));
                                       }
                                     },
                                   ),
@@ -871,7 +869,7 @@ class _ReviewPageState extends State<ReviewPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        Future.delayed(Duration(seconds: 5), () {
+        Future.delayed(Duration(seconds: 2), () {
           Navigator.of(context).pop(true);
         }); // return object of type Dialog
         return AlertDialog(
@@ -906,6 +904,61 @@ class _ReviewPageState extends State<ReviewPage> {
                 Text(
                   '마이페이지에서 확인하실 수 있습니다',
                   style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _alreadyExist(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop(true);
+        }); //
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Icon(
+            Icons.warning,
+            color: Colors.orangeAccent,
+            size: 17,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(text: '이미 '),
+                      TextSpan(
+                          text: '보관함',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '에 저장되어있습니다.'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '약보관함에서 확인하실 수 있습니다',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 10,
                 )
               ],
             ),
