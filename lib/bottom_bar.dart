@@ -29,9 +29,16 @@ class _BottomBarState extends State<BottomBar> {
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if(index != 1 ){
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+    else {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => AddButton()),
+      );
+    }
   }
 
   @override
