@@ -42,13 +42,33 @@ class _AddButtonState extends State<AddButton> {
             Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(//이부분은 핸드폰 마다 건드릴 수 있는 부분!!
-                      padding: EdgeInsets.fromLTRB(0, (height / 11), 0, 0),
-                      height: height/18,
+                    Column(
+                      children: [
+                        Container(//이부분은 핸드폰 마다 건드릴 수 있는 부분!!
+                          //color: Colors.redAccent,
+                          padding: EdgeInsets.fromLTRB(0, (height / 11), 0, 0),
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              height: 25,
+                              child: Text("검색해서 약 추가하기",
+                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Container(
+                      height: 30,
                       child: FlatButton(
-                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: Text(
                             "X",
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
@@ -61,18 +81,17 @@ class _AddButtonState extends State<AddButton> {
                   ],
                 ),
 
-            Align(
-              alignment: Alignment.bottomLeft,
-              child:
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-
-                  //width: width/10,
-                  height: height/33,
-                  child: Text("검색해서 약 추가하기",
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-                ),
-                 ),
+//            Row(
+//              mainAxisAlignment: MainAxisAlignment.start,
+//              children: [
+//                Container(
+//                  padding: EdgeInsets.symmetric(horizontal: 16),
+//                  height: 25,
+//                  child: Text("검색해서 약 추가하기",
+//                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+//                ),
+//              ],
+//            ),
                 _goToSearchBar(context),
               ],
             ),
@@ -102,9 +121,7 @@ class _AddButtonState extends State<AddButton> {
       child: Align(
         alignment: Alignment.topCenter,
         child: Container(
-          //margin: const EdgeInsets.only(top: 11, bottom: 4),
-          width: width / 33 * 30.1,
-          height: height / 20,
+          height: 35,
           decoration: BoxDecoration(
             // Color does not matter but must not be transparent
             color: Colors.black,
@@ -212,7 +229,7 @@ class MenuWidget extends StatelessWidget {
                           child: Text(
                             "케이스\n인식",
                             style: TextStyle(
-                                fontSize: 17, color: Color(0XFF327A70)),
+                                fontSize: 15, color: Color(0XFF327A70)),
                             textAlign: TextAlign.center,
                           ),
                         )
@@ -228,7 +245,6 @@ class MenuWidget extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(4))),
                 ),
                 Container(
-                  //margin: const EdgeInsets.all(15.0),
                   width: width / 4,
                   height: height / 5,
                   child: FlatButton(
@@ -249,7 +265,7 @@ class MenuWidget extends StatelessWidget {
                           child: Text(
                             "한 알\n인식",
                             style: TextStyle(
-                                fontSize: 17, color: Color(0XFF327A70)),
+                                fontSize: 15, color: Color(0XFF327A70)),
                             textAlign: TextAlign.center,
                           ),
                         )
@@ -269,7 +285,6 @@ class MenuWidget extends StatelessWidget {
                 height: 20,
               ),
               Container(
-                //margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 width: width/4*3.8,
                 height: height / 7,
                 child: FlatButton(

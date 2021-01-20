@@ -232,9 +232,9 @@ class _HomePageState extends State<HomePage> {
                         //이미지는 고정값
                         padding: EdgeInsets.symmetric(horizontal: 5),
                         child: Container(
-                            width: 90,
+                            width: 80,
                             child: AspectRatio(
-                                aspectRatio: 2.7 / 2,
+                                aspectRatio: 3.5 / 2,
                                 child: DrugImage(drugItemSeq: data.itemSeq)))),
                     Container(
                         padding:
