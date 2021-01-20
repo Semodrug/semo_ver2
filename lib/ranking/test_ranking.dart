@@ -31,19 +31,20 @@ class TestRanking extends StatelessWidget {
                   Icons.arrow_back,
                   color: Colors.teal[400],
                 ),
-                onPressed: () => Navigator.pushNamed(context, '/bottom_bar'),
+                onPressed: () => Navigator.of(context).pop()
+                ,
               ),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    onlyName,
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                ],
+              titleSpacing: 0,
+              title:
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0),
+                child: Text(
+                  onlyName,
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
               ),
               actions: [
                 //for search

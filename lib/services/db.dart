@@ -33,14 +33,14 @@ class DatabaseService {
       case "이름순":
         drugQuery = drugQuery.where('PRDUCT_TYPE', isEqualTo: categoryName )//;
             .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
-            .orderBy('ITEM_NAME', descending: false).limit(30);
+            .orderBy('ITEM_NAME', descending: false).limit(10);
 
         break;
 
       case "리뷰 많은 순":
         drugQuery = drugQuery.where('PRDUCT_TYPE', isEqualTo: categoryName )//;
             .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
-            .orderBy('numOfReview', descending: false).limit(10);
+            .orderBy('numOfReviews', descending: false).limit(10);
         break;
     }
 
@@ -92,6 +92,7 @@ class DatabaseService {
 
         totalRating: doc.data()['totalRating'] ?? 0,
         numOfReviews: doc.data()['numOfReviews'] ?? 0,
+        
       );
     }).toList();
   }
@@ -138,7 +139,9 @@ class DatabaseService {
       // review: snapshot.data()['review'],
 
       totalRating: snapshot.data()['totalRating'] ?? 0,
+
       numOfReviews: snapshot.data()['numOfReviews'] ?? 0,
+
     );
   }
 
