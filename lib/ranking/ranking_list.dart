@@ -17,7 +17,7 @@ class DrugList extends StatefulWidget {
 
 class _DrugListState extends State<DrugList> {
   String _filterOrSort = "이름순";
-  int totalNum = 0;
+  var totalNum = 0; //DatabaseService().getRankingNum();
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +30,7 @@ class _DrugListState extends State<DrugList> {
     return Column(
       children: [
         _countDropDown(context, totalNum),
+        //_countDropDown(context),
         _buildBody(context, _filterOrSort)
       ],
     );
@@ -41,6 +42,29 @@ class _DrugListState extends State<DrugList> {
     );
     */
   }
+
+//  Widget getNumOfRanking(BuildContext context){
+//    return Container(
+//      child: FutureBuilder(
+//          future: DatabaseService().,//.getRankingNum(),
+//          builder: (context, snapshot) {
+//            if (snapshot.hasData) {
+//              print('이게바로 데이타지');
+//              print('${snapshot.data}');
+//              return Text(snapshot.data);
+//            } else if (snapshot.hasError) {
+//              return Text(snapshot.error);
+//            } else {
+//              print('');
+//              return Center(
+//                child: Text('NONONO'),
+//                  //child: LinearProgressIndicator()
+//              );
+//            }
+//          }
+//      ),
+//    );
+//  }
 
   Widget _buildBody(BuildContext context, String _filterOrSort) {
     print('BODY');
@@ -75,10 +99,7 @@ class _DrugListState extends State<DrugList> {
   Widget _buildList(
       BuildContext context, String _filterOrSort, List<Drug> drugs) {
     //print('길이 알려주기 !! '+ '${drugs.length}');
-    //totalNum = drugs.length;
     print('   길이  ${drugs.length.toString()}');
-    //print(drugs[0].itemName);
-    //print(drugs[0].itemSeq);
 
     print('  ');
     return Expanded(
@@ -92,7 +113,8 @@ class _DrugListState extends State<DrugList> {
   }
 
   Widget _countDropDown(context, num) {
-    return Column(
+    //Widget _countDropDown(context) {
+      return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -102,13 +124,12 @@ class _DrugListState extends State<DrugList> {
                 margin: EdgeInsets.only(left: 20, top: 1),
                 child: Row(
                   children: <Widget>[
-                    Text('총 ${totalNum} 개 약'), // theme 추가
+                    Text('총 ${num} 개 약'), // theme 추가
+                    //getNumOfRanking(context)
                   ],
                 ),
               ),
               Spacer(),
-              //TODO: 지금 여기서 리뷰가 없어서 아예 리뷰에 관한 쿼리가 먹지를 않음
-              //TODO: DB에서 분명 리뷰가 없으면 0 을 넣어주라고 해두었는데 왜 쿼리에서는 먹지를 않지?
               DropdownButton<String>(
                 value: _filterOrSort,
                 // icon: Icon(Icons.arrow_drop_down),
