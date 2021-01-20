@@ -24,6 +24,7 @@ class TestRanking extends StatelessWidget {
     String onlyName = _checkCategoryName(categoryName);
     return
         Scaffold(
+          backgroundColor: Colors.white,
             appBar: AppBar(
               automaticallyImplyLeading: false,
               leading: IconButton(
@@ -46,6 +47,18 @@ class TestRanking extends StatelessWidget {
                       color: Colors.black),
                 ),
               ),
+              /*Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    onlyName,
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ],
+              ),*/
               actions: [
                 //for search
                 IconButton(
