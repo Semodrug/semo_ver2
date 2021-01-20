@@ -19,21 +19,21 @@ import 'package:semo_ver2/review/get_rating.dart';
 import 'package:semo_ver2/review/review_list.dart';
 import 'package:semo_ver2/review/write_review.dart';
 
-class ReviewPage extends StatefulWidget {
+class DrugInfoPage extends StatefulWidget {
   final String drugItemSeq;
-  ReviewPage(this.drugItemSeq);
+  DrugInfoPage(this.drugItemSeq);
 
   @override
-  _ReviewPageState createState() => _ReviewPageState();
+  _DrugInfoPageState createState() => _DrugInfoPageState();
 }
 
-class _ReviewPageState extends State<ReviewPage> {
+class _DrugInfoPageState extends State<DrugInfoPage> {
   final TextEditingController _filter = TextEditingController();
   FocusNode focusNode = FocusNode();
   String _searchText = "";
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  _ReviewPageState() {
+  _DrugInfoPageState() {
     _filter.addListener(() {
       setState(() {
         _searchText = _filter.text;
@@ -69,129 +69,183 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
 
-    return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.teal[200],
+    return StreamProvider<List<Review>>.value(
+        value: ReviewService().getReviews(widget.drugItemSeq),
+        child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.teal[200],
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+              centerTitle: true,
+              title: Text(
+                '약 정보',
+                style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+              elevation: 0,
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: <Color>[
+                      Color(0xFFE9FFFB),
+                      Color(0xFFE9FFFB),
+                      Color(0xFFFFFFFF),
+                    ])),
+              ),
             ),
-            onPressed: () => Navigator.pop(context),
-          ),
-          centerTitle: true,
-          title: Text(
-            '약 정보',
-            style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[
-                  Color(0xFFE9FFFB),
-                  Color(0xFFE9FFFB),
-                  Color(0xFFFFFFFF),
-                ])),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.create),
-            backgroundColor: Colors.teal[200],
-            elevation: 0.0,
-            onPressed: () async {
-              if (await ReviewService()
-                      .findUserWroteReview(widget.drugItemSeq, user.uid) ==
-                  false)
-                _dialogIfAlreadyExist();
-              else
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            WriteReview(drugItemSeq: widget.drugItemSeq)));
-            }),
-        backgroundColor: Colors.white,
-        body: StreamProvider<List<Review>>.value(
-          value: ReviewService().getReviews(widget.drugItemSeq),
-          child: StreamBuilder<Drug>(
-              key: _key1,
-              stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  Drug drug = snapshot.data;
-                  return GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: CustomScrollView(
-                      physics: PageScrollPhysics(),
-                      controller: _scrollController,
-                      slivers: <Widget>[
-                        SliverToBoxAdapter(
+            floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.create),
+                backgroundColor: Colors.teal[200],
+                elevation: 0.0,
+                onPressed: () async {
+                  if (await ReviewService()
+                          .findUserWroteReview(widget.drugItemSeq, user.uid) ==
+                      false)
+                    _dialogIfAlreadyExist();
+                  else
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                WriteReview(drugItemSeq: widget.drugItemSeq)));
+                }),
+            backgroundColor: Colors.white,
+            body: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: CustomScrollView(
+                physics: PageScrollPhysics(),
+                controller: _scrollController,
+                slivers: <Widget>[
+                  SliverToBoxAdapter(
 //                    key: _key1,
-                          child: _topInfo(context, drug, user),
-                        ),
-                        SliverToBoxAdapter(
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 10.0,
-                            child: Container(
-                              color: Colors.grey[200],
-                            ),
-                          ),
-                        ),
-                        SliverAppBar(
+                    child: _topInfo(context, widget.drugItemSeq),
+                  ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 10.0,
+                      child: Container(
+                        color: Colors.grey[200],
+                      ),
+                    ),
+                  ),
+                  SliverAppBar(
 //                    key: _key2,
-                          flexibleSpace: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
+                    flexibleSpace: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
 //                        Container(
 //                          width: width/2,
 //                          child: Center(child: Text("약정보", )),
 //                        ),
-                              Center(
-                                child: TextButton(
-                                  child: Text(
-                                    "약정보",
-                                  ),
-                                  onPressed: _onTapPillInfo,
-                                ),
-                              ),
-                              Center(
-                                child: TextButton(
-                                  child: Text(
-                                    "리뷰",
-                                  ),
-                                  onPressed: _onTapReview,
-                                ),
-                              ),
+                        Center(
+                          child: TextButton(
+                            child: Text(
+                              "약정보",
+                            ),
+                            onPressed: _onTapPillInfo,
+                          ),
+                        ),
+                        Center(
+                          child: TextButton(
+                            child: Text(
+                              "리뷰",
+                            ),
+                            onPressed: _onTapReview,
+                          ),
+                        ),
 
 //                        Container(
 //                          width: width/2,
 //                          child: Center(child: Text("리뷰", )),
 //                        ),
-                            ],
-                          ),
-                          leading: Container(),
-                          pinned: true,
-                          backgroundColor: Colors.white,
-                        ),
-                        SliverToBoxAdapter(
-                          child: _drugReviews(),
-                        )
                       ],
                     ),
-                  );
-                } else {
-                  return Loading();
-                }
-              }),
-        )
+                    leading: Container(),
+                    pinned: true,
+                    backgroundColor: Colors.white,
+                  ),
+                  SliverToBoxAdapter(
+                    child: Container(
+//                        key: _key1,
+                        height: 3000,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            SizedBox(height: 10),
+                            _underInfo(context, widget.drugItemSeq),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 10.0,
+                              child: Container(
+                                color: Colors.grey[200],
+                              ),
+                            ),
+                            GetRating(widget.drugItemSeq),
+                            Container(
+                              height: 4,
+                              color: Colors.grey[200],
+                            ),
+                            Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 15),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    //TODO EDIT num of reviews
+                                    StreamBuilder<Drug>(
+                                        stream: DatabaseService(
+                                                itemSeq: widget.drugItemSeq)
+                                            .drugData,
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            Drug drug = snapshot.data;
+                                            return Text(
+                                                drug.numOfReview
+                                                        .toStringAsFixed(0) +
+                                                    "개",
+                                                style: TextStyle(
+                                                  fontSize: 16.5,
+                                                  fontWeight: FontWeight.bold,
+                                                ));
+                                          } else
+                                            return Loading();
+                                        }),
+
+                                    InkWell(
+                                        child: Text('전체리뷰 보기',
+                                            style: TextStyle(
+                                              fontSize: 14.5,
+                                            )),
+                                        onTap: () {
+                                          // TODO GET ALL REVIEW
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AllReview()));
+                                        }),
+                                  ],
+                                )),
+                            _searchBar(),
+                            ReviewList(_searchText),
+                          ],
+                        )),
+                  )
+                ],
+              ),
+            )
 
 //            body:  Column(
 //              mainAxisSize: MainAxisSize.max,
@@ -234,167 +288,194 @@ class _ReviewPageState extends State<ReviewPage> {
 //                ReviewList(_searchText)
 //              ],
 //            )
-        );
+            ));
   }
 
   /* Top Information */
-  Widget _topInfo(BuildContext context, Drug drug, TheUser user) {
-    return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: user.uid).userData,
-        builder: (context, snapshot2) {
-          if (snapshot2.hasData) {
-            UserData userData = snapshot2.data;
-            bool _isFavorite = userData.favoriteList.contains(drug.itemSeq);
-            bool _isCareful =
-                _carefulDiseaseList(userData.diseaseList, drug.nbDocData)
-                    .isNotEmpty;
+  Widget _topInfo(BuildContext context, String drugItemSeq) {
+    TheUser user = Provider.of<TheUser>(context);
 
-            return StreamBuilder<List<SavedDrug>>(
-              stream: DatabaseService(uid: user.uid).savedDrugs,
-              builder: (context, snapshot3) {
-                if (snapshot3.hasData) {
-                  List<SavedDrug> savedDrugs = snapshot3.data;
-                  bool _isSaved = false;
-                  for (SavedDrug savedDrug in savedDrugs) {
-                    _isSaved = savedDrug.itemSeq.contains(drug.itemSeq);
-                    if (_isSaved == true) break;
-                  }
+    // TODO: how to control the state management better?
+    // 약정보
+    return StreamBuilder<Drug>(
+        key: _key1,
+        stream: DatabaseService(itemSeq: drugItemSeq).drugData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Drug drug = snapshot.data;
 
-                  return Padding(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: Stack(children: [
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            Center(
-                              child: Container(
-                                width: 200,
-                                child: AspectRatio(
-                                    aspectRatio: 3.5 / 2,
-                                    child:
-                                        DrugImage(drugItemSeq: drug.itemSeq)),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              drug.entpName,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * (0.8),
-                              child: Text(
-                                _shortenName(drug.itemName),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 28.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Row(children: <Widget>[
-                              Text(
-                                drug.totalRating.toStringAsFixed(1),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                " (" +
-                                    drug.numOfReview.toStringAsFixed(0) +
-                                    '개)',
-                                style: TextStyle(color: Colors.grey[600]),
-                              )
-                            ]),
-                            Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  CategoryButton(str: drug.category)
-                                ]),
-                            SizedBox(
-                              height: 20,
-                            )
-                          ]),
-                      _isCareful
-                          ? Positioned(
-                              top: 0,
-                              right: 0,
-                              child: IconButton(
-                                  icon: Icon(
-                                    Icons.announcement,
-                                    color: Colors.amber[700],
+            // 유저정보
+            return StreamBuilder<UserData>(
+                stream: DatabaseService(uid: user.uid).userData,
+                builder: (context, snapshot2) {
+                  if (snapshot2.hasData) {
+                    UserData userData = snapshot2.data;
+                    bool _isFavorite =
+                        userData.favoriteList.contains(drugItemSeq);
+                    bool _isCareful = _carefulDiseaseList(
+                            userData.diseaseList, drug.nbDocData)
+                        .isNotEmpty;
+
+                    // 보관하고 있는 약정보
+                    return StreamBuilder<List<SavedDrug>>(
+                      stream: DatabaseService(uid: user.uid).savedDrugs,
+                      builder: (context, snapshot3) {
+                        if (snapshot3.hasData) {
+                          List<SavedDrug> savedDrugs = snapshot3.data;
+                          bool _isSaved = false;
+                          for (SavedDrug savedDrug in savedDrugs) {
+                            _isSaved = savedDrug.itemSeq.contains(drugItemSeq);
+                            if (_isSaved == true) break;
+                          }
+
+                          print('now _isSaved is $_isSaved');
+
+                          return Padding(
+                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Stack(children: [
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        width: 200,
+                                        child: AspectRatio(
+                                            aspectRatio: 3.5 / 2,
+                                            child: DrugImage(
+                                                drugItemSeq: drugItemSeq)),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      drug.entpName,
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          (0.8),
+                                      child: Text(
+                                        _shortenName(drug.itemName),
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 28.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    Row(children: <Widget>[
+                                      Text(
+                                        drug.totalRating.toStringAsFixed(1),
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        " (" +
+                                            drug.numOfReview
+                                                .toStringAsFixed(0) +
+                                            '개)',
+                                        style:
+                                            TextStyle(color: Colors.grey[600]),
+                                      )
+                                    ]),
+                                    Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          CategoryButton(str: drug.category)
+                                        ]),
+                                    SizedBox(
+                                      height: 20,
+                                    )
+                                  ]),
+                              _isCareful
+                                  ? Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: IconButton(
+                                          icon: Icon(
+                                            Icons.announcement,
+                                            color: Colors.amber[700],
+                                          ),
+                                          onPressed: () {
+                                            _showWarning(
+                                                context,
+                                                _carefulDiseaseList(
+                                                    userData.diseaseList,
+                                                    drug.nbDocData),
+                                                drug.itemSeq);
+                                            // Navigator.of(context).pop();
+                                          }))
+                                  : Container(),
+                              Positioned(
+                                  top: 140,
+                                  right: 0,
+                                  child: IconButton(
+                                      icon: Icon(
+                                        _isFavorite
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: _isFavorite
+                                            ? Colors.redAccent
+                                            : null,
+                                      ),
+                                      onPressed: () async {
+                                        if (_isFavorite) {
+                                          await DatabaseService(uid: user.uid)
+                                              .removeFromFavoriteList(
+                                                  drugItemSeq);
+                                        } else {
+                                          _showFavoriteDone(context);
+                                          await DatabaseService(uid: user.uid)
+                                              .addToFavoriteList(drugItemSeq);
+                                          // _showFavoriteWell(context);
+                                        }
+                                      })),
+                              Positioned(
+                                bottom: 20,
+                                right: 0,
+                                child: ButtonTheme(
+                                  minWidth: 20,
+                                  height: 30,
+                                  child: FlatButton(
+                                    color: Colors.teal[300],
+                                    child: Text(
+                                      '+ 담기',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      if (_isSaved) {
+                                        _alreadySaved(context);
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                fullscreenDialog: true,
+                                                builder: (context) =>
+                                                    Expiration(
+                                                      drugItemSeq: drugItemSeq,
+                                                    )));
+                                      }
+                                    },
                                   ),
-                                  onPressed: () {
-                                    _showWarning(
-                                        context,
-                                        _carefulDiseaseList(
-                                            userData.diseaseList,
-                                            drug.nbDocData),
-                                        drug.itemSeq);
-                                    // Navigator.of(context).pop();
-                                  }))
-                          : Container(),
-                      Positioned(
-                          top: 140,
-                          right: 0,
-                          child: IconButton(
-                              icon: Icon(
-                                _isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: _isFavorite ? Colors.redAccent : null,
+                                ),
                               ),
-                              onPressed: () async {
-                                if (_isFavorite) {
-                                  await DatabaseService(uid: user.uid)
-                                      .removeFromFavoriteList(drug.itemSeq);
-                                } else {
-                                  _showFavoriteDone(context);
-                                  await DatabaseService(uid: user.uid)
-                                      .addToFavoriteList(drug.itemSeq);
-                                  // _showFavoriteWell(context);
-                                }
-                              })),
-                      Positioned(
-                        bottom: 20,
-                        right: 0,
-                        child: ButtonTheme(
-                          minWidth: 20,
-                          height: 30,
-                          child: FlatButton(
-                            color: Colors.teal[300],
-                            child: Text(
-                              '+ 담기',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: () {
-                              if (_isSaved) {
-                                _alreadySaved(context);
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        fullscreenDialog: true,
-                                        builder: (context) => Expiration(
-                                              drugItemSeq: drug.itemSeq,
-                                            )));
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ]),
-                  );
-                } else {
-                  return Loading();
-                }
-              },
-            );
+                            ]),
+                          );
+                        } else {
+                          return Loading();
+                        }
+                      },
+                    );
+                  } else {
+                    return Loading();
+                  }
+                });
           } else {
             return Loading();
           }
@@ -720,70 +801,31 @@ class _ReviewPageState extends State<ReviewPage> {
         });
   }
 
-  /* Review */
-  Widget _drugReviews() {
-    return Container(
-//                        key: _key1,
-        height: 3000,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(height: 10),
-            _underInfo(context, widget.drugItemSeq),
-            SizedBox(
-              width: double.infinity,
-              height: 10.0,
-              child: Container(
-                color: Colors.grey[200],
-              ),
-            ),
-            GetRating(widget.drugItemSeq),
-            Container(
-              height: 4,
-              color: Colors.grey[200],
-            ),
-            Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    //TODO EDIT num of reviews
-                    StreamBuilder<Drug>(
-                        stream: DatabaseService(itemSeq: widget.drugItemSeq)
-                            .drugData,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            Drug drug = snapshot.data;
-                            return Text(
-                                drug.numOfReview.toStringAsFixed(0) + "개",
-                                style: TextStyle(
-                                  fontSize: 16.5,
-                                  fontWeight: FontWeight.bold,
-                                ));
-                          } else
-                            return Loading();
-                        }),
+  Widget _categoryButton(str) {
+    String _shortenCategory(String data) {
+      String newName = '';
 
-                    InkWell(
-                        child: Text('전체리뷰 보기',
-                            style: TextStyle(
-                              fontSize: 14.5,
-                            )),
-                        onTap: () {
-                          // TODO GET ALL REVIEW
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AllReview()));
-                        }),
-                  ],
-                )),
-            _searchBar(),
-            ReviewList(_searchText),
-          ],
-        ));
+      newName = data.substring(7, (data.length));
+      return newName;
+    }
+
+    return ElevatedButton(
+      child: Text(
+        '#${_shortenCategory(str)}',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      style: ButtonStyle(
+          minimumSize: MaterialStateProperty.all<Size>(Size(10, 30)),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              EdgeInsets.symmetric(horizontal: 10)),
+          elevation: MaterialStateProperty.all<double>(0.0),
+          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF7F7F7)),
+          foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF009E8C))),
+      onPressed: () {},
+    );
   }
 
+  /* Review */
   Widget _searchBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
