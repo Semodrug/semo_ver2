@@ -1,38 +1,81 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:semo_ver2/models/drug.dart';
+import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/review/review_list.dart';
+import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/loading.dart';
 import 'review_page.dart';
 import 'write_review.dart';
 
 
 class AllReview extends StatefulWidget {
+  String drugItemSeq;
+  AllReview(this.drugItemSeq);
+
   @override
   _AllReveiewState createState() => _AllReveiewState();
 }
 
 class _AllReveiewState extends State<AllReview> {
   var index = 8;
-  int _counter = 0;
-  int _rating = 0;
+  final TextEditingController _filter = TextEditingController();
+  FocusNode focusNode = FocusNode();
+  String _searchText = "";
+
+  _AllReveiewState() {
+    _filter.addListener(() {
+      setState(() {
+        _searchText = _filter.text;
+      });
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: _appbar(context),
-      body: topOfReview(context),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.create),
-          backgroundColor: Colors.teal[300],
-          elevation: 0.0,
+    return StreamProvider<List<Review>>.value(
+      value: ReviewService().getReviews(widget.drugItemSeq),
+      child: Scaffold(
+        appBar: _appbar(context),
+//      body: topOfReview(context),
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: SizedBox(
+                width: double.infinity,
+                height: 10.0,
+                child: Container(
+                  color: Colors.grey[200],
+                ),
+              ),
+            ),
+//             FROM HERE: TAB
+            SliverToBoxAdapter(
+              child: _myTab(context),
+            ),
+//            SliverToBoxAdapter(
+//              child: _underTab(),
+//            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.create),
+            backgroundColor: Colors.teal[300],
+            elevation: 0.0,
 //          onPressed: () {
 //            Navigator.push(context,
 //                MaterialPageRoute(builder: (context) => WriteReview()));
 //          }
-          ),
+            ),
+      ),
     );
   }
 
@@ -48,19 +91,199 @@ class _AllReveiewState extends State<AllReview> {
       backgroundColor: Colors.white,
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.teal[300]),
-//          onPressed: () {
-//            Navigator.pop(
-//                context,
+          onPressed: () {
+            Navigator.pop(
+                context,
 //                MaterialPageRoute(builder: (context) => MyStatefulWidget()
-////                    builder: (context) => MyApp()
-//                ));
-//          }
+//                    builder: (context) => MyApp()
+//                )
+            );
+          }
       ),
       actions: <Widget>[],
     );
   }
 
-  */
+
+  Widget _myTab(BuildContext context) {
+    return DefaultTabController(
+        length: 3,
+        child: Column(
+          children: [
+            TabBar(
+              labelStyle:
+              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              unselectedLabelStyle:
+              TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
+              tabs: [
+                Tab(child: Text('전체리뷰', style: TextStyle(color: Colors.black))),
+                Tab(child: Text('효과리뷰만', style: TextStyle(color: Colors.black))),
+                Tab(child: Text('부작용리뷰만', style: TextStyle(color: Colors.black))),
+              ],
+              indicatorColor: Colors.teal[400],
+            ),
+            //TODO: height 없이 괜찮게
+            Container(
+              padding: EdgeInsets.all(0.0),
+              width: double.infinity,
+              height: 6000.0,
+              child: TabBarView(
+//               여기에 은영학우님 page 넣기!
+                children: [
+                  _underTab("none"),
+                  _underTab("effectOnly"),
+                  _underTab("sideEffectOnly"),
+
+//
+//                  _underInfo(context, drugItemSeq),
+//                  ReviewPage(drugItemSeq)
+                ],
+              ),
+            )
+          ],
+        ));
+  }
+
+  Widget _underTab(String filter) {
+    return Container(
+//                        key: _key1,
+        height: 3000,
+        child:Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              height: 4,
+              color: Colors.grey[200],
+            ),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    //TODO EDIT num of reviews
+                    StreamBuilder<Drug>(
+                        stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+                        builder: (context, snapshot) {
+                          if(snapshot.hasData) {
+                            Drug drug = snapshot.data;
+                            return Text(drug.numOfReviews.toStringAsFixed(0)+"개",
+                                style: TextStyle(
+                                  fontSize: 16.5,
+                                  fontWeight: FontWeight.bold,
+                                ));
+                          }
+                          else return Loading();
+                        }
+                    ),
+
+//                    InkWell(
+//                        child: Text('전체리뷰 보기',
+//                            style: TextStyle(
+//                              fontSize: 14.5,
+//                            )),
+//                        onTap: () {
+////
+////                          Navigator.push(
+////                              context,
+////                              MaterialPageRoute(
+////                                  builder: (context) => AllReview()));
+//                        }),
+                  ],
+                )),
+            _searchBar(),
+            ReviewList(_searchText, filter),
+          ],
+        )
+    );
+  }
+
+  Widget _searchBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+//        width: 370,
+//        width: MediaQuery.of(context).size.width*0.9,
+        height: 45,
+        margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          color: Colors.grey[200],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+                flex: 5,
+                child: TextField(
+                  focusNode: focusNode,
+                  style: TextStyle(fontSize: 15),
+//                  autofocus: true,
+                  controller: _filter,
+                  decoration: InputDecoration(
+                      fillColor: Colors.white12,
+                      filled: true,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
+//                      suffixIcon: focusNode.hasFocus
+//                          ? IconButton(
+//                        icon: Icon(Icons.cancel, size: 20),
+//                        onPressed: () {
+//                          setState(() {
+//                            _filter.clear();
+//                            _searchText = "";
+//                          });
+//                        },
+//                      )
+//                          : Container(),
+                      hintText: '검색',
+                      contentPadding: EdgeInsets.zero,
+                      labelStyle: TextStyle(color: Colors.grey),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                          BorderSide(color: Colors.transparent)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                          BorderSide(color: Colors.transparent)),
+                      border: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                          BorderSide(color: Colors.transparent))),
+                )),
+//            focusNode.hasFocus
+//                ? Expanded(
+//              child: FlatButton(
+//                child: Text(
+//                  'clear',
+//                  style: TextStyle(fontSize: 13),
+//                ),
+//                onPressed: () {
+//                  setState(() {
+//                    _filter.clear();
+//                    _searchText = "";
+//                    focusNode.unfocus();
+//                  });
+//                },
+//              ),
+//            )
+//                : Expanded(
+//              flex: 0,
+//              child: Container(),
+//            )
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
 /*Widget _buildBody(BuildContext context) {
     // TODO: get actual snapshot from Cloud Firestore
     return StreamBuilder<QuerySnapshot>(
@@ -71,7 +294,9 @@ class _AllReveiewState extends State<AllReview> {
           return _buildList(context, snapshot.data.documents);
         }
     );
-  }*//*
+  }*/
+
+/*
 
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
@@ -511,7 +736,8 @@ Widget _dateAndLike(record) {
 //            Text("309", style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold)),
     ],
   );
+  */
 }
 
 
-*/
+
