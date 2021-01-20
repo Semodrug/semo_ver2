@@ -8,6 +8,7 @@ import 'ranking_tile.dart';
 class DrugList extends StatefulWidget {
   final String categoryName;
 
+
   DrugList({this.categoryName});
 
   @override
@@ -45,8 +46,8 @@ class _DrugListState extends State<DrugList> {
     print('BODY');
     print(' ');
     return StreamBuilder<List<Drug>>(
-        stream: DatabaseService(categoryName: widget.categoryName)
-            .setter(_filterOrSort),
+        stream: DatabaseService(categoryName: widget.categoryName)//categoryName: widget.categoryName
+            .setForRanking(_filterOrSort),
         builder: (context, stream) {
           if (!stream.hasData) {
             return Center(child: CircularProgressIndicator());
@@ -75,18 +76,16 @@ class _DrugListState extends State<DrugList> {
       BuildContext context, String _filterOrSort, List<Drug> drugs) {
     //print('길이 알려주기 !! '+ '${drugs.length}');
     //totalNum = drugs.length;
-    List<Drug> drugList = [];
-    drugList = drugs;
-    print('   길이  ${drugList.length.toString()}');
-    print(drugList[0].itemName);
-    print(drugList[0].itemSeq);
+    print('   길이  ${drugs.length.toString()}');
+    //print(drugs[0].itemName);
+    //print(drugs[0].itemSeq);
 
     print('  ');
     return Expanded(
       child: ListView.builder(
-        itemCount: drugList.length,
+        itemCount: drugs.length,
         itemBuilder: (context, index) {
-          return DrugTile(drug: drugList[index], index: (index + 1));
+          return DrugTile(drug: drugs[index], index: (index + 1));
         },
       ),
     );
@@ -108,6 +107,8 @@ class _DrugListState extends State<DrugList> {
                 ),
               ),
               Spacer(),
+              //TODO: 지금 여기서 리뷰가 없어서 아예 리뷰에 관한 쿼리가 먹지를 않음
+              //TODO: DB에서 분명 리뷰가 없으면 0 을 넣어주라고 해두었는데 왜 쿼리에서는 먹지를 않지?
               DropdownButton<String>(
                 value: _filterOrSort,
                 // icon: Icon(Icons.arrow_drop_down),
@@ -121,7 +122,7 @@ class _DrugListState extends State<DrugList> {
                 onChanged: (String newValue) {
                   setState(() {
                     _filterOrSort = newValue;
-                    print('NEW == $_filterOrSort');
+                    //print('NEW == $_filterOrSort');
                   });
                 },
                 items: <String>['이름순', '리뷰 많은 순']

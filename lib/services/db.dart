@@ -28,29 +28,23 @@ class DatabaseService {
     return drugsSnapshots;
   }
 
-  Stream<List<Drug>> setter(String _filterOrSort) {
-    //애초에 쿼리가 카테고리가 같아야 한다.//카테고리가 생기면 카테고리를 담은 쿼리를 짜주기!!
-    Query multiQuery;
-
+  Stream<List<Drug>> setForRanking(String _filterOrSort) {
     switch (_filterOrSort) {
-      //쿼리가 이중으로 안된느 거 같아서 쪼개서 해보니까 먹는다 하지만 제대로 알아보자 분명 있을텐데
       case "이름순":
-        drugQuery = drugQuery.where('ITEM_NAME', isGreaterThan: '이지');
-
-        multiQuery =
-            drugQuery.orderBy('ITEM_NAME', descending: false).limit(10);
+        drugQuery = drugQuery.where('PRDUCT_TYPE', isEqualTo: categoryName )//;
+            .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
+            .orderBy('ITEM_NAME', descending: false).limit(30);
 
         break;
 
       case "리뷰 많은 순":
-        drugQuery = drugQuery.where('ITEM_NAME', isGreaterThan: '타이레');
-
-        multiQuery =
-            drugQuery.orderBy('ITEM_NAME', descending: false).limit(10);
+        drugQuery = drugQuery.where('PRDUCT_TYPE', isEqualTo: categoryName )//;
+            .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
+            .orderBy('numOfReview', descending: false).limit(10);
         break;
     }
 
-    drugsSnapshots = multiQuery.snapshots().map(_drugListFromSnapshot);
+    drugsSnapshots = drugQuery.snapshots().map(_drugListFromSnapshot);
 
     return drugsSnapshots;
   }
@@ -92,7 +86,7 @@ class DatabaseService {
         validTerm: doc.data()['VALID_TERM'] ?? '',
 
         // TODO:
-        category: doc.data()['category'] ?? '',
+        category: doc.data()['PRDUCT_TYPE'] ?? '',
         // image: doc.data()['image'] ?? '',
         // review: doc.data()['review'],
 
@@ -139,7 +133,7 @@ class DatabaseService {
       validTerm: snapshot.data()['VALID_TERM'] ?? '',
 
       // TODO:
-      category: snapshot.data()['category'] ?? '',
+      category: snapshot.data()['PRDUCT_TYPE'] ?? '',
       // image: snapshot.data()['image'] ?? '',
       // review: snapshot.data()['review'],
 
@@ -162,13 +156,14 @@ class DatabaseService {
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
       uid: uid,
-      registerDate: snapshot.data()['registerDate'] ?? '',
       agreeDate: snapshot.data()['agreeDate'] ?? '',
       sex: snapshot.data()['sex'] ?? '',
       nickname: snapshot.data()['nickname'] ?? '',
       birthYear: snapshot.data()['birthYear'] ?? '',
       isPregnant: snapshot.data()['isPregnant'] ?? false,
       diseaseList: snapshot.data()['diseaseList'] ?? [],
+      favoriteList: snapshot.data()['favoriteList'] ?? [],
+      searchList: snapshot.data()['searchList'] ?? [],
     );
   }
 
@@ -202,37 +197,37 @@ class DatabaseService {
   Future<void> updateUserHealth(isPregnant, diseaseList) async {
     return await userCollection.doc(uid).update({
       'isPregnant': isPregnant ?? '',
-      'disease_list': diseaseList ?? [],
+      'diseaseList': diseaseList ?? [],
     });
   }
 
   /* Favorite List */
   // List data from snapshots
-  Lists _listsFromSnapshot(DocumentSnapshot snapshot) {
-    return Lists(
-      favoriteLists: snapshot.data()['favoriteLists'] ?? '',
-    );
-  }
-
-  // get favorite list stream
-  Stream<Lists> get lists {
-    return userCollection
-        .doc(uid)
-        .collection('OtherInfos')
-        .doc('Lists')
-        .snapshots()
-        .map(_listsFromSnapshot);
-  }
-
-  Future<void> updateLists(List newList) async {
-    return await userCollection
-        .doc(uid)
-        .collection('OtherInfos')
-        .doc('Lists')
-        .set({
-      'favoriteLists': newList,
-    });
-  }
+  // Lists _listsFromSnapshot(DocumentSnapshot snapshot) {
+  //   return Lists(
+  //     favoriteLists: snapshot.data()['favoriteLists'] ?? '',
+  //   );
+  // }
+  //
+  // // get favorite list stream
+  // Stream<Lists> get lists {
+  //   return userCollection
+  //       .doc(uid)
+  //       .collection('OtherInfos')
+  //       .doc('Lists')
+  //       .snapshots()
+  //       .map(_listsFromSnapshot);
+  // }
+  //
+  // Future<void> updateLists(List newList) async {
+  //   return await userCollection
+  //       .doc(uid)
+  //       .collection('OtherInfos')
+  //       .doc('Lists')
+  //       .set({
+  //     'favoriteLists': newList,
+  //   });
+  // }
 
   /* Saved List */
   //drug list from snapshot
@@ -241,7 +236,7 @@ class DatabaseService {
       return SavedDrug(
         itemName: doc.data()['ITEM_NAME'] ?? '',
         itemSeq: doc.data()['ITEM_SEQ'] ?? '',
-        category: doc.data()['category'] ?? '',
+        category: doc.data()['PRDUCT_TYPE'] ?? '',
         expiration: doc.data()['expiration'] ?? '',
       );
     }).toList();
@@ -264,7 +259,7 @@ class DatabaseService {
         .set({
       'ITEM_NAME': itemName ?? '',
       'ITEM_SEQ': itemSeq ?? '',
-      'category': category ?? '',
+      'PRDUCT_TYPE': category ?? '',
       'expiration': expiration ?? '',
     });
   }
@@ -312,7 +307,6 @@ class DatabaseService {
 
       'totalRating': rating,
       'numOfReviews': length,
-
     });
   }
 
@@ -331,4 +325,37 @@ class DatabaseService {
     return result.docs.isEmpty;
   }
 
+  // Future<void> batchUpdate() {
+  //   WriteBatch batch = FirebaseFirestore.instance.batch();
+  //
+  //   return drugCollection.get().then((querySnapshot) {
+  //     querySnapshot.docs.forEach((myDoc) {
+  //       batch.update(myDoc.reference, {'numOfReview': 0, 'totalRating': 0});
+  //     });
+  //
+  //     return batch.commit();
+  //   });
+  // }
+
+  // Future<void> updateLists(List newList) async {
+  //   return await userCollection
+  //       .doc(uid)
+  //       .collection('OtherInfos')
+  //       .doc('Lists')
+  //       .set({
+  //     'favoriteLists': newList,
+  //   });
+  // }
+
+  Future<void> removeFromFavoriteList(String drugItemSeq) async {
+    return await userCollection.doc(uid).update({
+      'favoriteList': FieldValue.arrayRemove([drugItemSeq]),
+    });
+  }
+
+  Future<void> addToFavoriteList(String drugItemSeq) async {
+    return await userCollection.doc(uid).update({
+      'favoriteList': FieldValue.arrayUnion([drugItemSeq]),
+    });
+  }
 }
