@@ -781,7 +781,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   ],
                 )),
             _searchBar(),
-            ReviewList(_searchText),
+            ReviewList(_searchText, "all"),
           ],
         ));
   }
