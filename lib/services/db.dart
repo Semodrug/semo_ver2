@@ -40,7 +40,7 @@ class DatabaseService {
       case "리뷰 많은 순":
         drugQuery = drugQuery.where('PRDUCT_TYPE', isEqualTo: categoryName )//;
             .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
-            .orderBy('numOfReviews', descending: false).limit(10);
+            .orderBy('numOfReviews', descending: true).limit(10);
         break;
     }
 
