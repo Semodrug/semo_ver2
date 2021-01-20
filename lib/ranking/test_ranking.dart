@@ -10,8 +10,18 @@ class TestRanking extends StatelessWidget {
 
   TestRanking({this.categoryName});
 
+  String _checkCategoryName(String data) {
+    String newName = '';
+
+    newName = data.substring(7,(data.length));
+    print('newName = $newName ');
+    return newName;
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    String onlyName = _checkCategoryName(categoryName);
     return
         Scaffold(
             appBar: AppBar(
@@ -27,7 +37,7 @@ class TestRanking extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    categoryName.toString(),
+                    onlyName,
                     style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
