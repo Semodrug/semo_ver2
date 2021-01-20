@@ -91,7 +91,8 @@ class DatabaseService {
         // review: doc.data()['review'],
 
         totalRating: doc.data()['totalRating'] ?? 0,
-        numOfReview: doc.data()['numOfReviews'] ?? 0,
+        numOfReviews: doc.data()['numOfReviews'] ?? 0,
+        
       );
     }).toList();
   }
@@ -138,7 +139,9 @@ class DatabaseService {
       // review: snapshot.data()['review'],
 
       totalRating: snapshot.data()['totalRating'] ?? 0,
-      numOfReview: snapshot.data()['numOfReviews'] ?? 0,
+
+      numOfReviews: snapshot.data()['numOfReviews'] ?? 0,
+
     );
   }
 
@@ -203,31 +206,31 @@ class DatabaseService {
 
   /* Favorite List */
   // List data from snapshots
-  Lists _listsFromSnapshot(DocumentSnapshot snapshot) {
-    return Lists(
-      favoriteLists: snapshot.data()['favoriteLists'] ?? '',
-    );
-  }
-
-  // get favorite list stream
-  Stream<Lists> get lists {
-    return userCollection
-        .doc(uid)
-        .collection('OtherInfos')
-        .doc('Lists')
-        .snapshots()
-        .map(_listsFromSnapshot);
-  }
-
-  Future<void> updateLists(List newList) async {
-    return await userCollection
-        .doc(uid)
-        .collection('OtherInfos')
-        .doc('Lists')
-        .set({
-      'favoriteLists': newList,
-    });
-  }
+  // Lists _listsFromSnapshot(DocumentSnapshot snapshot) {
+  //   return Lists(
+  //     favoriteLists: snapshot.data()['favoriteLists'] ?? '',
+  //   );
+  // }
+  //
+  // // get favorite list stream
+  // Stream<Lists> get lists {
+  //   return userCollection
+  //       .doc(uid)
+  //       .collection('OtherInfos')
+  //       .doc('Lists')
+  //       .snapshots()
+  //       .map(_listsFromSnapshot);
+  // }
+  //
+  // Future<void> updateLists(List newList) async {
+  //   return await userCollection
+  //       .doc(uid)
+  //       .collection('OtherInfos')
+  //       .doc('Lists')
+  //       .set({
+  //     'favoriteLists': newList,
+  //   });
+  // }
 
   /* Saved List */
   //drug list from snapshot
@@ -299,10 +302,6 @@ class DatabaseService {
   }
 
   Future<void> updateTotalRating(num rating, num length) async {
-//    DocumentSnapshot drugSnapshot = await drugCollection.doc(itemSeq).get();
-//    num formerTotalRating = drugSnapshot.data()["totalRating"];
-//    num formerNumOfReview = drugSnapshot.data()["numOfReview"];
-
     return await drugCollection.doc(itemSeq).update({
 //      'totalRating': (formerTotalRating * formerNumOfReview + rating) /
 //              (formerNumOfReview + 1) ??
@@ -310,7 +309,7 @@ class DatabaseService {
 //      'numOfReview': FieldValue.increment(1),
 
       'totalRating': rating,
-      'numOfReview': length,
+      'numOfReviews': length,
     });
   }
 
@@ -340,4 +339,26 @@ class DatabaseService {
   //     return batch.commit();
   //   });
   // }
+
+  // Future<void> updateLists(List newList) async {
+  //   return await userCollection
+  //       .doc(uid)
+  //       .collection('OtherInfos')
+  //       .doc('Lists')
+  //       .set({
+  //     'favoriteLists': newList,
+  //   });
+  // }
+
+  Future<void> removeFromFavoriteList(String drugItemSeq) async {
+    return await userCollection.doc(uid).update({
+      'favoriteList': FieldValue.arrayRemove([drugItemSeq]),
+    });
+  }
+
+  Future<void> addToFavoriteList(String drugItemSeq) async {
+    return await userCollection.doc(uid).update({
+      'favoriteList': FieldValue.arrayUnion([drugItemSeq]),
+    });
+  }
 }
