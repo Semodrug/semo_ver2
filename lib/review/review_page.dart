@@ -46,7 +46,7 @@ class _ReviewPageState extends State<ReviewPage> {
   double _getSizes() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
     final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
-    double height = renderBox1.size.height + renderBox2.size.height+200;
+    double height = renderBox1.size.height + renderBox2.size.height + 200;
 //    print("SIZE of Red: $sizeRedWidth");
     print("SIZE of Red: $height");
     return height;
@@ -54,11 +54,13 @@ class _ReviewPageState extends State<ReviewPage> {
 
   var _scrollController = ScrollController();
   void _onTapPillInfo() {
-    _scrollController.animateTo(0, duration: Duration(milliseconds: 100), curve: Curves.easeOut);
+    _scrollController.animateTo(0,
+        duration: Duration(milliseconds: 100), curve: Curves.easeOut);
   }
 
   void _onTapReview() {
-    _scrollController.animateTo(_getSizes()-400, duration: Duration(milliseconds: 100), curve: Curves.easeOut);
+    _scrollController.animateTo(_getSizes() - 400,
+        duration: Duration(milliseconds: 100), curve: Curves.easeOut);
   }
 
   @override
@@ -146,13 +148,17 @@ class _ReviewPageState extends State<ReviewPage> {
 //                        ),
                         Center(
                           child: TextButton(
-                            child: Text("약정보", ),
+                            child: Text(
+                              "약정보",
+                            ),
                             onPressed: _onTapPillInfo,
                           ),
                         ),
                         Center(
                           child: TextButton(
-                            child: Text("리뷰", ),
+                            child: Text(
+                              "리뷰",
+                            ),
                             onPressed: _onTapReview,
                           ),
                         ),
@@ -174,7 +180,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(height:10),
+                            SizedBox(height: 10),
                             _underInfo(context, widget.drugItemSeq),
                             SizedBox(
                               width: double.infinity,
@@ -409,7 +415,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 builder: (context, snapshot2) {
                   if (snapshot2.hasData) {
                     UserData userData = snapshot2.data;
-                    bool isFavorite =
+                    bool _isFavorite =
                         userData.favoriteList.contains(drugItemSeq);
                     bool _isCareful = _carefulDiseaseList(
                             userData.diseaseList, drug.nbDocData)
@@ -421,12 +427,12 @@ class _ReviewPageState extends State<ReviewPage> {
                       builder: (context, snapshot3) {
                         if (snapshot3.hasData) {
                           List<SavedDrug> savedDrugs = snapshot3.data;
-                          // bool isSaved;
+                          bool _isSaved;
 
-                          // for (SavedDrug savedDrug in savedDrugs) {
-                          //   isSaved = savedDrug.itemSeq.contains(drugItemSeq);
-                          //   if (isSaved == true) break;
-                          // }
+                          for (SavedDrug savedDrug in savedDrugs) {
+                            _isSaved = savedDrug.itemSeq.contains(drugItemSeq);
+                            if (_isSaved == true) break;
+                          }
 
                           return Padding(
                             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -438,12 +444,16 @@ class _ReviewPageState extends State<ReviewPage> {
                                       height: 20.0,
                                     ),
                                     Center(
-                                      child: SizedBox(
-                                        child:
-                                            DrugImage(drugItemSeq: drugItemSeq),
-                                        width: 200.0,
-                                        height: 100.0,
+                                      child: Container(
+                                        width: 200,
+                                        child: AspectRatio(
+                                            aspectRatio: 3.5 / 2,
+                                            child: DrugImage(
+                                                drugItemSeq: drugItemSeq)),
                                       ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
                                     ),
                                     Text(
                                       drug.entpName,
@@ -479,6 +489,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                         children: <Widget>[
                                           _categoryButton(drug.category)
                                         ]),
+                                    SizedBox(
+                                      height: 20,
+                                    )
                                   ]),
                               _isCareful
                                   ? Positioned(
@@ -503,27 +516,31 @@ class _ReviewPageState extends State<ReviewPage> {
                                       )
                                   : Container(),
                               Positioned(
-                                  bottom: 70,
+                                  bottom: 110,
                                   right: 0,
                                   child: IconButton(
                                       icon: Icon(
-                                        // Icons.favorite_border,
-                                        isFavorite
+                                        _isFavorite
                                             ? Icons.favorite
                                             : Icons.favorite_border,
-                                        color: isFavorite
+                                        color: _isFavorite
                                             ? Colors.redAccent
                                             : null,
                                       ),
                                       onPressed: () async {
-                                        // isFavorite
-                                        //     ? favoriteLists.remove(drugItemSeq)
-                                        //     : favoriteLists.add(drugItemSeq);
-                                        // await DatabaseService(uid: user.uid)
-                                        //     .updateLists(favoriteLists);
+                                        if (_isFavorite) {
+                                          await DatabaseService(uid: user.uid)
+                                              .removeFromFavoriteList(
+                                                  drugItemSeq);
+                                        } else {
+                                          // _showFavoriteWell(context);
+                                          await DatabaseService(uid: user.uid)
+                                              .addToFavoriteList(drugItemSeq);
+                                          _showFavoriteWell(context);
+                                        }
                                       })),
                               Positioned(
-                                bottom: 0,
+                                bottom: 20,
                                 right: 0,
                                 child: ButtonTheme(
                                   minWidth: 20,
@@ -535,26 +552,18 @@ class _ReviewPageState extends State<ReviewPage> {
                                       style: TextStyle(color: Colors.white),
                                     ),
                                     onPressed: () {
-//                                       if (isSaved) {
-//                                         Navigator.push(
-//                                             context,
-//                                             MaterialPageRoute(
-//                                                 fullscreenDialog: true,
-//                                                 builder: (context) =>
-//                                                     Expiration(
-//                                                       drugItemSeq: drugItemSeq,
-//                                                     )));
-//
-// //                                     _myDialog(context, '약 보관함',
-// //                                         '이미 보관함에 저장되어있습니다.', '', '확인');
-//
-//                                         // MyDialog(
-//                                         //     contents: '이미 보관함에 저장되어있습니다.',
-//                                         //     tail1: '확인');
-//                                       } else {
-//                                         _myDialog(context, '약 보관함',
-//                                             '나의 보관함에 저장하시겠습니까?', '예', '아니요');
-//                                       }
+                                      if (_isSaved) {
+                                        _alreadyExist(context);
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                fullscreenDialog: true,
+                                                builder: (context) =>
+                                                    Expiration(
+                                                      drugItemSeq: drugItemSeq,
+                                                    )));
+                                      }
                                     },
                                   ),
                                 ),
@@ -751,29 +760,29 @@ class _ReviewPageState extends State<ReviewPage> {
           title: Text(
             dialogTitle,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.teal[400]),
+            style: TextStyle(color: Colors.teal[400], fontSize: 14),
           ),
           content: Text(dialogContent),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                tail1,
-                style: TextStyle(color: Colors.teal[200]),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
-              child: Text(
-                tail2,
-                style: TextStyle(color: Colors.teal[200]),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
+          // actions: <Widget>[
+          //   FlatButton(
+          //     child: Text(
+          //       tail1,
+          //       style: TextStyle(color: Colors.teal[200]),
+          //     ),
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //   ),
+          //   FlatButton(
+          //     child: Text(
+          //       tail2,
+          //       style: TextStyle(color: Colors.teal[200]),
+          //     ),
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //   ),
+          // ],
         );
       },
     );
@@ -853,10 +862,109 @@ class _ReviewPageState extends State<ReviewPage> {
               ],
             ),
           ),
-          // Text("${carefulDiseaseList}에 관한 주의사항이 있습니다. 자세히 보기를 확인해주세요"),
-          // actions: <Widget>[
-          //
-          // ],
+        );
+      },
+    );
+  }
+
+  void _showFavoriteWell(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop(true);
+        }); // return object of type Dialog
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Icon(
+            Icons.favorite,
+            color: Colors.red,
+            size: 17,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: '찜 목록',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '에 추가되었습니다.'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '마이페이지에서 확인하실 수 있습니다',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _alreadyExist(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop(true);
+        }); //
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Icon(
+            Icons.warning,
+            color: Colors.orangeAccent,
+            size: 17,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(text: '이미 '),
+                      TextSpan(
+                          text: '보관함',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '에 저장되어있습니다.'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '약보관함에서 확인하실 수 있습니다',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          ),
         );
       },
     );

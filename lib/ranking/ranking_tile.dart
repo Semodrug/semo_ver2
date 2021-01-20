@@ -3,11 +3,11 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/review/review_page.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/image.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-
 
 class DrugTile extends StatelessWidget {
   final Drug drug;
@@ -176,8 +176,7 @@ class DrugTile extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            PhilInfoPage(drugItemSeq: drug.itemSeq),
+                        builder: (context) => ReviewPage(drug.itemSeq),
                       ),
                     ),
                     print('===> pushed'),
@@ -275,10 +274,8 @@ class DrugTile extends StatelessWidget {
                         )),
                   ),
                 ));
-          }
-
-          else {
-          return Container();// Center(child: CircularProgressIndicator());
+          } else {
+            return Container(); // Center(child: CircularProgressIndicator());
           }
         });
     */
@@ -303,8 +300,6 @@ class DrugTile extends StatelessWidget {
           color: Colors.amberAccent,
         ),
       );
-
-
   }
 
   Widget _categoryButton(str) {
@@ -327,4 +322,3 @@ class DrugTile extends StatelessWidget {
     );
   }
 }
-
