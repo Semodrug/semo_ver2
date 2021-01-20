@@ -5,6 +5,7 @@ import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/review/review_page.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -26,7 +27,6 @@ class DrugTile extends StatelessWidget {
         newName = data.replaceAll('(', '(');
         if (newName.contains('')) {
           splitName = newName.split('(');
-          print(splitName);
           newName = splitName[0];
         }
       }
@@ -39,12 +39,22 @@ class DrugTile extends StatelessWidget {
 
     String drugRating = drug.totalRating.toStringAsFixed(2);
 
-    String _checkCategoryName(String data) {
-      String newName = '';
-
-      newName = data.substring(7, (data.length));
-      print('newName = $newName ');
-      return newName;
+    //디자이너님이 1-3위까지는 위를 붙이고, 4위부터는 그냥 숫자로만
+    Widget _upToThree(index) {
+      if (index < 4) {
+        return Center(
+          child: Text(
+            '${index.toString()}위',
+            style: TextStyle(fontSize: 12),
+          ),
+        );
+      } else
+        return Center(
+          child: Text(
+            index.toString(),
+            style: TextStyle(fontSize: 12),
+          ),
+        );
     }
 
     return Padding(
@@ -57,11 +67,7 @@ class DrugTile extends StatelessWidget {
                 builder: (context) => ReviewPage(drug.itemSeq),
               ),
             ),
-            print('===> pushed'),
-            print(drug.itemSeq),
-            // TODO: 리뷰개수
-            // print(' 리뷰 개수 잘 받아오는 확인 ${drug.review.toString()} ')
-          },
+             },
           child: Container(
             width: double.infinity,
             height: 100.0,
@@ -72,23 +78,21 @@ class DrugTile extends StatelessWidget {
                     SizedBox(
                       width: 40,
                       child: Container(
-                          margin: EdgeInsets.only(left: 10, right: 5),
+                          margin: EdgeInsets.only(left: 16, right: 5),
                           //padding: EdgeInsets.only(left: 0, right: 5),
-                          child: Text(
-                            ' ${index.toString()}위',
-                            style: TextStyle(fontSize: 12),
-                          )),
+                          child: _upToThree(index),
+//
+                         ),
                     ),
                     Container(
-                      padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+                      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                       child: AspectRatio(
                         aspectRatio: 2 / 2,
                         // TODO: show storage image - if null, defalut image
                         child: Container(
                             padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
                             child: SizedBox(
-                                width: 88,
-                                height: 66,
+                                width: 40,
                                 child: DrugImage(drugItemSeq: drug.itemSeq))),
                       ),
                     ),
@@ -137,8 +141,9 @@ class DrugTile extends StatelessWidget {
                             Expanded(
                                 child: Row(
                               children: [
-                                _categoryButton(
-                                    (_checkCategoryName(drug.category)))
+//                                _categoryButton(
+//                                    (_checkCategoryName(drug.category)))
+                                CategoryButton(str: drug.category)
                               ],
                             )),
                           ],

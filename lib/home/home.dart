@@ -11,6 +11,7 @@ import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/home/home_add_button_stack.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
+import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
 
 /*약들의 개수를 length 만큼 보여주고 싶은데 그 length의 인덱스를 어떻게 넘겨주지..?*/
@@ -161,13 +162,9 @@ class _HomePageState extends State<HomePage> {
       if (data.itemName.contains('(수출') || data.itemName.contains('(군납')) {
         if (newName.contains('')) {
           splitName = newName.split('(');
-          print(splitName);
           newName = splitName[0];
         }
       }
-
-      print('$newName 의 길이는? ');
-      print(newName.length);
 
       if (newName.length > 15) {
         newName = newName.substring(0, 12);
@@ -189,8 +186,7 @@ class _HomePageState extends State<HomePage> {
     String _checkCategoryName(String data) {
       String newName = '';
       //TODO: 이부분 0 --> 7로 바꿔주기 pattern이 0-6까지가 카테고리 이름
-      newName = data.substring(0,(data.length));
-      print('newName = $newName ');
+      newName = data.substring(7,(data.length));
       return newName;
     }
     String onlyCategoryName = _checkCategoryName(data.category);
@@ -219,12 +215,15 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.white,
                 child: Row(
                   children: [
-                    SizedBox(
-                      width: 20,
-                      child: Center(
-                        child: Text(
-                          num.toString(),
-                          style: TextStyle(fontSize: 12),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: SizedBox(
+                        width: 20,
+                        child: Center(
+                          child: Text(
+                            num.toString(),
+                            style: TextStyle(fontSize: 12),
+                          ),
                         ),
                       ),
                     ),
@@ -251,9 +250,13 @@ class _HomePageState extends State<HomePage> {
                                     fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            Container(
-                              height: 20,
-                              child: _categoryButton(onlyCategoryName)
+                            //SizedBox(height: 2,),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 3),
+                              child: Container(
+                                height: 20,
+                                 child: CategoryButton(str: data.category)
+                              ),
                             ),
                             SizedBox(
                               height: 3,
@@ -297,7 +300,6 @@ class _HomePageState extends State<HomePage> {
                                                     fontSize: 16)))),
                                     MaterialButton(
                                         onPressed: () {
-                                          print('삭제하기');
                                           FirebaseFirestore
                                               .instance //user가 가지고 있는 약 data
                                               .collection('users')

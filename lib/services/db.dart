@@ -31,16 +31,20 @@ class DatabaseService {
   Stream<List<Drug>> setForRanking(String _filterOrSort) {
     switch (_filterOrSort) {
       case "이름순":
-        drugQuery = drugQuery.where('PRDUCT_TYPE', isEqualTo: categoryName )//;
+        drugQuery = drugQuery
+            .where('PRDUCT_TYPE', isEqualTo: categoryName) //;
             .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
-            .orderBy('ITEM_NAME', descending: false).limit(10);
+            .orderBy('ITEM_NAME', descending: false)
+            .limit(10);
 
         break;
 
       case "리뷰 많은 순":
-        drugQuery = drugQuery.where('PRDUCT_TYPE', isEqualTo: categoryName )//;
+        drugQuery = drugQuery
+            .where('PRDUCT_TYPE', isEqualTo: categoryName) //;
             .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
-            .orderBy('numOfReviews', descending: true).limit(10);
+            .orderBy('numOfReviews', descending: true)
+            .limit(10);
         break;
     }
 
@@ -92,7 +96,6 @@ class DatabaseService {
 
         totalRating: doc.data()['totalRating'] ?? 0,
         numOfReviews: doc.data()['numOfReviews'] ?? 0,
-        
       );
     }).toList();
   }
@@ -141,7 +144,6 @@ class DatabaseService {
       totalRating: snapshot.data()['totalRating'] ?? 0,
 
       numOfReviews: snapshot.data()['numOfReviews'] ?? 0,
-
     );
   }
 
@@ -203,34 +205,6 @@ class DatabaseService {
       'diseaseList': diseaseList ?? [],
     });
   }
-
-  /* Favorite List */
-  // List data from snapshots
-  // Lists _listsFromSnapshot(DocumentSnapshot snapshot) {
-  //   return Lists(
-  //     favoriteLists: snapshot.data()['favoriteLists'] ?? '',
-  //   );
-  // }
-  //
-  // // get favorite list stream
-  // Stream<Lists> get lists {
-  //   return userCollection
-  //       .doc(uid)
-  //       .collection('OtherInfos')
-  //       .doc('Lists')
-  //       .snapshots()
-  //       .map(_listsFromSnapshot);
-  // }
-  //
-  // Future<void> updateLists(List newList) async {
-  //   return await userCollection
-  //       .doc(uid)
-  //       .collection('OtherInfos')
-  //       .doc('Lists')
-  //       .set({
-  //     'favoriteLists': newList,
-  //   });
-  // }
 
   /* Saved List */
   //drug list from snapshot
@@ -328,28 +302,6 @@ class DatabaseService {
     return result.docs.isEmpty;
   }
 
-  // Future<void> batchUpdate() {
-  //   WriteBatch batch = FirebaseFirestore.instance.batch();
-  //
-  //   return drugCollection.get().then((querySnapshot) {
-  //     querySnapshot.docs.forEach((myDoc) {
-  //       batch.update(myDoc.reference, {'numOfReview': 0, 'totalRating': 0});
-  //     });
-  //
-  //     return batch.commit();
-  //   });
-  // }
-
-  // Future<void> updateLists(List newList) async {
-  //   return await userCollection
-  //       .doc(uid)
-  //       .collection('OtherInfos')
-  //       .doc('Lists')
-  //       .set({
-  //     'favoriteLists': newList,
-  //   });
-  // }
-
   Future<void> removeFromFavoriteList(String drugItemSeq) async {
     return await userCollection.doc(uid).update({
       'favoriteList': FieldValue.arrayRemove([drugItemSeq]),
@@ -361,4 +313,27 @@ class DatabaseService {
       'favoriteList': FieldValue.arrayUnion([drugItemSeq]),
     });
   }
+
+  Future<String> itemSeqFromBarcode(barcode) async {
+    var result =
+        await drugCollection.where('BAR_CODE', isEqualTo: barcode).get();
+    var data;
+    if (result == null) {
+      data = null;
+    } else {
+      data = result.docs.first.data()['ITEM_SEQ'] ?? null;
+    }
+    print(data);
+
+    return data;
+
+    // drugCollection.where('BAR_CODE', isEqualTo: barcode).get().then((value) {
+    //   result = value.docs.first.data()['ITEM_SEQ'];
+    //   return result;
+    // });
+
+    // print('22 $result');
+  }
+
+  // databaseReference.collection ( "myCollection"). getDocuments (). then ((onValue) {onValue.documents.forEach ((f) {f [0]})});
 }

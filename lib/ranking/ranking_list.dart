@@ -16,21 +16,16 @@ class DrugList extends StatefulWidget {
 }
 
 class _DrugListState extends State<DrugList> {
-  String _filterOrSort = "이름순";
-  var totalNum = 0; //DatabaseService().getRankingNum();
+  String _filterOrSort = "리뷰 많은 순";
+  //var totalNum = 0; //DatabaseService().getRankingNum();
 
   @override
   Widget build(BuildContext context) {
-    print('build');
-    print(' ');
-    //일단 total num을 위해 임시로 열어둔 프로바이더
-    //List<Drug> drugs = Provider.of<List<Drug>>(context) ?? [];
-    //totalNum = drugs.length;
 
     return Column(
       children: [
-        _countDropDown(context, totalNum),
-        //_countDropDown(context),
+        //_countDropDown(context, totalNum),
+        _countDropDown(context),
         _buildBody(context, _filterOrSort)
       ],
     );
@@ -67,8 +62,6 @@ class _DrugListState extends State<DrugList> {
 //  }
 
   Widget _buildBody(BuildContext context, String _filterOrSort) {
-    print('BODY');
-    print(' ');
     return StreamBuilder<List<Drug>>(
         stream: DatabaseService(categoryName: widget.categoryName)//categoryName: widget.categoryName
             .setForRanking(_filterOrSort),
@@ -90,7 +83,6 @@ class _DrugListState extends State<DrugList> {
             );
             */
           } else {
-            print('데이터 있음');
             return _buildList(context, _filterOrSort, stream.data);
           }
         });
@@ -98,10 +90,6 @@ class _DrugListState extends State<DrugList> {
 
   Widget _buildList(
       BuildContext context, String _filterOrSort, List<Drug> drugs) {
-    //print('길이 알려주기 !! '+ '${drugs.length}');
-    print('   길이  ${drugs.length.toString()}');
-
-    print('  ');
     return Expanded(
       child: ListView.builder(
         itemCount: drugs.length,
@@ -112,49 +100,73 @@ class _DrugListState extends State<DrugList> {
     );
   }
 
-  Widget _countDropDown(context, num) {
-    //Widget _countDropDown(context) {
+  String _checkCategoryName(String data) {
+    String newName = '';
+    //TODO: 이부분 0 --> 7로 바꿔주기 pattern이 0-6까지가 카테고리 이름
+    newName = data.substring(7,(data.length));
+    return newName;
+  }
+
+
+  Widget _countDropDown(context) {
+    String onlyCategoryName = _checkCategoryName(widget.categoryName);
+
+    //Widget _countDropDown(context, num) {
       return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(left: 20, top: 1),
-                child: Row(
-                  children: <Widget>[
-                    Text('총 ${num} 개 약'), // theme 추가
-                    //getNumOfRanking(context)
-                  ],
+          child: Container(
+            //샘이가 elevation을 요청했ㄷ
+//            decoration: BoxDecoration(
+//              border: Border(
+//                  bottom: BorderSide( //
+//                    color: Colors.grey,
+//                    width: 0.5,)
+//              ),
+//            ),
+            height: 35,
+            child: Row(
+              children: <Widget>[
+                //TODO: No sql에서는 count가 현재 지원이 안되고 있어서 일단 1차적으로는 제외하고 가는 거로
+//              Container(
+//                margin: EdgeInsets.only(left: 20, top: 1),
+//                child: Row(
+//                  children: <Widget>[
+//                    Text('총 ${num} 개 약'), // theme 추가
+//                    //getNumOfRanking(context)
+//                  ],
+//                ),
+//              ),
+//                Container(
+//                  child: Text(onlyCategoryName, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)
+//                ),
+                Spacer(),
+                DropdownButton<String>(
+                  value: _filterOrSort,
+                   icon: Icon(Icons.arrow_drop_down),
+                   iconSize: 24,
+                   elevation: 16,
+                  style: TextStyle(color: Colors.black),
+//                  underline: Container(
+//                    height: 1,
+//                    color: Colors.black12,
+//                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      _filterOrSort = newValue;
+                    });
+                  },
+                  items: <String>['이름순', '리뷰 많은 순']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value.toUpperCase()),
+                    );
+                  }).toList(),
                 ),
-              ),
-              Spacer(),
-              DropdownButton<String>(
-                value: _filterOrSort,
-                // icon: Icon(Icons.arrow_drop_down),
-                // iconSize: 24,
-                // elevation: 16,
-                style: TextStyle(color: Colors.black),
-                underline: Container(
-                  height: 1,
-                  color: Colors.black12,
-                ),
-                onChanged: (String newValue) {
-                  setState(() {
-                    _filterOrSort = newValue;
-                    //print('NEW == $_filterOrSort');
-                  });
-                },
-                items: <String>['이름순', '리뷰 많은 순']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value.toUpperCase()),
-                  );
-                }).toList(),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         Divider(
