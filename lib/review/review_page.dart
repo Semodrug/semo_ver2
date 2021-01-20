@@ -425,12 +425,14 @@ class _ReviewPageState extends State<ReviewPage> {
                       builder: (context, snapshot3) {
                         if (snapshot3.hasData) {
                           List<SavedDrug> savedDrugs = snapshot3.data;
-                          // bool isSaved;
+                          bool _isSaved;
 
-                          // for (SavedDrug savedDrug in savedDrugs) {
-                          //   isSaved = savedDrug.itemSeq.contains(drugItemSeq);
-                          //   if (isSaved == true) break;
-                          // }
+                          for (SavedDrug savedDrug in savedDrugs) {
+                            _isSaved = savedDrug.itemSeq.contains(drugItemSeq);
+                            if (_isSaved == true) break;
+                          }
+
+                          print('1111 is $_isSaved');
 
                           return Padding(
                             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -526,6 +528,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                         } else {
                                           await DatabaseService(uid: user.uid)
                                               .addToFavoriteList(drugItemSeq);
+                                          _showFavoriteWell(context);
                                         }
                                       })),
                               Positioned(
@@ -541,26 +544,26 @@ class _ReviewPageState extends State<ReviewPage> {
                                       style: TextStyle(color: Colors.white),
                                     ),
                                     onPressed: () {
-//                                       if (isSaved) {
-//                                         Navigator.push(
-//                                             context,
-//                                             MaterialPageRoute(
-//                                                 fullscreenDialog: true,
-//                                                 builder: (context) =>
-//                                                     Expiration(
-//                                                       drugItemSeq: drugItemSeq,
-//                                                     )));
-//
-// //                                     _myDialog(context, '약 보관함',
-// //                                         '이미 보관함에 저장되어있습니다.', '', '확인');
-//
-//                                         // MyDialog(
-//                                         //     contents: '이미 보관함에 저장되어있습니다.',
-//                                         //     tail1: '확인');
-//                                       } else {
-//                                         _myDialog(context, '약 보관함',
-//                                             '나의 보관함에 저장하시겠습니까?', '예', '아니요');
-//                                       }
+                                      if (_isSaved) {
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         fullscreenDialog: true,
+                                        //         builder: (context) =>
+                                        //             Expiration(
+                                        //               drugItemSeq: drugItemSeq,
+                                        //             )));
+
+                                        _myDialog(context, '약 보관함',
+                                            '이미 보관함에 저장되어있습니다.', '', '확인');
+
+                                        // MyDialog(
+                                        //     contents: '이미 보관함에 저장되어있습니다.',
+                                        //     tail1: '확인');
+                                      } else {
+                                        _myDialog(context, '약 보관함',
+                                            '나의 보관함에 저장하시겠습니까?', '예', '아니요');
+                                      }
                                     },
                                   ),
                                 ),
@@ -757,29 +760,29 @@ class _ReviewPageState extends State<ReviewPage> {
           title: Text(
             dialogTitle,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.teal[400]),
+            style: TextStyle(color: Colors.teal[400], fontSize: 14),
           ),
           content: Text(dialogContent),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                tail1,
-                style: TextStyle(color: Colors.teal[200]),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
-              child: Text(
-                tail2,
-                style: TextStyle(color: Colors.teal[200]),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
+          // actions: <Widget>[
+          //   FlatButton(
+          //     child: Text(
+          //       tail1,
+          //       style: TextStyle(color: Colors.teal[200]),
+          //     ),
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //   ),
+          //   FlatButton(
+          //     child: Text(
+          //       tail2,
+          //       style: TextStyle(color: Colors.teal[200]),
+          //     ),
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //   ),
+          // ],
         );
       },
     );
@@ -859,10 +862,54 @@ class _ReviewPageState extends State<ReviewPage> {
               ],
             ),
           ),
-          // Text("${carefulDiseaseList}에 관한 주의사항이 있습니다. 자세히 보기를 확인해주세요"),
-          // actions: <Widget>[
-          //
-          // ],
+        );
+      },
+    );
+  }
+
+  void _showFavoriteWell(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 5), () {
+          Navigator.of(context).pop(true);
+        }); // return object of type Dialog
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Icon(
+            Icons.favorite,
+            color: Colors.red,
+            size: 17,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: '찜 목록',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '에 추가되었습니다.'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '마이페이지에서 확인하실 수 있습니다',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                )
+              ],
+            ),
+          ),
         );
       },
     );
