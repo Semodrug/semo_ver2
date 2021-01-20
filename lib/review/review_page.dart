@@ -12,6 +12,7 @@ import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'all_review.dart';
 import 'get_rating.dart';
 import 'review_list.dart';
 import 'write_review.dart';
@@ -204,11 +205,12 @@ class _ReviewPageState extends State<ReviewPage> {
                                               fontSize: 14.5,
                                             )),
                                         onTap: () {
+
                                           //TODO GET ALL REVIEW
-//                          Navigator.push(
-//                              context,
-//                              MaterialPageRoute(
-//                                  builder: (context) => AllReview()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AllReview()));
                                         }),
                                   ],
                                 )),
