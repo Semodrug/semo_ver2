@@ -122,7 +122,7 @@ class _ExpirationState extends State<Expiration> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '처방일',
+          '유통기한',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(
