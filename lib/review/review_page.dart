@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+
 import 'package:semo_ver2/drug_info/detail_info.dart';
 import 'package:semo_ver2/drug_info/set_expiration.dart';
 import 'package:semo_ver2/models/drug.dart';
@@ -11,12 +13,10 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/loading.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'all_review.dart';
-import 'get_rating.dart';
-import 'review_list.dart';
-import 'write_review.dart';
-import 'package:semo_ver2/drug_info/detail_info.dart';
+import 'package:semo_ver2/review/all_review.dart';
+import 'package:semo_ver2/review/get_rating.dart';
+import 'package:semo_ver2/review/review_list.dart';
+import 'package:semo_ver2/review/write_review.dart';
 
 class ReviewPage extends StatefulWidget {
   String drugItemSeq;
@@ -53,6 +53,7 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   var _scrollController = ScrollController();
+
   void _onTapPillInfo() {
     _scrollController.animateTo(0,
         duration: Duration(milliseconds: 100), curve: Curves.easeOut);
@@ -65,8 +66,8 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     TheUser user = Provider.of<TheUser>(context);
+
     return StreamProvider<List<Review>>.value(
         value: ReviewService().getReviews(widget.drugItemSeq),
         child: Scaffold(
@@ -115,7 +116,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             builder: (context) =>
                                 WriteReview(drugItemSeq: widget.drugItemSeq)));
                 }),
-//            backgroundColor: Colors.white,
+            backgroundColor: Colors.white,
             body: GestureDetector(
               onTap: () {
                 FocusScope.of(context).unfocus();
@@ -227,12 +228,12 @@ class _ReviewPageState extends State<ReviewPage> {
                                               fontSize: 14.5,
                                             )),
                                         onTap: () {
-
-                                          //TODO GET ALL REVIEW
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AllReview()));
+                                          // TODO GET ALL REVIEW
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AllReview()));
                                         }),
                                   ],
                                 )),
@@ -289,6 +290,535 @@ class _ReviewPageState extends State<ReviewPage> {
             ));
   }
 
+  /* Top Information */
+  Widget _topInfo(BuildContext context, String drugItemSeq) {
+    TheUser user = Provider.of<TheUser>(context);
+
+    // TODO: how to control the state management better?
+    // 약정보
+    return StreamBuilder<Drug>(
+        key: _key1,
+        stream: DatabaseService(itemSeq: drugItemSeq).drugData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Drug drug = snapshot.data;
+
+            // 유저정보
+            return StreamBuilder<UserData>(
+                stream: DatabaseService(uid: user.uid).userData,
+                builder: (context, snapshot2) {
+                  if (snapshot2.hasData) {
+                    UserData userData = snapshot2.data;
+                    bool _isFavorite =
+                        userData.favoriteList.contains(drugItemSeq);
+                    bool _isCareful = _carefulDiseaseList(
+                            userData.diseaseList, drug.nbDocData)
+                        .isNotEmpty;
+
+                    // 보관하고 있는 약정보
+                    return StreamBuilder<List<SavedDrug>>(
+                      stream: DatabaseService(uid: user.uid).savedDrugs,
+                      builder: (context, snapshot3) {
+                        if (snapshot3.hasData) {
+                          List<SavedDrug> savedDrugs = snapshot3.data;
+                          bool _isSaved;
+
+                          for (SavedDrug savedDrug in savedDrugs) {
+                            _isSaved = savedDrug.itemSeq.contains(drugItemSeq);
+                            if (_isSaved == true) break;
+                          }
+
+                          return Padding(
+                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Stack(children: [
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        width: 200,
+                                        child: AspectRatio(
+                                            aspectRatio: 3.5 / 2,
+                                            child: DrugImage(
+                                                drugItemSeq: drugItemSeq)),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      drug.entpName,
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          (0.8),
+                                      child: Text(
+                                        _shortenName(drug.itemName),
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 28.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    Row(children: <Widget>[
+                                      Text(
+                                        drug.totalRating.toStringAsFixed(1),
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        " (" +
+                                            drug.numOfReview
+                                                .toStringAsFixed(0) +
+                                            '개)',
+                                        style:
+                                            TextStyle(color: Colors.grey[600]),
+                                      )
+                                    ]),
+                                    Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          _categoryButton(drug.category)
+                                        ]),
+                                    SizedBox(
+                                      height: 20,
+                                    )
+                                  ]),
+                              _isCareful
+                                  ? Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: IconButton(
+                                          icon: Icon(
+                                            Icons.announcement,
+                                            color: Colors.amber[700],
+                                          ),
+                                          onPressed: () {
+                                            _showWarning(
+                                                context,
+                                                _carefulDiseaseList(
+                                                    userData.diseaseList,
+                                                    drug.nbDocData),
+                                                drug.itemSeq);
+                                            // Navigator.of(context).pop();
+                                          }))
+                                  : Container(),
+                              Positioned(
+                                  top: 140,
+                                  right: 0,
+                                  child: IconButton(
+                                      icon: Icon(
+                                        _isFavorite
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: _isFavorite
+                                            ? Colors.redAccent
+                                            : null,
+                                      ),
+                                      onPressed: () async {
+                                        if (_isFavorite) {
+                                          await DatabaseService(uid: user.uid)
+                                              .removeFromFavoriteList(
+                                                  drugItemSeq);
+                                        } else {
+                                          _showFavoriteDone(context);
+                                          await DatabaseService(uid: user.uid)
+                                              .addToFavoriteList(drugItemSeq);
+                                          // _showFavoriteWell(context);
+                                        }
+                                      })),
+                              Positioned(
+                                bottom: 20,
+                                right: 0,
+                                child: ButtonTheme(
+                                  minWidth: 20,
+                                  height: 30,
+                                  child: FlatButton(
+                                    color: Colors.teal[300],
+                                    child: Text(
+                                      '+ 담기',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      if (_isSaved) {
+                                        _alreadySaved(context);
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                fullscreenDialog: true,
+                                                builder: (context) =>
+                                                    Expiration(
+                                                      drugItemSeq: drugItemSeq,
+                                                    )));
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ]),
+                          );
+                        } else {
+                          return Loading();
+                        }
+                      },
+                    );
+                  } else {
+                    return Loading();
+                  }
+                });
+          } else {
+            return Loading();
+          }
+        });
+  }
+
+  String _shortenName(String data) {
+    String newName = data;
+    List splitName = [];
+    if (data.contains('(수출')) {
+      splitName = newName.split('(수출');
+      newName = splitName[0];
+    }
+
+    if (data.contains('(군납')) {
+      splitName = newName.split('(군납');
+      newName = splitName[0];
+    }
+    return newName;
+  }
+
+  List _carefulDiseaseList(List diseaseList, List nbDocData) {
+    List newList = new List();
+
+    for (int i = 0; i < nbDocData.length; i++) {
+      for (int j = 0; j < diseaseList.length; j++) {
+        if (nbDocData[i].contains(diseaseList[j])) {
+          if (!newList.contains(diseaseList[j])) newList.add(diseaseList[j]);
+        }
+      }
+    }
+
+    return newList;
+  }
+
+  /* Top Information - Dialogs */
+  void _showWarning(context, carefulDiseaseList, drugItemSeq) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Column(
+            children: [
+              SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: Image.asset('assets/icons/warning_icon.png')),
+              Text(
+                '주의사항',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              )
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: '${carefulDiseaseList.join(", ")}',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '에 관한 주의사항을 확인해주세요'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      child: Text(
+                        "닫기",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    TextButton(
+                      child: Text(
+                        "자세히보기",
+                        style: TextStyle(color: Colors.teal[200]),
+                      ),
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailInfo(
+                                      drugItemSeq: drugItemSeq,
+                                    )));
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showFavoriteDone(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop(true);
+        }); // return object of type Dialog
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Icon(
+            Icons.favorite,
+            color: Colors.red,
+            size: 17,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: '찜 목록',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '에 추가되었습니다.'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '마이페이지에서 확인하실 수 있습니다',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _alreadySaved(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop(true);
+        }); //
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Icon(
+            Icons.warning,
+            color: Colors.orangeAccent,
+            size: 17,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(text: '이미 '),
+                      TextSpan(
+                          text: '보관함',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '에 저장되어있습니다.'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '약보관함에서 확인하실 수 있습니다',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /* Under Information */
+  Widget _underInfo(BuildContext context, String drugItemSeq) {
+    return StreamBuilder<Drug>(
+        key: _key2,
+        stream: DatabaseService(itemSeq: drugItemSeq).drugData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Drug drug = snapshot.data;
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '효능효과',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    _drugDocInfo(context, drugItemSeq, 'EE'),
+                    Container(
+                      height: 10,
+                    ),
+                    Text(
+                      '용법용량',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    _drugDocInfo(context, drugItemSeq, 'UD'),
+                    Container(
+                      height: 10,
+                    ),
+                    Text(
+                      '저장방법',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(drug.storageMethod),
+                    Container(
+                      height: 10,
+                    ),
+                    FlatButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailInfo(
+                                        drugItemSeq: drugItemSeq,
+                                      )));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text('자세히 보기'),
+                            Icon(Icons.keyboard_arrow_right)
+                          ],
+                        )),
+                  ]),
+            );
+          } else {
+            return Loading();
+          }
+        });
+  }
+
+  Widget _drugDocInfo(BuildContext context, String drugItemSeq, String type) {
+    return StreamBuilder<Drug>(
+        stream: DatabaseService(itemSeq: drugItemSeq).drugData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Drug drug = snapshot.data;
+            // print("SUMI's TEST: ${specInfo.eeDataList}");
+            if (type == 'EE') {
+              return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: drug.eeDocData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Text(
+                      drug.eeDocData[index].toString(),
+                    );
+                  });
+            } else if (type == 'NB') {
+              return ListView.builder(
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: drug.nbDocData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Text(
+                      drug.nbDocData[index].toString(),
+                    );
+                  });
+            } else if (type == 'UD') {
+              return ListView.builder(
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: drug.udDocData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Text(
+                      drug.udDocData[index].toString(),
+                    );
+                  });
+            } else {
+              return Container();
+            }
+          } else {
+            return Loading();
+          }
+        });
+  }
+
+  /* category button */
+  Widget _categoryButton(str) {
+    return Container(
+      width: 24 + str.length.toDouble() * 10,
+      child: ButtonTheme(
+        minWidth: 10,
+        height: 22,
+        child: FlatButton(
+          child: Text(
+            '#$str',
+            style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
+          ),
+          onPressed: () => print('$str!'),
+          color: Colors.grey[200],
+        ),
+      ),
+    );
+  }
+
+  /* Review */
   Widget _searchBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -368,331 +898,6 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  String _shortenName(String data) {
-    String newName = data;
-    List splitName = [];
-    if (data.contains('(수출')) {
-      splitName = newName.split('(수출');
-      newName = splitName[0];
-    }
-
-    if (data.contains('(군납')) {
-      splitName = newName.split('(군납');
-      newName = splitName[0];
-    }
-    return newName;
-  }
-
-  List _carefulDiseaseList(List diseaseList, List nbDocData) {
-    List newList = new List();
-
-    for (int i = 0; i < nbDocData.length; i++) {
-      for (int j = 0; j < diseaseList.length; j++) {
-        if (nbDocData[i].contains(diseaseList[j])) {
-          if (!newList.contains(diseaseList[j])) newList.add(diseaseList[j]);
-        }
-      }
-    }
-
-    return newList;
-  }
-
-  Widget _topInfo(BuildContext context, String drugItemSeq) {
-    TheUser user = Provider.of<TheUser>(context);
-
-    // TODO: how to control the state management better?
-    // 약정보
-    return StreamBuilder<Drug>(
-        key: _key1,
-        stream: DatabaseService(itemSeq: drugItemSeq).drugData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            Drug drug = snapshot.data;
-
-            // 유저정보
-            return StreamBuilder<UserData>(
-                stream: DatabaseService(uid: user.uid).userData,
-                builder: (context, snapshot2) {
-                  if (snapshot2.hasData) {
-                    UserData userData = snapshot2.data;
-                    bool _isFavorite =
-                        userData.favoriteList.contains(drugItemSeq);
-                    bool _isCareful = _carefulDiseaseList(
-                            userData.diseaseList, drug.nbDocData)
-                        .isNotEmpty;
-
-                    // 보관하고 있는 약정보
-                    return StreamBuilder<List<SavedDrug>>(
-                      stream: DatabaseService(uid: user.uid).savedDrugs,
-                      builder: (context, snapshot3) {
-                        if (snapshot3.hasData) {
-                          List<SavedDrug> savedDrugs = snapshot3.data;
-                          bool _isSaved;
-
-                          for (SavedDrug savedDrug in savedDrugs) {
-                            _isSaved = savedDrug.itemSeq.contains(drugItemSeq);
-                            if (_isSaved == true) break;
-                          }
-
-                          return Padding(
-                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: Stack(children: [
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 20.0,
-                                    ),
-                                    Center(
-                                      child: Container(
-                                        width: 200,
-                                        child: AspectRatio(
-                                            aspectRatio: 3.5 / 2,
-                                            child: DrugImage(
-                                                drugItemSeq: drugItemSeq)),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      drug.entpName,
-                                      style: TextStyle(
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                    Text(
-                                      _shortenName(drug.itemName),
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 28.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Row(children: <Widget>[
-                                      Text(
-                                        drug.totalRating.toStringAsFixed(1),
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        " (" +
-                                            drug.numOfReview
-                                                .toStringAsFixed(0) +
-                                            '개)',
-                                        style:
-                                            TextStyle(color: Colors.grey[600]),
-                                      )
-                                    ]),
-                                    Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          _categoryButton(drug.category)
-                                        ]),
-                                    SizedBox(
-                                      height: 20,
-                                    )
-                                  ]),
-                              _isCareful
-                                  ? Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child: IconButton(
-                                          icon: Icon(
-                                            Icons.announcement,
-                                            color: Colors.amber[700],
-                                          ),
-                                          onPressed: () {
-                                            _showWarning(
-                                                context,
-                                                _carefulDiseaseList(
-                                                    userData.diseaseList,
-                                                    drug.nbDocData),
-                                                drug.itemSeq);
-                                            // Navigator.of(context).pop();
-                                          })
-//                                    onPressed: () => _showWarning(context) ),
-//                                  Navigator.of(context).pop();
-                                      )
-                                  : Container(),
-                              Positioned(
-                                  bottom: 110,
-                                  right: 0,
-                                  child: IconButton(
-                                      icon: Icon(
-                                        _isFavorite
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        color: _isFavorite
-                                            ? Colors.redAccent
-                                            : null,
-                                      ),
-                                      onPressed: () async {
-                                        if (_isFavorite) {
-                                          await DatabaseService(uid: user.uid)
-                                              .removeFromFavoriteList(
-                                                  drugItemSeq);
-                                        } else {
-                                          // _showFavoriteWell(context);
-                                          await DatabaseService(uid: user.uid)
-                                              .addToFavoriteList(drugItemSeq);
-                                          _showFavoriteWell(context);
-                                        }
-                                      })),
-                              Positioned(
-                                bottom: 20,
-                                right: 0,
-                                child: ButtonTheme(
-                                  minWidth: 20,
-                                  height: 30,
-                                  child: FlatButton(
-                                    color: Colors.teal[300],
-                                    child: Text(
-                                      '+ 담기',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    onPressed: () {
-                                      if (_isSaved) {
-                                        _alreadyExist(context);
-                                      } else {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                fullscreenDialog: true,
-                                                builder: (context) =>
-                                                    Expiration(
-                                                      drugItemSeq: drugItemSeq,
-                                                    )));
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ]),
-                          );
-                        } else {
-                          return Loading();
-                        }
-                      },
-                    );
-                  } else {
-                    return Loading();
-                  }
-                });
-          } else {
-            return Loading();
-          }
-        });
-  }
-
-  Widget _underInfo(BuildContext context, String drugItemSeq) {
-    return StreamBuilder<Drug>(
-        key: _key2,
-        stream: DatabaseService(itemSeq: drugItemSeq).drugData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            Drug drug = snapshot.data;
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '효능효과',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    _drugInfo(context, drugItemSeq, 'EE'),
-                    Container(
-                      height: 10,
-                    ),
-                    Text(
-                      '용법용량',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    _drugInfo(context, drugItemSeq, 'UD'),
-                    Container(
-                      height: 10,
-                    ),
-                    Text(
-                      '저장방법',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(drug.storageMethod),
-                    Container(
-                      height: 10,
-                    ),
-                    FlatButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailInfo(
-                                        drugItemSeq: drugItemSeq,
-                                      )));
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('자세히 보기'),
-                            Icon(Icons.keyboard_arrow_right)
-                          ],
-                        )),
-                  ]),
-            );
-          } else {
-            return Loading();
-          }
-        });
-  }
-
-// 약의 자세한 정보들
-  Widget _drugInfo(BuildContext context, String drugItemSeq, String type) {
-    return StreamBuilder<Drug>(
-        stream: DatabaseService(itemSeq: drugItemSeq).drugData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            Drug drug = snapshot.data;
-            // print("SUMI's TEST: ${specInfo.eeDataList}");
-            if (type == 'EE') {
-              return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: drug.eeDocData.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Text(
-                      drug.eeDocData[index].toString(),
-                    );
-                  });
-            } else if (type == 'NB') {
-              return ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: drug.nbDocData.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Text(
-                      drug.nbDocData[index].toString(),
-                    );
-                  });
-            } else if (type == 'UD') {
-              return ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: drug.udDocData.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Text(
-                      drug.udDocData[index].toString(),
-                    );
-                  });
-            } else {
-              return Container();
-            }
-          } else {
-            return Loading();
-          }
-        });
-  }
-
   Future<void> _dialogIfAlreadyExist() {
     return showDialog<void>(
       context: context,
@@ -747,311 +952,4 @@ class _ReviewPageState extends State<ReviewPage> {
       },
     );
   }
-
-  Future<void> _myDialog(
-      context, dialogTitle, dialogContent, tail1, tail2) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Text(
-            dialogTitle,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.teal[400], fontSize: 14),
-          ),
-          content: Text(dialogContent),
-          // actions: <Widget>[
-          //   FlatButton(
-          //     child: Text(
-          //       tail1,
-          //       style: TextStyle(color: Colors.teal[200]),
-          //     ),
-          //     onPressed: () {
-          //       Navigator.pop(context);
-          //     },
-          //   ),
-          //   FlatButton(
-          //     child: Text(
-          //       tail2,
-          //       style: TextStyle(color: Colors.teal[200]),
-          //     ),
-          //     onPressed: () {
-          //       Navigator.pop(context);
-          //     },
-          //   ),
-          // ],
-        );
-      },
-    );
-  }
-
-// warning
-  void _showWarning(context, carefulDiseaseList, drugItemSeq) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Column(
-            children: [
-              SizedBox(
-                  width: 32,
-                  height: 32,
-                  child: Image.asset('assets/icons/warning_icon.png')),
-              Text(
-                '주의사항',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              )
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: '${carefulDiseaseList.join(", ")}',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: '에 관한 주의사항을 확인해주세요'),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      child: Text(
-                        "닫기",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    TextButton(
-                      child: Text(
-                        "자세히보기",
-                        style: TextStyle(color: Colors.teal[200]),
-                      ),
-                      onPressed: () async {
-                        Navigator.pop(context);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DetailInfo(
-                                      drugItemSeq: drugItemSeq,
-                                    )));
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showFavoriteWell(context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.of(context).pop(true);
-        }); // return object of type Dialog
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Icon(
-            Icons.favorite,
-            color: Colors.red,
-            size: 17,
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: '찜 목록',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: '에 추가되었습니다.'),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  '마이페이지에서 확인하실 수 있습니다',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                SizedBox(
-                  height: 10,
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _alreadyExist(context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.of(context).pop(true);
-        }); //
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Icon(
-            Icons.warning,
-            color: Colors.orangeAccent,
-            size: 17,
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(text: '이미 '),
-                      TextSpan(
-                          text: '보관함',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: '에 저장되어있습니다.'),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  '약보관함에서 확인하실 수 있습니다',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                SizedBox(
-                  height: 10,
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-// add favorite list
-  void _question(context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: new Text(
-            "질병주의",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.teal[400]),
-          ),
-          content: new Text("신장질환이 있는 환자는 반드시 의사와 상의할 것"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text(
-                "닫기",
-                style: TextStyle(color: Colors.teal[200]),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-// 카테고리전용 buttion
-  Widget _categoryButton(str) {
-    return Container(
-      width: 24 + str.length.toDouble() * 10,
-      child: ButtonTheme(
-        minWidth: 10,
-        height: 22,
-        child: FlatButton(
-          child: Text(
-            '#$str',
-            style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
-          ),
-          onPressed: () => print('$str!'),
-          color: Colors.grey[200],
-        ),
-      ),
-    );
-  }
-
-// tab 구현
-  Widget _myTab(BuildContext context, String drugItemSeq) {
-    return DefaultTabController(
-        length: 2,
-        child: Column(
-          children: [
-            TabBar(
-              labelStyle:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              unselectedLabelStyle:
-                  TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
-              tabs: [
-                Tab(child: Text('약 정보', style: TextStyle(color: Colors.black))),
-                Tab(child: Text('리뷰', style: TextStyle(color: Colors.black))),
-              ],
-              indicatorColor: Colors.teal[400],
-            ),
-            //TODO: height 없이 괜찮게
-            Container(
-              width: double.infinity,
-              height: 6000.0,
-              child: TabBarView(
-                children: [
-                  _underInfo(context, drugItemSeq),
-                  ReviewPage(drugItemSeq)
-                ],
-              ),
-            )
-          ],
-        ));
-  }
-
-//TODO: After controller data, I have to re-touch this widget
-
 }
