@@ -2,53 +2,80 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:semo_ver2/models/drug.dart';
+import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/review/review_list.dart';
+import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/loading.dart';
 import 'review_page.dart';
 import 'write_review.dart';
 
 
 class AllReview extends StatefulWidget {
+  String drugItemSeq;
+  AllReview(this.drugItemSeq);
+
   @override
   _AllReveiewState createState() => _AllReveiewState();
 }
 
 class _AllReveiewState extends State<AllReview> {
   var index = 8;
-  int _counter = 0;
-  int _rating = 0;
+  final TextEditingController _filter = TextEditingController();
+  FocusNode focusNode = FocusNode();
+  String _searchText = "";
+
+  _AllReveiewState() {
+    _filter.addListener(() {
+      setState(() {
+        _searchText = _filter.text;
+      });
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: _appbar(context),
+    return StreamProvider<List<Review>>.value(
+      value: ReviewService().getReviews(widget.drugItemSeq),
+      child: Scaffold(
+        appBar: _appbar(context),
 //      body: topOfReview(context),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: SizedBox(
-              width: double.infinity,
-              height: 10.0,
-              child: Container(
-                color: Colors.grey[200],
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: SizedBox(
+                width: double.infinity,
+                height: 10.0,
+                child: Container(
+                  color: Colors.grey[200],
+                ),
               ),
             ),
-          ),
 //             FROM HERE: TAB
-          SliverToBoxAdapter(
-            child: _myTab(context),
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.create),
-          backgroundColor: Colors.teal[300],
-          elevation: 0.0,
+            SliverToBoxAdapter(
+              child: _myTab(context),
+            ),
+//            SliverToBoxAdapter(
+//              child: _underTab(),
+//            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.create),
+            backgroundColor: Colors.teal[300],
+            elevation: 0.0,
 //          onPressed: () {
 //            Navigator.push(context,
 //                MaterialPageRoute(builder: (context) => WriteReview()));
 //          }
-          ),
+            ),
+      ),
     );
   }
 
@@ -103,9 +130,10 @@ class _AllReveiewState extends State<AllReview> {
               child: TabBarView(
 //               여기에 은영학우님 page 넣기!
                 children: [
-                  Container(color: Colors.yellowAccent, height: 200,),
-                  Container(color: Colors.blueAccent, height: 200,),
-                  Container(color: Colors.deepPurpleAccent, height: 200,),
+                  _underTab("none"),
+                  _underTab("effectOnly"),
+                  _underTab("sideEffectOnly"),
+
 //
 //                  _underInfo(context, drugItemSeq),
 //                  ReviewPage(drugItemSeq)
@@ -116,67 +144,144 @@ class _AllReveiewState extends State<AllReview> {
         ));
   }
 
-//  Widget _underTab() {
-//    return Container(
-////                        key: _key1,
-//        height: 3000,
-//        child:Column(
-//          mainAxisSize: MainAxisSize.max,
-//          children: [
-//            SizedBox(height:10),
-//            _underInfo(context, widget.drugItemSeq),
-//            SizedBox(
-//              width: double.infinity,
-//              height: 10.0,
-//              child: Container(color: Colors.grey[200],),
-//            ),
-//            GetRating(widget.drugItemSeq),
-//            Container(
-//              height: 4,
-//              color: Colors.grey[200],
-//            ),
-//            Container(
-//                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-//                child: Row(
-//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                  children: <Widget>[
-//                    //TODO EDIT num of reviews
-//                    StreamBuilder<Drug>(
-//                        stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
-//                        builder: (context, snapshot) {
-//                          if(snapshot.hasData) {
-//                            Drug drug = snapshot.data;
-//                            return Text(drug.numOfReview.toStringAsFixed(0)+"개",
-//                                style: TextStyle(
-//                                  fontSize: 16.5,
-//                                  fontWeight: FontWeight.bold,
-//                                ));
-//                          }
-//                          else return Loading();
-//                        }
-//                    ),
-//
+  Widget _underTab(String filter) {
+    return Container(
+//                        key: _key1,
+        height: 3000,
+        child:Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              height: 4,
+              color: Colors.grey[200],
+            ),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    //TODO EDIT num of reviews
+                    StreamBuilder<Drug>(
+                        stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+                        builder: (context, snapshot) {
+                          if(snapshot.hasData) {
+                            Drug drug = snapshot.data;
+                            return Text(drug.numOfReviews.toStringAsFixed(0)+"개",
+                                style: TextStyle(
+                                  fontSize: 16.5,
+                                  fontWeight: FontWeight.bold,
+                                ));
+                          }
+                          else return Loading();
+                        }
+                    ),
+
 //                    InkWell(
 //                        child: Text('전체리뷰 보기',
 //                            style: TextStyle(
 //                              fontSize: 14.5,
 //                            )),
 //                        onTap: () {
-//
-//                          //TODO GET ALL REVIEW
-//                          Navigator.push(
-//                              context,
-//                              MaterialPageRoute(
-//                                  builder: (context) => AllReview()));
+////
+////                          Navigator.push(
+////                              context,
+////                              MaterialPageRoute(
+////                                  builder: (context) => AllReview()));
 //                        }),
-//                  ],
-//                )),
-//            _searchBar(),
-//            ReviewList(_searchText),
-//          ],
-//        )
-//    );
-//  }
+                  ],
+                )),
+            _searchBar(),
+            ReviewList(_searchText, filter),
+          ],
+        )
+    );
+  }
+
+  Widget _searchBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+//        width: 370,
+//        width: MediaQuery.of(context).size.width*0.9,
+        height: 45,
+        margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          color: Colors.grey[200],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+                flex: 5,
+                child: TextField(
+                  focusNode: focusNode,
+                  style: TextStyle(fontSize: 15),
+//                  autofocus: true,
+                  controller: _filter,
+                  decoration: InputDecoration(
+                      fillColor: Colors.white12,
+                      filled: true,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
+//                      suffixIcon: focusNode.hasFocus
+//                          ? IconButton(
+//                        icon: Icon(Icons.cancel, size: 20),
+//                        onPressed: () {
+//                          setState(() {
+//                            _filter.clear();
+//                            _searchText = "";
+//                          });
+//                        },
+//                      )
+//                          : Container(),
+                      hintText: '검색',
+                      contentPadding: EdgeInsets.zero,
+                      labelStyle: TextStyle(color: Colors.grey),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                          BorderSide(color: Colors.transparent)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                          BorderSide(color: Colors.transparent)),
+                      border: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(10)),
+                          borderSide:
+                          BorderSide(color: Colors.transparent))),
+                )),
+//            focusNode.hasFocus
+//                ? Expanded(
+//              child: FlatButton(
+//                child: Text(
+//                  'clear',
+//                  style: TextStyle(fontSize: 13),
+//                ),
+//                onPressed: () {
+//                  setState(() {
+//                    _filter.clear();
+//                    _searchText = "";
+//                    focusNode.unfocus();
+//                  });
+//                },
+//              ),
+//            )
+//                : Expanded(
+//              flex: 0,
+//              child: Container(),
+//            )
+          ],
+        ),
+      ),
+    );
+  }
+
 
 
 /*Widget _buildBody(BuildContext context) {

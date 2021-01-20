@@ -39,7 +39,7 @@ class _GetRatingState extends State<GetRating> {
                 List<Review> reviews = snapshot.data;
                 int length = 0 ;
                 num sum = 0;
-                num ratingResult = 0;
+                double ratingResult = 0;
                 double effectGood = 0;
                 double effectSoso = 0;
                 double effectBad = 0;
@@ -58,9 +58,8 @@ class _GetRatingState extends State<GetRating> {
                     review.sideEffect == "yes" ? sideEffectYes++ : sideEffectNo++;
                   });
 
-                  ratingResult = sum / length;
-//                  drug.totalRating = ratingResult;
-//                  updateTotalRating
+                  ratingResult = (sum / length);
+                  if (ratingResult.isNaN) ratingResult = 0;
                   DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(ratingResult, length);
 
                   return Container(
@@ -77,7 +76,8 @@ class _GetRatingState extends State<GetRating> {
                             children: <Widget>[
                               Icon(Icons.star, color: Colors.amber[300], size: 35),
                               //Todo : Rating
-                              Text(ratingResult.toStringAsFixed(1), style: TextStyle(fontSize: 35)),
+
+                              Text(ratingResult.toStringAsFixed(2), style: TextStyle(fontSize: 35)),
                               Text("/5",
                                   style: TextStyle(
                                       fontSize: 20, color: Colors.grey[500])),

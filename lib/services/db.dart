@@ -97,7 +97,7 @@ class DatabaseService {
         // review: doc.data()['review'],
 
         totalRating: doc.data()['totalRating'] ?? 0,
-        numOfReview: doc.data()['numOfReview'] ?? 0,
+        numOfReviews: doc.data()['numOfReviews'] ?? 0,
       );
     }).toList();
   }
@@ -144,7 +144,7 @@ class DatabaseService {
       // review: snapshot.data()['review'],
 
       totalRating: snapshot.data()['totalRating'] ?? 0,
-      numOfReview: snapshot.data()['numOfReview'] ?? 0,
+      numOfReviews: snapshot.data()['numOfReviews'] ?? 0,
     );
   }
 
@@ -304,10 +304,6 @@ class DatabaseService {
   }
 
   Future<void> updateTotalRating(num rating, num length) async {
-//    DocumentSnapshot drugSnapshot = await drugCollection.doc(itemSeq).get();
-//    num formerTotalRating = drugSnapshot.data()["totalRating"];
-//    num formerNumOfReview = drugSnapshot.data()["numOfReview"];
-
     return await drugCollection.doc(itemSeq).update({
 //      'totalRating': (formerTotalRating * formerNumOfReview + rating) /
 //              (formerNumOfReview + 1) ??
@@ -315,7 +311,7 @@ class DatabaseService {
 //      'numOfReview': FieldValue.increment(1),
 
       'totalRating': rating,
-      'numOfReview': length,
+      'numOfReviews': length,
 
     });
   }
