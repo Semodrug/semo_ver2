@@ -1,6 +1,12 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:semo_ver2/camera/barcode_no_result.dart';
 import 'package:semo_ver2/home/home.dart';
+import 'package:semo_ver2/review/review_page.dart';
+import 'package:semo_ver2/services/db.dart';
 
 class AddButton extends StatefulWidget {
   @override
@@ -46,7 +52,8 @@ class _AddButtonState extends State<AddButton> {
                   children: [
                     Column(
                       children: [
-                        Container(//이부분은 핸드폰 마다 건드릴 수 있는 부분!!
+                        Container(
+                          //이부분은 핸드폰 마다 건드릴 수 있는 부분!!
                           //color: Colors.redAccent,
                           padding: EdgeInsets.fromLTRB(0, (height / 11), 0, 0),
                           height: 30,
@@ -58,7 +65,10 @@ class _AddButtonState extends State<AddButton> {
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               height: 25,
                               child: Text("검색해서 약 추가하기",
-                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
                             ),
                           ],
                         ),
@@ -69,9 +79,13 @@ class _AddButtonState extends State<AddButton> {
                       height: 30,
                       child: FlatButton(
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: Text(
-                            "X",
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                        // Text(
+                        //     "X",
+                        //     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
                         onPressed: () {
                           print('눌렸나확인해보자');
                           Navigator.pushNamed(context, '/bottom_bar');
@@ -127,8 +141,7 @@ class _AddButtonState extends State<AddButton> {
             color: Colors.black,
             borderRadius: BorderRadius.circular(10),
           ),
-          child:
-          FlatButton(
+          child: FlatButton(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -150,10 +163,47 @@ class _AddButtonState extends State<AddButton> {
       ),
     );
   }
-
 }
 
-class MenuWidget extends StatelessWidget {
+class MenuWidget extends StatefulWidget {
+  @override
+  _MenuWidgetState createState() => _MenuWidgetState();
+}
+
+class _MenuWidgetState extends State<MenuWidget> {
+  File pickedImage;
+  String barcodeNum;
+  bool imageLoaded = false;
+
+  Future<void> pickImage() async {
+    var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      pickedImage = awaitImage;
+      imageLoaded = true;
+    });
+
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(pickedImage);
+    VisionText readedText;
+
+    final BarcodeDetector barcodeDetector =
+        FirebaseVision.instance.barcodeDetector();
+
+    final List<Barcode> barcodes =
+        await barcodeDetector.detectInImage(visionImage);
+
+    for (Barcode barcode in barcodes) {
+      final String rawValue = barcode.rawValue;
+      final BarcodeValueType valueType = barcode.valueType;
+
+      setState(() {
+        barcodeNum = "$rawValue";
+      });
+    }
+
+    barcodeDetector.close();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -186,8 +236,7 @@ class MenuWidget extends StatelessWidget {
                           child: SizedBox(
                             height: 24,
                             width: 24,
-                            child: Image.asset(
-                                'assets/icons/barcode_icon.png'),
+                            child: Image.asset('assets/icons/barcode_icon.png'),
                           ),
                         ),
                         SizedBox(height: 15),
@@ -201,9 +250,23 @@ class MenuWidget extends StatelessWidget {
                         )
                       ],
                     ),
-                    onPressed: () {
-                      print(
-                          "바코드 인식 페이지로!!"); // 여기는 바코드 인식 페이지가 어떤 약인지 알려주는 바코드 페이지
+                    onPressed: () async {
+                      await pickImage();
+
+                      var data = await DatabaseService()
+                          .itemSeqFromBarcode(barcodeNum);
+
+                      (barcodeNum != null && data != null)
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReviewPage(data),
+                              ))
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NoResult(),
+                              ));
                     },
                   ),
                   padding: EdgeInsets.all(4),
@@ -256,8 +319,8 @@ class MenuWidget extends StatelessWidget {
                           child: SizedBox(
                             height: 24,
                             width: 24,
-                            child: Image.asset(
-                                'assets/icons/one_drug_icon.png'),
+                            child:
+                                Image.asset('assets/icons/one_drug_icon.png'),
                           ),
                         ),
                         SizedBox(height: 15),
@@ -285,7 +348,7 @@ class MenuWidget extends StatelessWidget {
                 height: 20,
               ),
               Container(
-                width: width/4*3.8,
+                width: width / 4 * 3.8,
                 height: height / 7,
                 child: FlatButton(
                   child: Column(
@@ -299,8 +362,8 @@ class MenuWidget extends StatelessWidget {
                       Container(
                         child: Text(
                           "촬영해서 약 추가하기",
-                          style: TextStyle(
-                              fontSize: 14, color: Color(0XFFA4A4A4)),
+                          style:
+                              TextStyle(fontSize: 14, color: Color(0XFFA4A4A4)),
                           textAlign: TextAlign.center,
                         ),
                       )
@@ -329,12 +392,13 @@ class CurvePainter extends CustomPainter {
     var path = Path();
 
     path.moveTo(0, size.height * 0.3); //A
-    path.quadraticBezierTo((size.width / 4) * 0.8, size.height/6, size.width / 2, size.height/6); //BC
+    path.quadraticBezierTo((size.width / 4) * 0.8, size.height / 6,
+        size.width / 2, size.height / 6); //BC
 
     path.quadraticBezierTo(
-      //DE
+        //DE
         (size.width / 4) * 3.2,
-        size.height/6, //size.height / 2,
+        size.height / 6, //size.height / 2,
         size.width,
         size.height * 0.3);
 
