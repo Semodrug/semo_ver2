@@ -62,7 +62,7 @@ class _ReviewListState extends State<ReviewList> {
     String regDate =  year + "." + month + "." + day;
 
     return Container(
-      padding: EdgeInsets.fromLTRB(20,0,4,12),
+      padding: EdgeInsets.fromLTRB(20,0,20,12),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -165,9 +165,7 @@ class _ReviewListState extends State<ReviewList> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         //effect
-        widget.filter == "sideEffectOnly" ?
-        Container() :
-        Row(
+        if (widget.filter == "sideEffectOnly") Container() else Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
@@ -194,80 +192,96 @@ class _ReviewListState extends State<ReviewList> {
                   ],
                 )),
             Container(width: MediaQuery.of(context).size.width * 0.025),
-            Text(review.effectText, style: TextStyle(fontSize: 17.0)),
+//            Expanded(child: Text(review.effectText, style: TextStyle(fontSize: 17.0))),
           ],
         ) ,
+        Container(height:5),
+        widget.filter == "sideEffectOnly" ?
+        Container() :
+        Text(review.effectText, style: TextStyle(fontSize: 17.0)),
+
         widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
         Container() :
         Container(height: MediaQuery.of(context).size.height * 0.01),
 //        SizedBox(height:13),
+        Container(height:5),
+
 
         //side effect
         widget.filter == "effectOnly" ?
-        Container() :
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-                height: 28,
-                width: 80,
-                //width: 5, height: 5,
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.grey[400], width: 1.0),
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(6.0))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("부작용", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
-                    Container(width: MediaQuery.of(context).size.width * 0.0125),
-                    Container(
-                        width: 17,
-                        height: 17,
-                        decoration: BoxDecoration(
-                            color: review.sideEffect == "yes"? Color(0xffFF7070) : Color(0xff88F0BE),
-//                            color: Colors.redAccent[100],
-                            shape: BoxShape.circle)),
-                  ],
-                )),
-            Container(width: MediaQuery.of(context).size.width * 0.025),
-            Text(review.sideEffectText, style: TextStyle(fontSize: 17.0)),
-          ],
-        ),
+          Container() :
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                  height: 28,
+                  width: 80,
+                  //width: 5, height: 5,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Colors.grey[400], width: 1.0),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(6.0))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("부작용", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
+                      Container(width: MediaQuery.of(context).size.width * 0.0125),
+                      Container(
+                          width: 17,
+                          height: 17,
+                          decoration: BoxDecoration(
+                              color: review.sideEffect == "yes"? Color(0xffFF7070) : Color(0xff88F0BE),
+  //                            color: Colors.redAccent[100],
+                              shape: BoxShape.circle)),
+                    ],
+                  )),
+              Container(width: MediaQuery.of(context).size.width * 0.025),
+  //            Expanded(child: Text(review.sideEffectText, style: TextStyle(fontSize: 17.0)),)
+            ],
+          ),
+        Container(height:5),
+        widget.filter == "effectOnly" ?
+          Container() :
+          Text(review.sideEffectText, style: TextStyle(fontSize: 17.0)),
         widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
         Container() :
         Container(height: MediaQuery.of(context).size.height * 0.01),
 //        SizedBox(height:13),
+        Container(height:5),
 
         //overall
         widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
-        Container() :
-        Row(
-          children: <Widget>[
-            Container(
-                height: 25,
-                width: 45,
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.grey[400], width: 1.0),
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(6.0))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("총평", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
-                  ],
-                )),
-//            Padding(padding: EdgeInsets.all(5)),
-            Container(width: MediaQuery.of(context).size.width * 0.0145),
-            Text(review.overallText, style: TextStyle(fontSize: 17.0)),
-//            Container(width: MediaQuery.of(context).size.width * 0.03),
-          ],
-        ),
+          Container() :
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                  height: 25,
+                  width: 45,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Colors.grey[400], width: 1.0),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(6.0))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("총평", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
+                    ],
+                  )),
+  //            Padding(padding: EdgeInsets.all(5)),
+              Container(width: MediaQuery.of(context).size.width * 0.0145),
+  //            Expanded(child: Text(review.overallText, style: TextStyle(fontSize: 17.0))),
+  //            Container(width: MediaQuery.of(context).size.width * 0.03),
+            ],
+          ),
+        Container(height:5),
+        widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
+          Container() :
+          Text(review.overallText, style: TextStyle(fontSize: 17.0)),
         Container(height: MediaQuery.of(context).size.height * 0.02),
 //        Padding(padding: EdgeInsets.only(top: 6.0)),
-
       ],
     );
   }

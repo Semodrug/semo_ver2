@@ -8,6 +8,8 @@ import 'package:semo_ver2/home/home.dart';
 import 'package:semo_ver2/review/review_page.dart';
 import 'package:semo_ver2/services/db.dart';
 
+import 'case_recognition.dart';
+
 class AddButton extends StatefulWidget {
   @override
   _AddButtonState createState() => _AddButtonState();
@@ -299,7 +301,11 @@ class _MenuWidgetState extends State<MenuWidget> {
                       ],
                     ),
                     onPressed: () {
-                      print("CASE 인식");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CaseRecognition()
+                        ));
                     },
                   ),
                   padding: EdgeInsets.all(4),
