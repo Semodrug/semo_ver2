@@ -13,7 +13,6 @@ class DrugTile extends StatelessWidget {
   final Drug drug;
   final int index;
 
-
   DrugTile({this.drug, this.index});
 
   @override
@@ -43,7 +42,7 @@ class DrugTile extends StatelessWidget {
     String _checkCategoryName(String data) {
       String newName = '';
 
-      newName = data.substring(7,(data.length));
+      newName = data.substring(7, (data.length));
       print('newName = $newName ');
       return newName;
     }
@@ -55,8 +54,7 @@ class DrugTile extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    PhilInfoPage(drugItemSeq: drug.itemSeq),
+                builder: (context) => ReviewPage(drug.itemSeq),
               ),
             ),
             print('===> pushed'),
@@ -87,12 +85,11 @@ class DrugTile extends StatelessWidget {
                         aspectRatio: 2 / 2,
                         // TODO: show storage image - if null, defalut image
                         child: Container(
-                            padding: EdgeInsets.zero,//fromLTRB(5, 0, 5, 5),
+                            padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
                             child: SizedBox(
                                 width: 88,
                                 height: 66,
-                                child: DrugImage(
-                                    drugItemSeq: drug.itemSeq))),
+                                child: DrugImage(drugItemSeq: drug.itemSeq))),
                       ),
                     ),
                     Container(
@@ -104,8 +101,8 @@ class DrugTile extends StatelessWidget {
                           children: [
                             Text(
                               drug.entpName,
-                              style: TextStyle(
-                                  fontSize: 11, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 11, color: Colors.grey),
                             ),
                             Expanded(
                               child: Row(children: [
@@ -124,14 +121,12 @@ class DrugTile extends StatelessWidget {
                                   Text(
                                     drugRating,
                                     style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 13),
+                                        color: Colors.grey[600], fontSize: 13),
                                   ),
                                   Text(
                                     '( ${drug.numOfReview} 개)',
                                     style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 10),
+                                        color: Colors.grey[600], fontSize: 10),
                                   ),
                                 ],
                               ),
@@ -141,10 +136,11 @@ class DrugTile extends StatelessWidget {
 //                            ),
                             Expanded(
                                 child: Row(
-                                  children: [
-                                    _categoryButton((_checkCategoryName(drug.category)))
-                                  ],
-                                )),
+                              children: [
+                                _categoryButton(
+                                    (_checkCategoryName(drug.category)))
+                              ],
+                            )),
                           ],
                         )),
                   ],
@@ -284,22 +280,22 @@ class DrugTile extends StatelessWidget {
   Widget _getRateStar(RatingResult) {
 //    print('  별정믄?   ');
 //    print(RatingResult.toString());
-      return RatingBar.builder(
-        initialRating: RatingResult*1.0,
-        minRating: 1,
-        ignoreGestures: true,
-        direction: Axis.horizontal,
-        allowHalfRating: false,
-        itemCount: 5,
-        itemSize: 14,
-        glow: false,
-        itemPadding: EdgeInsets.symmetric(horizontal: 0),
-        unratedColor: Colors.grey[300],
-        itemBuilder: (context, _) => Icon(
-          Icons.star,
-          color: Colors.amberAccent,
-        ),
-      );
+    return RatingBar.builder(
+      initialRating: RatingResult * 1.0,
+      minRating: 1,
+      ignoreGestures: true,
+      direction: Axis.horizontal,
+      allowHalfRating: false,
+      itemCount: 5,
+      itemSize: 14,
+      glow: false,
+      itemPadding: EdgeInsets.symmetric(horizontal: 0),
+      unratedColor: Colors.grey[300],
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: Colors.amberAccent,
+      ),
+    );
   }
 
   Widget _categoryButton(str) {
