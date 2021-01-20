@@ -91,8 +91,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildList(BuildContext context, List<SavedDrug> snapshot) {
     num = 0;
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
 
     int count = snapshot.length;
     return Column(
@@ -143,7 +141,6 @@ class _HomePageState extends State<HomePage> {
         ),
         Expanded(
           child: ListView(
-            //padding: EdgeInsets.symmetric(horizontal : 20.0),
             children:
                 snapshot.map((data) => _buildListItem(context, data)).toList(),
           ),
@@ -154,9 +151,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildListItem(BuildContext context, SavedDrug data) {
     TheUser user = Provider.of<TheUser>(context);
-
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
     num++;
 
     /*너무 긴 이름들 잘라서 보여주기 정보를 바꾸는 건 아님*/
@@ -165,7 +159,6 @@ class _HomePageState extends State<HomePage> {
       List splitName = [];
 
       if (data.itemName.contains('(수출') || data.itemName.contains('(군납')) {
-        newName = data.itemName.replaceAll('(', '(');
         if (newName.contains('')) {
           splitName = newName.split('(');
           print(splitName);
@@ -184,13 +177,23 @@ class _HomePageState extends State<HomePage> {
     }
 
     /*혹시라도 카테고리가 없는 애들을 위해서 임시로 만들어 놓음*/
-    String _checkCategory(SavedDrug data) {
-      String newCategory = '카테고리 지정 없음';
-      if (data.category == '')
-        return newCategory;
-      else
-        return data.category;
+//    String _checkCategory(SavedDrug data) {
+//      String newCategory = '카테고리 지정 없음';
+//      if (data.category == '')
+//        return newCategory;
+//      else
+//        return data.category;
+//    }
+
+    //TODO: 지금 클라우드에 적히지가 않아서 이따 적어야함
+    String _checkCategoryName(String data) {
+      String newName = '';
+      //TODO: 이부분 0 --> 7로 바꿔주기 pattern이 0-6까지가 카테고리 이름
+      newName = data.substring(0,(data.length));
+      print('newName = $newName ');
+      return newName;
     }
+    String onlyCategoryName = _checkCategoryName(data.category);
 
     return GestureDetector(
       onTap: () => {
@@ -229,12 +232,9 @@ class _HomePageState extends State<HomePage> {
                         //이미지는 고정값
                         padding: EdgeInsets.symmetric(horizontal: 5),
                         child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 0.8, color: Colors.grey[300])),
-                            width: 75,
+                            width: 90,
                             child: AspectRatio(
-                                aspectRatio: 2.3 / 2,
+                                aspectRatio: 2.7 / 2,
                                 child: DrugImage(drugItemSeq: data.itemSeq)))),
                     Container(
                         padding:
@@ -253,14 +253,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Container(
                               height: 20,
-                              child: OutlineButton(
-                                padding: EdgeInsets.all(2),
-                                child: Text(
-                                  _checkCategory(data),
-                                  style: TextStyle(
-                                      fontSize: 11, color: Colors.grey),
-                                ),
-                              ),
+                              child: _categoryButton(onlyCategoryName)
                             ),
                             SizedBox(
                               height: 3,
@@ -354,7 +347,7 @@ class _HomePageState extends State<HomePage> {
         child: RaisedButton(
           child: Text(
             '$str',
-            style: TextStyle(color: Colors.grey[600], fontSize: 12.0),
+            style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
           ),
           onPressed: () => print('$str!'),
           color: Colors.white,
