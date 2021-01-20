@@ -13,6 +13,7 @@ class DrugTile extends StatelessWidget {
   final Drug drug;
   final int index;
 
+
   DrugTile({this.drug, this.index});
 
   @override
@@ -30,10 +31,6 @@ class DrugTile extends StatelessWidget {
           newName = splitName[0];
         }
       }
-
-      print('$newName 의 길이는? ');
-      print(newName.length);
-
       if (newName.length > 15) {
         newName = newName.substring(0, 12);
         newName = newName + '...';
@@ -41,6 +38,120 @@ class DrugTile extends StatelessWidget {
       return newName;
     }
 
+    String drugRating = drug.totalRating.toStringAsFixed(2);
+
+    String _checkCategoryName(String data) {
+      String newName = '';
+
+      newName = data.substring(7,(data.length));
+      print('newName = $newName ');
+      return newName;
+    }
+
+    return Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: GestureDetector(
+          onTap: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    PhilInfoPage(drugItemSeq: drug.itemSeq),
+              ),
+            ),
+            print('===> pushed'),
+            print(drug.itemSeq),
+            // TODO: 리뷰개수
+            // print(' 리뷰 개수 잘 받아오는 확인 ${drug.review.toString()} ')
+          },
+          child: Container(
+            width: double.infinity,
+            height: 100.0,
+            child: Material(
+                color: Colors.white,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 40,
+                      child: Container(
+                          margin: EdgeInsets.only(left: 10, right: 5),
+                          //padding: EdgeInsets.only(left: 0, right: 5),
+                          child: Text(
+                            ' ${index.toString()}위',
+                            style: TextStyle(fontSize: 12),
+                          )),
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+                      child: AspectRatio(
+                        aspectRatio: 2 / 2,
+                        // TODO: show storage image - if null, defalut image
+                        child: Container(
+                            padding: EdgeInsets.zero,//fromLTRB(5, 0, 5, 5),
+                            child: SizedBox(
+                                width: 88,
+                                height: 66,
+                                child: DrugImage(
+                                    drugItemSeq: drug.itemSeq))),
+                      ),
+                    ),
+                    Container(
+                        margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
+                        //padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              drug.entpName,
+                              style: TextStyle(
+                                  fontSize: 11, color: Colors.grey),
+                            ),
+                            Expanded(
+                              child: Row(children: [
+                                Text(
+                                  _checkLongName(drug.itemName),
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ]),
+                            ),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  _getRateStar(drug.totalRating),
+                                  Text(
+                                    drugRating,
+                                    style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 13),
+                                  ),
+                                  Text(
+                                    '( ${drug.numOfReview} 개)',
+                                    style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 10),
+                                  ),
+                                ],
+                              ),
+                            ),
+//                            SizedBox(
+//                              height: 3,
+//                            ),
+                            Expanded(
+                                child: Row(
+                                  children: [
+                                    _categoryButton((_checkCategoryName(drug.category)))
+                                  ],
+                                )),
+                          ],
+                        )),
+                  ],
+                )),
+          ),
+        ));
+    /*
     return StreamBuilder(
         stream: ReviewService().getReviews(drug.itemSeq),
         builder: (context, snapshot) {
@@ -56,7 +167,7 @@ class DrugTile extends StatelessWidget {
               sum += review.starRating;
             });
             ratingResult = sum / len;
-            print('rating Result ==> $ratingResult');
+            //print('rating Result ==> $ratingResult');
 
             return Padding(
                 padding: const EdgeInsets.only(top: 8.0),
@@ -134,7 +245,7 @@ class DrugTile extends StatelessWidget {
                                         children: [
                                           _getRateStar(drug.totalRating),
                                           Text(
-                                            '${drug.totalRating}',
+                                            drugRating,
                                             style: TextStyle(
                                                 color: Colors.grey[600],
                                                 fontSize: 13),
@@ -167,29 +278,28 @@ class DrugTile extends StatelessWidget {
             return Container(); // Center(child: CircularProgressIndicator());
           }
         });
+    */
   }
 
   Widget _getRateStar(RatingResult) {
-    print('  별정믄?   ');
-    print(RatingResult.toString());
-    //double rating = 1.0;
-    //if(RatingResult == 0){
-    return RatingBar.builder(
-      initialRating: RatingResult * 1.0,
-      minRating: 1,
-      ignoreGestures: true,
-      direction: Axis.horizontal,
-      allowHalfRating: false,
-      itemCount: 5,
-      itemSize: 14,
-      glow: false,
-      itemPadding: EdgeInsets.symmetric(horizontal: 0),
-      unratedColor: Colors.grey[300],
-      itemBuilder: (context, _) => Icon(
-        Icons.star,
-        color: Colors.amberAccent,
-      ),
-    );
+//    print('  별정믄?   ');
+//    print(RatingResult.toString());
+      return RatingBar.builder(
+        initialRating: RatingResult*1.0,
+        minRating: 1,
+        ignoreGestures: true,
+        direction: Axis.horizontal,
+        allowHalfRating: false,
+        itemCount: 5,
+        itemSize: 14,
+        glow: false,
+        itemPadding: EdgeInsets.symmetric(horizontal: 0),
+        unratedColor: Colors.grey[300],
+        itemBuilder: (context, _) => Icon(
+          Icons.star,
+          color: Colors.amberAccent,
+        ),
+      );
   }
 
   Widget _categoryButton(str) {
@@ -202,7 +312,7 @@ class DrugTile extends StatelessWidget {
         height: 22,
         child: RaisedButton(
           child: Text(
-            '#$str',
+            '$str',
             style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
           ),
           onPressed: () => print('$str!'),

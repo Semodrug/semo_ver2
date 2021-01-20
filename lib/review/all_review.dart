@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -23,7 +22,24 @@ class _AllReveiewState extends State<AllReview> {
 
     return Scaffold(
       appBar: _appbar(context),
-      body: topOfReview(context),
+//      body: topOfReview(context),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: SizedBox(
+              width: double.infinity,
+              height: 10.0,
+              child: Container(
+                color: Colors.grey[200],
+              ),
+            ),
+          ),
+//             FROM HERE: TAB
+          SliverToBoxAdapter(
+            child: _myTab(context),
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.create),
           backgroundColor: Colors.teal[300],
@@ -48,19 +64,121 @@ class _AllReveiewState extends State<AllReview> {
       backgroundColor: Colors.white,
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.teal[300]),
-//          onPressed: () {
-//            Navigator.pop(
-//                context,
+          onPressed: () {
+            Navigator.pop(
+                context,
 //                MaterialPageRoute(builder: (context) => MyStatefulWidget()
-////                    builder: (context) => MyApp()
-//                ));
-//          }
+//                    builder: (context) => MyApp()
+//                )
+            );
+          }
       ),
       actions: <Widget>[],
     );
   }
 
-  */
+
+  Widget _myTab(BuildContext context) {
+    return DefaultTabController(
+        length: 3,
+        child: Column(
+          children: [
+            TabBar(
+              labelStyle:
+              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              unselectedLabelStyle:
+              TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
+              tabs: [
+                Tab(child: Text('전체리뷰', style: TextStyle(color: Colors.black))),
+                Tab(child: Text('효과리뷰만', style: TextStyle(color: Colors.black))),
+                Tab(child: Text('부작용리뷰만', style: TextStyle(color: Colors.black))),
+              ],
+              indicatorColor: Colors.teal[400],
+            ),
+            //TODO: height 없이 괜찮게
+            Container(
+              padding: EdgeInsets.all(0.0),
+              width: double.infinity,
+              height: 6000.0,
+              child: TabBarView(
+//               여기에 은영학우님 page 넣기!
+                children: [
+                  Container(color: Colors.yellowAccent, height: 200,),
+                  Container(color: Colors.blueAccent, height: 200,),
+                  Container(color: Colors.deepPurpleAccent, height: 200,),
+//
+//                  _underInfo(context, drugItemSeq),
+//                  ReviewPage(drugItemSeq)
+                ],
+              ),
+            )
+          ],
+        ));
+  }
+
+//  Widget _underTab() {
+//    return Container(
+////                        key: _key1,
+//        height: 3000,
+//        child:Column(
+//          mainAxisSize: MainAxisSize.max,
+//          children: [
+//            SizedBox(height:10),
+//            _underInfo(context, widget.drugItemSeq),
+//            SizedBox(
+//              width: double.infinity,
+//              height: 10.0,
+//              child: Container(color: Colors.grey[200],),
+//            ),
+//            GetRating(widget.drugItemSeq),
+//            Container(
+//              height: 4,
+//              color: Colors.grey[200],
+//            ),
+//            Container(
+//                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+//                child: Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  children: <Widget>[
+//                    //TODO EDIT num of reviews
+//                    StreamBuilder<Drug>(
+//                        stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+//                        builder: (context, snapshot) {
+//                          if(snapshot.hasData) {
+//                            Drug drug = snapshot.data;
+//                            return Text(drug.numOfReview.toStringAsFixed(0)+"개",
+//                                style: TextStyle(
+//                                  fontSize: 16.5,
+//                                  fontWeight: FontWeight.bold,
+//                                ));
+//                          }
+//                          else return Loading();
+//                        }
+//                    ),
+//
+//                    InkWell(
+//                        child: Text('전체리뷰 보기',
+//                            style: TextStyle(
+//                              fontSize: 14.5,
+//                            )),
+//                        onTap: () {
+//
+//                          //TODO GET ALL REVIEW
+//                          Navigator.push(
+//                              context,
+//                              MaterialPageRoute(
+//                                  builder: (context) => AllReview()));
+//                        }),
+//                  ],
+//                )),
+//            _searchBar(),
+//            ReviewList(_searchText),
+//          ],
+//        )
+//    );
+//  }
+
+
 /*Widget _buildBody(BuildContext context) {
     // TODO: get actual snapshot from Cloud Firestore
     return StreamBuilder<QuerySnapshot>(
@@ -71,7 +189,9 @@ class _AllReveiewState extends State<AllReview> {
           return _buildList(context, snapshot.data.documents);
         }
     );
-  }*//*
+  }*/
+
+/*
 
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
@@ -511,7 +631,8 @@ Widget _dateAndLike(record) {
 //            Text("309", style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold)),
     ],
   );
+  */
 }
 
 
-*/
+

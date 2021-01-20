@@ -30,16 +30,15 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildBodyOfAll(BuildContext context, String searchVal) {
-    return StreamBuilder<QuerySnapshot>(
-      //현재 2만개 정도 들어와있는 데이터 //todo:안먹음 그래서 조치가 필요 검색어에 따른 정보만 보여주게끔 해야한다.
-      stream: FirebaseFirestore.instance
-          .collection('Drugs')
-          .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
-          .limit(20) //
-          .snapshots(),
-      builder: (context, AsyncSnapshot snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        if (searchVal == '') {
+      return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('Drugs')
+            .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
+            .limit(30) //
+            .snapshots(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) return LinearProgressIndicator();
+        if (searchVal == '' || searchVal.length < 2) {
           return StreamBuilder<QuerySnapshot>(
             stream: userSearchList.snapshots(),
             builder: (context, snapshot) {
@@ -61,7 +60,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      //SizedBox(width: 20,),
                       Container(
                           height: 30,
                           child: Center(
@@ -99,10 +97,12 @@ class _SearchScreenState extends State<SearchScreen> {
               );
             },
           );
-        } else
-          return _buildListOfAll(context, snapshot.data.docs);
-      },
-    );
+        }
+          else
+            return _buildListOfAll(context, snapshot.data.docs);
+        },
+      );
+    //}
   }
 
   Widget _buildListOfAll(
@@ -173,7 +173,7 @@ class _SearchScreenState extends State<SearchScreen> {
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
-        if (searchVal == '') {
+        if (searchVal == '' || searchVal.length < 2) {
           return StreamBuilder<QuerySnapshot>(
             stream: userSearchList.snapshots(),
             builder: (context, snapshot) {
@@ -364,7 +364,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 //flex: 5,
                                 child: TextFormField(
                                   onFieldSubmitted: (val) {
-                                    if (val != '') {
+                                    if (val != '' || val.length > 2) {
                                       addRecentSearchList();
                                       focusNode.unfocus();
                                     }
@@ -398,7 +398,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         });
                                       },
                                     ),
-                                    hintText: '어떤 약을 찾고 계세요?',
+                                    hintText: '두 글자 이상 검색해주세요',
                                     contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     labelStyle: TextStyle(color: Colors.grey),
                                     focusedBorder: OutlineInputBorder(

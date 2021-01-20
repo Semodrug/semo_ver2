@@ -28,29 +28,23 @@ class DatabaseService {
     return drugsSnapshots;
   }
 
-  Stream<List<Drug>> setter(String _filterOrSort) {
-    //애초에 쿼리가 카테고리가 같아야 한다.//카테고리가 생기면 카테고리를 담은 쿼리를 짜주기!!
-    Query multiQuery;
-
+  Stream<List<Drug>> setForRanking(String _filterOrSort) {
     switch (_filterOrSort) {
-      //쿼리가 이중으로 안된느 거 같아서 쪼개서 해보니까 먹는다 하지만 제대로 알아보자 분명 있을텐데
       case "이름순":
-        drugQuery = drugQuery.where('ITEM_NAME', isGreaterThan: '이지');
-
-        multiQuery =
-            drugQuery.orderBy('ITEM_NAME', descending: false).limit(10);
+        drugQuery = drugQuery.where('PRDUCT_TYPE', isEqualTo: categoryName )//;
+            .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
+            .orderBy('ITEM_NAME', descending: false).limit(30);
 
         break;
 
       case "리뷰 많은 순":
-        drugQuery = drugQuery.where('ITEM_NAME', isGreaterThan: '타이레');
-
-        multiQuery =
-            drugQuery.orderBy('ITEM_NAME', descending: false).limit(10);
+        drugQuery = drugQuery.where('PRDUCT_TYPE', isEqualTo: categoryName )//;
+            .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
+            .orderBy('numOfReview', descending: false).limit(10);
         break;
     }
 
-    drugsSnapshots = multiQuery.snapshots().map(_drugListFromSnapshot);
+    drugsSnapshots = drugQuery.snapshots().map(_drugListFromSnapshot);
 
     return drugsSnapshots;
   }
@@ -92,7 +86,7 @@ class DatabaseService {
         validTerm: doc.data()['VALID_TERM'] ?? '',
 
         // TODO:
-        category: doc.data()['category'] ?? '',
+        category: doc.data()['PRDUCT_TYPE'] ?? '',
         // image: doc.data()['image'] ?? '',
         // review: doc.data()['review'],
 
@@ -139,7 +133,7 @@ class DatabaseService {
       validTerm: snapshot.data()['VALID_TERM'] ?? '',
 
       // TODO:
-      category: snapshot.data()['category'] ?? '',
+      category: snapshot.data()['PRDUCT_TYPE'] ?? '',
       // image: snapshot.data()['image'] ?? '',
       // review: snapshot.data()['review'],
 
@@ -242,7 +236,7 @@ class DatabaseService {
       return SavedDrug(
         itemName: doc.data()['ITEM_NAME'] ?? '',
         itemSeq: doc.data()['ITEM_SEQ'] ?? '',
-        category: doc.data()['category'] ?? '',
+        category: doc.data()['PRDUCT_TYPE'] ?? '',
         expiration: doc.data()['expiration'] ?? '',
       );
     }).toList();
@@ -265,7 +259,7 @@ class DatabaseService {
         .set({
       'ITEM_NAME': itemName ?? '',
       'ITEM_SEQ': itemSeq ?? '',
-      'category': category ?? '',
+      'PRDUCT_TYPE': category ?? '',
       'expiration': expiration ?? '',
     });
   }
