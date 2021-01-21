@@ -63,7 +63,7 @@ class _GetRatingState extends State<GetRating> {
                   DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(ratingResult, length);
 
                   return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      padding: EdgeInsets.fromLTRB(20,15,10,15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -76,11 +76,10 @@ class _GetRatingState extends State<GetRating> {
                             children: <Widget>[
                               Icon(Icons.star, color: Colors.amber[300], size: 35),
                               //Todo : Rating
-
                               Text(ratingResult.toStringAsFixed(2), style: TextStyle(fontSize: 35)),
                               Text("/5",
                                   style: TextStyle(
-                                      fontSize: 20, color: Colors.grey[500])),
+                                      fontSize: 18, color: Colors.grey[500])),
       //                        SizedBox(
       //                            width:30
       //                        ),
