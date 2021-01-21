@@ -16,8 +16,8 @@ class CategoryButton extends StatelessWidget {
 
     return ElevatedButton(
       child: Text(
-        '#${_shortenCategory(str)}',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        '${_shortenCategory(str)}',
+        style: TextStyle(fontSize: 12),
       ),
       style: ButtonStyle(
           minimumSize: MaterialStateProperty.all<Size>(Size(10, 30)),
