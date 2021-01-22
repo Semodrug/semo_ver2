@@ -3,6 +3,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/drug_info/warning_highlighting.dart';
+//
 
 import 'package:semo_ver2/drug_info/detail_info.dart';
 import 'package:semo_ver2/drug_info/set_expiration.dart';
@@ -429,7 +431,6 @@ class _ReviewPageState extends State<ReviewPage> {
 
     return newList;
   }
-
   /* Top Information - Dialogs */
   void _showWarning(context, carefulDiseaseList, drugItemSeq) {
     showDialog(
@@ -494,8 +495,9 @@ class _ReviewPageState extends State<ReviewPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => DetailInfo(
+                                builder: (context) => WarningInfo(
                                       drugItemSeq: drugItemSeq,
+                                      warningList : carefulDiseaseList,
                                     )));
                       },
                     ),
