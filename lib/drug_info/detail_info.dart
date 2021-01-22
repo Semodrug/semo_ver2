@@ -57,16 +57,20 @@ class _DetailInfoState extends State<DetailInfo> {
         children: [
           Center(
             child: Container(
-              margin: EdgeInsets.fromLTRB(0, 11, 0, 0),
+              margin: EdgeInsets.fromLTRB(16, 11, 16, 0),
               child: SizedBox(
-                  width: 390,
+                  //width: 370,
                   height: 35,
                   child: FlatButton(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Icon(Icons.search, size: 20),
-                        Text("어떤 약 정보를 찾고 계세요? "),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          //TODO: 여기 멘트 정리
+                          child: Text("궁금한 정보를 입력해주세요."),
+                        ),
                       ],
                     ),
                     onPressed: () {
