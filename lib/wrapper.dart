@@ -24,12 +24,12 @@ class Wrapper extends StatelessWidget {
       return FutureBuilder<bool>(
           future: DatabaseService(uid: user.uid).checkIfDocExists(user.uid),
           builder: (context, snapshot) {
-            return BottomBar();
-            // if (snapshot.data == true) {
-            //   return BottomBar();
-            // } else {
-            //   return PolicyAgreePage();
-            // }
+            // return BottomBar();
+            if (snapshot.data == true) {
+              return BottomBar();
+            } else {
+              return PolicyAgreePage();
+            }
           });
     }
   }
