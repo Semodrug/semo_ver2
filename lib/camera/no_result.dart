@@ -35,9 +35,38 @@ class _NoResultState extends State<NoResult> {
                 Color(0xFFFFFFFF),
               ])),
         ),
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.home_outlined,
+                color: Colors.teal[200],
+              ),
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, '/bottom_bar')),
+          SizedBox(
+            width: 4,
+          )
+        ],
       ),
       backgroundColor: Colors.white,
-      body: Text('결과가 없어유'),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 32,
+                height: 32,
+                child: Image.asset('assets/icons/warning_icon.png')),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              '검색결과가 없습니다',
+              // style: TextStyle(fontSize: 14, color: Colors.grey),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

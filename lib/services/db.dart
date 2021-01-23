@@ -318,22 +318,13 @@ class DatabaseService {
     var result =
         await drugCollection.where('BAR_CODE', isEqualTo: barcode).get();
     var data;
-    if (result == null) {
+
+    if (result.docs.isEmpty) {
       data = null;
     } else {
       data = result.docs.first.data()['ITEM_SEQ'] ?? null;
     }
-    print(data);
 
     return data;
-
-    // drugCollection.where('BAR_CODE', isEqualTo: barcode).get().then((value) {
-    //   result = value.docs.first.data()['ITEM_SEQ'];
-    //   return result;
-    // });
-
-    // print('22 $result');
   }
-
-  // databaseReference.collection ( "myCollection"). getDocuments (). then ((onValue) {onValue.documents.forEach ((f) {f [0]})});
 }
