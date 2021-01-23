@@ -37,15 +37,12 @@ class _NoResultState extends State<NoResult> {
         ),
         actions: [
           IconButton(
-              icon: Icon(
-                Icons.home_outlined,
-                color: Colors.teal[200],
-              ),
+              icon: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: Image.asset('assets/icons/home_icon.png')),
               onPressed: () =>
                   Navigator.pushReplacementNamed(context, '/bottom_bar')),
-          SizedBox(
-            width: 4,
-          )
         ],
       ),
       backgroundColor: Colors.white,
