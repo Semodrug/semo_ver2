@@ -34,6 +34,7 @@ class _ReviewPageState extends State<ReviewPage> {
   FocusNode focusNode = FocusNode();
   String _searchText = "";
   FirebaseAuth auth = FirebaseAuth.instance;
+  // bool _isCareful;
 
   _ReviewPageState() {
     _filter.addListener(() {
@@ -66,6 +67,14 @@ class _ReviewPageState extends State<ReviewPage> {
     _scrollController.animateTo(_getSizes() - 400,
         duration: Duration(milliseconds: 100), curve: Curves.easeOut);
   }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+  //     if (_isCareful) _showWarning(context, ['간장애'], widget.drugItemSeq);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -338,7 +347,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                             userData.diseaseList,
                                             drug.nbDocData),
                                         drug.itemSeq);
-                                    // Navigator.of(context).pop();
                                   }))
                           : Container(),
                       Positioned(
@@ -431,6 +439,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
     return newList;
   }
+
   /* Top Information - Dialogs */
   void _showWarning(context, carefulDiseaseList, drugItemSeq) {
     showDialog(
@@ -497,7 +506,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             MaterialPageRoute(
                                 builder: (context) => WarningInfo(
                                       drugItemSeq: drugItemSeq,
-                                      warningList : carefulDiseaseList,
+                                      warningList: carefulDiseaseList,
                                     )));
                       },
                     ),
