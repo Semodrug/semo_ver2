@@ -290,7 +290,8 @@ class _GetHealthPageState extends State<GetHealthPage> {
           ),
           color: Colors.teal[400],
           onPressed: () async {
-            if (_isFind) diseaseList.add(_selfWritingController.text);
+            if (_selfWritingController.text.isNotEmpty)
+              diseaseList.add(_selfWritingController.text);
 
             await DatabaseService(uid: user.uid)
                 .updateUserHealth(isPregnant[1], diseaseList);
