@@ -74,13 +74,28 @@ class _ReviewPageState extends State<ReviewPage> {
   void _onTapPillInfo() {
     _scrollController.animateTo(_getPillInfoSize(),
         duration: Duration(milliseconds: 100), curve: Curves.linear);
+    setState(() {
+      pillInfoTab = true;
+    });
   }
 
   void _onTapReview() {
     _scrollController.animateTo(_getReviewSizes(),
         duration: Duration(milliseconds: 100), curve: Curves.easeOut);
+    setState(() {
+      pillInfoTab = false;
+    });
   }
-
+ 
+  bool pillInfoTab = false;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+  //     if (_isCareful) _showWarning(context, ['간장애'], widget.drugItemSeq);
+  //   });
+  // }
+ 
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
@@ -181,13 +196,16 @@ class _ReviewPageState extends State<ReviewPage> {
                                 child: InkWell(
                                   child: Center(child: Text("약정보")),
                                   onTap: _onTapPillInfo,
+                                  // onTap: () {
+                                  //   _onTapPillInfo;
+                                  // },
                                 ),
                                 width: MediaQuery.of(context).size.width / 2,
                                 decoration: BoxDecoration(
                                     border: Border(
                                         bottom: BorderSide(
                                             color: Colors.black87,
-                                            width: 1.0))),
+                                            width: pillInfoTab == true ?  2.0: 1.0))),
                               ),
                               Container(
                                 child: InkWell(
@@ -199,7 +217,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                     border: Border(
                                         bottom: BorderSide(
                                             color: Colors.black87,
-                                            width: 2.0))),
+                                            width: pillInfoTab == true ?  1.0: 2.0))),
                               )
                             ],
                           ),
