@@ -3,11 +3,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/drug_info/expiration_s.dart';
 import 'package:semo_ver2/drug_info/warning_highlighting.dart';
 //
 
 import 'package:semo_ver2/drug_info/detail_info.dart';
-import 'package:semo_ver2/drug_info/set_expiration.dart';
+import 'package:semo_ver2/drug_info/expiration_g.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
@@ -390,9 +391,17 @@ class _ReviewPageState extends State<ReviewPage> {
                                     context,
                                     MaterialPageRoute(
                                         fullscreenDialog: true,
-                                        builder: (context) => Expiration(
+                                        builder: (context) {
+                                          if (drug.etcOtcCode == '일반의약품') {
+                                            return ExpirationG(
                                               drugItemSeq: drug.itemSeq,
-                                            )));
+                                            );
+                                          } else {
+                                            return ExpirationS(
+                                              drugItemSeq: drug.itemSeq,
+                                            );
+                                          }
+                                        }));
                               }
                             },
                           ),
