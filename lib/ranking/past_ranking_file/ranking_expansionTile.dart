@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/ranking/test_ranking.dart';
+import 'package:semo_ver2/ranking/past_ranking_file/test_ranking.dart';
 
 String BigCategory = '';
 
