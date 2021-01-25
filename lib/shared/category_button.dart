@@ -24,8 +24,13 @@ class CategoryButton extends StatelessWidget {
           padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
               EdgeInsets.symmetric(horizontal: 10)),
           elevation: MaterialStateProperty.all<double>(0.0),
-          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF7F7F7)),
-          foregroundColor: MaterialStateProperty.all<Color>(Color(0xFF009E8C))),
+          // Color(0xFFF7F7F7) Color(0xFF009E8C)
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white10),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.black54),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0.0),
+                  side: BorderSide(color: Colors.grey[300])))),
       onPressed: () {},
     );
   }
