@@ -3,11 +3,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/drug_info/expiration_s.dart';
 import 'package:semo_ver2/drug_info/warning_highlighting.dart';
 //
 
 import 'package:semo_ver2/drug_info/detail_info.dart';
-import 'package:semo_ver2/drug_info/set_expiration.dart';
+import 'package:semo_ver2/drug_info/expiration_g.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
@@ -34,6 +35,7 @@ class _ReviewPageState extends State<ReviewPage> {
   FocusNode focusNode = FocusNode();
   String _searchText = "";
   FirebaseAuth auth = FirebaseAuth.instance;
+  // bool _isCareful;
 
   _ReviewPageState() {
     _filter.addListener(() {
@@ -77,6 +79,14 @@ class _ReviewPageState extends State<ReviewPage> {
     _scrollController.animateTo(_getReviewSizes(),
         duration: Duration(milliseconds: 100), curve: Curves.easeOut);
   }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+  //     if (_isCareful) _showWarning(context, ['간장애'], widget.drugItemSeq);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -388,7 +398,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                             userData.diseaseList,
                                             drug.nbDocData),
                                         drug.itemSeq);
-                                    // Navigator.of(context).pop();
                                   }))
                           : Container(),
                       Positioned(
@@ -432,9 +441,17 @@ class _ReviewPageState extends State<ReviewPage> {
                                     context,
                                     MaterialPageRoute(
                                         fullscreenDialog: true,
-                                        builder: (context) => Expiration(
+                                        builder: (context) {
+                                          if (drug.etcOtcCode == '일반의약품') {
+                                            return ExpirationG(
                                               drugItemSeq: drug.itemSeq,
-                                            )));
+                                            );
+                                          } else {
+                                            return ExpirationS(
+                                              drugItemSeq: drug.itemSeq,
+                                            );
+                                          }
+                                        }));
                               }
                             },
                           ),
@@ -481,6 +498,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
     return newList;
   }
+
   /* Top Information - Dialogs */
   void _showWarning(context, carefulDiseaseList, drugItemSeq) {
     showDialog(
@@ -547,7 +565,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             MaterialPageRoute(
                                 builder: (context) => WarningInfo(
                                       drugItemSeq: drugItemSeq,
-                                      warningList : carefulDiseaseList,
+                                      warningList: carefulDiseaseList,
                                     )));
                       },
                     ),

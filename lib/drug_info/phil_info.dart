@@ -5,7 +5,7 @@
 // import 'package:semo_ver2/drug_info/detail_info.dart';
 // import 'package:semo_ver2/models/drug.dart';
 // import 'package:semo_ver2/models/user.dart';
-// import 'package:semo_ver2/drug_info/set_expiration.dart';
+// import 'package:semo_ver2/drug_info/expiration_g.dart';
 // import 'package:semo_ver2/services/db.dart';
 // import 'package:semo_ver2/shared/image.dart';
 // import 'package:semo_ver2/shared/loading.dart';
