@@ -33,11 +33,14 @@ class _ReviewListState extends State<ReviewList> {
       } else
         print('    RESULT Nothing     ');
     }
-    return Expanded(
-      child: ListView(
+    return ListView.builder(
         physics: const ClampingScrollPhysics(),
-        children: searchResults.map((data) => _buildListItem(context, data)).toList(),
-      ),
+        shrinkWrap: true,
+        itemCount: reviews.length,
+        itemBuilder: (context, index) {
+        return _buildListItem(context, searchResults[index]);
+    },
+//      children: searchResults.map((data) => _buildListItem(context, data)).toList(),
     );
 
 
