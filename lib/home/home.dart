@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/drug_info/expiration_g.dart';
 import 'package:semo_ver2/drug_info/expiration_s.dart';
-import 'package:semo_ver2/review/review_page.dart';
+import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/models/drug.dart';
 

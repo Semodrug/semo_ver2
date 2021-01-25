@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:semo_ver2/camera/no_result.dart';
 import 'package:semo_ver2/home/home.dart';
-import 'package:semo_ver2/review/review_page.dart';
+import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/db.dart';
 
 import 'case_recognition.dart';

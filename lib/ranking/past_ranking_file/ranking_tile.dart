@@ -3,7 +3,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/models/review.dart';
-import 'package:semo_ver2/review/review_page.dart';
+import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
@@ -67,7 +67,7 @@ class DrugTile extends StatelessWidget {
                 builder: (context) => ReviewPage(drug.itemSeq),
               ),
             ),
-             },
+          },
           child: Container(
             width: double.infinity,
             height: 100.0,
@@ -78,11 +78,11 @@ class DrugTile extends StatelessWidget {
                     SizedBox(
                       width: 40,
                       child: Container(
-                          margin: EdgeInsets.only(left: 16, right: 5),
-                          //padding: EdgeInsets.only(left: 0, right: 5),
-                          child: _upToThree(index),
+                        margin: EdgeInsets.only(left: 16, right: 5),
+                        //padding: EdgeInsets.only(left: 0, right: 5),
+                        child: _upToThree(index),
 //
-                         ),
+                      ),
                     ),
                     Container(
                       padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
