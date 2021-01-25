@@ -43,11 +43,19 @@ class _ReviewPageState extends State<ReviewPage> {
 
   GlobalKey _key1 = GlobalKey();
   GlobalKey _key2 = GlobalKey();
+  GlobalKey _pillInfoKey = GlobalKey();
 
-  double _getSizes() {
+  double _getReviewSizes() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
-    final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
-    double height = renderBox1.size.height + renderBox2.size.height + 200;
+//    final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
+    final RenderBox pillInfoRenderBox = _pillInfoKey.currentContext.findRenderObject();
+    double height = pillInfoRenderBox.size.height + renderBox1.size.height;
+    return height;
+  }
+
+  double _getPillInfoSize() {
+    final RenderBox pillInfoRenderBox = _pillInfoKey.currentContext.findRenderObject();
+    double height = pillInfoRenderBox.size.height;
 //    print("SIZE of Red: $sizeRedWidth");
     print("SIZE of Red: $height");
     return height;
@@ -56,12 +64,12 @@ class _ReviewPageState extends State<ReviewPage> {
   var _scrollController = ScrollController();
 
   void _onTapPillInfo() {
-    _scrollController.animateTo(0,
-        duration: Duration(milliseconds: 100), curve: Curves.easeOut);
+    _scrollController.animateTo(_getPillInfoSize(),
+        duration: Duration(milliseconds: 100), curve: Curves.linear);
   }
 
   void _onTapReview() {
-    _scrollController.animateTo(_getSizes() - 400,
+    _scrollController.animateTo(_getReviewSizes(),
         duration: Duration(milliseconds: 100), curve: Curves.easeOut);
   }
 
@@ -119,7 +127,7 @@ class _ReviewPageState extends State<ReviewPage> {
         body: StreamProvider<List<Review>>.value(
           value: ReviewService().getReviews(widget.drugItemSeq),
           child: StreamBuilder<Drug>(
-              key: _key1,
+//              key: _key1,
               stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -134,15 +142,17 @@ class _ReviewPageState extends State<ReviewPage> {
                       slivers: <Widget>[
                         SliverToBoxAdapter(
 //                    key: _key1,
-                          child: _topInfo(context, drug, user),
-                        ),
-                        SliverToBoxAdapter(
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 10.0,
-                            child: Container(
-                              color: Colors.grey[200],
-                            ),
+                          child: Column(
+                            children: [
+                              _topInfo(context, drug, user),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 10.0,
+                                child: Container(
+                                  color: Colors.grey[200],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         SliverAppBar(
@@ -150,36 +160,71 @@ class _ReviewPageState extends State<ReviewPage> {
                           flexibleSpace: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-//                        Container(
-//                          width: width/2,
-//                          child: Center(child: Text("약정보", )),
-//                        ),
-                              Center(
-                                child: TextButton(
-                                  child: Text(
-                                    "약정보",
-                                  ),
-                                  onPressed: _onTapPillInfo,
-                                ),
-                              ),
-                              Center(
-                                child: TextButton(
-                                  child: Text(
-                                    "리뷰",
-                                  ),
-                                  onPressed: _onTapReview,
-                                ),
-                              ),
+//                              Center(
+//                                child:
 
-//                        Container(
-//                          width: width/2,
-//                          child: Center(child: Text("리뷰", )),
-//                        ),
+//                                TextButton(
+//                                  child: Text(
+//                                    "약정보",
+//                                  ),
+//                                  onPressed: _onTapPillInfo,
+//                                ),
+//                              ),
+
+
+                              Container(
+                                child: InkWell(
+                                  child: Center(child: Text("약정보")),
+                                  onTap: _onTapPillInfo,
+                                ),
+                                width: MediaQuery.of(context).size.width/2,
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.black87,
+                                            width:  1.0
+                                        )
+                                    )
+                                ),
+                              ) ,
+                              Container(
+                                child: InkWell(
+                                    child: Center(child: Text("리뷰")),
+                                  onTap: _onTapReview,
+                                ),
+                                width: MediaQuery.of(context).size.width/2,
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.black87,
+                                            width:  2.0
+                                        )
+                                    )
+                                ),
+                              )
                             ],
                           ),
                           leading: Container(),
                           pinned: true,
                           backgroundColor: Colors.white,
+                        ),
+                        SliverToBoxAdapter(
+                          child: Column(
+                            children: [
+                              SizedBox(height: 10),
+                              _underInfo(context, widget.drugItemSeq),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 10.0,
+                                child: Container(
+                                  color: Colors.grey[200],
+                                ),
+                              ),
+                            ],
+                          )
+                        ),
+                        SliverToBoxAdapter(
+                          child: _totalRating(),
                         ),
                         SliverToBoxAdapter(
                           child: _drugReviews(),
@@ -261,6 +306,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   }
 
                   return Padding(
+                    key: _pillInfoKey,
                     padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                     child: Stack(children: [
                       Column(
@@ -615,12 +661,14 @@ class _ReviewPageState extends State<ReviewPage> {
   /* Under Information */
   Widget _underInfo(BuildContext context, String drugItemSeq) {
     return StreamBuilder<Drug>(
-        key: _key2,
+//        key: _key2,
+
         stream: DatabaseService(itemSeq: drugItemSeq).drugData,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Drug drug = snapshot.data;
             return Padding(
+              key:  _key1,
               padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -720,70 +768,64 @@ class _ReviewPageState extends State<ReviewPage> {
         });
   }
 
+  Widget _totalRating() {
+    return Column(
+      children: [
+        GetRating(widget.drugItemSeq),
+        Container(
+          height: 4,
+          color: Colors.grey[200],
+        ),
+      ],
+    );
+  }
   /* Review */
   Widget _drugReviews() {
-    return Container(
-//                        key: _key1,
-        height: 3000,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(height: 10),
-            _underInfo(context, widget.drugItemSeq),
-            SizedBox(
-              width: double.infinity,
-              height: 10.0,
-              child: Container(
-                color: Colors.grey[200],
-              ),
-            ),
-            GetRating(widget.drugItemSeq),
-            Container(
-              height: 4,
-              color: Colors.grey[200],
-            ),
-            Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    //TODO EDIT num of reviews
-                    StreamBuilder<Drug>(
-                        stream: DatabaseService(itemSeq: widget.drugItemSeq)
-                            .drugData,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            Drug drug = snapshot.data;
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              //TODO EDIT num of reviews
+              StreamBuilder<Drug>(
+                  stream: DatabaseService(itemSeq: widget.drugItemSeq)
+                      .drugData,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      Drug drug = snapshot.data;
 
-                            return Text(
-                                drug.numOfReviews.toStringAsFixed(0) + "개",
-                                style: TextStyle(
-                                  fontSize: 16.5,
-                                  fontWeight: FontWeight.bold,
-                                ));
-                          } else
-                            return Loading();
-                        }),
+                      return Text(
+                          drug.numOfReviews.toStringAsFixed(0) + "개",
+                          style: TextStyle(
+                            fontSize: 16.5,
+                            fontWeight: FontWeight.bold,
+                          ));
+                    } else
+                      return Loading();
+                  }),
 
-                    InkWell(
-                        child: Text('전체리뷰 보기',
-                            style: TextStyle(
-                              fontSize: 14.5,
-                            )),
-                        onTap: () {
-                          //TODO GET ALL REVIEW
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      AllReview(widget.drugItemSeq)));
-                        }),
-                  ],
-                )),
-            _searchBar(),
-            ReviewList(_searchText, "all"),
-          ],
-        ));
+              InkWell(
+                  child: Text('전체리뷰 보기',
+                      style: TextStyle(
+                        fontSize: 14.5,
+                      )),
+                  onTap: () {
+                    //TODO GET ALL REVIEW
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                AllReview(widget.drugItemSeq)));
+                  }),
+            ],
+          ),
+        ),
+        _searchBar(),
+        ReviewList(_searchText, "all"),
+      ],
+    );
   }
 
   Widget _searchBar() {

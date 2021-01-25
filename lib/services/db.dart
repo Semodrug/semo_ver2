@@ -34,7 +34,7 @@ class DatabaseService {
         drugQuery = drugQuery
             .where('PRDUCT_TYPE', isEqualTo: categoryName) //;
             .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
-            .orderBy('ITEM_NAME', descending: false)
+            .orderBy('ITEM_NAME', descending: true)
             .limit(10);
 
         break;
