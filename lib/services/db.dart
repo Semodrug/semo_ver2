@@ -206,6 +206,11 @@ class DatabaseService {
     });
   }
 
+  Future<List> getDiseaseList() async {
+    DocumentSnapshot ds = await userCollection.doc(uid).get();
+    return ds.data()['diseaseList'];
+  }
+
   /* Saved List */
   //drug list from snapshot
   List<SavedDrug> _savedDrugListFromSnapshot(QuerySnapshot snapshot) {

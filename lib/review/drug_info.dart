@@ -86,7 +86,7 @@ class _ReviewPageState extends State<ReviewPage> {
       pillInfoTab = false;
     });
   }
-
+ 
   bool pillInfoTab = false;
   // @override
   // void initState() {
@@ -95,7 +95,7 @@ class _ReviewPageState extends State<ReviewPage> {
   //     if (_isCareful) _showWarning(context, ['간장애'], widget.drugItemSeq);
   //   });
   // }
-
+ 
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
@@ -163,19 +163,18 @@ class _ReviewPageState extends State<ReviewPage> {
                       controller: _scrollController,
                       slivers: <Widget>[
                         SliverToBoxAdapter(
-                          child: _topInfo(context, drug, user),
-                          // Column(
-                          //   children: [
-                          //     _topInfo(context, drug, user),
-                          //     SizedBox(
-                          //       width: double.infinity,
-                          //       height: 10.0,
-                          //       child: Container(
-                          //         color: Colors.grey[200],
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
+                          child: Column(
+                            children: [
+                              _topInfo(context, drug, user),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 10.0,
+                                child: Container(
+                                  color: Colors.grey[200],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         SliverAppBar(
                           flexibleSpace: Row(
@@ -322,6 +321,15 @@ class _ReviewPageState extends State<ReviewPage> {
                     if (_isSaved == true) break;
                   }
 
+                  if (_isCareful) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _showWarning(
+                          context,
+                          _carefulDiseaseList(
+                              userData.diseaseList, drug.nbDocData),
+                          drug.itemSeq);
+                    });
+                  }
                   return Stack(
                     children: [
                       Padding(
