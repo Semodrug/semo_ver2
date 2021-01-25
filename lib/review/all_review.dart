@@ -9,9 +9,8 @@ import 'package:semo_ver2/review/review_list.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/loading.dart';
-import 'review_page.dart';
+import 'drug_info.dart';
 import 'write_review.dart';
-
 
 class AllReview extends StatefulWidget {
   String drugItemSeq;
@@ -34,8 +33,6 @@ class _AllReveiewState extends State<AllReview> {
       });
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,14 +64,14 @@ class _AllReveiewState extends State<AllReview> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.create),
-            backgroundColor: Colors.teal[300],
-            elevation: 0.0,
+          child: Icon(Icons.create),
+          backgroundColor: Colors.teal[300],
+          elevation: 0.0,
 //          onPressed: () {
 //            Navigator.push(context,
 //                MaterialPageRoute(builder: (context) => WriteReview()));
 //          }
-            ),
+        ),
       ),
     );
   }
@@ -90,20 +87,18 @@ class _AllReveiewState extends State<AllReview> {
       elevation: 0.0,
       backgroundColor: Colors.white,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.teal[300]),
+          icon: Icon(Icons.arrow_back, color: Colors.teal[300]),
           onPressed: () {
             Navigator.pop(
-                context,
+              context,
 //                MaterialPageRoute(builder: (context) => MyStatefulWidget()
 //                    builder: (context) => MyApp()
 //                )
             );
-          }
-      ),
+          }),
       actions: <Widget>[],
     );
   }
-
 
   Widget _myTab(BuildContext context) {
     return DefaultTabController(
@@ -112,13 +107,17 @@ class _AllReveiewState extends State<AllReview> {
           children: [
             TabBar(
               labelStyle:
-              TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               unselectedLabelStyle:
-              TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
+                  TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
               tabs: [
                 Tab(child: Text('전체리뷰', style: TextStyle(color: Colors.black))),
-                Tab(child: Text('효과리뷰만', style: TextStyle(color: Colors.black))),
-                Tab(child: Text('부작용리뷰만', style: TextStyle(color: Colors.black))),
+                Tab(
+                    child:
+                        Text('효과리뷰만', style: TextStyle(color: Colors.black))),
+                Tab(
+                    child:
+                        Text('부작용리뷰만', style: TextStyle(color: Colors.black))),
               ],
               indicatorColor: Colors.teal[400],
             ),
@@ -148,7 +147,7 @@ class _AllReveiewState extends State<AllReview> {
     return Container(
 //                        key: _key1,
         height: 3000,
-        child:Column(
+        child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
@@ -162,19 +161,20 @@ class _AllReveiewState extends State<AllReview> {
                   children: <Widget>[
                     //TODO EDIT num of reviews
                     StreamBuilder<Drug>(
-                        stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+                        stream: DatabaseService(itemSeq: widget.drugItemSeq)
+                            .drugData,
                         builder: (context, snapshot) {
-                          if(snapshot.hasData) {
+                          if (snapshot.hasData) {
                             Drug drug = snapshot.data;
-                            return Text(drug.numOfReviews.toStringAsFixed(0)+"개",
+                            return Text(
+                                drug.numOfReviews.toStringAsFixed(0) + "개",
                                 style: TextStyle(
                                   fontSize: 16.5,
                                   fontWeight: FontWeight.bold,
                                 ));
-                          }
-                          else return Loading();
-                        }
-                    ),
+                          } else
+                            return Loading();
+                        }),
 
 //                    InkWell(
 //                        child: Text('전체리뷰 보기',
@@ -193,8 +193,7 @@ class _AllReveiewState extends State<AllReview> {
             _searchBar(),
             ReviewList(_searchText, filter),
           ],
-        )
-    );
+        ));
   }
 
   Widget _searchBar() {
@@ -241,20 +240,14 @@ class _AllReveiewState extends State<AllReview> {
                       contentPadding: EdgeInsets.zero,
                       labelStyle: TextStyle(color: Colors.grey),
                       focusedBorder: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(10)),
-                          borderSide:
-                          BorderSide(color: Colors.transparent)),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.transparent)),
                       enabledBorder: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(10)),
-                          borderSide:
-                          BorderSide(color: Colors.transparent)),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.transparent)),
                       border: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(10)),
-                          borderSide:
-                          BorderSide(color: Colors.transparent))),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.transparent))),
                 )),
 //            focusNode.hasFocus
 //                ? Expanded(
@@ -281,8 +274,6 @@ class _AllReveiewState extends State<AllReview> {
       ),
     );
   }
-
-
 
 /*Widget _buildBody(BuildContext context) {
     // TODO: get actual snapshot from Cloud Firestore
@@ -738,6 +729,3 @@ Widget _dateAndLike(record) {
   );
   */
 }
-
-
-

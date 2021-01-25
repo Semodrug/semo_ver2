@@ -2,10 +2,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/drug.dart';
 
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/review/review_page.dart';
+import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
-
 
 class RankingTile extends StatelessWidget {
   final Drug drug;
@@ -103,7 +102,7 @@ class RankingTile extends StatelessWidget {
                             Text(
                               drug.entpName,
                               style:
-                              TextStyle(fontSize: 11, color: Colors.grey),
+                                  TextStyle(fontSize: 11, color: Colors.grey),
                             ),
                             Expanded(
                               child: Row(children: [
@@ -138,12 +137,12 @@ class RankingTile extends StatelessWidget {
 //                            ),
                             Expanded(
                                 child: Row(
-                                  children: [
+                              children: [
 //                                _categoryButton(
 //                                    (_checkCategoryName(drug.category)))
-                                    CategoryButton(str: drug.category)
-                                  ],
-                                )),
+                                CategoryButton(str: drug.category)
+                              ],
+                            )),
                           ],
                         )),
                   ],

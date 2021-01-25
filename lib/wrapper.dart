@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/initial/policy_agree.dart';
@@ -24,12 +26,13 @@ class Wrapper extends StatelessWidget {
       return FutureBuilder<bool>(
           future: DatabaseService(uid: user.uid).checkIfDocExists(user.uid),
           builder: (context, snapshot) {
-            return BottomBar();
-            // if (snapshot.data == true) {
-            //   return BottomBar();
-            // } else {
-            //   return PolicyAgreePage();
-            // }
+            // return BottomBar();
+
+            if (snapshot.data == false) {
+              return PolicyAgreePage();
+            } else {
+              return BottomBar();
+            }
           });
     }
   }

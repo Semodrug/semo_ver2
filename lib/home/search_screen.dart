@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
-import 'package:semo_ver2/review/review_page.dart';
+import 'package:semo_ver2/review/drug_info.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -30,14 +30,14 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildBodyOfAll(BuildContext context, String searchVal) {
-      return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('Drugs')
-            .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
-            .limit(30) //
-            .snapshots(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData) return LinearProgressIndicator();
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('Drugs')
+          .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
+          .limit(30) //
+          .snapshots(),
+      builder: (context, AsyncSnapshot snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
         if (searchVal == '' || searchVal.length < 2) {
           return StreamBuilder<QuerySnapshot>(
             stream: userSearchList.snapshots(),
@@ -97,11 +97,10 @@ class _SearchScreenState extends State<SearchScreen> {
               );
             },
           );
-        }
-          else
-            return _buildListOfAll(context, snapshot.data.docs);
-        },
-      );
+        } else
+          return _buildListOfAll(context, snapshot.data.docs);
+      },
+    );
     //}
   }
 
@@ -363,59 +362,59 @@ class _SearchScreenState extends State<SearchScreen> {
                             Expanded(
                                 //flex: 5,
                                 child: TextFormField(
-                                  onFieldSubmitted: (val) {
-                                    if (val != '' || val.length > 2) {
-                                      addRecentSearchList();
-                                      focusNode.unfocus();
-                                    }
-                                  },
-                                  focusNode: focusNode,
-                                  style: TextStyle(fontSize: 15),
-                                  autofocus: true,
-                                  controller: _filter,
-                                  decoration: InputDecoration(
-                                    fillColor: Colors.white12,
-                                    filled: true,
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.all(0),
-                                      child: Icon(
-                                        Icons.search,
-                                        color: Colors.grey,
-                                        size: 20,
-                                      ),
-                                    ),
-                                    suffixIcon: IconButton(
-                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      icon: Icon(
-                                        Icons.cancel,
-                                        size: 20,
-                                        color: Colors.teal,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _filter.clear();
-                                          _searchText = "";
-                                        });
-                                      },
-                                    ),
-                                    hintText: '두 글자 이상 검색해주세요',
-                                    contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                    labelStyle: TextStyle(color: Colors.grey),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.transparent)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(10)),
-                                        borderSide:
-                                            BorderSide(color: Colors.transparent)),
+                              onFieldSubmitted: (val) {
+                                if (val != '' || val.length > 2) {
+                                  addRecentSearchList();
+                                  focusNode.unfocus();
+                                }
+                              },
+                              focusNode: focusNode,
+                              style: TextStyle(fontSize: 15),
+                              autofocus: true,
+                              controller: _filter,
+                              decoration: InputDecoration(
+                                fillColor: Colors.white12,
+                                filled: true,
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(0),
+                                  child: Icon(
+                                    Icons.search,
+                                    color: Colors.grey,
+                                    size: 20,
                                   ),
-                                )),
+                                ),
+                                suffixIcon: IconButton(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  icon: Icon(
+                                    Icons.cancel,
+                                    size: 20,
+                                    color: Colors.teal,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _filter.clear();
+                                      _searchText = "";
+                                    });
+                                  },
+                                ),
+                                hintText: '두 글자 이상 검색해주세요',
+                                contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                labelStyle: TextStyle(color: Colors.grey),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    borderSide:
+                                        BorderSide(color: Colors.transparent)),
+                              ),
+                            )),
                           ],
                         ),
                       ),
                     ),
-                  Spacer(),
+                    Spacer(),
                     SizedBox(
                       width: 50,
                       child: FlatButton(
