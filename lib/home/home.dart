@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/drug_info/set_expiration.dart';
+import 'package:semo_ver2/drug_info/expiration_g.dart';
+import 'package:semo_ver2/drug_info/expiration_s.dart';
 import 'package:semo_ver2/review/review_page.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/models/drug.dart';
@@ -186,9 +187,10 @@ class _HomePageState extends State<HomePage> {
     String _checkCategoryName(String data) {
       String newName = '';
       //TODO: 이부분 0 --> 7로 바꿔주기 pattern이 0-6까지가 카테고리 이름
-      newName = data.substring(7,(data.length));
+      newName = data.substring(7, (data.length));
       return newName;
     }
+
     String onlyCategoryName = _checkCategoryName(data.category);
 
     return GestureDetector(
@@ -254,9 +256,8 @@ class _HomePageState extends State<HomePage> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 3),
                               child: Container(
-                                height: 20,
-                                 child: CategoryButton(str: data.category)
-                              ),
+                                  height: 20,
+                                  child: CategoryButton(str: data.category)),
                             ),
                             SizedBox(
                               height: 3,
@@ -287,11 +288,20 @@ class _HomePageState extends State<HomePage> {
                                               context,
                                               MaterialPageRoute(
                                                   fullscreenDialog: true,
-                                                  builder: (context) =>
-                                                      Expiration(
+                                                  builder: (context) {
+                                                    if (data.etcOtcCode ==
+                                                        '일반의약품') {
+                                                      return ExpirationG(
                                                         drugItemSeq:
                                                             data.itemSeq,
-                                                      )));
+                                                      );
+                                                    } else {
+                                                      return ExpirationS(
+                                                        drugItemSeq:
+                                                            data.itemSeq,
+                                                      );
+                                                    }
+                                                  }));
                                         },
                                         child: Center(
                                             child: Text("수정하기",

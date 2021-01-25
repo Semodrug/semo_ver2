@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:semo_ver2/camera/barcode_no_result.dart';
+import 'package:semo_ver2/camera/no_result.dart';
 import 'package:semo_ver2/home/home.dart';
 import 'package:semo_ver2/review/review_page.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -302,10 +302,9 @@ class _MenuWidgetState extends State<MenuWidget> {
                     ),
                     onPressed: () {
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CaseRecognition()
-                        ));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CaseRecognition()));
                     },
                   ),
                   padding: EdgeInsets.all(4),

@@ -215,6 +215,7 @@ class DatabaseService {
         itemSeq: doc.data()['ITEM_SEQ'] ?? '',
         category: doc.data()['PRDUCT_TYPE'] ?? '',
         expiration: doc.data()['expiration'] ?? '',
+        etcOtcCode: doc.data()['ETC_OTC_CODE'] ?? '',
       );
     }).toList();
   }
@@ -228,7 +229,8 @@ class DatabaseService {
         .map(_savedDrugListFromSnapshot);
   }
 
-  Future<void> addSavedList(itemName, itemSeq, category, expiration) async {
+  Future<void> addSavedList(
+      itemName, itemSeq, category, etcOtcCode, expiration) async {
     return await userCollection
         .doc(uid)
         .collection('savedList')
@@ -237,6 +239,7 @@ class DatabaseService {
       'ITEM_NAME': itemName ?? '',
       'ITEM_SEQ': itemSeq ?? '',
       'PRDUCT_TYPE': category ?? '',
+      'etcOtcCode': etcOtcCode ?? '',
       'expiration': expiration ?? '',
     });
   }
@@ -318,22 +321,13 @@ class DatabaseService {
     var result =
         await drugCollection.where('BAR_CODE', isEqualTo: barcode).get();
     var data;
-    if (result == null) {
+
+    if (result.docs.isEmpty) {
       data = null;
     } else {
       data = result.docs.first.data()['ITEM_SEQ'] ?? null;
     }
-    print(data);
 
     return data;
-
-    // drugCollection.where('BAR_CODE', isEqualTo: barcode).get().then((value) {
-    //   result = value.docs.first.data()['ITEM_SEQ'];
-    //   return result;
-    // });
-
-    // print('22 $result');
   }
-
-  // databaseReference.collection ( "myCollection"). getDocuments (). then ((onValue) {onValue.documents.forEach ((f) {f [0]})});
 }
