@@ -39,4 +39,14 @@ void main() {
   //               userData.diseaseList, drug.nbDocData),
   //           drug.itemSeq));
   // }
+
+  // if (_isCareful) {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     _showWarning(
+  //         context,
+  //         _carefulDiseaseList(
+  //             userData.diseaseList, drug.nbDocData),
+  //         drug.itemSeq);
+  //   });
+  // }
 }

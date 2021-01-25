@@ -303,15 +303,6 @@ class _ReviewPageState extends State<ReviewPage> {
                     if (_isSaved == true) break;
                   }
 
-                  if (_isCareful) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      _showWarning(
-                          context,
-                          _carefulDiseaseList(
-                              userData.diseaseList, drug.nbDocData),
-                          drug.itemSeq);
-                    });
-                  }
                   return Stack(
                     children: [
                       Padding(
