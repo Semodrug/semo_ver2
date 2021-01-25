@@ -45,21 +45,24 @@ class _ReviewPageState extends State<ReviewPage> {
 
   GlobalKey _key1 = GlobalKey();
   GlobalKey _key2 = GlobalKey();
-  GlobalKey _pillInfoKey = GlobalKey();
+  GlobalKey _key3 = GlobalKey();
+  GlobalKey _key4 = GlobalKey();
+
+
 
   double _getReviewSizes() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
-//    final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
-    final RenderBox pillInfoRenderBox = _pillInfoKey.currentContext.findRenderObject();
-    double height = pillInfoRenderBox.size.height + renderBox1.size.height;
+    final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
+    final RenderBox renderBox3 = _key3.currentContext.findRenderObject();
+    final RenderBox renderBox4 = _key4.currentContext.findRenderObject();
+    double height = renderBox1.size.height /*+ renderBox2.size.height*/ + renderBox3.size.height + renderBox4.size.height + 20;
     return height;
   }
 
   double _getPillInfoSize() {
-    final RenderBox pillInfoRenderBox = _pillInfoKey.currentContext.findRenderObject();
-    double height = pillInfoRenderBox.size.height;
-//    print("SIZE of Red: $sizeRedWidth");
-    print("SIZE of Red: $height");
+    final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
+    final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
+    double height = renderBox1.size.height /*+ renderBox2.size.height*/;
     return height;
   }
 
@@ -129,7 +132,6 @@ class _ReviewPageState extends State<ReviewPage> {
         body: StreamProvider<List<Review>>.value(
           value: ReviewService().getReviews(widget.drugItemSeq),
           child: StreamBuilder<Drug>(
-//              key: _key1,
               stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -139,27 +141,28 @@ class _ReviewPageState extends State<ReviewPage> {
                       FocusScope.of(context).unfocus();
                     },
                     child: CustomScrollView(
-                      physics: PageScrollPhysics(),
+                      //physics: PageScrollPhysics(),
                       controller: _scrollController,
                       slivers: <Widget>[
                         SliverToBoxAdapter(
-//                    key: _key1,
-                          child: Column(
-                            children: [
-                              _topInfo(context, drug, user),
-                              SizedBox(
-                                width: double.infinity,
-                                height: 10.0,
-                                child: Container(
-                                  color: Colors.grey[200],
-                                ),
-                              ),
-                            ],
-                          ),
+                          child: _topInfo(context, drug, user),
+                          // Column(
+                          //   children: [
+                          //     _topInfo(context, drug, user),
+                          //     SizedBox(
+                          //       width: double.infinity,
+                          //       height: 10.0,
+                          //       child: Container(
+                          //         color: Colors.grey[200],
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                         ),
                         SliverAppBar(
-//                    key: _key2,
+
                           flexibleSpace: Row(
+                            key: _key2,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
 //                              Center(
@@ -211,6 +214,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           backgroundColor: Colors.white,
                         ),
                         SliverToBoxAdapter(
+
                           child: Column(
                             children: [
                               SizedBox(height: 10),
@@ -308,7 +312,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   }
 
                   return Padding(
-                    key: _pillInfoKey,
+                    key: _key1,
                     padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                     child: Stack(children: [
                       Column(
@@ -670,7 +674,7 @@ class _ReviewPageState extends State<ReviewPage> {
           if (snapshot.hasData) {
             Drug drug = snapshot.data;
             return Padding(
-              key:  _key1,
+              key: _key3,
               padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -772,6 +776,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   Widget _totalRating() {
     return Column(
+      key: _key4,
       children: [
         GetRating(widget.drugItemSeq),
         Container(
