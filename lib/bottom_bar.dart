@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/home/home_add_button_stack.dart';
-import 'package:semo_ver2/ranking/test_ranking.dart';
+//import 'package:semo_ver2/ranking/past_dart_file/test_ranking.dart';
 
 import 'camera/camera.dart';
 import 'home/home.dart';
