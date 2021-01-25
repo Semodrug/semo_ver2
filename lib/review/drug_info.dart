@@ -86,7 +86,7 @@ class _ReviewPageState extends State<ReviewPage> {
       pillInfoTab = false;
     });
   }
- 
+
   bool pillInfoTab = false;
   // @override
   // void initState() {
@@ -95,7 +95,16 @@ class _ReviewPageState extends State<ReviewPage> {
   //     if (_isCareful) _showWarning(context, ['간장애'], widget.drugItemSeq);
   //   });
   // }
- 
+
+  bool _ifZeroReview = false;
+  void _ifNoReview() {
+    _ifZeroReview = true;
+  }
+
+  bool checkIfNoReview() {
+    return _ifZeroReview;
+  }
+
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
@@ -163,18 +172,19 @@ class _ReviewPageState extends State<ReviewPage> {
                       controller: _scrollController,
                       slivers: <Widget>[
                         SliverToBoxAdapter(
-                          child: Column(
-                            children: [
-                              _topInfo(context, drug, user),
-                              SizedBox(
-                                width: double.infinity,
-                                height: 10.0,
-                                child: Container(
-                                  color: Colors.grey[200],
-                                ),
-                              ),
-                            ],
-                          ),
+                          child: _topInfo(context, drug, user),
+                          // Column(
+                          //   children: [
+                          //     _topInfo(context, drug, user),
+                          //     SizedBox(
+                          //       width: double.infinity,
+                          //       height: 10.0,
+                          //       child: Container(
+                          //         color: Colors.grey[200],
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                         ),
                         SliverAppBar(
                           flexibleSpace: Row(
@@ -321,15 +331,6 @@ class _ReviewPageState extends State<ReviewPage> {
                     if (_isSaved == true) break;
                   }
 
-                  if (_isCareful) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      _showWarning(
-                          context,
-                          _carefulDiseaseList(
-                              userData.diseaseList, drug.nbDocData),
-                          drug.itemSeq);
-                    });
-                  }
                   return Stack(
                     children: [
                       Padding(
@@ -844,8 +845,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       Drug drug = snapshot.data;
-
-                      return Text(drug.numOfReviews.toStringAsFixed(0) + "개",
+                      if(drug.numOfReviews == 0)
+                        _ifNoReview();
+                      return Text("리뷰 "+drug.numOfReviews.toStringAsFixed(0) + "개",
                           style: TextStyle(
                             fontSize: 16.5,
                             fontWeight: FontWeight.bold,
@@ -854,7 +856,8 @@ class _ReviewPageState extends State<ReviewPage> {
                       return Loading();
                   }),
 
-              InkWell(
+              checkIfNoReview() == true ? Container()
+                  : InkWell(
                   child: Text('전체리뷰 보기',
                       style: TextStyle(
                         fontSize: 14.5,
@@ -870,11 +873,26 @@ class _ReviewPageState extends State<ReviewPage> {
             ],
           ),
         ),
-        _searchBar(),
-        ReviewList(_searchText, "all"),
+        checkIfNoReview() == true ? Container() : _searchBar(),
+        checkIfNoReview() == true ?
+          Container(
+            height: 310,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Container(height: 30,),
+                Image.asset('assets/images/Group 257.png', ),
+                Container(height: 10,),
+                Text("아직 작성된 리뷰가 없어요")
+              ],
+            )
+          )
+          : ReviewList(_searchText, "all"),
       ],
     );
   }
+
+
 
   Widget _searchBar() {
     return Padding(

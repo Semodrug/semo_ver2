@@ -88,6 +88,7 @@ class _GetRatingState extends State<GetRating> {
                               Column(
                                 children: [
                                   Text("효과"),
+                                  //TODO
                                   MyPieChart("effect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
       //            _effectPieChart(effectGood, effectSoso, effectBad),
                                 ],
