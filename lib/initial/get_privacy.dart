@@ -142,7 +142,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.teal),
             ),
-            hintText: '닉네임 입력 (2자 이상)',
+            hintText: '닉네임 입력 (10자 이하)',
             hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
             // suffixIcon: _checkButton('중복확인')
             //    OutlineButton(
@@ -171,7 +171,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
           ),
           keyboardType: TextInputType.text,
           onChanged: (value) {
-            if (value.length >= 2) {
+            if (value.length >= 1 && value.length <= 10) {
               setState(() {
                 _isNicknameFilled = true;
               });
@@ -274,9 +274,11 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
           onPressed: () async {
             if (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled) {
               // phoneMaskFormatter.getUnmaskedText().length != 11 ||
-              if (birthYearMaskFormatter.getUnmaskedText().length != 4)
-                showSnackBar(context);
-              else {
+              if (birthYearMaskFormatter.getUnmaskedText().length != 4) {
+                print(birthYearMaskFormatter.getUnmaskedText().length);
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('입력하신 항목을 다시 확인해주세요')));
+              } else {
                 var result =
                     await DatabaseService().isUnique(_nicknameController.text);
                 if (result == false) {
@@ -335,11 +337,11 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
     );
   }
 }
-
-void showSnackBar(BuildContext context) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    content: Text('입력하신 항목을 다시 확인해주세요', textAlign: TextAlign.center),
-    duration: Duration(seconds: 2),
-    backgroundColor: Colors.teal[100],
-  ));
-}
+//
+// void showSnackBar(BuildContext context) {
+//   Scaffold.of(context).showSnackBar(SnackBar(
+//     content: Text('입력하신 항목을 다시 확인해주세요', textAlign: TextAlign.center),
+//     duration: Duration(seconds: 2),
+//     backgroundColor: Colors.teal[100],
+//   ));
+// }
