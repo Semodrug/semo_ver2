@@ -16,6 +16,9 @@ bool _isNicknameFilled = true;
 
 class EditPrivacyPage extends StatefulWidget {
   final String title = '개인 정보 수정';
+  final UserData userData;
+
+  const EditPrivacyPage({Key key, this.userData}) : super(key: key);
 
   @override
   _EditPrivacyPageState createState() => _EditPrivacyPageState();
@@ -25,88 +28,172 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
   final AuthService _auth = AuthService();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  List<bool> isSelected = List.generate(2, (_) => false);
-  TextEditingController birthYearController = TextEditingController();
-  TextEditingController nicknameController = TextEditingController();
+  List<bool> _isSelected;
+  TextEditingController _birthYearController = TextEditingController();
+  TextEditingController _nicknameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _birthYearController.dispose();
+    _nicknameController.dispose();
+    super.dispose();
+  }
+
+  void initState() {
+    super.initState();
+    _isSelected =
+        (widget.userData.sex == 'male') ? [true, false] : [false, true];
+    _birthYearController.text = widget.userData.birthYear;
+    _nicknameController.text = widget.userData.nickname;
+  }
 
   @override
   Widget build(BuildContext context) {
-    TheUser user = Provider.of<TheUser>(context);
-
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.teal[200],
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.teal[200],
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        centerTitle: true,
+        title: Text(
+          widget.title,
+          style: TextStyle(
+              fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
+                Color(0xFFE9FFFB),
+                Color(0xFFE9FFFB),
+                Color(0xFFFFFFFF),
+              ])),
+        ),
+      ),
+      backgroundColor: Colors.white,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  topTitle(widget.userData),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  gender(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  birthYear(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  nickname(),
+                  SizedBox(height: 50.0),
+                  submit(context),
+                ],
+              ),
             ),
-            onPressed: () => Navigator.pop(context),
-          ),
-          centerTitle: true,
-          title: Text(
-            widget.title,
-            style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[
-                  Color(0xFFE9FFFB),
-                  Color(0xFFE9FFFB),
-                  Color(0xFFFFFFFF),
-                ])),
           ),
         ),
-        backgroundColor: Colors.white,
-        body: StreamBuilder<UserData>(
-            stream: DatabaseService(uid: user.uid).userData,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                UserData userData = snapshot.data;
+      ),
+    );
 
-                return GestureDetector(
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: SingleChildScrollView(
-                    child: Form(
-                      key: _formKey,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            topTitle(userData),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            gender(userData),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            birthYear(userData),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            nickname(userData),
-                            SizedBox(height: 50.0),
-                            submit(context),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              } else {
-                return Loading();
-              }
-            }));
+    // return Scaffold(
+    //     appBar: AppBar(
+    //       leading: IconButton(
+    //         icon: Icon(
+    //           Icons.arrow_back,
+    //           color: Colors.teal[200],
+    //         ),
+    //         onPressed: () => Navigator.pop(context),
+    //       ),
+    //       centerTitle: true,
+    //       title: Text(
+    //         widget.title,
+    //         style: TextStyle(
+    //             fontSize: 14.0,
+    //             fontWeight: FontWeight.bold,
+    //             color: Colors.black),
+    //       ),
+    //       elevation: 0,
+    //       flexibleSpace: Container(
+    //         decoration: BoxDecoration(
+    //             gradient: LinearGradient(
+    //                 begin: Alignment.topCenter,
+    //                 end: Alignment.bottomCenter,
+    //                 colors: <Color>[
+    //               Color(0xFFE9FFFB),
+    //               Color(0xFFE9FFFB),
+    //               Color(0xFFFFFFFF),
+    //             ])),
+    //       ),
+    //     ),
+    //     backgroundColor: Colors.white,
+    //     body: StreamBuilder<UserData>(
+    //         stream: DatabaseService(uid: user.uid).userData,
+    //         builder: (context, snapshot) {
+    //           if (snapshot.hasData) {
+    //             UserData userData = snapshot.data;
+    //             if (userData.sex == 'male') {
+    //               _isSelected = [true, false];
+    //             } else {
+    //               _isSelected = [false, true];
+    //             }
+    //             _birthYearController.text = userData.birthYear;
+    //             _nicknameController.text = userData.nickname;
+    //
+    //             return GestureDetector(
+    //               onTap: () {
+    //                 FocusScope.of(context).unfocus();
+    //               },
+    //               child: SingleChildScrollView(
+    //                 child: Form(
+    //                   key: _formKey,
+    //                   child: Padding(
+    //                     padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+    //                     child: Column(
+    //                       crossAxisAlignment: CrossAxisAlignment.start,
+    //                       children: <Widget>[
+    //                         topTitle(userData),
+    //                         SizedBox(
+    //                           height: 40,
+    //                         ),
+    //                         gender(),
+    //                         SizedBox(
+    //                           height: 20.0,
+    //                         ),
+    //                         birthYear(),
+    //                         SizedBox(
+    //                           height: 20.0,
+    //                         ),
+    //                         nickname(),
+    //                         SizedBox(height: 50.0),
+    //                         submit(context),
+    //                       ],
+    //                     ),
+    //                   ),
+    //                 ),
+    //               ),
+    //             );
+    //           } else {
+    //             return Loading();
+    //           }
+    //         }));
   }
 
   Widget topTitle(userData) {
@@ -141,15 +228,8 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
     );
   }
 
-  Widget gender(userData) {
-    if (userData.sex == 'male') {
-      isSelected = [true, false];
-    } else {
-      isSelected = [false, true];
-    }
-
+  Widget gender() {
     return Row(
-      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('성별', style: TextStyle(color: Colors.grey, fontSize: 16.0)),
         SizedBox(
@@ -168,27 +248,25 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
               _isGenderFilled = true;
 
               for (int buttonIndex = 0;
-                  buttonIndex < isSelected.length;
+                  buttonIndex < _isSelected.length;
                   buttonIndex++) {
                 if (buttonIndex == index) {
-                  isSelected[buttonIndex] = true;
+                  _isSelected[buttonIndex] = true;
                 } else {
-                  isSelected[buttonIndex] = false;
+                  _isSelected[buttonIndex] = false;
                 }
               }
             });
           },
-          isSelected: isSelected,
+          isSelected: _isSelected,
         ),
       ],
     );
   }
 
-  Widget birthYear(userData) {
-    birthYearController.text = userData.birthYear;
-
+  Widget birthYear() {
     return TextFormField(
-      controller: birthYearController,
+      controller: _birthYearController,
       cursorColor: Colors.teal[400],
       decoration: InputDecoration(
           focusedBorder: UnderlineInputBorder(
@@ -216,11 +294,9 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
     );
   }
 
-  Widget nickname(userData) {
-    nicknameController.text = userData.nickname;
-
+  Widget nickname() {
     return TextFormField(
-      controller: nicknameController,
+      controller: _nicknameController,
       cursorColor: Colors.teal[400],
       decoration: InputDecoration(
         focusedBorder: UnderlineInputBorder(
@@ -278,10 +354,8 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
     return Container(
       alignment: Alignment.center,
       child: SizedBox(
-        width: 400.0,
+        width: MediaQuery.of(context).size.width,
         height: 45.0,
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-        //alignment: Alignment.center,
         child: RaisedButton(
           shape: RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(10.0)),
@@ -294,23 +368,21 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
               : Colors.grey,
           onPressed: () async {
             if (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled) {
-              // phoneMaskFormatter.getUnmaskedText().length != 11 ||
               if (birthYearMaskFormatter.getUnmaskedText().length != 4)
                 showSnackBar(context);
               else {
                 var result =
-                    await DatabaseService().isUnique(nicknameController.text);
+                    await DatabaseService().isUnique(_nicknameController.text);
                 if (result == false) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
                 } else {
                   await DatabaseService(uid: user.uid).updateUserPrivacy(
-                    isSelected[0] ? 'male' : 'female',
-                    birthYearController.text,
-                    nicknameController.text,
+                    _isSelected[0] ? 'male' : 'female',
+                    _birthYearController.text,
+                    _nicknameController.text,
                   );
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => GetHealthPage()));
+                  Navigator.pop(context);
                 }
               }
             }
@@ -353,7 +425,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
         textColor: _isNicknameFilled ? Colors.teal[200] : Colors.grey,
         onPressed: () async {
           var result =
-              await DatabaseService().isUnique(nicknameController.text);
+              await DatabaseService().isUnique(_nicknameController.text);
           if (result == false) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));

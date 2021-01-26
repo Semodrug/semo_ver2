@@ -68,7 +68,8 @@ class _MyPageState extends State<MyPage> {
                           color: Colors.grey[50],
                           height: 10,
                         ),
-                        _myPageMenu('회원정보 수정', context, EditPrivacyPage()),
+                        _myPageMenu('회원정보 수정', context,
+                            EditPrivacyPage(userData: userData)),
                         Container(
                           color: Colors.grey[50],
                           height: 2,
