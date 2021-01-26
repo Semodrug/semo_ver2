@@ -1,17 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:semo_ver2/drug_info/expiration_g.dart';
 import 'package:semo_ver2/drug_info/expiration_s.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'package:semo_ver2/models/drug.dart';
-
-import 'package:semo_ver2/home/home_edit.dart';
 import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/home/home_add_button_stack.dart';
+import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
 
@@ -155,7 +152,7 @@ class _HomePageState extends State<HomePage> {
     TheUser user = Provider.of<TheUser>(context);
     num++;
 
-    /*너무 긴 이름들 잘라서 보여주기 정보를 바꾸는 건 아님*/
+    /* 너무 긴 이름들 잘라서 보여주기 정보를 바꾸는 건 아님 */
     String _checkLongName(SavedDrug data) {
       String newName = data.itemName;
       List splitName = [];
@@ -343,26 +340,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _categoryButton(str) {
-    return Container(
-      width: 24 + str.length.toDouble() * 10,
-      padding: EdgeInsets.symmetric(horizontal: 2),
-      child: ButtonTheme(
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
-        minWidth: 10,
-        height: 22,
-        child: RaisedButton(
-          child: Text(
-            '$str',
-            style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
-          ),
-          onPressed: () => print('$str!'),
-          color: Colors.white,
         ),
       ),
     );
