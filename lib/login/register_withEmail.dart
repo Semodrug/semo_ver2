@@ -127,7 +127,7 @@ class _RegisterFormState extends State<RegisterForm> {
             hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
           ),
           onChanged: (value) {
-            if (value.isNotEmpty) {
+            if (value.length > 6) {
               setState(() {
                 _isIdFilled = true;
               });
