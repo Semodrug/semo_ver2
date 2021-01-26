@@ -326,6 +326,8 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
         onPressed: () {
           setState(() {
+            _isGenderFilled = true;
+
             for (int buttonIndex = 0;
                 buttonIndex < isPressed.length;
                 buttonIndex++) {

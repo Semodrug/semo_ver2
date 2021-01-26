@@ -12,11 +12,10 @@ import 'package:semo_ver2/initial/get_health.dart';
 //     mask: '####.##.##', filter: {"#": RegExp(r'[0-9]')});
 var birthYearMaskFormatter =
     new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
-bool _isGenderFilled = false;
-bool _isBirthYearFilled = false;
+
 bool _isNicknameFilled = false;
-//print(maskFormatter.getMaskedText()); // -> "+0 (123) 456-78-90"
-//print(maskFormatter.getUnmaskedText()); // -> 01234567890
+bool _isBirthYearFilled = false;
+bool _isGenderFilled = false;
 
 class GetPrivacyPage extends StatefulWidget {
   final String title = '회원가입';
@@ -212,7 +211,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
           keyboardType: TextInputType.number,
           inputFormatters: [birthYearMaskFormatter],
           onChanged: (value) {
-            if (value.length >= 4) {
+            if (value.length == 4) {
               setState(() {
                 _isBirthYearFilled = true;
               });
@@ -269,11 +268,11 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
             '다음',
             style: TextStyle(color: Colors.white),
           ),
-          color: (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled)
+          color: (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled)
               ? Colors.teal[400]
               : Colors.grey,
           onPressed: () async {
-            if (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled) {
+            if (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled) {
               // phoneMaskFormatter.getUnmaskedText().length != 11 ||
               if (birthYearMaskFormatter.getUnmaskedText().length != 4)
                 showSnackBar(context);
@@ -313,6 +312,8 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
         onPressed: () {
           setState(() {
+            _isGenderFilled = true;
+
             for (int buttonIndex = 0;
                 buttonIndex < isPressed.length;
                 buttonIndex++) {
