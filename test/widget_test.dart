@@ -29,4 +29,24 @@ void main() {
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });
+
+  // if (_isCareful) {
+  //   Future.delayed(
+  //       Duration.zero,
+  //       () => _showWarning(
+  //           context,
+  //           _carefulDiseaseList(
+  //               userData.diseaseList, drug.nbDocData),
+  //           drug.itemSeq));
+  // }
+
+  // if (_isCareful) {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     _showWarning(
+  //         context,
+  //         _carefulDiseaseList(
+  //             userData.diseaseList, drug.nbDocData),
+  //         drug.itemSeq);
+  //   });
+  // }
 }

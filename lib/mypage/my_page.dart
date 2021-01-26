@@ -66,8 +66,7 @@ class _MyPageState extends State<MyPage> {
                         SizedBox(
                           height: 10,
                         ),
-                        _myPageMenu('회원정보 수정', context,
-                            EditPrivacyPage(userData: userData)),
+                        _myPageMenu('회원정보 수정', context, EditPrivacyPage()),
                         SizedBox(
                           height: 2,
                         ),
