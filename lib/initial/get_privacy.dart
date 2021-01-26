@@ -84,7 +84,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                       SizedBox(
                         height: 40,
                       ),
-                      gender(),
+                      nickname(),
                       SizedBox(
                         height: 20.0,
                       ),
@@ -92,7 +92,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      nickname(),
+                      gender(),
                       SizedBox(height: 50.0),
                       submit(context),
                     ],
@@ -127,126 +127,128 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
     );
   }
 
-  Widget gender() {
-    return Row(
+  Widget nickname() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('성별', style: TextStyle(color: Colors.grey, fontSize: 16.0)),
-        SizedBox(
-          width: 20,
+        Text(
+          '닉네임',
+          style: TextStyle(
+              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
         ),
-        exclusiveButton(0, _isSelected, '남'),
-        SizedBox(width: 10),
-        exclusiveButton(1, _isSelected, '여'),
-        // ToggleButtons(
-        //   constraints: BoxConstraints(
-        //     minWidth: 40,
-        //     minHeight: 20,
-        //   ),
-        //   children: [Text('남'), Text('여')],
-        //   selectedColor: Colors.teal[400],
-        //   fillColor: Colors.teal[100],
-        //   onPressed: (int index) {
-        //     setState(() {
-        //       _isGenderFilled = true;
-        //
-        //       for (int buttonIndex = 0;
-        //           buttonIndex < _isSelected.length;
-        //           buttonIndex++) {
-        //         if (buttonIndex == index) {
-        //           _isSelected[buttonIndex] = true;
-        //         } else {
-        //           _isSelected[buttonIndex] = false;
-        //         }
-        //       }
-        //     });
-        //   },
-        //   isSelected: _isSelected,
-        // ),
+        TextFormField(
+          controller: _nicknameController,
+          cursorColor: Colors.teal[400],
+          decoration: InputDecoration(
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.teal),
+            ),
+            hintText: '닉네임 입력 (2자 이상)',
+            hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
+            // suffixIcon: _checkButton('중복확인')
+            //    OutlineButton(
+            //   color: _isFilled ? Colors.teal : Colors.grey,
+            //   child: Text(
+            //     "중복확인",
+            //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
+            //   ),
+            //   onPressed: () async {
+            //     bool result =
+            //         await DatabaseService().isUnique(nicknameController.text);
+            //
+            //     setState(() {
+            //       if (result == true) _isError = true;
+            //     });
+            //   },
+            // )
+
+            //     TextButton(
+            //   child: Text(
+            //     "중복확인",
+            //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
+            //   ),
+            //   onPressed: () {},
+            // )
+          ),
+          keyboardType: TextInputType.text,
+          onChanged: (value) {
+            if (value.length >= 2) {
+              setState(() {
+                _isNicknameFilled = true;
+              });
+            } else {
+              setState(() {
+                _isNicknameFilled = false;
+              });
+            }
+          },
+          validator: (String value) {
+            if (value.isEmpty) return "닉네임을 입력하세요.";
+            return null;
+          },
+        ),
       ],
     );
   }
 
   Widget birthYear() {
-    return TextFormField(
-      controller: _birthYearController,
-      cursorColor: Colors.teal[400],
-      decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.teal),
-          ),
-          hintText: '출생년도',
-          hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0)),
-      keyboardType: TextInputType.number,
-      inputFormatters: [birthYearMaskFormatter],
-      onChanged: (value) {
-        if (value.length >= 4) {
-          setState(() {
-            _isBirthYearFilled = true;
-          });
-        } else {
-          setState(() {
-            _isBirthYearFilled = false;
-          });
-        }
-      },
-      validator: (String value) {
-        if (value.isEmpty) return "생년월일을 입력하세요.";
-        return null;
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '출생년도',
+          style: TextStyle(
+              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          controller: _birthYearController,
+          cursorColor: Colors.teal[400],
+          decoration: InputDecoration(
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.teal),
+              ),
+              hintText: '출생년도',
+              hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0)),
+          keyboardType: TextInputType.number,
+          inputFormatters: [birthYearMaskFormatter],
+          onChanged: (value) {
+            if (value.length >= 4) {
+              setState(() {
+                _isBirthYearFilled = true;
+              });
+            } else {
+              setState(() {
+                _isBirthYearFilled = false;
+              });
+            }
+          },
+          validator: (String value) {
+            if (value.isEmpty) return "생년월일을 입력하세요.";
+            return null;
+          },
+        ),
+      ],
     );
   }
 
-  Widget nickname() {
-    return TextFormField(
-      controller: _nicknameController,
-      cursorColor: Colors.teal[400],
-      decoration: InputDecoration(
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.teal),
+  Widget gender() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '성별',
+          style: TextStyle(
+              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
         ),
-        hintText: '닉네임 (2자 이상)',
-        hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
-        // suffixIcon: _checkButton('중복확인')
-        //    OutlineButton(
-        //   color: _isFilled ? Colors.teal : Colors.grey,
-        //   child: Text(
-        //     "중복확인",
-        //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
-        //   ),
-        //   onPressed: () async {
-        //     bool result =
-        //         await DatabaseService().isUnique(nicknameController.text);
-        //
-        //     setState(() {
-        //       if (result == true) _isError = true;
-        //     });
-        //   },
-        // )
-
-        //     TextButton(
-        //   child: Text(
-        //     "중복확인",
-        //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
-        //   ),
-        //   onPressed: () {},
-        // )
-      ),
-      keyboardType: TextInputType.text,
-      onChanged: (value) {
-        if (value.length >= 2) {
-          setState(() {
-            _isNicknameFilled = true;
-          });
-        } else {
-          setState(() {
-            _isNicknameFilled = false;
-          });
-        }
-      },
-      validator: (String value) {
-        if (value.isEmpty) return "닉네임을 입력하세요.";
-        return null;
-      },
+        SizedBox(height: 5),
+        Row(
+          children: [
+            exclusiveButton(0, _isSelected, '남'),
+            SizedBox(width: 10),
+            exclusiveButton(1, _isSelected, '여'),
+          ],
+        ),
+      ],
     );
   }
 
