@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:semo_ver2/initial/get_privacy.dart';
-import 'package:semo_ver2/initial/get_health.dart';
 import 'package:semo_ver2/mypage/1_edit_privacy.dart';
+import 'package:semo_ver2/mypage/2_edit_health.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -74,7 +74,8 @@ class _MyPageState extends State<MyPage> {
                           color: Colors.grey[50],
                           height: 2,
                         ),
-                        _myPageMenu('나의 건강정보 관리', context, GetPrivacyPage()),
+                        _myPageMenu('나의 건강정보 관리', context,
+                            EditHealthPage(userData: userData)),
                         Container(
                           color: Colors.grey[50],
                           height: 10,
