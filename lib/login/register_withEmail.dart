@@ -85,11 +85,11 @@ class _RegisterFormState extends State<RegisterForm> {
                   )),
             ),
             SizedBox(
-              height: 20,
+              height: 40,
             ),
             emailField(),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             passwordField(),
             SizedBox(height: 50.0),
@@ -102,86 +102,103 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   void dispose() {
-    // Clean up the controller when the Widget is disposed
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   Widget emailField() {
-    String _emailErrorMsg;
-
-    return TextFormField(
-      controller: _emailController,
-      cursorColor: Colors.teal[400],
-      decoration: InputDecoration(
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.teal),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '이메일(아이디)',
+          style: TextStyle(
+              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
         ),
-        hintText: '아이디 (이메일)',
-        hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
-      ),
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          setState(() {
-            _isIdFilled = true;
-          });
-        } else {
-          setState(() {
-            _isIdFilled = false;
-          });
-        }
-      },
-      validator: (String value) {
-        if (value.isEmpty) {
-          return '아이디(이메일)을 입력해주세요';
-        } else if (!value.contains('@')) {
-          return '올바른 이메일을 입력해주세요';
-        }
-        return null;
-      },
+        TextFormField(
+          controller: _emailController,
+          cursorColor: Colors.teal[400],
+          decoration: InputDecoration(
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.teal),
+            ),
+            hintText: '아이디 (이메일)',
+            hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
+          ),
+          onChanged: (value) {
+            if (value.length > 6) {
+              setState(() {
+                _isIdFilled = true;
+              });
+            } else {
+              setState(() {
+                _isIdFilled = false;
+              });
+            }
+          },
+          validator: (String value) {
+            if (value.isEmpty) {
+              return '이메일을 입력해주세요';
+            } else if (!value.contains('@')) {
+              return '올바른 이메일을 입력해주세요';
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 
   Widget passwordField() {
-    return TextFormField(
-      controller: _passwordController,
-      cursorColor: Colors.teal[400],
-      decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.teal),
-          ),
-          hintText: '비밀번호 (8자리 이상)',
-          hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
-          suffixIcon: IconButton(
-            icon: Icon(
-              Icons.visibility,
-              color: _isSecret ? Colors.grey : Colors.black87,
-            ),
-            onPressed: () {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '비밀번호',
+          style: TextStyle(
+              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          controller: _passwordController,
+          cursorColor: Colors.teal[400],
+          decoration: InputDecoration(
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.teal),
+              ),
+              hintText: '비밀번호 (8자리 이상)',
+              hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  Icons.visibility,
+                  color: _isSecret ? Colors.grey[300] : Colors.grey[600],
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isSecret = !_isSecret;
+                  });
+                },
+              )),
+          obscureText: _isSecret ? true : false,
+          onChanged: (value) {
+            if (value.length >= 8) {
               setState(() {
-                _isSecret = !_isSecret;
+                _isPasswordFilled = true;
               });
-            },
-          )),
-      obscureText: _isSecret ? true : false,
-      onChanged: (value) {
-        if (value.length >= 8) {
-          setState(() {
-            _isPasswordFilled = true;
-          });
-        } else {
-          setState(() {
-            _isPasswordFilled = false;
-          });
-        }
-      },
-      validator: (String value) {
-        if (value.isEmpty || value.length < 8) {
-          return '8자리 이상 입력해주세요';
-        }
-        return null;
-      },
+            } else {
+              setState(() {
+                _isPasswordFilled = false;
+              });
+            }
+          },
+          validator: (String value) {
+            if (value.isEmpty || value.length < 8) {
+              return '8자리 이상 입력해주세요';
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 

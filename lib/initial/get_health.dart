@@ -22,7 +22,7 @@ class _GetHealthPageState extends State<GetHealthPage> {
   List<bool> isDisease = List.generate(7, (_) => false);
   List<String> diseaseList = [];
 
-  Widget _ExclusiveButton(index, isPressed, buttonName) {
+  Widget exclusiveButton(index, isPressed, buttonName) {
     return ButtonTheme(
       minWidth: 40.0,
       child: FlatButton(
@@ -213,9 +213,9 @@ class _GetHealthPageState extends State<GetHealthPage> {
         ),
         Row(
           children: [
-            _ExclusiveButton(0, isPregnant, '해당없음'),
+            exclusiveButton(0, isPregnant, '해당없음'),
             SizedBox(width: 10),
-            _ExclusiveButton(1, isPregnant, '임산부'),
+            exclusiveButton(1, isPregnant, '임산부'),
           ],
         ),
       ],

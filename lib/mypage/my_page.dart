@@ -54,6 +54,7 @@ class _MyPageState extends State<MyPage> {
                     ])),
               ),
             ),
+            backgroundColor: Colors.white,
             body: StreamBuilder<UserData>(
               stream: DatabaseService(uid: user.uid).userData,
               builder: (context, snapshot) {
@@ -63,36 +64,45 @@ class _MyPageState extends State<MyPage> {
                     child: Column(
                       children: [
                         _topMyInfo(userData),
-                        SizedBox(
+                        Container(
+                          color: Colors.grey[50],
                           height: 10,
                         ),
-                        _myPageMenu('회원정보 수정', context, EditPrivacyPage()),
-                        SizedBox(
+                        _myPageMenu('회원정보 수정', context,
+                            EditPrivacyPage(userData: userData)),
+                        Container(
+                          color: Colors.grey[50],
                           height: 2,
                         ),
                         _myPageMenu('나의 건강정보 관리', context, GetPrivacyPage()),
-                        SizedBox(
+                        Container(
+                          color: Colors.grey[50],
                           height: 10,
                         ),
                         // TODO: 공지사항, 1:1문의, 이용약관, 환경설정 페이지
                         _myPageMenu('공지사항', context, GetPrivacyPage()),
-                        SizedBox(
+                        Container(
+                          color: Colors.grey[50],
                           height: 2,
                         ),
                         _myPageMenu('1:1 문의', context, GetPrivacyPage()),
-                        SizedBox(
+                        Container(
+                          color: Colors.grey[50],
                           height: 2,
                         ),
                         _myPageMenu('이용약관', context, GetPrivacyPage()),
-                        SizedBox(
+                        Container(
+                          color: Colors.grey[50],
                           height: 2,
                         ),
                         _myPageMenu('개인정보 처리방침', context, GetPrivacyPage()),
-                        SizedBox(
+                        Container(
+                          color: Colors.grey[50],
                           height: 10,
                         ),
                         _myPageMenu('환경설정', context, GetPrivacyPage()),
-                        SizedBox(
+                        Container(
+                          color: Colors.grey[50],
                           height: 2,
                         ),
                         Container(
@@ -221,7 +231,6 @@ Widget _myMenu(String name, String count, BuildContext context, var nextPage) {
 
 Widget _myPageMenu(String name, BuildContext context, var nextPage) {
   return Container(
-    color: Colors.white,
     padding: EdgeInsets.fromLTRB(20.0, 0, 12.0, 0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
