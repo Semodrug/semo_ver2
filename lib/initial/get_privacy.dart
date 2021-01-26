@@ -26,12 +26,11 @@ class GetPrivacyPage extends StatefulWidget {
 }
 
 class _GetPrivacyPageState extends State<GetPrivacyPage> {
-  List<bool> isSelected = List.generate(2, (_) => false);
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController nicknameController = TextEditingController();
-  TextEditingController birthYearController = TextEditingController();
+  List<bool> _isSelected = List.generate(2, (_) => false);
+  TextEditingController _nicknameController = TextEditingController();
+  TextEditingController _birthYearController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +92,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      nickname(user),
+                      nickname(),
                       SizedBox(height: 50.0),
                       submit(context),
                     ],
@@ -130,44 +129,46 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
 
   Widget gender() {
     return Row(
-      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('성별', style: TextStyle(color: Colors.grey, fontSize: 16.0)),
         SizedBox(
           width: 20,
         ),
-        ToggleButtons(
-          constraints: BoxConstraints(
-            minWidth: 40,
-            minHeight: 20,
-          ),
-          children: [Text('남'), Text('여')],
-          selectedColor: Colors.teal[400],
-          fillColor: Colors.teal[100],
-          onPressed: (int index) {
-            setState(() {
-              _isGenderFilled = true;
-
-              for (int buttonIndex = 0;
-                  buttonIndex < isSelected.length;
-                  buttonIndex++) {
-                if (buttonIndex == index) {
-                  isSelected[buttonIndex] = true;
-                } else {
-                  isSelected[buttonIndex] = false;
-                }
-              }
-            });
-          },
-          isSelected: isSelected,
-        ),
+        exclusiveButton(0, _isSelected, '남'),
+        SizedBox(width: 10),
+        exclusiveButton(1, _isSelected, '여'),
+        // ToggleButtons(
+        //   constraints: BoxConstraints(
+        //     minWidth: 40,
+        //     minHeight: 20,
+        //   ),
+        //   children: [Text('남'), Text('여')],
+        //   selectedColor: Colors.teal[400],
+        //   fillColor: Colors.teal[100],
+        //   onPressed: (int index) {
+        //     setState(() {
+        //       _isGenderFilled = true;
+        //
+        //       for (int buttonIndex = 0;
+        //           buttonIndex < _isSelected.length;
+        //           buttonIndex++) {
+        //         if (buttonIndex == index) {
+        //           _isSelected[buttonIndex] = true;
+        //         } else {
+        //           _isSelected[buttonIndex] = false;
+        //         }
+        //       }
+        //     });
+        //   },
+        //   isSelected: _isSelected,
+        // ),
       ],
     );
   }
 
   Widget birthYear() {
     return TextFormField(
-      controller: birthYearController,
+      controller: _birthYearController,
       cursorColor: Colors.teal[400],
       decoration: InputDecoration(
           focusedBorder: UnderlineInputBorder(
@@ -195,9 +196,9 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
     );
   }
 
-  Widget nickname(user) {
+  Widget nickname() {
     return TextFormField(
-      controller: nicknameController,
+      controller: _nicknameController,
       cursorColor: Colors.teal[400],
       decoration: InputDecoration(
         focusedBorder: UnderlineInputBorder(
@@ -276,15 +277,15 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                 showSnackBar(context);
               else {
                 var result =
-                    await DatabaseService().isUnique(nicknameController.text);
+                    await DatabaseService().isUnique(_nicknameController.text);
                 if (result == false) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
                 } else {
                   await DatabaseService(uid: user.uid).updateUserPrivacy(
-                    isSelected[0] ? 'male' : 'female',
-                    birthYearController.text,
-                    nicknameController.text,
+                    _isSelected[0] ? 'male' : 'female',
+                    _birthYearController.text,
+                    _nicknameController.text,
                   );
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => GetHealthPage()));
@@ -297,47 +298,32 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
     );
   }
 
-  // Widget _checkButton(str) {
-  //   return Container(
-  //     width: 24 + str.length.toDouble() * 10,
-  //     padding: EdgeInsets.symmetric(horizontal: 2),
-  //     child: ButtonTheme(
-  //       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
-  //       minWidth: 10,
-  //       height: 22,
-  //       child: FlatButton(
-  //         child: Text(
-  //           '#$str',
-  //           style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
-  //         ),
-  //         //padding: EdgeInsets.all(0),
-  //         onPressed: () => print('$str!'),
-  //         color: Colors.grey[200],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Widget _checkButton(str) {
+  Widget exclusiveButton(index, isPressed, buttonName) {
     return ButtonTheme(
-      minWidth: 40.0,
+      minWidth: 70.0,
       child: FlatButton(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6.0),
             side: BorderSide(
-                color: _isNicknameFilled ? Colors.teal[200] : Colors.grey)),
+                color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
         color: Colors.white,
-        textColor: _isNicknameFilled ? Colors.teal[200] : Colors.grey,
-        onPressed: () async {
-          var result =
-              await DatabaseService().isUnique(nicknameController.text);
-          if (result == false) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
-          } else {}
+        textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        onPressed: () {
+          setState(() {
+            for (int buttonIndex = 0;
+                buttonIndex < isPressed.length;
+                buttonIndex++) {
+              if (buttonIndex == index) {
+                isPressed[buttonIndex] = true;
+              } else {
+                isPressed[buttonIndex] = false;
+              }
+            }
+          });
         },
         child: Text(
-          str,
+          buttonName,
           style: TextStyle(
             fontSize: 14.0,
           ),
