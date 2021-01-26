@@ -5,6 +5,9 @@ import 'package:semo_ver2/initial/get_privacy.dart';
 import 'package:semo_ver2/mypage/1_edit_privacy.dart';
 import 'package:semo_ver2/mypage/2_edit_health.dart';
 import 'package:semo_ver2/mypage/3_notice.dart';
+import 'package:semo_ver2/mypage/4_inquiry.dart';
+import 'package:semo_ver2/mypage/5_policy_terms.dart';
+import 'package:semo_ver2/mypage/6_policy_privacy.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -87,22 +90,22 @@ class _MyPageState extends State<MyPage> {
                           color: Colors.grey[50],
                           height: 2,
                         ),
-                        _myPageMenu('1:1 문의', context, GetPrivacyPage()),
+                        _myPageMenu('1:1 문의', context, InquiryPage()),
                         Container(
                           color: Colors.grey[50],
                           height: 2,
                         ),
-                        _myPageMenu('이용약관', context, GetPrivacyPage()),
+                        _myPageMenu('이용약관', context, PolicyTermPage()),
                         Container(
                           color: Colors.grey[50],
                           height: 2,
                         ),
-                        _myPageMenu('개인정보 처리방침', context, GetPrivacyPage()),
+                        _myPageMenu('개인정보 처리방침', context, PolicyPrivacyPage()),
                         Container(
                           color: Colors.grey[50],
                           height: 10,
                         ),
-                        _myPageMenu('환경설정', context, GetPrivacyPage()),
+                        _myPageMenu('환경설정?', context, GetPrivacyPage()),
                         Container(
                           color: Colors.grey[50],
                           height: 2,

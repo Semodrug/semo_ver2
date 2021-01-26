@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/services/db.dart';
 
-class PolicyTerms extends StatelessWidget {
+class PolicyTermPage extends StatefulWidget {
+  @override
+  _PolicyTermPageState createState() => _PolicyTermPageState();
+}
+
+class _PolicyTermPageState extends State<PolicyTermPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,8 +40,6 @@ class PolicyTerms extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.white,
-        body: Padding(
-          child: Text(''),
-        ));
+        body: Text('이용약관 페이지'));
   }
 }
