@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/initial/get_privacy.dart';
 import 'package:semo_ver2/mypage/1_edit_privacy.dart';
 import 'package:semo_ver2/mypage/2_edit_health.dart';
+import 'package:semo_ver2/mypage/3_notice.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -81,7 +82,7 @@ class _MyPageState extends State<MyPage> {
                           height: 10,
                         ),
                         // TODO: 공지사항, 1:1문의, 이용약관, 환경설정 페이지
-                        _myPageMenu('공지사항', context, GetPrivacyPage()),
+                        _myPageMenu('공지사항', context, NoticePage()),
                         Container(
                           color: Colors.grey[50],
                           height: 2,
