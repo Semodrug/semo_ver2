@@ -3,23 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/initial/get_health.dart';
+import 'package:semo_ver2/shared/loading.dart';
 
 var birthYearMaskFormatter =
     new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
-bool _isGenderFilled = false;
-bool _isBirthYearFilled = false;
-bool _isNicknameFilled = false;
+bool _isGenderFilled = true;
+bool _isBirthYearFilled = true;
+bool _isNicknameFilled = true;
 
 class EditPrivacyPage extends StatefulWidget {
-  final String title = '회원가입';
+  final String title = '개인 정보 수정';
 
   @override
   _EditPrivacyPageState createState() => _EditPrivacyPageState();
 }
 
 class _EditPrivacyPageState extends State<EditPrivacyPage> {
+  final AuthService _auth = AuthService();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<bool> isSelected = List.generate(2, (_) => false);
   TextEditingController birthYearController = TextEditingController();
@@ -60,67 +64,90 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
           ),
         ),
         backgroundColor: Colors.white,
-        body: Builder(builder: (context) {
-          return GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      topTitle(),
-                      SizedBox(
-                        height: 40,
+        body: StreamBuilder<UserData>(
+            stream: DatabaseService(uid: user.uid).userData,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                UserData userData = snapshot.data;
+
+                return GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            topTitle(userData),
+                            SizedBox(
+                              height: 40,
+                            ),
+                            gender(userData),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            birthYear(userData),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            nickname(userData),
+                            SizedBox(height: 50.0),
+                            submit(context),
+                          ],
+                        ),
                       ),
-                      gender(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      birthYear(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      nickname(user),
-                      SizedBox(height: 50.0),
-                      submit(context),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
-          );
-        }));
+                );
+              } else {
+                return Loading();
+              }
+            }));
   }
 
-  Widget topTitle() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget topTitle(userData) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          '개인 정보 설정',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.w600),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${userData.nickname}님',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              _auth.userEmail,
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            )
+          ],
         ),
-        SizedBox(
-          height: 6,
-        ),
-        Text(
-          '서비스 이용을 도와드려요.',
-          style: TextStyle(
-              color: Colors.grey[700],
-              fontSize: 12.0,
-              fontWeight: FontWeight.w200),
+        // TODO: image picker
+        IconButton(
+          icon: Icon(
+            Icons.person,
+            color: Colors.teal[200],
+          ),
+          onPressed: () {},
         ),
       ],
     );
   }
 
-  Widget gender() {
+  Widget gender(userData) {
+    if (userData.sex == 'male') {
+      isSelected = [true, false];
+    } else {
+      isSelected = [false, true];
+    }
+
     return Row(
       // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -157,7 +184,9 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
     );
   }
 
-  Widget birthYear() {
+  Widget birthYear(userData) {
+    birthYearController.text = userData.birthYear;
+
     return TextFormField(
       controller: birthYearController,
       cursorColor: Colors.teal[400],
@@ -187,7 +216,9 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
     );
   }
 
-  Widget nickname(user) {
+  Widget nickname(userData) {
+    nicknameController.text = userData.nickname;
+
     return TextFormField(
       controller: nicknameController,
       cursorColor: Colors.teal[400],
@@ -255,7 +286,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
           shape: RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(10.0)),
           child: Text(
-            '다음',
+            '저장',
             style: TextStyle(color: Colors.white),
           ),
           color: (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled)
