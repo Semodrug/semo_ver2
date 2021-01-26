@@ -46,6 +46,7 @@ class _NoticePageState extends State<NoticePage> {
           if (snapshot.hasData) {
             List<Notice> notices = snapshot.data;
             return ListView.separated(
+              // reverse: false,
               itemCount: notices.length,
               itemBuilder: (_, index) => Card(
                   elevation: 0,

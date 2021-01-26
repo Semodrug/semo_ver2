@@ -337,11 +337,12 @@ class DatabaseService {
     return data;
   }
 
-  final CollectionReference noticeCollection =
-      FirebaseFirestore.instance.collection('Notices');
+  Query noticeQuery = FirebaseFirestore.instance.collection('Notices');
 
   Stream<List<Notice>> get noticeData {
-    return noticeCollection.snapshots().map(_noticeListFromSnapshot);
+    noticeQuery = noticeQuery.orderBy('date', descending: true);
+
+    return noticeQuery.snapshots().map(_noticeListFromSnapshot);
   }
 
   List<Notice> _noticeListFromSnapshot(QuerySnapshot snapshot) {
