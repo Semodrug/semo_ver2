@@ -52,10 +52,10 @@ class _CameraState extends State<CameraPage> {
                           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
-                          print('BACK to home');
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => BottomBar()));
-                          print('XXXXXX');
+                          Navigator.pop(context);
+//                          Navigator.push(context,
+//                              MaterialPageRoute(builder: (context) => BottomBar()));
+//                          print('XXXXXX');
                         },
                       ),
                     ),
@@ -94,6 +94,7 @@ class _CameraState extends State<CameraPage> {
               ],
             ),
             onPressed: () {
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(

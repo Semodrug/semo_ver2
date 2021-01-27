@@ -263,7 +263,7 @@ class _HomePageState extends State<HomePage> {
 
 
                                   height: 20,
-                                  child: CategoryButton(str: data.category)),
+                                  child: CategoryButton(str: data.category, fromHome : 'home')),
 
                             ),
                             SizedBox(
