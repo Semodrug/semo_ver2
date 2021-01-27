@@ -153,6 +153,7 @@ class _AddButtonState extends State<AddButton> {
               ],
             ),
             onPressed: () {
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/search');
             },
             textColor: Colors.grey[500],
