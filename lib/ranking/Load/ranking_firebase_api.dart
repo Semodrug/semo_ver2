@@ -22,7 +22,7 @@ class FirebaseApi {
         refUsers = refUsers
             .where('PRDUCT_TYPE', isEqualTo: getCategory) //;
             .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
-            .orderBy('totalRating', descending: false)
+            .orderBy('totalRating', descending: true)
             .orderBy('ITEM_NAME', descending: false)
             .limit(limit);
 

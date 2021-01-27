@@ -12,6 +12,7 @@ import 'package:semo_ver2/drug_info/expiration_g.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
@@ -24,7 +25,9 @@ import 'package:semo_ver2/review/write_review.dart';
 
 class ReviewPage extends StatefulWidget {
   final String drugItemSeq;
-  ReviewPage(this.drugItemSeq);
+  String fromRankingTile = '';
+
+  ReviewPage(this.drugItemSeq, {this.fromRankingTile});
 
   @override
   _ReviewPageState createState() => _ReviewPageState();
@@ -116,7 +119,21 @@ class _ReviewPageState extends State<ReviewPage> {
               Icons.arrow_back,
               color: Colors.teal[200],
             ),
-            onPressed: () => Navigator.pop(context),
+            //onPressed: () => Navigator.pop(context),
+              //다시 카테고리 페이지로 가기 위함 provider 를 다시 불러오려면 페이지를 다시 여는 방법
+            onPressed: () async {
+              if(widget.fromRankingTile == 'true'){
+                var result = await DatabaseService(itemSeq:widget.drugItemSeq).getCategoryOfDrug();
+                print('   : )');
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RankingContentPage(categoryName: result)
+                    ));
+              }
+             else Navigator.pop(context);
+            }
           ),
           centerTitle: true,
           title: Text(

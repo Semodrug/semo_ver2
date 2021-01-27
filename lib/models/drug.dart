@@ -1,11 +1,13 @@
 class Drug {
   final String barCode;
+
   // final String cancelName;
   final String chart; // 성상 (본품은 백색의 정제다.)
   // final String cnsgnManuf; // 위탁제조업체
   // final String ediCode; // 보험코드
 
   final List eeDocData;
+
   // final String eeDocId; // 효능효과 다운로드 링크
   final String entpName;
   final String entpNo;
@@ -22,6 +24,7 @@ class Drug {
   final String materialName; // 원료성분 (1정 중 80밀리그램,염산에페드린,KP,25,밀리그램)
 
   final List nbDocData;
+
   // final String nbDocId; // 주의사항 다운로드 링크
   final String permitKindName; // 허가, 신고 구분
   final String storageMethod;
@@ -82,13 +85,14 @@ class SavedDrug {
   final String category;
   final String expiration;
   final String etcOtcCode;
+  final List searchNameList;
 
-
-  SavedDrug(
-      {this.itemName,
-      this.itemSeq,
-      this.category,
-      this.expiration,
-      this.etcOtcCode});
-
+  SavedDrug({
+    this.itemName,
+    this.itemSeq,
+    this.category,
+    this.expiration,
+    this.etcOtcCode,
+    this.searchNameList,
+  });
 }

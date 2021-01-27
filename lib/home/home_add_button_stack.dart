@@ -43,7 +43,8 @@ class _AddButtonState extends State<AddButton> {
                       color: Colors.black.withOpacity(0.7),
                     ),
                     onTap: () {
-                      Navigator.pushNamed(context, '/bottom_bar');
+                      Navigator.pop(context);
+                      //Navigator.pushNamed(context, '/bottom_bar');
                     }),
               ),
             ),
@@ -152,6 +153,7 @@ class _AddButtonState extends State<AddButton> {
               ],
             ),
             onPressed: () {
+              Navigator.pop(context);
               Navigator.pushNamed(context, '/search');
             },
             textColor: Colors.grey[500],

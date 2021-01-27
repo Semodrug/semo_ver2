@@ -240,14 +240,14 @@ class DatabaseService {
 
   //for search from User drugs
   Stream<List<SavedDrug>> setForSearchFromUser(String searchVal, int limit) {
-    print('### uid is $uid');
+    //print('### uid is $uid');
     Query drugFromUserQuery = FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
         .collection('savedList');
 
     drugFromUserQuery = drugFromUserQuery
-        .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
+        .where('searchNameList', arrayContains: searchVal)
         .orderBy('ITEM_NAME', descending: false)
         .limit(limit);
 
@@ -267,7 +267,7 @@ class DatabaseService {
   }
 
   Future<void> addSavedList(
-      itemName, itemSeq, category, etcOtcCode, expiration) async {
+      itemName, itemSeq, category, etcOtcCode, expiration, searchNameList) async {
     return await userCollection
         .doc(uid)
         .collection('savedList')
@@ -278,6 +278,7 @@ class DatabaseService {
       'PRDUCT_TYPE': category ?? '',
       'etcOtcCode': etcOtcCode ?? '',
       'expiration': expiration ?? '',
+      'searchNameList': searchNameList ?? [],
     });
   }
 
@@ -313,6 +314,10 @@ class DatabaseService {
   Future<num> getTotalRating() async {
     DocumentSnapshot ds = await drugCollection.doc(itemSeq).get();
     return ds.data()["totalRating"];
+  }
+  Future<String> getCategoryOfDrug() async {
+    DocumentSnapshot snap = await drugCollection.doc(itemSeq).get();
+    return snap.data()["PRDUCT_TYPE"];
   }
 
   Future<void> updateTotalRating(num rating, num length) async {

@@ -184,19 +184,15 @@ class _SearchScreenState extends State<SearchScreen> {
     if (_searchText.length < 2) {
       return _noResultContainer();
     } else if (_searchText.length != 0) {
-      print(drugs.length);
-
-      return Expanded(
-        child: ListView.builder(
-          itemCount: drugs.length,
-          itemBuilder: (context, index) {
-            return ListDrugOfUser(
-                _checkLongName(drugs[index].itemName),
-                drugs[index].itemSeq,
-                drugs[index]
-                    .expiration); //DrugTile(drug: drugs[index], index: (index + 1));
-          },
-        ),
+      return ListView.builder(
+        itemCount: drugs.length,
+        itemBuilder: (context, index) {
+          return ListDrugOfUser(
+              _checkLongName(drugs[index].itemName),
+              drugs[index].itemSeq,
+              drugs[index]
+                  .expiration); //DrugTile(drug: drugs[index], index: (index + 1));
+        },
       );
     }
   }
@@ -334,7 +330,8 @@ class _SearchScreenState extends State<SearchScreen> {
           child: FlatButton(
               padding: EdgeInsets.only(right: 10),
               onPressed: () {
-                Navigator.pushNamed(context, '/bottom_bar');
+                Navigator.pop(context);
+                //Navigator.pushNamed(context, '/bottom_bar');
               },
               child: Text('취소')),
         )
@@ -386,7 +383,7 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         GestureDetector(
           onTap: () => {
-            print('search ==> ${searchSnapshot.recent}'),
+            //print('search ==> ${searchSnapshot.recent}'),
             _searchText = searchSnapshot.recent,
             _filter.text = _searchText
           },
@@ -447,8 +444,31 @@ class ListDrugOfAll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String searchList;
+    TheUser user = Provider.of<TheUser>(context);
+
+    CollectionReference userSearchList = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('searchList');
+
+    Future<void> addRecentSearchList() async {
+      try {
+        assert(item_name != null);
+
+        searchList = item_name;
+        assert(searchList != null);
+        //drug 이름 누르면 저장 기능 array로 저장해주기
+        userSearchList.add({'searchList': searchList});
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
+
     return GestureDetector(
       onTap: () => {
+        addRecentSearchList(),
+        Navigator.pop(context),
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -496,6 +516,7 @@ class ListDrugOfUser extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => {
+        Navigator.pop(context),
         Navigator.push(
             context,
             MaterialPageRoute(
