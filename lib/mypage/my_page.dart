@@ -200,7 +200,7 @@ class _MyPageState extends State<MyPage> {
                 // TODO: 리뷰 갯수
                 _myMenu('리뷰', '0', context, MyReviews()),
                 _myMenu('찜', '0', context, MyReviews()),
-                _myMenu('1:1 문의', '0', context, MyReviews())
+                //_myMenu('1:1 문의', '0', context, MyReviews())
               ],
             )
           ],

@@ -71,6 +71,9 @@ class ReviewService {
         id: doc.data()['id'] ?? '',
          documentId: doc.id ?? '',
         registrationDate: doc.data()['registrationDate'],
+        entpName: doc.data()['entpName'],
+        itemName: doc.data()['itemName'],
+        seqNum: doc.data()['seqNum'],
       );
     }).toList();
   }
@@ -91,6 +94,11 @@ class ReviewService {
 
   Stream<List<Review>> getReviews(String seqNum) {
     return reviewCollection.where("seqNum", isEqualTo: seqNum).snapshots()
+        .map(_reviewListFromSnapshot);
+  }
+
+  Stream<List<Review>> getUserReviews(String uid) {
+    return reviewCollection.where("uid", isEqualTo: uid).snapshots()
         .map(_reviewListFromSnapshot);
   }
 
@@ -157,7 +165,10 @@ class ReviewService {
         uid: doc.data()['uid'] ?? '',
         id: doc.data()['id'] ?? '',
         documentId: doc.id ?? '',
-        registrationDate: doc.data()['registrationDate']
+        registrationDate: doc.data()['registrationDate'],
+        entpName: doc.data()['entpName'],
+        itemName: doc.data()['itemName'],
+        seqNum: doc.data()['seqNum'],
       );
     });
   }

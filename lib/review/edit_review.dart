@@ -3,8 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
 
@@ -125,23 +128,58 @@ class _EditReviewState extends State<EditReview> {
               height: 100.0,
             ),
             Padding(padding: EdgeInsets.only(left: 15)),
+
+            // Text(widget.review.effectText),
+
+
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-//                Text("00제약", style: TextStyle(fontSize: 14, color: Colors.grey[400])),
-                Text("타이레놀", style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold)),
-                Row(
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.only(top: 3)),
-                    Container(
-                      width: 17, height:17,
-                      color: Colors.teal[100],
-                    ),
-                    Padding(padding: EdgeInsets.only(right: 3)),
-                    //TODO!!!
-                    Text("4.26 (3개) ", style: TextStyle(fontSize: 15, color: Colors.black)),
-                  ],
-                ),
+                StreamBuilder<Drug>(
+                    stream: DatabaseService(itemSeq: widget.review.seqNum).drugData,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        Drug drug = snapshot.data;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(drug.entpName, style: TextStyle(fontSize: 11, color: Colors.grey, )),
+                            Text(drug.itemName, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
+                            Container(height: 2,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                RatingBar.builder(
+                                  itemSize: 20,
+                                  initialRating: drug.totalRating ,
+                                  //!= null ? widget.tapToRatingResult: 0,
+                                  minRating: 0,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  unratedColor: _grey,
+                                  itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star, color: Colors.amber[300],
+                                  ),
+                                ),
+                                Container(width:5),
+                                Text(drug.totalRating.toStringAsFixed(2), style: TextStyle(fontSize: 15, color: Colors.black, )),
+                                Container(width:3),
+                                Text("("+drug.numOfReviews.toStringAsFixed(0)+"개)", style: TextStyle(fontSize: 13, color: Colors.grey, )),
+                              ],
+                            ),
+                            CategoryButton(str: drug.category)
+                          ],
+                        );
+                        // Text(drug.totalRating.toStringAsFixed(2)+drug.numOfReviews.toStringAsFixed(0) + "개",
+                        //   style: TextStyle(
+                        //     fontSize: 16.5,
+                        //     fontWeight: FontWeight.bold,
+                        //   ));
+                      } else
+                        return Loading();
+                    }),
               ],
             )
           ],

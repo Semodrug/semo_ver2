@@ -5,10 +5,13 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/shared/loading.dart';
 import 'review.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -56,6 +59,13 @@ class _WriteReviewState extends State<WriteReview> {
   DateTime regDate = DateTime.now();
   static const _green = Color(0xff57C8B8);
   static const _grey = Color(0x95C4C4C4);
+  String _entpName =''; //약 제조사
+  String _itemName =''; //약 이름
+
+  void setItemNames(itemName, entpName) {
+    _itemName = itemName;
+    _entpName = entpName;
+  }
 
 
 
@@ -79,6 +89,9 @@ class _WriteReviewState extends State<WriteReview> {
           "favoriteSelected": favoriteSelected,
           "noFavorite": noFavorite,
           "registrationDate": DateTime.now(),
+          "entpName" : _entpName,
+          "itemName": _itemName
+
 //          "name" : "TESTUSER",
         }
     );
@@ -152,20 +165,52 @@ class _WriteReviewState extends State<WriteReview> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-//                Text("00제약", style: TextStyle(fontSize: 14, color: Colors.grey[400])),
-                Text("타이레놀", style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold)),
-                Row(
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.only(top: 3)),
-                    Container(
-                      width: 17, height:17,
-                      color: Colors.teal[100],
-                    ),
-                    Padding(padding: EdgeInsets.only(right: 3)),
-                    //TODO!!!
-                    Text("4.26 (3개) ", style: TextStyle(fontSize: 15, color: Colors.black)),
-                  ],
-                ),
+                StreamBuilder<Drug>(
+                    stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        Drug drug = snapshot.data;
+                        setItemNames(drug.itemName, drug.entpName);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(drug.entpName, style: TextStyle(fontSize: 11, color: Colors.grey, )),
+                            Text(drug.itemName, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
+                            Container(height: 2,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                RatingBar.builder(
+                                  itemSize: 20,
+                                  initialRating: drug.totalRating ,
+                                  //!= null ? widget.tapToRatingResult: 0,
+                                  minRating: 0,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  unratedColor: _grey,
+                                  itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star, color: Colors.amber[300],
+                                  ),
+                                ),
+                                Container(width:5),
+                                Text(drug.totalRating.toStringAsFixed(2), style: TextStyle(fontSize: 15, color: Colors.black, )),
+                                Container(width:3),
+                                Text("("+drug.numOfReviews.toStringAsFixed(0)+"개)", style: TextStyle(fontSize: 13, color: Colors.grey, )),
+                              ],
+                            ),
+                            CategoryButton(str: drug.category)
+                          ],
+                        );
+                        // Text(drug.totalRating.toStringAsFixed(2)+drug.numOfReviews.toStringAsFixed(0) + "개",
+                        //   style: TextStyle(
+                        //     fontSize: 16.5,
+                        //     fontWeight: FontWeight.bold,
+                        //   ));
+                      } else
+                        return Loading();
+                    }),
               ],
             )
           ],
