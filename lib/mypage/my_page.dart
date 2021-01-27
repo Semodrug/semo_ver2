@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:semo_ver2/initial/get_privacy.dart';
 import 'package:semo_ver2/mypage/1_edit_privacy.dart';
 import 'package:semo_ver2/mypage/2_edit_health.dart';
 import 'package:semo_ver2/mypage/3_notice.dart';
 import 'package:semo_ver2/mypage/4_inquiry.dart';
 import 'package:semo_ver2/mypage/5_policy_terms.dart';
 import 'package:semo_ver2/mypage/6_policy_privacy.dart';
-import 'package:semo_ver2/services/auth.dart';
+import 'package:semo_ver2/mypage/7_others.dart';
+import 'package:semo_ver2/mypage/my_reviews.dart';
+
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/loading.dart';
-import 'package:semo_ver2/mypage/my_reviews.dart';
 
 class MyPage extends StatefulWidget {
   @override
@@ -105,43 +106,43 @@ class _MyPageState extends State<MyPage> {
                           color: Colors.grey[50],
                           height: 10,
                         ),
-                        _myPageMenu('환경설정?', context, GetPrivacyPage()),
+                        _myPageMenu('기타', context, Others()),
                         Container(
                           color: Colors.grey[50],
-                          height: 2,
+                          height: 10,
                         ),
-                        Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.fromLTRB(20.0, 0, 10.0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '로그아웃',
-                              ),
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.navigate_next,
-                                    color: Colors.teal[200],
-                                  ),
-                                  onPressed: () async {
-                                    // TODO: when log-out, we should go to login page by Wrapper
-                                    await _auth.signOut();
-
-                                    Navigator.of(context)
-                                        .pushNamedAndRemoveUntil('/start',
-                                            (Route<dynamic> route) => false);
-
-                                    // Navigator.pushNamedAndRemoveUntil(context, "/start",
-                                    //     (Route<dynamic> route) => false);
-                                    // Navigator.of(context)
-                                    //     .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-                                    // Navigator.pushReplacementNamed(context, '/login');
-                                    // Navigator.pop(context);
-                                  }),
-                            ],
-                          ),
-                        ),
+                        // Container(
+                        //   color: Colors.white,
+                        //   padding: EdgeInsets.fromLTRB(20.0, 0, 10.0, 0),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: [
+                        //       Text(
+                        //         '로그아웃',
+                        //       ),
+                        //       IconButton(
+                        //           icon: Icon(
+                        //             Icons.navigate_next,
+                        //             color: Colors.teal[200],
+                        //           ),
+                        //           onPressed: () async {
+                        //             // TODO: when log-out, we should go to login page by Wrapper
+                        //             await _auth.signOut();
+                        //
+                        //             Navigator.of(context)
+                        //                 .pushNamedAndRemoveUntil('/start',
+                        //                     (Route<dynamic> route) => false);
+                        //
+                        //             // Navigator.pushNamedAndRemoveUntil(context, "/start",
+                        //             //     (Route<dynamic> route) => false);
+                        //             // Navigator.of(context)
+                        //             //     .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+                        //             // Navigator.pushReplacementNamed(context, '/login');
+                        //             // Navigator.pop(context);
+                        //           }),
+                        //     ],
+                        //   ),
+                        // ),
                         // _myPageMenu('로그아웃', context, RegisterThirdPage()),
                       ],
                     ),

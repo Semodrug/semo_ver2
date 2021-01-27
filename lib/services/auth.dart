@@ -141,11 +141,22 @@ class AuthService {
     }
   }
 
-  // // Firebase로부터 회원 탈퇴
-  // void withdrawalAccount() async {
-  //   await getUser().delete();
-  //   setUser(null);
-  // }
+  // Firebase로부터 회원 탈퇴
+  Future withdrawalAccount() async {
+    try {
+      return await _auth.currentUser.delete();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        return '로그인을 다시 하신 후 시도해주시기 바랍니다.';
+      } else
+        return e.toString();
+    }
+
+    // catch (error) {
+    //   print(error.toString());
+    //   return error.toString();
+    // }
+  }
 
   // // Firebase로부터 수신한 메시지 설정
   // void setLastFBMessage(String msg) {
