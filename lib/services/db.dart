@@ -18,13 +18,25 @@ class DatabaseService {
 
   //drugSnapshot 값 get이랑 set에서 해주기
   Stream<List<Drug>> drugsSnapshots;
+  Stream<List<SavedDrug>> drugsFromUserSnapshots;
 
   //get drug stream
-  Stream<List<Drug>> get drugs {
-    //초기값으로 이름순 정렬
-    drugQuery = drugQuery.orderBy('ITEM_NAME', descending: false);
+//  Stream<List<Drug>> get drugs {
+//    //초기값으로 이름순 정렬
+//    drugQuery = drugQuery.orderBy('ITEM_NAME', descending: false);
+//
+//    drugsSnapshots = drugQuery.snapshots().map(_drugListFromSnapshot);
+//    return drugsSnapshots;
+//  }
+
+  Stream<List<Drug>> setForSearch(String searchVal, int limit) {
+    drugQuery = drugQuery
+        .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
+        .orderBy('ITEM_NAME', descending: false)
+        .limit(limit);
 
     drugsSnapshots = drugQuery.snapshots().map(_drugListFromSnapshot);
+
     return drugsSnapshots;
   }
 
@@ -215,15 +227,39 @@ class DatabaseService {
   //drug list from snapshot
   List<SavedDrug> _savedDrugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
+      print('in SAVED DRUGS');
+      print(doc.data()['ITEM_NAME']);
+      print(doc.data()['ITEM_SEQ']);
+      print(doc.data()['PRDUCT_TYPE']);
+      print(doc.data()['expiration']);
+      print(doc.data()['etcOtcCode']);
+
       return SavedDrug(
         itemName: doc.data()['ITEM_NAME'] ?? '',
         itemSeq: doc.data()['ITEM_SEQ'] ?? '',
         category: doc.data()['PRDUCT_TYPE'] ?? '',
         expiration: doc.data()['expiration'] ?? '',
-        etcOtcCode: doc.data()['ETC_OTC_CODE'] ?? '',
+        etcOtcCode: doc.data()['etcOtcCode'] ?? '',
+
       );
     }).toList();
   }
+  //for search from User drugs
+  Stream<List<SavedDrug>> setForSearchFromUser(String searchVal, int limit) {
+    Query drugFromUserQuery =  FirebaseFirestore.instance.collection('users').doc(uid)
+        .collection('savedList');
+
+    //print('여기는 디비 파일 $searchVal');
+    drugFromUserQuery = drugFromUserQuery
+        .where('ITEM_NAME', isGreaterThanOrEqualTo: searchVal)
+        .orderBy('ITEM_NAME', descending: false)
+        .limit(limit);
+
+    drugsFromUserSnapshots = drugFromUserQuery.snapshots().map(_savedDrugListFromSnapshot);
+
+    return drugsFromUserSnapshots;
+  }
+
 
   //get drug list stream
   Stream<List<SavedDrug>> get savedDrugs {

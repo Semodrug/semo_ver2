@@ -83,10 +83,12 @@ class SavedDrug {
   final String expiration;
   final String etcOtcCode;
 
+
   SavedDrug(
       {this.itemName,
       this.itemSeq,
       this.category,
       this.expiration,
       this.etcOtcCode});
+
 }

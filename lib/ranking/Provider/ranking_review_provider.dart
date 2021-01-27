@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/models/drug.dart';
-import 'package:semo_ver2/ranking/Load/firebase_api.dart';
+import 'package:semo_ver2/ranking/Load/ranking_firebase_api.dart';
 
 class DrugsReviewProvider extends ChangeNotifier {
   final _drugsSnapshot = <DocumentSnapshot>[];
