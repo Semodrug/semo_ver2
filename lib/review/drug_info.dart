@@ -215,7 +215,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                     border: Border(
                                         bottom: BorderSide(
                                             color: Colors.black87,
-                                            width: pillInfoTab == true ?  2.0: 1.0))),
+                                            width: pillInfoTab == true
+                                                ? 2.0
+                                                : 1.0))),
                               ),
                               Container(
                                 child: InkWell(
@@ -227,7 +229,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                     border: Border(
                                         bottom: BorderSide(
                                             color: Colors.black87,
-                                            width: pillInfoTab == true ?  1.0: 2.0))),
+                                            width: pillInfoTab == true
+                                                ? 1.0
+                                                : 2.0))),
                               )
                             ],
                           ),
@@ -545,59 +549,58 @@ class _ReviewPageState extends State<ReviewPage> {
               )
             ],
           ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: '${carefulDiseaseList.join(", ")}',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: '에 관한 주의사항을 확인해주세요'),
-                    ],
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  // Note: Styles for TextSpans must be explicitly defined.
+                  // Child text spans will inherit styles from parent
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black,
                   ),
-                ),
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      child: Text(
-                        "닫기",
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    TextButton(
-                      child: Text(
-                        "자세히보기",
-                        style: TextStyle(color: Colors.teal[200]),
-                      ),
-                      onPressed: () async {
-                        Navigator.pop(context);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => WarningInfo(
-                                      drugItemSeq: drugItemSeq,
-                                      warningList: carefulDiseaseList,
-                                    )));
-                      },
-                    ),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: '${carefulDiseaseList.join(", ")}',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    TextSpan(text: '에 관한 주의사항을 확인해주세요'),
                   ],
-                )
-              ],
-            ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    child: Text(
+                      "닫기",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  TextButton(
+                    child: Text(
+                      "자세히보기",
+                      style: TextStyle(color: Colors.teal[200]),
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WarningInfo(
+                                    drugItemSeq: drugItemSeq,
+                                    warningList: carefulDiseaseList,
+                                  )));
+                    },
+                  ),
+                ],
+              )
+            ],
           ),
         );
       },
@@ -845,9 +848,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       Drug drug = snapshot.data;
-                      if(drug.numOfReviews == 0)
-                        _ifNoReview();
-                      return Text("리뷰 "+drug.numOfReviews.toStringAsFixed(0) + "개",
+                      if (drug.numOfReviews == 0) _ifNoReview();
+                      return Text(
+                          "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
                           style: TextStyle(
                             fontSize: 16.5,
                             fontWeight: FontWeight.bold,
@@ -856,43 +859,47 @@ class _ReviewPageState extends State<ReviewPage> {
                       return Loading();
                   }),
 
-              checkIfNoReview() == true ? Container()
+              checkIfNoReview() == true
+                  ? Container()
                   : InkWell(
-                  child: Text('전체리뷰 보기',
-                      style: TextStyle(
-                        fontSize: 14.5,
-                      )),
-                  onTap: () {
-                    //TODO GET ALL REVIEW
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                AllReview(widget.drugItemSeq)));
-                  }),
+                      child: Text('전체리뷰 보기',
+                          style: TextStyle(
+                            fontSize: 14.5,
+                          )),
+                      onTap: () {
+                        //TODO GET ALL REVIEW
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    AllReview(widget.drugItemSeq)));
+                      }),
             ],
           ),
         ),
         checkIfNoReview() == true ? Container() : _searchBar(),
-        checkIfNoReview() == true ?
-          Container(
-            height: 310,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: [
-                Container(height: 30,),
-                Image.asset('assets/images/Group 257.png', ),
-                Container(height: 10,),
-                Text("아직 작성된 리뷰가 없어요")
-              ],
-            )
-          )
-          : ReviewList(_searchText, "all"),
+        checkIfNoReview() == true
+            ? Container(
+                height: 310,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 30,
+                    ),
+                    Image.asset(
+                      'assets/images/Group 257.png',
+                    ),
+                    Container(
+                      height: 10,
+                    ),
+                    Text("아직 작성된 리뷰가 없어요")
+                  ],
+                ))
+            : ReviewList(_searchText, "all"),
       ],
     );
   }
-
-
 
   Widget _searchBar() {
     return Padding(

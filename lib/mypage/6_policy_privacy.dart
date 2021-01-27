@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-class PolicyPrivacy extends StatelessWidget {
+class PolicyPrivacyPage extends StatefulWidget {
+  @override
+  _PolicyPrivacyPageState createState() => _PolicyPrivacyPageState();
+}
+
+class _PolicyPrivacyPageState extends State<PolicyPrivacyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,11 +39,6 @@ class PolicyPrivacy extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.white,
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
-          child: Column(
-            children: [Text('')],
-          ),
-        ));
+        body: Text('개인정보 처리방침 페이지'));
   }
 }

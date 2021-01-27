@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:semo_ver2/models/drug.dart';
+import 'package:semo_ver2/models/notice.dart';
 import 'package:semo_ver2/models/user.dart';
 
 class DatabaseService {
@@ -370,5 +371,23 @@ class DatabaseService {
     }
 
     return data;
+  }
+
+  Query noticeQuery = FirebaseFirestore.instance.collection('Notices');
+
+  Stream<List<Notice>> get noticeData {
+    noticeQuery = noticeQuery.orderBy('date', descending: true);
+
+    return noticeQuery.snapshots().map(_noticeListFromSnapshot);
+  }
+
+  List<Notice> _noticeListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return Notice(
+        title: doc.data()['title'] ?? '',
+        dateString: doc.data()['date'] ?? '',
+        contents: doc.data()['contents'] ?? [],
+      );
+    }).toList();
   }
 }

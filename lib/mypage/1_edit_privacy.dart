@@ -8,6 +8,7 @@ import 'package:semo_ver2/services/db.dart';
 
 var birthYearMaskFormatter =
     new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
+
 bool _isGenderFilled = true;
 bool _isBirthYearFilled = true;
 bool _isNicknameFilled = true;
@@ -160,7 +161,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.teal),
             ),
-            hintText: '닉네임 입력 (2자 이상)',
+            hintText: '닉네임 입력 (10자 이하)',
             hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
             // suffixIcon: _checkButton('중복확인')
             //    OutlineButton(
@@ -189,7 +190,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
           ),
           keyboardType: TextInputType.text,
           onChanged: (value) {
-            if (value.length >= 2) {
+            if (value.length >= 1 && value.length <= 10) {
               setState(() {
                 _isNicknameFilled = true;
               });
@@ -229,7 +230,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
           keyboardType: TextInputType.number,
           inputFormatters: [birthYearMaskFormatter],
           onChanged: (value) {
-            if (value.length >= 4) {
+            if (value.length == 4) {
               setState(() {
                 _isBirthYearFilled = true;
               });
@@ -278,22 +279,25 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
         width: MediaQuery.of(context).size.width,
         height: 45.0,
         child: RaisedButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-          child: Text(
-            '저장',
-            style: TextStyle(color: Colors.white),
-          ),
-          color: (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled)
-              ? Colors.teal[400]
-              : Colors.grey,
-          onPressed: () async {
-            if (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled) {
-              if (birthYearMaskFormatter.getUnmaskedText().length != 4)
-                showSnackBar(context);
-              else {
+            shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(10.0)),
+            child: Text(
+              '저장',
+              style: TextStyle(color: Colors.white),
+            ),
+            color: (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled)
+                ? Colors.teal[400]
+                : Colors.grey,
+            onPressed: () async {
+              print('_isGenderFilled is $_isGenderFilled');
+              print('_isBirthYearFilled is $_isBirthYearFilled');
+              print('_isNicknameFilled is $_isNicknameFilled');
+
+              if (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled) {
                 var result =
                     await DatabaseService().isUnique(_nicknameController.text);
+                if (_nicknameController.text == widget.userData.nickname)
+                  result = true;
                 if (result == false) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
@@ -303,12 +307,10 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                     _birthYearController.text,
                     _nicknameController.text,
                   );
-                  Navigator.pop(context);
+                  _showEditedWell(context);
                 }
               }
-            }
-          },
-        ),
+            }),
       ),
     );
   }
@@ -348,12 +350,67 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
       ),
     );
   }
-}
 
-void showSnackBar(BuildContext context) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    content: Text('입력하신 항목을 다시 확인해주세요', textAlign: TextAlign.center),
-    duration: Duration(seconds: 2),
-    backgroundColor: Colors.teal[100],
-  ));
+  void _showEditedWell(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop(true);
+          Navigator.of(context).pop(true);
+          // Navigator.pushReplacementNamed(context, '/bottom_bar');
+        }); // return object of type Dialog
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Icon(
+            Icons.check_circle,
+            color: Colors.green,
+            size: 17,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: '개인 정보',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '가 수정되었습니다.'),
+                    ],
+                  ),
+                ),
+                // SizedBox(height: 10),
+                // Text(
+                //   '홈에서 확인하실 수 있습니다',
+                //   style: TextStyle(fontSize: 14, color: Colors.grey),
+                // ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
+//
+// void showSnackBar(BuildContext context) {
+//   Scaffold.of(context).showSnackBar(SnackBar(
+//     content: Text('입력하신 항목을 다시 확인해주세요', textAlign: TextAlign.center),
+//     duration: Duration(seconds: 2),
+//     backgroundColor: Colors.teal[100],
+//   ));
+
+//
+// }

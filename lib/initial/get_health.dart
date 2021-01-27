@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/bottom_bar.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 
@@ -18,72 +14,9 @@ class GetHealthPage extends StatefulWidget {
 class _GetHealthPageState extends State<GetHealthPage> {
   TextEditingController _selfWritingController = TextEditingController();
 
-  List<bool> isPregnant = List.generate(2, (_) => false);
-  List<bool> isDisease = List.generate(7, (_) => false);
-  List<String> diseaseList = [];
-
-  Widget exclusiveButton(index, isPressed, buttonName) {
-    return ButtonTheme(
-      minWidth: 40.0,
-      child: FlatButton(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6.0),
-            side: BorderSide(
-                color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
-        color: Colors.white,
-        textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-        onPressed: () {
-          setState(() {
-            for (int buttonIndex = 0;
-                buttonIndex < isPressed.length;
-                buttonIndex++) {
-              if (buttonIndex == index) {
-                isPressed[buttonIndex] = true;
-              } else {
-                isPressed[buttonIndex] = false;
-              }
-            }
-          });
-        },
-        child: Text(
-          buttonName,
-          style: TextStyle(
-            fontSize: 14.0,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _MultiButton(index, isPressed, buttonName) {
-    return ButtonTheme(
-      minWidth: 40.0,
-      child: FlatButton(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6.0),
-            side: BorderSide(
-                color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
-        color: Colors.white,
-        textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-        onPressed: () {
-          setState(() {
-            isPressed[index] = !isPressed[index];
-            isPressed[index]
-                ? diseaseList.add(buttonName)
-                : diseaseList.remove(buttonName);
-          });
-        },
-        child: Text(
-          buttonName,
-          style: TextStyle(
-            fontSize: 14.0,
-          ),
-        ),
-      ),
-    );
-  }
+  List<bool> _isPregnant = List.generate(2, (_) => false);
+  List<bool> _isDisease = List.generate(7, (_) => false);
+  List<String> _diseaseList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -213,9 +146,9 @@ class _GetHealthPageState extends State<GetHealthPage> {
         ),
         Row(
           children: [
-            exclusiveButton(0, isPregnant, '해당없음'),
+            _exclusiveButton(0, _isPregnant, '해당없음'),
             SizedBox(width: 10),
-            exclusiveButton(1, isPregnant, '임산부'),
+            _exclusiveButton(1, _isPregnant, '임산부'),
           ],
         ),
       ],
@@ -232,24 +165,24 @@ class _GetHealthPageState extends State<GetHealthPage> {
         ),
         Row(
           children: [
-            _MultiButton(0, isDisease, '고혈압'),
+            _multiButton(0, _isDisease, '고혈압'),
             SizedBox(width: 6),
-            _MultiButton(1, isDisease, '심장질환'),
+            _multiButton(1, _isDisease, '심장질환'),
             SizedBox(width: 6),
-            _MultiButton(2, isDisease, '고지혈증'),
+            _multiButton(2, _isDisease, '고지혈증'),
             SizedBox(width: 6),
-            _MultiButton(3, isDisease, '당뇨병'),
+            _multiButton(3, _isDisease, '당뇨병'),
           ],
         ),
         Container(
           height: 36.0,
           child: Row(
             children: [
-              _MultiButton(4, isDisease, '간장애'),
+              _multiButton(4, _isDisease, '간장애'),
               SizedBox(width: 6),
-              _MultiButton(5, isDisease, '콩팥장애'),
+              _multiButton(5, _isDisease, '콩팥장애'),
               SizedBox(width: 6),
-              _MultiButton(6, isDisease, '신장'),
+              _multiButton(6, _isDisease, '신장'),
             ],
           ),
         ),
@@ -258,16 +191,20 @@ class _GetHealthPageState extends State<GetHealthPage> {
   }
 
   Widget selfWrite() {
-    return TextFormField(
-      controller: _selfWritingController,
-      cursorColor: Colors.teal[400],
-      decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.teal),
-          ),
-          hintText: '질병명',
-          hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0)),
-      keyboardType: TextInputType.text,
+    return Container(
+      padding: EdgeInsets.all(8),
+      height: 40,
+      child: TextField(
+        controller: _selfWritingController,
+        cursorColor: Colors.teal[400],
+        decoration: InputDecoration(
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.teal),
+            ),
+            hintText: '질병명 직접 입력하기',
+            hintStyle: TextStyle(color: Colors.grey, fontSize: 14.0)),
+        keyboardType: TextInputType.text,
+      ),
     );
   }
 
@@ -291,14 +228,78 @@ class _GetHealthPageState extends State<GetHealthPage> {
           color: Colors.teal[400],
           onPressed: () async {
             if (_selfWritingController.text.isNotEmpty)
-              diseaseList.add(_selfWritingController.text);
+              _diseaseList.add(_selfWritingController.text);
 
             await DatabaseService(uid: user.uid)
-                .updateUserHealth(isPregnant[1], diseaseList);
+                .updateUserHealth(_isPregnant[1], _diseaseList);
 
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/start', (Route<dynamic> route) => false);
           },
+        ),
+      ),
+    );
+  }
+
+  /* buttons */
+  Widget _exclusiveButton(index, isPressed, buttonName) {
+    return ButtonTheme(
+      minWidth: 40.0,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6.0),
+            side: BorderSide(
+                color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
+        color: Colors.white,
+        textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        onPressed: () {
+          setState(() {
+            for (int buttonIndex = 0;
+                buttonIndex < isPressed.length;
+                buttonIndex++) {
+              if (buttonIndex == index) {
+                isPressed[buttonIndex] = true;
+              } else {
+                isPressed[buttonIndex] = false;
+              }
+            }
+          });
+        },
+        child: Text(
+          buttonName,
+          style: TextStyle(
+            fontSize: 14.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _multiButton(index, isPressed, buttonName) {
+    return ButtonTheme(
+      minWidth: 40.0,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6.0),
+            side: BorderSide(
+                color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
+        color: Colors.white,
+        textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        onPressed: () {
+          setState(() {
+            isPressed[index] = !isPressed[index];
+            isPressed[index]
+                ? _diseaseList.add(buttonName)
+                : _diseaseList.remove(buttonName);
+          });
+        },
+        child: Text(
+          buttonName,
+          style: TextStyle(
+            fontSize: 14.0,
+          ),
         ),
       ),
     );

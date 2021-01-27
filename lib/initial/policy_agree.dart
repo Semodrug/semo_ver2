@@ -147,7 +147,7 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PolicyTerms()),
+                  MaterialPageRoute(builder: (context) => PolicyTermPage()),
                 );
               },
             ),
@@ -192,7 +192,7 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PolicyPrivacy()),
+                  MaterialPageRoute(builder: (context) => PolicyPrivacyPage()),
                 );
               },
             ),
