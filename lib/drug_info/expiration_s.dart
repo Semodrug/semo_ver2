@@ -370,6 +370,19 @@ class _ExpirationSState extends State<ExpirationS> {
   }
 
   Widget _okButton(context, user, drug, expirationTime) {
+    List<String> searchNameList = drug.itemName.split('');
+    List<String> searchListOutput = [];
+    for(int i =0; i< searchNameList.length; i++){
+      if (i != searchNameList.length - 1) {
+        searchListOutput.add((searchNameList[i]));
+      }
+      List<String> temp = [searchNameList[i]];
+      for (int j = i + 1; j < searchNameList.length; j++) {
+        temp.add(searchNameList[j]);
+        searchListOutput.add((temp.join()));
+      }
+    }
+
     return Container(
       alignment: Alignment.center,
       child: SizedBox(
@@ -382,7 +395,7 @@ class _ExpirationSState extends State<ExpirationS> {
             _showSaveWell(context);
             // Navigator.pop(context);
             await DatabaseService(uid: user.uid).addSavedList(drug.itemName,
-                drug.itemSeq, drug.category, drug.etcOtcCode, expirationTime);
+                drug.itemSeq, drug.category, drug.etcOtcCode, expirationTime, searchListOutput);
           },
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
