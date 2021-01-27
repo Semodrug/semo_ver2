@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/review/drug_info.dart';
+import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
@@ -68,88 +69,124 @@ class DrugTile extends StatelessWidget {
               ),
             ),
           },
-          child: Container(
-            width: double.infinity,
-            height: 100.0,
-            child: Material(
-                color: Colors.white,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 40,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 16, right: 5),
-                        //padding: EdgeInsets.only(left: 0, right: 5),
-                        child: _upToThree(index),
+          child:StreamBuilder<Drug>(
+              stream: DatabaseService(itemSeq: drug.itemSeq).drugData,
+            builder: (context, snapshot) {
+             if (snapshot.hasData) {
+                Drug drugStreamData = snapshot.data;
+                return Container(
+                  width: double.infinity,
+                  height: 100.0,
+                  child: Material(
+                      color: Colors.white,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 40,
+                            child: Container(
+                              margin: EdgeInsets.only(left: 16, right: 5),
+                              //padding: EdgeInsets.only(left: 0, right: 5),
+                              child: _upToThree(index),
 //
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                      child: AspectRatio(
-                        aspectRatio: 2 / 2,
-                        // TODO: show storage image - if null, defalut image
-                        child: Container(
-                            padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
-                            child: SizedBox(
-                                width: 40,
-                                child: DrugImage(drugItemSeq: drug.itemSeq))),
-                      ),
-                    ),
-                    Container(
-                        margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
-                        //padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              drug.entpName,
-                              style:
-                                  TextStyle(fontSize: 11, color: Colors.grey),
                             ),
-                            Expanded(
-                              child: Row(children: [
-                                Text(
-                                  _checkLongName(drug.itemName),
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ]),
+                          ),
+                          Container(
+                            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                            child: AspectRatio(
+                              aspectRatio: 2 / 2,
+                              // TODO: show storage image - if null, defalut image
+                              child: Container(
+                                  padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
+                                  child: SizedBox(
+                                      width: 40,
+                                      child: DrugImage(drugItemSeq: drugStreamData.itemSeq))),
                             ),
-                            Expanded(
-                              child: Row(
+                          ),
+                          Container(
+                              margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
+                              //padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _getRateStar(drug.totalRating),
                                   Text(
-                                    drugRating,
-                                    style: TextStyle(
-                                        color: Colors.grey[600], fontSize: 13),
+                                    drugStreamData.entpName,
+                                    style:
+                                    TextStyle(fontSize: 11, color: Colors.grey),
                                   ),
-                                  Text(
-                                    '( ${drug.numOfReviews} 개)',
-                                    style: TextStyle(
-                                        color: Colors.grey[600], fontSize: 10),
+                                  Expanded(
+                                    child: Row(children: [
+                                      Text(
+                                        _checkLongName(drugStreamData.itemName),
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ]),
                                   ),
+                                  /*
+                                StreamBuilder<Drug>(
+                                    stream: DatabaseService(itemSeq: drug.itemSeq).drugData,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        Drug drugStreamData = snapshot.data;
+
+                                        return Expanded(
+                                          child: Row(
+                                            children: [
+                                              _getRateStar(drugStreamData.totalRating),
+                                              Text(
+                                                drugRating,
+                                                style: TextStyle(
+                                                    color: Colors.grey[600],
+                                                    fontSize: 13),
+                                              ),
+                                              Text(
+                                                '( ${drugStreamData.numOfReviews} 개)',
+                                                style: TextStyle(
+                                                    color: Colors.grey[600],
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                     else return LinearProgressIndicator();
+                                    }),
+*/
+
+
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        _getRateStar(drugStreamData.totalRating),
+                                        Text(
+                                          drugRating,
+                                          style: TextStyle(
+                                              color: Colors.grey[600], fontSize: 13),
+                                        ),
+                                        Text(
+                                          '( ${drugStreamData.numOfReviews} 개)',
+                                          style: TextStyle(
+                                              color: Colors.grey[600], fontSize: 10),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                      child: Row(
+                                        children: [CategoryButton(str: drugStreamData.category)],
+                                      )),
                                 ],
-                              ),
-                            ),
-//                            SizedBox(
-//                              height: 3,
-//                            ),
-                            Expanded(
-                                child: Row(
-                              children: [
-//                                _categoryButton(
-//                                    (_checkCategoryName(drug.category)))
-                                CategoryButton(str: drug.category)
-                              ],
-                            )),
-                          ],
-                        )),
-                  ],
-                )),
+                              )),
+                        ],
+                      )),
+                );
+    }
+             else return LinearProgressIndicator();
+
+
+            }
           ),
         ));
     /*
