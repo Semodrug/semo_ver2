@@ -15,9 +15,12 @@ class Review {
   final String documentId;
   final Timestamp registrationDate;
   final String seqNum;
+  final String entpName;
+  final String itemName;
+
 
 //  final String name;
 //  final String uid;
 
-  Review({this.effect, this.sideEffect, this.effectText, this.sideEffectText, this.overallText, this.favoriteSelected, this.starRating,this.noFavorite, this.uid, this.id, this.documentId, this.registrationDate, this.seqNum});
+  Review({this.effect, this.sideEffect, this.effectText, this.sideEffectText, this.overallText, this.favoriteSelected, this.starRating,this.noFavorite, this.uid, this.id, this.documentId, this.registrationDate, this.seqNum, this.itemName, this.entpName});
 }
