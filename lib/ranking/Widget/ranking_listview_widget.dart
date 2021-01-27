@@ -36,33 +36,35 @@ class _ListViewReviewWidgetState extends State<ListViewReviewWidget> {
 
   void scrollListener() {
     if (scrollController.offset >=
-        scrollController.position.maxScrollExtent / 2 &&
+            scrollController.position.maxScrollExtent / 2 &&
         !scrollController.position.outOfRange) {
       if (widget.drugsProvider.hasNext) {
-        widget.drugsProvider.fetchNextDrugs();//user 가 더 있다면 next user를 load 해라
+        widget.drugsProvider.fetchNextDrugs(); //user 가 더 있다면 next user를 load 해라
       }
     }
   }
 
-
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(child:
-        ListView.builder(
-          controller: scrollController,
-          itemCount: widget.drugsProvider.drugs.length,
-          itemBuilder: (context, index) {
-            print('${widget.drugsProvider.drugs[index].itemName}');
-            return RankingTile(drug: widget.drugsProvider.drugs[index], index: (index + 1));
-          },
-        ),
-        ),
-      ],
-    );
+    if (widget.drugsProvider.drugs.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    } else
+      return Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              controller: scrollController,
+              itemCount: widget.drugsProvider.drugs.length,
+              itemBuilder: (context, index) {
+                //print('${widget.drugsProvider.drugs[index].itemName}');
+                return RankingTile(
+                    drug: widget.drugsProvider.drugs[index],
+                    index: (index + 1));
+              },
+            ),
+          ),
+        ],
+      );
   }
-
-
 }
 
 class ListViewTotalRankingWidget extends StatefulWidget {
@@ -76,10 +78,12 @@ class ListViewTotalRankingWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ListViewTotalRankingWidgetState createState() => _ListViewTotalRankingWidgetState();
+  _ListViewTotalRankingWidgetState createState() =>
+      _ListViewTotalRankingWidgetState();
 }
 
-class _ListViewTotalRankingWidgetState extends State<ListViewTotalRankingWidget> {
+class _ListViewTotalRankingWidgetState
+    extends State<ListViewTotalRankingWidget> {
   final scrollController = ScrollController();
 
   @override
@@ -98,32 +102,35 @@ class _ListViewTotalRankingWidgetState extends State<ListViewTotalRankingWidget>
 
   void scrollListener() {
     if (scrollController.offset >=
-        scrollController.position.maxScrollExtent / 2 &&
+            scrollController.position.maxScrollExtent / 2 &&
         !scrollController.position.outOfRange) {
       if (widget.drugsProvider.hasNext) {
-        widget.drugsProvider.fetchNextDrugs();//user 가 더 있다면 next user를 load 해라
+        widget.drugsProvider.fetchNextDrugs(); //user 가 더 있다면 next user를 load 해라
       }
     }
   }
 
-
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(child:
-        ListView.builder(
-          controller: scrollController,
-          itemCount: widget.drugsProvider.drugs.length,
-          itemBuilder: (context, index) {
-            print('${widget.drugsProvider.drugs[index].itemName}');
-            return RankingTile(drug: widget.drugsProvider.drugs[index], index: (index + 1));
-          },
-        ),
-        ),
-      ],
-    );
+    if (widget.drugsProvider.drugs.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    } else
+      return Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              controller: scrollController,
+              itemCount: widget.drugsProvider.drugs.length,
+              itemBuilder: (context, index) {
+                print('${widget.drugsProvider.drugs[index].itemName}');
+                return RankingTile(
+                    drug: widget.drugsProvider.drugs[index],
+                    index: (index + 1));
+              },
+            ),
+          ),
+        ],
+      );
   }
-
 
 //
 //  String _checkCategoryName(String data) {
@@ -132,6 +139,5 @@ class _ListViewTotalRankingWidgetState extends State<ListViewTotalRankingWidget>
 //    newName = data.substring(7,(data.length));
 //    return newName;
 //  }
-
 
 }

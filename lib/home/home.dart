@@ -4,8 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:semo_ver2/drug_info/expiration_g.dart';
 import 'package:semo_ver2/drug_info/expiration_s.dart';
 import 'package:semo_ver2/review/drug_info.dart';
+
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/home/search_screen.dart';
+//import 'package:semo_ver2/home/_past_search_screen.dart';
+
 import 'package:semo_ver2/home/home_add_button_stack.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
@@ -183,8 +186,12 @@ class _HomePageState extends State<HomePage> {
     //TODO: 지금 클라우드에 적히지가 않아서 이따 적어야함
     String _checkCategoryName(String data) {
       String newName = '';
-      //TODO: 이부분 0 --> 7로 바꿔주기 pattern이 0-6까지가 카테고리 이름
-      newName = data.substring(7, (data.length));
+
+      if(data.length > 10) {
+        newName = data.substring(0,9);
+        newName = newName +'...';
+      }
+
       return newName;
     }
 
@@ -253,8 +260,11 @@ class _HomePageState extends State<HomePage> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 3),
                               child: Container(
+
+
                                   height: 20,
                                   child: CategoryButton(str: data.category)),
+
                             ),
                             SizedBox(
                               height: 3,
@@ -374,6 +384,7 @@ class SearchBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) => SearchScreen(),
+                  //builder: (BuildContext context) => SearchScreenByProvider()
                 ),
               );
             },
