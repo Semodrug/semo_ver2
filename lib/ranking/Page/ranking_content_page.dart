@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/ranking/Provider/ranking_review_provider.dart';
 import 'package:semo_ver2/ranking/Provider/ranking_totalRating_provider.dart';
-import 'package:semo_ver2/ranking/Widget/listview_widget.dart';
+import 'package:semo_ver2/ranking/Widget/ranking_listview_widget.dart';
 
 import 'package:semo_ver2/home/search_screen.dart';
 
@@ -87,9 +87,9 @@ class _RankingContentPageState extends State<RankingContentPage> {
       body: Column(
         children: [
           _countDropDown(context),
-          if(_filterOrSort == '리뷰 많은 순')
-           fromFilterOfReview(context)
-          else if(_filterOrSort == '별점순')
+          if (_filterOrSort == '리뷰 많은 순')
+            fromFilterOfReview(context)
+          else if (_filterOrSort == '별점순')
             fromFilterOfName(context)
 
           /*
@@ -128,7 +128,8 @@ class _RankingContentPageState extends State<RankingContentPage> {
     return Expanded(
       child: ChangeNotifierProvider(
         create: (context) => DrugsTotalRankingProvider('별점순'),
-        child: Consumer<DrugsTotalRankingProvider>(
+        child:
+        Consumer<DrugsTotalRankingProvider>(
           builder: (context, drugsProvider, _) => ListViewTotalRankingWidget(
             drugsProvider: drugsProvider,
             category: widget.categoryName,
