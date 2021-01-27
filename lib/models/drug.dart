@@ -36,36 +36,35 @@ class Drug {
   // TODO : category
   final String category;
 
-  Drug({
-    this.barCode,
-    // this.cancelName,
-    this.chart,
-    // this.cnsgnManuf,
-    // this.ediCode,
-    this.eeDocData,
-    // this.eeDocId,
-    this.entpName,
-    this.entpNo,
-    this.etcOtcCode,
-    // this.indutyType,
-    this.ingrName,
-    this.itemName,
-    // this.itemPermitDate,
-    this.itemSeq,
-    this.mainItemIngr,
-    this.materialName,
-    this.nbDocData,
-    // this.nbDocId,
-    this.permitKindName,
-    this.storageMethod,
-    this.totalContect,
-    this.udDocData,
-    this.udDocId,
-    this.validTerm,
-    this.category,
-    this.totalRating,
-    this.numOfReviews
-  });
+  Drug(
+      {this.barCode,
+      // this.cancelName,
+      this.chart,
+      // this.cnsgnManuf,
+      // this.ediCode,
+      this.eeDocData,
+      // this.eeDocId,
+      this.entpName,
+      this.entpNo,
+      this.etcOtcCode,
+      // this.indutyType,
+      this.ingrName,
+      this.itemName,
+      // this.itemPermitDate,
+      this.itemSeq,
+      this.mainItemIngr,
+      this.materialName,
+      this.nbDocData,
+      // this.nbDocId,
+      this.permitKindName,
+      this.storageMethod,
+      this.totalContect,
+      this.udDocData,
+      this.udDocId,
+      this.validTerm,
+      this.category,
+      this.totalRating,
+      this.numOfReviews});
 }
 
 //
@@ -85,5 +84,11 @@ class SavedDrug {
   final String etcOtcCode;
 
 
-  SavedDrug({this.itemName, this.itemSeq, this.category, this.expiration, this.etcOtcCode});
+  SavedDrug(
+      {this.itemName,
+      this.itemSeq,
+      this.category,
+      this.expiration,
+      this.etcOtcCode});
+
 }

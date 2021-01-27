@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/review/review_page.dart';
 import 'package:semo_ver2/services/db.dart';
+
+import 'package:semo_ver2/drug_info/phil_info.dart';
+import 'package:semo_ver2/review/drug_info.dart';
+
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -27,6 +31,7 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
+
   //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
   String _checkLongName(String data) {
     String newName = data;
@@ -37,6 +42,7 @@ class _SearchScreenState extends State<SearchScreen> {
         splitName = newName.split('(');
         // print(splitName);
         newName = splitName[0];
+
       }
     }
     return newName;

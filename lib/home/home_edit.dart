@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/review/review_page.dart';
+import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/models/drug.dart';
 
@@ -22,7 +22,6 @@ class HomeEditPage extends StatefulWidget {
 class _HomeEditPageState extends State<HomeEditPage> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: _buildBody(context),
@@ -72,7 +71,7 @@ class _HomeEditPageState extends State<HomeEditPage> {
                   '편집 취소',
                 ),
                 onPressed: () {
-                 Navigator.pushNamed(context, '/bottom_bar');
+                  Navigator.pushNamed(context, '/bottom_bar');
                 },
               )
             ],
@@ -85,7 +84,7 @@ class _HomeEditPageState extends State<HomeEditPage> {
           child: ListView(
             padding: EdgeInsets.all(10.0),
             children:
-            snapshot.map((data) => _buildListItem(context, data)).toList(),
+                snapshot.map((data) => _buildListItem(context, data)).toList(),
           ),
         ),
         ButtonTheme(
@@ -112,7 +111,7 @@ class _HomeEditPageState extends State<HomeEditPage> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, SavedDrug data ) {
+  Widget _buildListItem(BuildContext context, SavedDrug data) {
     check++;
     /*너무 긴 이름들 잘라서 보여주기 정보를 바꾸는 건 아님*/
     String _checkLongName(SavedDrug data) {
@@ -149,86 +148,80 @@ class _HomeEditPageState extends State<HomeEditPage> {
         ),
       },
       child: Container(
-        width: double.infinity,
-        height: 100.0,
-        child: Material(
-          color: Colors.white,
-          child:
-
-            Stack(
-              children: [
-          Row(
-            children: [
-              SizedBox(
-                width: 15,
-                child: Center(
-                  child: Text(check.toString()),
-                ),
-              ),
-              Container(
-                  padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-                  child: SizedBox(
-                      width: 88, height: 66, child: DrugImage(drugItemSeq:data.itemSeq))),
-              Container(
-                  padding: EdgeInsets.fromLTRB(15, 20, 5, 5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(children: [
-                        Text(
-                          _checkLongName(data),
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        )
-                      ]),
-                      Expanded(
-                          child:
-                          Row(
+          width: double.infinity,
+          height: 100.0,
+          child: Material(
+            color: Colors.white,
+            child: Stack(children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 15,
+                    child: Center(
+                      child: Text(check.toString()),
+                    ),
+                  ),
+                  Container(
+                      padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+                      child: SizedBox(
+                          width: 88,
+                          height: 66,
+                          child: DrugImage(drugItemSeq: data.itemSeq))),
+                  Container(
+                      padding: EdgeInsets.fromLTRB(15, 20, 5, 5),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(children: [
+                            Text(
+                              _checkLongName(data),
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            )
+                          ]),
+                          Expanded(
+                              child: Row(
                             children: [_categoryButton((_checkCategory(data)))],
                           )),
-                      SizedBox(
-                        height: 3,
-                      ),
-                      Expanded(
-                        child: Text(
-                          data.expiration,
-                          style: TextStyle(
-                              color: Colors.grey[600], fontSize: 13),
-                        ),
-                      )
-                    ],
-                  )),
-            ],
-          ),
-           Positioned(
-                              top: 5,
-                              right: 20,
-                              width: 20,
-                             height: 30,
-                             // top: 0,                             // right: 0,
-                                child: Align(
-                                  //alignment: Alignment.centerRight,
-                                  child: IconButton(
-                                    padding: EdgeInsets.all(2.0),
-                                    icon:
-                                      Icon(
-                                        Icons.cancel, size: 20
-                                       ),
-                                    onPressed: () {
-                                      askDeleteAlert(context, data);                                  },
-                                  ),
-                                ),
-                              ),
-      ]
-        ),)
-      ),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Expanded(
+                            child: Text(
+                              data.expiration,
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 13),
+                            ),
+                          )
+                        ],
+                      )),
+                ],
+              ),
+              Positioned(
+                top: 5,
+                right: 20,
+                width: 20,
+                height: 30,
+                // top: 0,                             // right: 0,
+                child: Align(
+                  //alignment: Alignment.centerRight,
+                  child: IconButton(
+                    padding: EdgeInsets.all(2.0),
+                    icon: Icon(Icons.cancel, size: 20),
+                    onPressed: () {
+                      askDeleteAlert(context, data);
+                    },
+                  ),
+                ),
+              ),
+            ]),
+          )),
     );
   }
 
-   void askDeleteAlert (BuildContext context, SavedDrug data) async {
-
-     showDialog(
+  void askDeleteAlert(BuildContext context, SavedDrug data) async {
+    showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
@@ -244,13 +237,13 @@ class _HomeEditPageState extends State<HomeEditPage> {
               onPressed: () {
                 Navigator.pushNamed(context, '/bottom_bar');
 
-                      FirebaseFirestore.instance //user가 가지고 있는 약 data
-                          .collection('users')
-                          .doc(user.uid)
-                          .collection('savedList')
-                          .doc(data.itemSeq)
-                          .delete();
-                      },
+                FirebaseFirestore.instance //user가 가지고 있는 약 data
+                    .collection('users')
+                    .doc(user.uid)
+                    .collection('savedList')
+                    .doc(data.itemSeq)
+                    .delete();
+              },
             ),
             FlatButton(
               child: Text('취소'),

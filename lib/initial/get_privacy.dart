@@ -12,11 +12,10 @@ import 'package:semo_ver2/initial/get_health.dart';
 //     mask: '####.##.##', filter: {"#": RegExp(r'[0-9]')});
 var birthYearMaskFormatter =
     new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
-bool _isGenderFilled = false;
-bool _isBirthYearFilled = false;
+
 bool _isNicknameFilled = false;
-//print(maskFormatter.getMaskedText()); // -> "+0 (123) 456-78-90"
-//print(maskFormatter.getUnmaskedText()); // -> 01234567890
+bool _isBirthYearFilled = false;
+bool _isGenderFilled = false;
 
 class GetPrivacyPage extends StatefulWidget {
   final String title = '회원가입';
@@ -26,12 +25,11 @@ class GetPrivacyPage extends StatefulWidget {
 }
 
 class _GetPrivacyPageState extends State<GetPrivacyPage> {
-  List<bool> isSelected = List.generate(2, (_) => false);
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController nicknameController = TextEditingController();
-  TextEditingController birthYearController = TextEditingController();
+  List<bool> _isSelected = List.generate(2, (_) => false);
+  TextEditingController _nicknameController = TextEditingController();
+  TextEditingController _birthYearController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +83,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                       SizedBox(
                         height: 40,
                       ),
-                      gender(),
+                      nickname(),
                       SizedBox(
                         height: 20.0,
                       ),
@@ -93,7 +91,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      nickname(user),
+                      gender(),
                       SizedBox(height: 50.0),
                       submit(context),
                     ],
@@ -128,124 +126,128 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
     );
   }
 
-  Widget gender() {
-    return Row(
-      // crossAxisAlignment: CrossAxisAlignment.start,
+  Widget nickname() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('성별', style: TextStyle(color: Colors.grey, fontSize: 16.0)),
-        SizedBox(
-          width: 20,
+        Text(
+          '닉네임',
+          style: TextStyle(
+              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
         ),
-        ToggleButtons(
-          constraints: BoxConstraints(
-            minWidth: 40,
-            minHeight: 20,
-          ),
-          children: [Text('남'), Text('여')],
-          selectedColor: Colors.teal[400],
-          fillColor: Colors.teal[100],
-          onPressed: (int index) {
-            setState(() {
-              _isGenderFilled = true;
+        TextFormField(
+          controller: _nicknameController,
+          cursorColor: Colors.teal[400],
+          decoration: InputDecoration(
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.teal),
+            ),
+            hintText: '닉네임 입력 (2자 이상)',
+            hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
+            // suffixIcon: _checkButton('중복확인')
+            //    OutlineButton(
+            //   color: _isFilled ? Colors.teal : Colors.grey,
+            //   child: Text(
+            //     "중복확인",
+            //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
+            //   ),
+            //   onPressed: () async {
+            //     bool result =
+            //         await DatabaseService().isUnique(nicknameController.text);
+            //
+            //     setState(() {
+            //       if (result == true) _isError = true;
+            //     });
+            //   },
+            // )
 
-              for (int buttonIndex = 0;
-                  buttonIndex < isSelected.length;
-                  buttonIndex++) {
-                if (buttonIndex == index) {
-                  isSelected[buttonIndex] = true;
-                } else {
-                  isSelected[buttonIndex] = false;
-                }
-              }
-            });
+            //     TextButton(
+            //   child: Text(
+            //     "중복확인",
+            //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
+            //   ),
+            //   onPressed: () {},
+            // )
+          ),
+          keyboardType: TextInputType.text,
+          onChanged: (value) {
+            if (value.length >= 2) {
+              setState(() {
+                _isNicknameFilled = true;
+              });
+            } else {
+              setState(() {
+                _isNicknameFilled = false;
+              });
+            }
           },
-          isSelected: isSelected,
+          validator: (String value) {
+            if (value.isEmpty) return "닉네임을 입력하세요.";
+            return null;
+          },
         ),
       ],
     );
   }
 
   Widget birthYear() {
-    return TextFormField(
-      controller: birthYearController,
-      cursorColor: Colors.teal[400],
-      decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.teal),
-          ),
-          hintText: '출생년도',
-          hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0)),
-      keyboardType: TextInputType.number,
-      inputFormatters: [birthYearMaskFormatter],
-      onChanged: (value) {
-        if (value.length >= 4) {
-          setState(() {
-            _isBirthYearFilled = true;
-          });
-        } else {
-          setState(() {
-            _isBirthYearFilled = false;
-          });
-        }
-      },
-      validator: (String value) {
-        if (value.isEmpty) return "생년월일을 입력하세요.";
-        return null;
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '출생년도',
+          style: TextStyle(
+              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          controller: _birthYearController,
+          cursorColor: Colors.teal[400],
+          decoration: InputDecoration(
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.teal),
+              ),
+              hintText: '출생년도',
+              hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0)),
+          keyboardType: TextInputType.number,
+          inputFormatters: [birthYearMaskFormatter],
+          onChanged: (value) {
+            if (value.length == 4) {
+              setState(() {
+                _isBirthYearFilled = true;
+              });
+            } else {
+              setState(() {
+                _isBirthYearFilled = false;
+              });
+            }
+          },
+          validator: (String value) {
+            if (value.isEmpty) return "생년월일을 입력하세요.";
+            return null;
+          },
+        ),
+      ],
     );
   }
 
-  Widget nickname(user) {
-    return TextFormField(
-      controller: nicknameController,
-      cursorColor: Colors.teal[400],
-      decoration: InputDecoration(
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.teal),
+  Widget gender() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '성별',
+          style: TextStyle(
+              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
         ),
-        hintText: '닉네임 (2자 이상)',
-        hintStyle: TextStyle(color: Colors.grey, fontSize: 16.0),
-        // suffixIcon: _checkButton('중복확인')
-        //    OutlineButton(
-        //   color: _isFilled ? Colors.teal : Colors.grey,
-        //   child: Text(
-        //     "중복확인",
-        //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
-        //   ),
-        //   onPressed: () async {
-        //     bool result =
-        //         await DatabaseService().isUnique(nicknameController.text);
-        //
-        //     setState(() {
-        //       if (result == true) _isError = true;
-        //     });
-        //   },
-        // )
-
-        //     TextButton(
-        //   child: Text(
-        //     "중복확인",
-        //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
-        //   ),
-        //   onPressed: () {},
-        // )
-      ),
-      keyboardType: TextInputType.text,
-      onChanged: (value) {
-        if (value.length >= 2) {
-          setState(() {
-            _isNicknameFilled = true;
-          });
-        } else {
-          setState(() {
-            _isNicknameFilled = false;
-          });
-        }
-      },
-      validator: (String value) {
-        if (value.isEmpty) return "닉네임을 입력하세요.";
-        return null;
-      },
+        SizedBox(height: 5),
+        Row(
+          children: [
+            exclusiveButton(0, _isSelected, '남'),
+            SizedBox(width: 10),
+            exclusiveButton(1, _isSelected, '여'),
+          ],
+        ),
+      ],
     );
   }
 
@@ -266,25 +268,25 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
             '다음',
             style: TextStyle(color: Colors.white),
           ),
-          color: (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled)
+          color: (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled)
               ? Colors.teal[400]
               : Colors.grey,
           onPressed: () async {
-            if (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled) {
+            if (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled) {
               // phoneMaskFormatter.getUnmaskedText().length != 11 ||
               if (birthYearMaskFormatter.getUnmaskedText().length != 4)
                 showSnackBar(context);
               else {
                 var result =
-                    await DatabaseService().isUnique(nicknameController.text);
+                    await DatabaseService().isUnique(_nicknameController.text);
                 if (result == false) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
                 } else {
                   await DatabaseService(uid: user.uid).updateUserPrivacy(
-                    isSelected[0] ? 'male' : 'female',
-                    birthYearController.text,
-                    nicknameController.text,
+                    _isSelected[0] ? 'male' : 'female',
+                    _birthYearController.text,
+                    _nicknameController.text,
                   );
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => GetHealthPage()));
@@ -297,47 +299,34 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
     );
   }
 
-  // Widget _checkButton(str) {
-  //   return Container(
-  //     width: 24 + str.length.toDouble() * 10,
-  //     padding: EdgeInsets.symmetric(horizontal: 2),
-  //     child: ButtonTheme(
-  //       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 2),
-  //       minWidth: 10,
-  //       height: 22,
-  //       child: FlatButton(
-  //         child: Text(
-  //           '#$str',
-  //           style: TextStyle(color: Colors.teal[400], fontSize: 12.0),
-  //         ),
-  //         //padding: EdgeInsets.all(0),
-  //         onPressed: () => print('$str!'),
-  //         color: Colors.grey[200],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Widget _checkButton(str) {
+  Widget exclusiveButton(index, isPressed, buttonName) {
     return ButtonTheme(
-      minWidth: 40.0,
+      minWidth: 70.0,
       child: FlatButton(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6.0),
             side: BorderSide(
-                color: _isNicknameFilled ? Colors.teal[200] : Colors.grey)),
+                color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
         color: Colors.white,
-        textColor: _isNicknameFilled ? Colors.teal[200] : Colors.grey,
-        onPressed: () async {
-          var result =
-              await DatabaseService().isUnique(nicknameController.text);
-          if (result == false) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
-          } else {}
+        textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        onPressed: () {
+          setState(() {
+            _isGenderFilled = true;
+
+            for (int buttonIndex = 0;
+                buttonIndex < isPressed.length;
+                buttonIndex++) {
+              if (buttonIndex == index) {
+                isPressed[buttonIndex] = true;
+              } else {
+                isPressed[buttonIndex] = false;
+              }
+            }
+          });
         },
         child: Text(
-          str,
+          buttonName,
           style: TextStyle(
             fontSize: 14.0,
           ),

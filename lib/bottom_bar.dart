@@ -7,7 +7,7 @@ import 'home/home.dart';
 import 'mypage/my_page.dart';
 import 'ranking/ranking.dart';
 import 'drug_info/phil_info.dart';
-import 'review/review_page.dart';
+import 'review/drug_info.dart';
 
 class BottomBar extends StatefulWidget {
   @override
@@ -29,12 +29,11 @@ class _BottomBarState extends State<BottomBar> {
   ];
 
   void _onItemTapped(int index) {
-    if(index != 1 ){
+    if (index != 1) {
       setState(() {
         _selectedIndex = index;
       });
-    }
-    else {
+    } else {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => AddButton()),
       );
