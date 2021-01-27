@@ -10,7 +10,6 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 
-
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class SearchScreen extends StatefulWidget {
@@ -31,7 +30,6 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-
   //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
   String _checkLongName(String data) {
     String newName = data;
@@ -42,13 +40,12 @@ class _SearchScreenState extends State<SearchScreen> {
         splitName = newName.split('(');
         // print(splitName);
         newName = splitName[0];
-
       }
     }
     return newName;
   }
 
-  Widget _noResultContainer(){
+  Widget _noResultContainer() {
     return Container(
       padding: EdgeInsets.only(top: 30),
       child: Align(
@@ -87,74 +84,68 @@ class _SearchScreenState extends State<SearchScreen> {
                       color: Colors.grey[400]),
                 )),
           );
-        return
-
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                      height: 30,
-                      child: Center(
-                          child: Text(
-                            '    최근검색어',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ))),
-                  FlatButton(
-                    child: Text('전체삭제'),
-                    onPressed: () {
-                      //print('삭제되었음');
-                      FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(user.uid)
-                          .collection('searchList')
-                          .get()
-                          .then((snapshot) {
-                        for (DocumentSnapshot ds in snapshot.docs) {
-                          ds.reference.delete();
-                        }
-                      });
-                    },
-                  )
-                ],
+        return Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                    height: 30,
+                    child: Center(
+                        child: Text(
+                      '    최근검색어',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ))),
+                FlatButton(
+                  child: Text('전체삭제'),
+                  onPressed: () {
+                    //print('삭제되었음');
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(user.uid)
+                        .collection('searchList')
+                        .get()
+                        .then((snapshot) {
+                      for (DocumentSnapshot ds in snapshot.docs) {
+                        ds.reference.delete();
+                      }
+                    });
+                  },
+                )
+              ],
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                children: snapshot.data.docs
+                    .map((data) => _buildRecentSearchList(context, data))
+                    .toList(),
               ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  children: snapshot.data.docs
-                      .map((data) => _buildRecentSearchList(context, data))
-                      .toList(),
-                ),
-              ),
-            ],
-          );
+            ),
+          ],
+        );
       },
     );
   }
 
   Widget _buildBodyOfAll(BuildContext context, String searchVal) {
-      return
-        StreamBuilder<List<Drug>>(
-            stream: DatabaseService()//categoryName: widget.categoryName
-                .setForSearch(searchVal, 20),
-            builder: (context, stream) {
-              if (!stream.hasData) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (searchVal == '' || searchVal.length < 2) {
-         return _streamOfSearch(context);
+    return StreamBuilder<List<Drug>>(
+      stream: DatabaseService() //categoryName: widget.categoryName
+          .setForSearch(searchVal, 20),
+      builder: (context, stream) {
+        if (!stream.hasData) {
+          return Center(child: CircularProgressIndicator());
         }
-          else
-            return _buildListOfAll(context, stream.data);
-        },
-      );
+        if (searchVal == '' || searchVal.length < 2) {
+          return _streamOfSearch(context);
+        } else
+          return _buildListOfAll(context, stream.data);
+      },
+    );
     //}
   }
 
-  Widget _buildListOfAll(
-      BuildContext context, List<Drug> drugs) {
-
+  Widget _buildListOfAll(BuildContext context, List<Drug> drugs) {
     if (_searchText.length < 2) {
       return _noResultContainer();
     } else if (_searchText.length != 0) {
@@ -162,39 +153,37 @@ class _SearchScreenState extends State<SearchScreen> {
         itemCount: drugs.length,
         itemBuilder: (context, index) {
           return ListDrugOfAll(
-              _checkLongName(drugs[index].itemName),  drugs[index].category, drugs[index].itemSeq );//DrugTile(drug: drugs[index], index: (index + 1));
+              _checkLongName(drugs[index].itemName),
+              drugs[index].category,
+              drugs[index]
+                  .itemSeq); //DrugTile(drug: drugs[index], index: (index + 1));
         },
       );
     }
   }
 
   Widget _buildBodyOfUser(BuildContext context, String searchVal) {
-    return
-      StreamBuilder<List<SavedDrug>>(
-        stream: DatabaseService()//categoryName: widget.categoryName
-            .setForSearchFromUser(searchVal, 10),
-        builder: (context, stream) {
-          print('######');
-          print(stream.data);
-          print('######');
-          if (!stream.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (searchVal == '' || searchVal.length < 2) {
-            return _streamOfSearch(context);
-          }
-          else
-            return _buildListOfUser(context, stream.data);
-        },
-      );
+    TheUser user = Provider.of<TheUser>(context);
+
+    return StreamBuilder<List<SavedDrug>>(
+      stream: DatabaseService(uid: user.uid) //categoryName: widget.categoryName
+          .setForSearchFromUser(searchVal, 10),
+      builder: (context, stream) {
+        if (!stream.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (searchVal == '' || searchVal.length < 2) {
+          return _streamOfSearch(context);
+        } else
+          return _buildListOfUser(context, stream.data);
+      },
+    );
   }
 
-  Widget _buildListOfUser(
-      BuildContext context, List<SavedDrug> drugs) {
+  Widget _buildListOfUser(BuildContext context, List<SavedDrug> drugs) {
     if (_searchText.length < 2) {
       return _noResultContainer();
     } else if (_searchText.length != 0) {
-      print('개수 알아보기??');
       print(drugs.length);
 
       return Expanded(
@@ -202,7 +191,10 @@ class _SearchScreenState extends State<SearchScreen> {
           itemCount: drugs.length,
           itemBuilder: (context, index) {
             return ListDrugOfUser(
-                _checkLongName(drugs[index].itemName),  drugs[index].itemSeq, drugs[index].expiration );//DrugTile(drug: drugs[index], index: (index + 1));
+                _checkLongName(drugs[index].itemName),
+                drugs[index].itemSeq,
+                drugs[index]
+                    .expiration); //DrugTile(drug: drugs[index], index: (index + 1));
           },
         ),
       );
@@ -233,9 +225,7 @@ class _SearchScreenState extends State<SearchScreen> {
         slivers: [
           SliverToBoxAdapter(
             child: Column(
-              children: [
-                _searchBar(context)
-              ],
+              children: [_searchBar(context)],
             ),
           ),
           SliverToBoxAdapter(
@@ -246,7 +236,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _searchBar(BuildContext context){
+  Widget _searchBar(BuildContext context) {
     String searchList;
     TheUser user = Provider.of<TheUser>(context);
 
@@ -267,7 +257,8 @@ class _SearchScreenState extends State<SearchScreen> {
         print('Error: $e');
       }
     }
-    return  Row(
+
+    return Row(
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 16.0),
@@ -281,61 +272,58 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Row(
               children: [
                 Expanded(
-                  //flex: 5,
+                    //flex: 5,
                     child: TextFormField(
-                      cursorColor: Colors.teal[400],
-                      onFieldSubmitted: (val) {
-                        if (val != '' || val.length > 2) {
-                          addRecentSearchList();
-                          focusNode.unfocus();
-                        }
-                      },
-                      focusNode: focusNode,
-                      style: TextStyle(fontSize: 15),
-                      autofocus: true,
-                      controller: _filter,
-                      decoration: InputDecoration( //여기서 언덜라인 없애주기
-                        border: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        fillColor: Colors.white12,
-                        filled: true,
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(0),
-                          child: Icon(
-                            Icons.search,
-                            color: Colors.grey,
-                            size: 20,
-                          ),
-                        ),
-                        suffixIcon: IconButton(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          icon: Icon(
-                            Icons.cancel,
-                            size: 20,
-                            color: Colors.teal,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _filter.clear();
-                              _searchText = "";
-                            });
-                          },
-                        ),
-                        hintText: '두 글자 이상 검색해주세요',
-                        contentPadding: EdgeInsets.fromLTRB(
-                            0, 0, 0, 0),
-                        labelStyle: TextStyle(color: Colors.grey),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            BorderSide(color: Colors.transparent)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10)),
-                            borderSide:
-                            BorderSide(color: Colors.transparent)),
+                  cursorColor: Colors.teal[400],
+                  onFieldSubmitted: (val) {
+                    if (val != '' || val.length > 2) {
+                      addRecentSearchList();
+                      focusNode.unfocus();
+                    }
+                  },
+                  focusNode: focusNode,
+                  style: TextStyle(fontSize: 15),
+                  autofocus: true,
+                  controller: _filter,
+                  decoration: InputDecoration(
+                    //여기서 언덜라인 없애주기
+                    border: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    fillColor: Colors.white12,
+                    filled: true,
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                        size: 20,
                       ),
-                    )),
+                    ),
+                    suffixIcon: IconButton(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      icon: Icon(
+                        Icons.cancel,
+                        size: 20,
+                        color: Colors.teal,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _filter.clear();
+                          _searchText = "";
+                        });
+                      },
+                    ),
+                    hintText: '두 글자 이상 검색해주세요',
+                    contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    labelStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(color: Colors.transparent)),
+                  ),
+                )),
               ],
             ),
           ),
@@ -492,18 +480,17 @@ class ListDrugOfAll extends StatelessWidget {
   }
 }
 
-
 class ListDrugOfUser extends StatelessWidget {
   final String item_name;
   final String item_seq;
   final String expiration;
 
   const ListDrugOfUser(
-      this.item_name,
-      this.item_seq,
-      this.expiration, {
-        Key key,
-      }) : super(key: key);
+    this.item_name,
+    this.item_seq,
+    this.expiration, {
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -548,7 +535,6 @@ class ListDrugOfUser extends StatelessWidget {
     );
   }
 }
-
 
 class RecentSearch {
   final String recent;
