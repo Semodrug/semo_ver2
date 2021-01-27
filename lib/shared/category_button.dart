@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class CategoryButton extends StatelessWidget {
   final String str;
+  String fromHome = '';
 
-  const CategoryButton({Key key, this.str}) : super(key: key);
+  //const
+  CategoryButton({this.str, this.fromHome});// : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +13,14 @@ class CategoryButton extends StatelessWidget {
       String newName = '';
 
       newName = data.substring(7, (data.length));
+
+      if(fromHome == 'home'){
+        if(newName.length > 12){
+          newName = newName.substring(0, 15);
+          newName = newName + '...';
+        }
+      }
+
       return newName;
     }
 
