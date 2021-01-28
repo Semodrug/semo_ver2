@@ -257,6 +257,10 @@ class DatabaseService {
     return drugsFromUserSnapshots;
   }
 
+  Future<void> deleteSavedDrugData(String drugItemSeq) async {
+    return await userCollection.doc(uid).collection('savedList').doc(drugItemSeq).delete();
+  }
+
   //get drug list stream
   Stream<List<SavedDrug>> get savedDrugs {
     return userCollection
