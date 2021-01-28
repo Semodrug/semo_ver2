@@ -90,7 +90,6 @@ class _AddButtonState extends State<AddButton> {
                         //     "X",
                         //     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
                         onPressed: () {
-                          print('눌렸나확인해보자');
                           Navigator.pushNamed(context, '/bottom_bar');
                         },
                       ),
