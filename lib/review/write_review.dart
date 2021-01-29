@@ -20,11 +20,7 @@ class WriteReview extends StatefulWidget {
   String drugItemSeq;
   double tapToRatingResult;
 
-
   WriteReview({this.drugItemSeq, this.tapToRatingResult});
-//  WriteReview({@required this.drugItemSeq, this.tapToRatingResult});
-
-
 
 
   _WriteReviewState createState() => _WriteReviewState();
@@ -113,7 +109,6 @@ class _WriteReviewState extends State<WriteReview> {
               icon: Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () {
                 Navigator.pop(context);
-                print("Go back button is clicked");
               }),
         ),
 
@@ -472,7 +467,6 @@ class _WriteReviewState extends State<WriteReview> {
                           effect = "soso";
                           setState(()  {
                             effect = "soso";
-                            print(effect);
                           });
                         }
                     ),

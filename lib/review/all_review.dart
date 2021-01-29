@@ -79,10 +79,7 @@ class _AllReveiewState extends State<AllReview> {
   Widget _appbar(BuildContext context) {
     return AppBar(
       title: Text('약이름',
-          style: TextStyle(
-              fontSize: 16.5,
-              fontWeight: FontWeight.bold,
-              color: Colors.black)),
+          style: Theme.of(context).textTheme.headline4),
 //      centerTitle: true,
       elevation: 0.0,
       backgroundColor: Colors.white,

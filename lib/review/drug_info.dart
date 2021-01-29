@@ -126,7 +126,6 @@ class _ReviewPageState extends State<ReviewPage> {
                   var result =
                       await DatabaseService(itemSeq: widget.drugItemSeq)
                           .getCategoryOfDrug();
-                  print('   : )');
                   Navigator.pop(context);
                   Navigator.push(
                       context,
@@ -139,10 +138,8 @@ class _ReviewPageState extends State<ReviewPage> {
           centerTitle: true,
           title: Text(
             '약 정보',
-            style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
+            style: Theme.of(context).textTheme.subtitle1,
+
           ),
           elevation: 0,
           flexibleSpace: Container(
@@ -814,7 +811,6 @@ class _ReviewPageState extends State<ReviewPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Drug drug = snapshot.data;
-            // print("SUMI's TEST: ${specInfo.eeDataList}");
             if (type == 'EE') {
               return ListView.builder(
                   shrinkWrap: true,
@@ -823,6 +819,8 @@ class _ReviewPageState extends State<ReviewPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return Text(
                       drug.eeDocData[index].toString(),
+                      style: Theme.of(context).textTheme.headline4,
+
                     );
                   });
             } else if (type == 'NB') {

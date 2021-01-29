@@ -4,6 +4,7 @@ import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/report_review.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/theme/colors.dart';
 import 'edit_review.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -163,37 +164,51 @@ class _ReviewListState extends State<ReviewList> {
     );
   }
 
+  Widget _reviewFactor(review, type) {
+    return Container(
+      height: 10,
+      width: MediaQuery.of(context).size.width-40,
+      decoration: BoxDecoration(
+        color: gray50,
+        border: Border.all(color: gray50),
+        borderRadius: BorderRadius.all(Radius.circular(4.0))),
+    );
+  }
+
   Widget _review(review) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         //effect
+        _reviewFactor(review, "effect"),
         if (widget.filter == "sideEffectOnly") Container() else Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
-                height: 28,
-                width: 70,
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.grey[400], width: 1.0),
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(6.0))),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("효과", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
-                    Padding(padding: EdgeInsets.all(2.5)),
-                    Container(
-                        width: 17,
-                        height: 17,
-                        decoration: BoxDecoration(
-                          //TODO: COlor: Based on effect color
-                            color: review.effect == "soso" ? Color(0xffFFDD66) : review.effect == "bad" ? Color(0xffFF7070) : Color(0xff88F0BE),
-                            shape: BoxShape.circle)),
-                  ],
-                )),
+
+            // Container(
+            //     height: 28,
+            //     width: 70,
+            //     decoration: BoxDecoration(
+            //         border: Border.all(
+            //             color: Colors.grey[400], width: 1.0),
+            //         borderRadius:
+            //         BorderRadius.all(Radius.circular(6.0))),
+            //     child: Row(
+            //       crossAxisAlignment: CrossAxisAlignment.center,
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: <Widget>[
+            //         Text("효과", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
+            //         Padding(padding: EdgeInsets.all(2.5)),
+            //         Container(
+            //             width: 17,
+            //             height: 17,
+            //             decoration: BoxDecoration(
+            //               //TODO: COlor: Based on effect color
+            //                 color: review.effect == "soso" ? Color(0xffFFDD66) : review.effect == "bad" ? Color(0xffFF7070) : Color(0xff88F0BE),
+            //                 shape: BoxShape.circle)),
+            //       ],
+            //     )
+            // ),
             Container(width: MediaQuery.of(context).size.width * 0.025),
 //            Expanded(child: Text(review.effectText, style: TextStyle(fontSize: 17.0))),
           ],
