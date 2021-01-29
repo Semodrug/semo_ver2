@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/initial/get_privacy.dart';
+import 'package:semo_ver2/initial/2_get_privacy.dart';
 import 'package:semo_ver2/models/user.dart';
 
 import 'package:semo_ver2/mypage/6_policy_privacy.dart';
