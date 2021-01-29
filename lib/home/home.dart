@@ -187,9 +187,9 @@ class _HomePageState extends State<HomePage> {
     String _checkCategoryName(String data) {
       String newName = '';
 
-      if(data.length > 10) {
-        newName = data.substring(0,9);
-        newName = newName +'...';
+      if (data.length > 10) {
+        newName = data.substring(0, 9);
+        newName = newName + '...';
       }
 
       return newName;
@@ -260,11 +260,9 @@ class _HomePageState extends State<HomePage> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 3),
                               child: Container(
-
-
                                   height: 20,
-                                  child: CategoryButton(str: data.category, fromHome : 'home')),
-
+                                  child: CategoryButton(
+                                      str: data.category, fromHome: 'home')),
                             ),
                             SizedBox(
                               height: 3,
@@ -291,6 +289,7 @@ class _HomePageState extends State<HomePage> {
                                   children: <Widget>[
                                     MaterialButton(
                                         onPressed: () {
+                                          Navigator.of(context).pop();
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -317,13 +316,15 @@ class _HomePageState extends State<HomePage> {
                                                     fontSize: 16)))),
                                     MaterialButton(
                                         onPressed: () {
-                                          FirebaseFirestore
-                                              .instance //user가 가지고 있는 약 data
-                                              .collection('users')
-                                              .doc(user.uid)
-                                              .collection('savedList')
-                                              .doc(data.itemSeq)
-                                              .delete();
+                                          Navigator.pop(context);
+                                          _showDeleteDialog(data.itemSeq, user.uid);
+//                                          FirebaseFirestore
+//                                              .instance //user가 가지고 있는 약 data
+//                                              .collection('users')
+//                                              .doc(user.uid)
+//                                              .collection('savedList')
+//                                              .doc(data.itemSeq)
+//                                              .delete();
                                         },
                                         child: Center(
                                             child: Text("삭제하기",
@@ -352,6 +353,45 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showDeleteDialog(record, uid) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+//          title: Center(child: Text('AlertDialog Title')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        await DatabaseService(uid: uid).deleteSavedDrugData(record);
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+
+        );
+      },
     );
   }
 }

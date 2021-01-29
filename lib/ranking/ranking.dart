@@ -11,7 +11,7 @@ class RankingPage extends StatelessWidget {
         body: ListView.separated(
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(categories[index]),
+                title: Text(categories[index], style: Theme.of(context).textTheme.headline4,),
                 onTap: () {
                   getCategory = numCategory[index] + categories[index]; //카테고리 설정해주기
                   Navigator.push(

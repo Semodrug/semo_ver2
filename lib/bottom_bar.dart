@@ -19,7 +19,8 @@ class _BottomBarState extends State<BottomBar> {
 
   final List<Widget> _widgetOptions = [
     HomePage(),
-    AddButton(),
+   // AddButton(),
+    CameraPage(),
     RankingPage(),
 //    PhilInfoPage(
 //      drugItemSeq: '199303108',
@@ -35,7 +36,7 @@ class _BottomBarState extends State<BottomBar> {
       });
     } else {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => AddButton()),
+        MaterialPageRoute(builder: (context) => CameraPage()),
       );
     }
   }

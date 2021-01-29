@@ -7,12 +7,12 @@ ThemeData _buildIYMYTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
 //    accentColor: kShrineBrown900,
-//    primaryColor: kShrinePink100,
-//    buttonColor: kShrinePink100,
+    primaryColor: primary300_main,
+    buttonColor: primary300_main,
 //    scaffoldBackgroundColor: kShrineBackgroundWhite,
 //    cardColor: kShrineBackgroundWhite,
-//    textSelectionColor: kShrinePink100,
-//    errorColor: kShrineErrorRed,
+    textSelectionColor: primary500_light_text,
+    errorColor: warning,
 //    buttonTheme: base.buttonTheme.copyWith(
 //      buttonColor: kShrinePink100,
 //      colorScheme: base.colorScheme.copyWith(
@@ -29,30 +29,32 @@ ThemeData _buildIYMYTheme() {
 //      focusedBorder: CutCornersBorder(
 //        borderSide: BorderSide(
 //          width: 2.0,
-//          color: kShrineBrown900,
+//          color: primary700,
 //        ),
 //      ),
 //      border: CutCornersBorder(),
 //    ),
     textTheme: _buildTextTheme(base.textTheme),
-//    primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
-//    accentTextTheme: _buildTextTheme(base.accentTextTheme),
+    primaryTextTheme: _buildTextTheme(base.primaryTextTheme), //이건 필요한가?
+    accentTextTheme: _buildTextTheme(base.accentTextTheme), //필요할ㄲㅏ?
   );
 }
 
 TextTheme _buildTextTheme(TextTheme base) {
   return base
       .copyWith(
-        headline1: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
-        headline2: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        headline3: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        headline4: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
-        headline5: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        headline6: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        subtitle1: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        subtitle2: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-        bodyText1: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-        bodyText2: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+        headline1: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        headline2: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.grey[900]),
+        headline3: TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.grey[600]),
+        headline4: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.grey[800]),
+        headline5: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey[800]),
+        headline6: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[400]),
+
+        subtitle1: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[750]),
+        subtitle2: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey[900]),
+
+        bodyText1: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+        bodyText2: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.grey[500]),
       )
       .apply(
         fontFamily: 'NotoSansKR',

@@ -9,6 +9,7 @@ import 'package:semo_ver2/services/db.dart';
 
 import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/review/drug_info.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -340,6 +341,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _myTab(String searchVal) {
+    double height = MediaQuery.of(context).size.height;
+
     return DefaultTabController(
         length: 2,
         child: Column(
@@ -348,7 +351,7 @@ class _SearchScreenState extends State<SearchScreen> {
               labelStyle:
                   TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               unselectedLabelStyle:
-                  TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.w100),
               tabs: [
                 Tab(
                     child:
@@ -362,7 +365,7 @@ class _SearchScreenState extends State<SearchScreen> {
             Container(
               padding: EdgeInsets.all(0.0),
               width: double.infinity,
-              height: 440.0,
+              height: height - 200,//440.0,
               child: TabBarView(
                 children: [
                   _buildBodyOfAll(context, searchVal),

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/services/auth.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 import 'bottom_bar.dart';
 import 'camera/camera.dart';
@@ -11,6 +12,8 @@ import 'login/login.dart';
 import 'ranking/ranking.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/wrapper.dart';
+import 'package:semo_ver2/theme/theme_data.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,7 +41,9 @@ class MyApp extends StatelessWidget {
             '/search': (context) => SearchScreen(),
 
           },
-          theme: ThemeData(
+          theme: _IYMYTheme
+          /*
+          ThemeData(
               // TODO: Add Theme Data
             textTheme: TextTheme(
               headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
@@ -61,7 +66,54 @@ class MyApp extends StatelessWidget {
 //              TextStyle? button,
 //              TextStyle? overline,
             ),
-          )),
+          )
+          */
+      ),
     );
   }
+}
+
+//여기부터 그냥 넣어둔거!
+
+final ThemeData _IYMYTheme = _buildIYMYTheme();
+
+ThemeData _buildIYMYTheme() {
+  final ThemeData base = ThemeData();
+  return base.copyWith(
+//    accentColor: kShrineBrown900,
+    primaryColor: primary300_main,
+    buttonColor: primary300_main,
+//    scaffoldBackgroundColor: kShrineBackgroundWhite,
+//    cardColor: kShrineBackgroundWhite,
+    textSelectionColor: primary500_light_text,
+    errorColor: warning,
+
+    textTheme: _buildTextTheme(base.textTheme),
+    //primaryTextTheme: _buildTextTheme(base.primaryTextTheme), //이건 필요한가?
+    //accentTextTheme: _buildTextTheme(base.accentTextTheme), //필요할ㄲㅏ?
+  );
+}
+
+TextTheme _buildTextTheme(TextTheme base) {
+  return base
+      .copyWith(
+    headline1: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+    headline2: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.grey[900]),
+    headline3: TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.grey[600]),
+    headline4: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.grey[800]),
+    headline5: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey[800]),
+    headline6: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[400]),
+
+    subtitle1: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[800]),
+    subtitle2: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey[900]),
+
+    bodyText1: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+    bodyText2: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.grey[500]),
+  )
+      .apply(
+    fontFamily: 'NotoSansKR',
+    displayColor: black87,
+
+//    bodyColor: kShrineBrown900,
+  );
 }
