@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 class CategoryButton extends StatelessWidget {
   final String str;
   String fromHome = '';
 
   //const
-  CategoryButton({this.str, this.fromHome});// : super(key: key);
+  CategoryButton({this.str, this.fromHome}); // : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +15,8 @@ class CategoryButton extends StatelessWidget {
 
       newName = data.substring(7, (data.length));
 
-      if(fromHome == 'home'){
-        if(newName.length > 12){
+      if (fromHome == 'home') {
+        if (newName.length > 12) {
           newName = newName.substring(0, 15);
           newName = newName + '...';
         }
@@ -27,20 +28,16 @@ class CategoryButton extends StatelessWidget {
     return ElevatedButton(
       child: Text(
         '${_shortenCategory(str)}',
-        style: TextStyle(fontSize: 12),
+        style: TextStyle(fontSize: 12, color: primary600_bold_text),
       ),
-      style: ButtonStyle(
-          minimumSize: MaterialStateProperty.all<Size>(Size(10, 30)),
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-              EdgeInsets.symmetric(horizontal: 10)),
-          elevation: MaterialStateProperty.all<double>(0.0),
-          // Color(0xFFF7F7F7) Color(0xFF009E8C)
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.white10),
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.black54),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0.0),
-                  side: BorderSide(color: Colors.grey[300])))),
+      style: ElevatedButton.styleFrom(
+          minimumSize: Size(10, 30),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          elevation: 0,
+          primary: gray0_white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
+              side: BorderSide(color: Colors.grey[300]))),
       onPressed: () {},
     );
   }
