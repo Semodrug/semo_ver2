@@ -60,9 +60,6 @@ class _EditReviewState extends State<EditReview> {
             myControllerEffect.text = review.effectText;
             myControllerSideEffect.text = review.sideEffectText;
             myControllerOverall.text = review.overallText;
-//            sideEffectText = review.sideEffectText;
-//            overallText = review.overallText;
-//            starRating = review.starRating;
 
             return Scaffold(
                 resizeToAvoidBottomInset: true,
@@ -79,7 +76,6 @@ class _EditReviewState extends State<EditReview> {
                       icon: Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () {
                         Navigator.pop(context);
-                        print("Go back button is clicked");
                       }),
                 ),
 
@@ -294,7 +290,6 @@ class _EditReviewState extends State<EditReview> {
                           effect = "soso";
                           setState(()  {
                             effect = "soso";
-                            print(effect);
                           });
                         }
                     ),
