@@ -98,11 +98,11 @@ class _BottomBarState extends State<BottomBar> {
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈',),
             BottomNavigationBarItem(
                 icon: Icon(Icons.camera_alt), label: 'camera'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today), label: 'ranking'),
+                icon: Icon(Icons.list), label: '카테고리'),
             // BottomNavigationBarItem(icon: Icon(Icons.create), label: 'review'),
           ],
           currentIndex: _selectedIndex,
