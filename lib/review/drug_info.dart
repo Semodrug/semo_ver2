@@ -115,26 +115,27 @@ class _ReviewPageState extends State<ReviewPage> {
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.teal[200],
-            ),
-            //onPressed: () => Navigator.pop(context),
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.teal[200],
+              ),
+              //onPressed: () => Navigator.pop(context),
               //다시 카테고리 페이지로 가기 위함 provider 를 다시 불러오려면 페이지를 다시 여는 방법
-            onPressed: () async {
-              if(widget.fromRankingTile == 'true'){
-                var result = await DatabaseService(itemSeq:widget.drugItemSeq).getCategoryOfDrug();
-                print('   : )');
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RankingContentPage(categoryName: result)
-                    ));
-              }
-             else Navigator.pop(context);
-            }
-          ),
+              onPressed: () async {
+                if (widget.fromRankingTile == 'true') {
+                  var result =
+                      await DatabaseService(itemSeq: widget.drugItemSeq)
+                          .getCategoryOfDrug();
+                  print('   : )');
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              RankingContentPage(categoryName: result)));
+                } else
+                  Navigator.pop(context);
+              }),
           centerTitle: true,
           title: Text(
             '약 정보',
@@ -372,15 +373,30 @@ class _ReviewPageState extends State<ReviewPage> {
                                           DrugImage(drugItemSeq: drug.itemSeq)),
                                 ),
                               ),
-                              SizedBox(
-                                height: 20,
+                              SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Text(
+                                    drug.etcOtcCode,
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  Text(
+                                    '  |  ',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  Text(
+                                    drug.entpName,
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                drug.entpName,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                ),
-                              ),
+                              SizedBox(height: 4),
                               SizedBox(
                                 width:
                                     MediaQuery.of(context).size.width * (0.8),
@@ -392,6 +408,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
+                              SizedBox(height: 10),
                               Row(children: <Widget>[
                                 Text(
                                   drug.totalRating.toStringAsFixed(1),
