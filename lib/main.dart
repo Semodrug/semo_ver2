@@ -97,22 +97,36 @@ ThemeData _buildIYMYTheme() {
 TextTheme _buildTextTheme(TextTheme base) {
   return base
       .copyWith(
-    headline1: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
-    headline2: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.grey[900]),
-    headline3: TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.grey[600]),
-    headline4: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.grey[800]),
-    headline5: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey[800]),
+    headline1: TextStyle(fontSize: 34, fontWeight: FontWeight.bold, color: Color(0xFF0D0D0D)),
+    headline2: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color(0xFF666666)),
+    headline3: TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: Color(0xFF666666)),
+    headline4: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF2C2C2C)),
+    headline5: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF1F1F1F)), //0D0D0D
     headline6: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[400]),
 
-    subtitle1: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[800]),
+    subtitle1: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF1F1F1F)),
     subtitle2: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey[900]),
 
     bodyText1: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-    bodyText2: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.grey[500]),
+    bodyText2: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF666666)),
+
+    // headline1: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+    // headline2: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+    // headline3: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+    // headline4: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+    // headline5: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+    // headline6: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+    //
+    // subtitle1: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+    // subtitle2: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+    //
+    // bodyText1: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+    // bodyText2: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
   )
       .apply(
     fontFamily: 'NotoSansKR',
     displayColor: black87,
+
 
 //    bodyColor: kShrineBrown900,
   );
