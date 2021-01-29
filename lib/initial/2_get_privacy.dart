@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'package:semo_ver2/initial/get_health.dart';
+import 'package:semo_ver2/initial/3_get_health.dart';
 
 // var phoneMaskFormatter = new MaskTextInputFormatter(
 //     mask: '###-####-####', filter: {"#": RegExp(r'[0-9]')});

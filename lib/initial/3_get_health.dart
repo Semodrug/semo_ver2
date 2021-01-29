@@ -180,9 +180,9 @@ class _GetHealthPageState extends State<GetHealthPage> {
             children: [
               _multiButton(4, _isDisease, '간장애'),
               SizedBox(width: 6),
-              _multiButton(5, _isDisease, '콩팥장애'),
+              _multiButton(5, _isDisease, '신장'),
               SizedBox(width: 6),
-              _multiButton(6, _isDisease, '신장'),
+              _multiButton(6, _isDisease, '심장'),
             ],
           ),
         ),
