@@ -91,7 +91,6 @@ class _WriteReviewState extends State<WriteReview> {
           "registrationDate": DateTime.now(),
           "entpName" : _entpName,
           "itemName": _itemName
-
 //          "name" : "TESTUSER",
         }
     );
