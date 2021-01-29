@@ -289,7 +289,6 @@ class InvertedClipper extends CustomClipper<Path> {
 }
 */
 
-import 'dart:html';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
