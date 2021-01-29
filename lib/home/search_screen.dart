@@ -70,7 +70,7 @@ class _SearchScreenState extends State<SearchScreen> {
         .collection('searchList');
 
     return StreamBuilder<QuerySnapshot>(
-      stream: userSearchList.snapshots(),
+      stream: userSearchList.orderBy('time', descending: true).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data.docs.length == 0)
           return Container(
@@ -249,7 +249,7 @@ class _SearchScreenState extends State<SearchScreen> {
         searchList = _searchText;
         assert(searchList != null);
         //검색어 저장 기능 array로 저장해주기
-        userSearchList.add({'searchList': searchList});
+        userSearchList.add({'searchList': searchList, 'time' : DateTime.now()});
       } catch (e) {
         print('Error: $e');
       }
@@ -462,7 +462,7 @@ class ListDrugOfAll extends StatelessWidget {
         searchList = item_name;
         assert(searchList != null);
         //drug 이름 누르면 저장 기능 array로 저장해주기
-        userSearchList.add({'searchList': searchList});
+        userSearchList.add({'searchList': searchList, 'time' : DateTime.now()});
       } catch (e) {
         print('Error: $e');
       }
@@ -562,11 +562,13 @@ class ListDrugOfUser extends StatelessWidget {
 
 class RecentSearch {
   final String recent;
+  final Timestamp time;
 
   final DocumentReference reference;
 
   RecentSearch.fromMap(Map<String, dynamic> map, {this.reference})
-      : recent = map['searchList'];
+      : recent = map['searchList'],
+       time = map['time'];
 
   RecentSearch.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
