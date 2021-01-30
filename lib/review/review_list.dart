@@ -71,7 +71,7 @@ class _ReviewListState extends State<ReviewList> {
         decoration: BoxDecoration(
             border: Border(
                 bottom:
-                BorderSide(width: 0.6, color: Colors.grey[300]))),
+                BorderSide(width: 0.6, color: gray75))),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -105,12 +105,17 @@ class _ReviewListState extends State<ReviewList> {
             ),
           ),
           SizedBox(width: 10),
-          Text(review.nickName, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+          Text(review.nickName,
+              style: Theme.of(context).textTheme.caption.copyWith(
+                color: gray500,
+                fontSize: 12
+              )
+          ),
           Expanded(child: Container()),
           IconButton(
            padding: EdgeInsets.only(right:0),
            // constraints: BoxConstraints(),
-            icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
+            icon: Icon(Icons.more_horiz, color: gray500, size: 19),
             onPressed: () {
 //            if(auth.currentUser.uid == review.uid) {
               if(user.uid == review.uid) {
@@ -184,13 +189,19 @@ class _ReviewListState extends State<ReviewList> {
             children: [
               Text(
                 type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
-                style: Theme.of(context).textTheme.subtitle2,),
+                style: Theme.of(context).textTheme.subtitle2.copyWith(
+                  color: gray900
+                ),),
               Container(width:3),
               _face(type == "effect" ? review.effect : type == "sideEffect" ? review.sideEffect : "overall",),
             ],
           ),
           Container(height:4),
-          Text(review.effectText),
+          Text(review.effectText,
+            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                color: gray600,
+              fontSize: 14
+            ),),
         ],
       )
     );
@@ -251,7 +262,10 @@ class _ReviewListState extends State<ReviewList> {
       child: Row(
         children: <Widget>[
           Text(regDate,
-              style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+          style: Theme.of(context).textTheme.caption.copyWith(
+              color: gray500,
+              fontSize: 12
+          )),
 //        Padding(padding: EdgeInsets.all(18)),
           Expanded(child: Container( )),
           Container(
@@ -261,10 +275,8 @@ class _ReviewListState extends State<ReviewList> {
                 new GestureDetector(
                     child: new Icon(
                       names.contains(auth.currentUser.uid) ? Icons.thumb_up_alt
-                          : Icons.thumb_up_alt_outlined,
-//                                            color: names.contains(auth.currentUser.uid) ?
-//                                                Colors.redAccent[200] : Colors.grey[300],
-                      color: primary400_line,
+                          : Icons.thumb_up_alt,
+                      color: names.contains(auth.currentUser.uid) ? primary400_line : Color(0xffDADADA),
                       size: 20,
                     ),
                     onTap:() async{
@@ -279,9 +291,12 @@ class _ReviewListState extends State<ReviewList> {
               ],
             ),
           ),
-          Container(width:2),
+          Container(width:3),
           Text((review.noFavorite).toString(),
-              style: TextStyle(fontSize: 14, color: Colors.black)),
+              style: Theme.of(context).textTheme.caption.copyWith(
+                  color: gray400,
+                  fontSize: 12
+              )),
           SizedBox(width: 15)
         ],
       ),

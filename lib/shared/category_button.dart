@@ -31,13 +31,13 @@ class CategoryButton extends StatelessWidget {
         style: TextStyle(fontSize: 12, color: primary600_bold_text),
       ),
       style: ElevatedButton.styleFrom(
-          minimumSize: Size(10, 30),
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          minimumSize: Size(12, 23),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           elevation: 0,
-          primary: gray0_white,
+          primary: gray50,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
-              side: BorderSide(color: Colors.grey[300]))),
+              side: BorderSide(color: gray75))),
       onPressed: () {},
     );
   }
