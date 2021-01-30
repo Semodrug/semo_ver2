@@ -132,7 +132,10 @@ class _ReviewPageState extends State<ReviewPage> {
           centerTitle: true,
           title: Text(
             '약 정보',
-            style: Theme.of(context).textTheme.subtitle1,
+            style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
           ),
           elevation: 0,
           flexibleSpace: Container(
@@ -285,44 +288,161 @@ class _ReviewPageState extends State<ReviewPage> {
             if (_isSaved == true) break;
           }
 
-          return Stack(
-            children: [
-              Padding(
-                key: _key1,
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 20.0,
+
+                  return Stack(
+                    children: [
+                      Padding(
+                        key: _key1,
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Center(
+                                child: Container(
+                                  width: 200,
+                                  child: AspectRatio(
+                                      aspectRatio: 3.5 / 2,
+                                      child:
+                                          DrugImage(drugItemSeq: drug.itemSeq)),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Text(
+                                    drug.etcOtcCode,
+                                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                      color: gray300_inactivated,
+                                      fontSize: 14
+                                    )
+                                  ),
+                                  Text(
+                                    '  |  ',
+                                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                          color: gray300_inactivated,
+                                          fontSize: 14
+                                      )
+                                  ),
+                                  Text(
+                                    drug.entpName,
+                                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                          color: gray300_inactivated,
+                                          fontSize: 14
+                                      )
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 4),
+                              SizedBox(
+                                width:
+                                    MediaQuery.of(context).size.width * (0.8),
+                                child: Text(
+                                  _shortenName(drug.itemName),
+                                  style: Theme.of(context).textTheme.headline4.copyWith(
+                                      color: gray750_activated,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold
+                                  )
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Row(children: <Widget>[
+                                Text(
+                                  drug.totalRating.toStringAsFixed(1),
+                                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                        color: gray900,
+                                        fontSize: 14
+                                    )
+                                ),
+                                Text(
+                                  " (" +
+                                      drug.numOfReviews.toStringAsFixed(0) +
+                                      '개)',
+                                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                        color: gray750_activated,
+                                        fontSize: 12,
+                                    )
+                                )
+                              ]),
+                              Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    CategoryButton(str: drug.category)
+                                  ]),
+                              SizedBox(
+                                height: 20,
+                              )
+                            ]),
                       ),
-                      Center(
-                        child: Container(
-                          width: 200,
-                          child: AspectRatio(
-                              aspectRatio: 3.5 / 2,
-                              child: DrugImage(drugItemSeq: drug.itemSeq)),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Text(
-                            drug.etcOtcCode,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          Text(
-                            '  |  ',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          Text(
-                            drug.entpName,
-                            style: TextStyle(
-                              color: Colors.grey[600],
+                      _isCareful
+                          ? Positioned(
+                              top: 0,
+                              right: 0,
+                              child: FlatButton(
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        child: Image.asset(
+                                            'assets/icons/warning_icon.png'),
+                                        width: 32,
+                                        height: 32,
+                                      ),
+                                      Text(
+                                        '주의',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  onPressed: () {
+                                    _showWarning(
+                                        context,
+                                        _carefulDiseaseList(
+                                            userData.diseaseList,
+                                            drug.nbDocData),
+                                        drug.itemSeq);
+                                  }))
+                          : Container(),
+                      Positioned(
+                          top: 140,
+                          right: 20,
+                          child: IconButton(
+                              icon: Icon(
+                                _isFavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: _isFavorite ? Colors.redAccent : null,
+                              ),
+                              onPressed: () async {
+                                if (_isFavorite) {
+                                  await DatabaseService(uid: user.uid)
+                                      .removeFromFavoriteList(drug.itemSeq);
+                                } else {
+                                  _showFavoriteDone(context);
+                                  await DatabaseService(uid: user.uid)
+                                      .addToFavoriteList(drug.itemSeq);
+                                  // _showFavoriteWell(context);
+                                }
+                              })),
+                      Positioned(
+                        bottom: 20,
+                        right: 20,
+                        child: ButtonTheme(
+                          minWidth: 20,
+                          height: 30,
+                          child: FlatButton(
+                            color: Colors.teal[300],
+                            child: Text(
+                              '+ 담기',
+                                style: Theme.of(context).textTheme.headline6.copyWith(
+                                  color: gray0_white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold
+                              )
                             ),
                           ),
                         ],
@@ -662,62 +782,76 @@ class _ReviewPageState extends State<ReviewPage> {
     bool _isCareful =
         _carefulDiseaseList(userData.diseaseList, drug.nbDocData).isNotEmpty;
 
-    return Padding(
-      key: _key3,
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _isCareful
-                ? _warningMessage(
-                    context,
-                    _carefulDiseaseList(userData.diseaseList, drug.nbDocData),
-                    drug.itemSeq)
-                : Container(),
-            _isCareful ? SizedBox(height: 20) : Container(),
-            Text(
-              '효능효과',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            _drugDocInfo(context, drug.itemSeq, 'EE'),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              '용법용량',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            _drugDocInfo(context, drug.itemSeq, 'UD'),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              '저장방법',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(drug.storageMethod),
-            SizedBox(
-              height: 10,
-            ),
-            FlatButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailInfo(
-                                drugItemSeq: drug.itemSeq,
-                              )));
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text('약 정보 전체보기'),
-                    Icon(Icons.keyboard_arrow_right)
-                  ],
-                )),
-          ]),
-    );
+        stream: DatabaseService(itemSeq: drugItemSeq).drugData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Drug drug = snapshot.data;
+            return Padding(
+              key: _key3,
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '효능효과',
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                          color: gray750_activated,
+                        )
+                    ),
+                    _drugDocInfo(context, drugItemSeq, 'EE'),
+                    Container(
+                      height: 10,
+                    ),
+                    Text(
+                      '용법용량',
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                          color: gray750_activated,
+                        )
+                    ),
+                    _drugDocInfo(context, drugItemSeq, 'UD'),
+                    Container(
+                      height: 10,
+                    ),
+                    Text(
+                      '저장방법',
+                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: gray750_activated,
+                      )
+                    ),
+                    Text(drug.storageMethod,
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: gray600,
+                        )),
+                    Container(
+                      height: 10,
+                    ),
+                    FlatButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailInfo(
+                                        drugItemSeq: drugItemSeq,
+                                      )));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text('자세히 보기',
+                                style: Theme.of(context).textTheme.caption.copyWith(
+                                  color: gray500,
+                                  fontSize: 12
+                                )),
+                            Icon(Icons.keyboard_arrow_right)
+                          ],
+                        )),
+                  ]),
+            );
+          } else {
+            return Loading();
+          }
+        });
   }
 
   Widget _drugDocInfo(BuildContext context, String drugItemSeq, String type) {
@@ -734,7 +868,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return Text(
                       drug.eeDocData[index].toString(),
-                      style: Theme.of(context).textTheme.headline4,
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: gray600,
+                        )
                     );
                   });
             } else if (type == 'NB') {
@@ -755,6 +891,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return Text(
                       drug.udDocData[index].toString(),
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: gray600,
+                        )
                     );
                   });
             } else {

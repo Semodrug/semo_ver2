@@ -74,6 +74,7 @@ class ReviewService {
         entpName: doc.data()['entpName'],
         itemName: doc.data()['itemName'],
         seqNum: doc.data()['seqNum'],
+        nickName: doc.data()['nickName'],
       );
     }).toList();
   }
@@ -114,6 +115,8 @@ class ReviewService {
 //    else
 //      return false;
   }
+
+
 
 //  Future<bool> isUnique(newNickname) async {
 //    final QuerySnapshot result =
@@ -169,6 +172,7 @@ class ReviewService {
         entpName: doc.data()['entpName'],
         itemName: doc.data()['itemName'],
         seqNum: doc.data()['seqNum'],
+        nickName: doc.data()['nickName'],
       );
     });
   }

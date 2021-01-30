@@ -394,4 +394,9 @@ class DatabaseService {
       );
     }).toList();
   }
+
+  Future<String> getNickName() async {
+    DocumentSnapshot snap = await userCollection.doc(uid).get();
+    return snap.data()["nickname"];
+  }
 }
