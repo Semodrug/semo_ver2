@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
+//TODO: 검색 바 UI 수정
+//TODO: 효능효과 밑의 간격!
+//TODO: 글씨 색이 뭔가 흐릿
 String search;
-TextStyle
-    posRes = TextStyle(color: Colors.black, backgroundColor: Colors.yellowAccent[100]),
-    negRes = TextStyle(color: Colors.black, backgroundColor: Colors.white);
+TextStyle posRes = TextStyle(
+        fontFamily: 'NotoSansKR',
+        fontSize: 14,
+        fontWeight: FontWeight.w800,
+        color: Colors.grey[500],
+        backgroundColor: warning.withOpacity(0.3)),
+    negRes = TextStyle(
+        fontFamily: 'NotoSansKR',
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: Colors.grey[500],
+        backgroundColor: Colors.white);
 
 TextSpan searchMatch(String match) {
   if (search == null || search == "")
     return TextSpan(text: match, style: negRes);
-  var refinedMatch = match;// .toLowerCase();
-  var refinedSearch = search;// .toLowerCase();
+  var refinedMatch = match; // .toLowerCase();
+  var refinedSearch = search; // .toLowerCase();
   if (refinedMatch.contains(refinedSearch)) {
     if (refinedMatch.substring(0, refinedSearch.length) == refinedSearch) {
       return TextSpan(
@@ -60,7 +73,8 @@ class SearchHighlightingScreen extends StatefulWidget {
   String storage = '';
   String entp_name = '';
 
-  SearchHighlightingScreen({this.infoEE, this.infoNB, this.infoUD, this.storage, this.entp_name});
+  SearchHighlightingScreen(
+      {this.infoEE, this.infoNB, this.infoUD, this.storage, this.entp_name});
 
   @override
   _SearchHighlightingScreenState createState() =>
@@ -68,7 +82,6 @@ class SearchHighlightingScreen extends StatefulWidget {
 }
 
 class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
-
   final TextEditingController _filter = TextEditingController();
   FocusNode focusNode = FocusNode();
 
@@ -80,37 +93,26 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
     });
   }
 
-
-  Widget _changeToText (BuildContext context, List notYetText){
+  Widget _changeToText(BuildContext context, List notYetText) {
     String textFinish = '';
-    for (int i =0; i< notYetText.length; i++){
+    for (int i = 0; i < notYetText.length; i++) {
       textFinish = textFinish + notYetText[i].toString() + '\n';
     }
     //잘라져 있는 형태라면 이부분을 없애면 될 거 같다.
     textFinish = textFinish.replaceAll(" \"", "\n\"");
 
-    return RichText(
-        textScaleFactor: 1.08,
-        text: searchMatch(textFinish)
-    );
+    return RichText(textScaleFactor: 1.08, text: searchMatch(textFinish));
   }
 
-  Widget _alreadyText (BuildContext context, String text){
-
-    return RichText(
-        textScaleFactor: 1.08,
-        text: searchMatch(text)
-    );
+  Widget _alreadyText(BuildContext context, String text) {
+    return RichText(textScaleFactor: 1.08, text: searchMatch(text));
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title:
-        Padding(
+        title: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Container(
             width: double.infinity,
@@ -123,45 +125,42 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
               children: [
                 Expanded(
                     child: TextField(
-                      onChanged: (t) {
+                  onChanged: (t) {
+                    setState(() {
+                      search = t;
+                    });
+                  },
+                  focusNode: focusNode,
+                  style: TextStyle(fontSize: 15),
+                  autofocus: true,
+                  controller: _filter,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white12,
+                    filled: true,
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
+                    suffixIcon: IconButton(
+                      icon:
+                          Icon(Icons.cancel, size: 20, color: Colors.teal[400]),
+                      onPressed: () {
                         setState(() {
-                          search = t;
+                          _filter.clear();
+                          search = "";
                         });
                       },
-                      focusNode: focusNode,
-                      style: TextStyle(fontSize: 15),
-                      autofocus: true,
-                      controller: _filter,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white12,
-                        filled: true,
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                          size: 20,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.cancel,
-                              size: 20, color: Colors.teal[400]),
-                          onPressed: () {
-                            setState(() {
-                              _filter.clear();
-                              search = "";
-                            });
-                          },
-                        ),
-                        //hintText: '어떤 약 정보를 찾고 계세요?',
-                        labelStyle: TextStyle(color: Colors.grey),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                            BorderSide(color: Colors.transparent)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10)),
-                            borderSide:
-                            BorderSide(color: Colors.transparent)),
-                      ),
-                    )),
+                    ),
+                    //hintText: '어떤 약 정보를 찾고 계세요?',
+                    labelStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(color: Colors.transparent)),
+                  ),
+                )),
               ],
             ),
           ),
@@ -196,8 +195,8 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
               ])),
         ),
       ),
-      body:
-      Padding(
+      backgroundColor: Colors.white,
+      body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
         child: CustomScrollView(
           slivers: [
@@ -214,34 +213,33 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('효능효과',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                            Text(
+                              '효능효과',
+                              style: Theme.of(context).textTheme.subtitle1,
+                            ),
                             _changeToText(context, widget.infoEE),
-                            //SizedBox(height: 3),
-
+                            Divider(height: 30),
                             Text('용법용량',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15)),
                             _changeToText(context, widget.infoUD),
-                            //SizedBox(height: 3),
-
-                            Text(
-                              '저장방법',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                            Divider(height: 30),
+                            Text('저장방법',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15)),
                             _alreadyText(context, widget.storage),
-                            SizedBox(height: 12),
-
-                            Text(
-                              '회사명',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                            Divider(height: 30),
+                            Text('회사명',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15)),
                             _alreadyText(context, widget.entp_name),
-                            SizedBox(height: 12),
-
+                            Divider(height: 30),
                             Text('주의사항',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15)),
                             _changeToText(context, widget.infoNB),
                           ],
                         ),
-
                       ],
                     ),
                   ))
@@ -255,12 +253,9 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
   }
 }
 
+// for test
 final text = '''
 Call me Ishmael. Some years ago—never mind how long precisely—having
 of the world. '''
     .replaceAll("", "\n")
     .replaceAll("  ", "");
-
-
-
-

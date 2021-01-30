@@ -43,7 +43,7 @@ class _ExpirationSState extends State<ExpirationS> {
         ),
         centerTitle: true,
         title: Text(
-          '상비약 추가하기',
+          '약 추가하기',
           style: TextStyle(
               fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -83,8 +83,8 @@ class _ExpirationSState extends State<ExpirationS> {
                         child: _durationPick()),
                     SizedBox(height: 20),
                     _isSelf ? _expirationPick() : Container(),
-                    SizedBox(height: 20),
                     _expectedDuration(),
+                    SizedBox(height: 20),
                     _okButton(context, user, drug, _expectedDateString)
                   ],
                 ),
@@ -113,14 +113,15 @@ class _ExpirationSState extends State<ExpirationS> {
         ),
         Text(
           drug.entpName,
-          style: TextStyle(
-            color: Colors.grey[600],
-          ),
+          style: Theme.of(context).textTheme.caption,
         ),
-        Text(
-          drug.itemName,
-          style: TextStyle(
-              color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.bold),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.7,
+          child: Text(
+            drug.itemName,
+            style: Theme.of(context).textTheme.headline5,
+            textAlign: TextAlign.center,
+          ),
         ),
         CategoryButton(str: drug.category),
       ],
@@ -132,8 +133,8 @@ class _ExpirationSState extends State<ExpirationS> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '약을 제조받은 일자가 언제인가요?',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          '언제 약을 제조받으셨나요?',
+          style: Theme.of(context).textTheme.subtitle1,
         ),
         SizedBox(
           height: 4,
@@ -166,7 +167,7 @@ class _ExpirationSState extends State<ExpirationS> {
                 children: [
                   Text(
                     '${DateFormat('yyyy').format(_pickDateTime)}년 ${DateFormat('MM').format(_pickDateTime)}월 ${DateFormat('dd').format(_pickDateTime)}일',
-                    style: TextStyle(color: Colors.black),
+                    style: Theme.of(context).textTheme.bodyText2,
                   ),
                   Icon(Icons.keyboard_arrow_down)
                 ],
@@ -182,7 +183,7 @@ class _ExpirationSState extends State<ExpirationS> {
       children: [
         Text(
           '약 종류에 따른 예상 사용가능기간을 선택해주세요',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.subtitle1,
         ),
         SizedBox(
           height: 4,
@@ -205,7 +206,10 @@ class _ExpirationSState extends State<ExpirationS> {
             items: <DropdownMenuItem>[
               DropdownMenuItem(
                 value: 60,
-                child: Text('2개월 - 약국에서 처방받은 알약'),
+                child: Text(
+                  '[2개월] 약국에서 처방받은 알약',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
                 onTap: () {
                   setState(() {
                     _isSelf = false;
@@ -214,7 +218,10 @@ class _ExpirationSState extends State<ExpirationS> {
               ),
               DropdownMenuItem(
                 value: 14,
-                child: Text('2주 - 개봉된 액체상태의 시럽'),
+                child: Text(
+                  '[2주] 개봉된 액체상태의 시럽',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
                 onTap: () {
                   setState(() {
                     _isSelf = false;
@@ -223,7 +230,10 @@ class _ExpirationSState extends State<ExpirationS> {
               ),
               DropdownMenuItem(
                 value: 30,
-                child: Text('1개월 - 개봉된 액체상태의 안약'),
+                child: Text(
+                  '[1개월] 개봉된 액체상태의 안약',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
                 onTap: () {
                   setState(() {
                     _isSelf = false;
@@ -232,7 +242,10 @@ class _ExpirationSState extends State<ExpirationS> {
               ),
               DropdownMenuItem(
                 value: 180,
-                child: Text('6개월 - 개봉된 연고'),
+                child: Text(
+                  '[6개월] 개봉된 연고',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
                 onTap: () {
                   setState(() {
                     _isSelf = false;
@@ -241,7 +254,10 @@ class _ExpirationSState extends State<ExpirationS> {
               ),
               DropdownMenuItem(
                 value: 0,
-                child: Text('유효기한 직접 입력하기'),
+                child: Text(
+                  '직접 입력하기',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
                 onTap: () {
                   setState(() {
                     _isSelf = true;
@@ -279,20 +295,22 @@ class _ExpirationSState extends State<ExpirationS> {
             children: <TextSpan>[
               TextSpan(
                 text: '예상 유효기간은 ',
+                style: Theme.of(context).textTheme.bodyText2,
               ),
               TextSpan(
                   text: _expectedDateString,
                   style: TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.teal[400])),
               TextSpan(
-                text: '입니다',
+                text: ' 입니다',
+                style: Theme.of(context).textTheme.bodyText2,
               ),
             ],
           ),
         ),
-        SizedBox(
-          height: 20,
-        ),
+        // SizedBox(
+        //   height: 20,
+        // ),
       ],
     );
   }
@@ -324,7 +342,7 @@ class _ExpirationSState extends State<ExpirationS> {
       children: [
         Text(
           '유효기한 직접 입력',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.subtitle1,
         ),
         SizedBox(
           height: 4,
@@ -359,12 +377,13 @@ class _ExpirationSState extends State<ExpirationS> {
                 children: [
                   Text(
                     '${DateFormat('yyyy').format(_pickSelfDateTime)}년 ${DateFormat('MM').format(_pickSelfDateTime)}월 ${DateFormat('dd').format(_pickSelfDateTime)}일',
-                    style: TextStyle(color: Colors.black),
+                    style: Theme.of(context).textTheme.bodyText2,
                   ),
                   Icon(Icons.keyboard_arrow_down)
                 ],
               ),
-            ))
+            )),
+        SizedBox(height: 20),
       ],
     );
   }
@@ -372,7 +391,7 @@ class _ExpirationSState extends State<ExpirationS> {
   Widget _okButton(context, user, drug, expirationTime) {
     List<String> searchNameList = drug.itemName.split('');
     List<String> searchListOutput = [];
-    for(int i =0; i< searchNameList.length; i++){
+    for (int i = 0; i < searchNameList.length; i++) {
       if (i != searchNameList.length - 1) {
         searchListOutput.add((searchNameList[i]));
       }
@@ -394,8 +413,13 @@ class _ExpirationSState extends State<ExpirationS> {
           onPressed: () async {
             _showSaveWell(context);
             // Navigator.pop(context);
-            await DatabaseService(uid: user.uid).addSavedList(drug.itemName,
-                drug.itemSeq, drug.category, drug.etcOtcCode, expirationTime, searchListOutput);
+            await DatabaseService(uid: user.uid).addSavedList(
+                drug.itemName,
+                drug.itemSeq,
+                drug.category,
+                drug.etcOtcCode,
+                expirationTime,
+                searchListOutput);
           },
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),

@@ -92,13 +92,6 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   bool pillInfoTab = false;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
-  //     if (_isCareful) _showWarning(context, ['간장애'], widget.drugItemSeq);
-  //   });
-  // }
 
   bool _ifZeroReview = false;
   void _ifNoReview() {
@@ -181,186 +174,120 @@ class _ReviewPageState extends State<ReviewPage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   Drug drug = snapshot.data;
-                  return GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: CustomScrollView(
-                      //physics: PageScrollPhysics(),
-                      controller: _scrollController,
-                      slivers: <Widget>[
-                        SliverToBoxAdapter(
-                          child: _topInfo(context, drug, user),
-                          // Column(
-                          //   children: [
-                          //     _topInfo(context, drug, user),
-                          //     SizedBox(
-                          //       width: double.infinity,
-                          //       height: 10.0,
-                          //       child: Container(
-                          //         color: Colors.grey[200],
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
-                        ),
-                        SliverAppBar(
-                          flexibleSpace: Row(
-                            key: _key2,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-//                              Center(
-//                                child:
-
-//                                TextButton(
-//                                  child: Text(
-//                                    "약정보",
-//                                  ),
-//                                  onPressed: _onTapPillInfo,
-//                                ),
-//                              ),
-
-                              Container(
-                                child: InkWell(
-                                  child: Center(child:
-                                  Text("약정보",
-                                      style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                        color: primary500_light_text,
-                                      ))
+                  return StreamBuilder<UserData>(
+                      stream: DatabaseService(uid: user.uid).userData,
+                      builder: (context, snapshot2) {
+                        if (snapshot2.hasData) {
+                          UserData userData = snapshot2.data;
+                          return GestureDetector(
+                            onTap: () {
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: CustomScrollView(
+                              //physics: PageScrollPhysics(),
+                              controller: _scrollController,
+                              slivers: <Widget>[
+                                SliverToBoxAdapter(
+                                  child:
+                                      _topInfo(context, drug, user, userData),
+                                ),
+                                SliverAppBar(
+                                  flexibleSpace: Row(
+                                    key: _key2,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Container(
+                                        child: InkWell(
+                                          child: Center(child: Text("약정보")),
+                                          onTap: _onTapPillInfo,
+                                          // onTap: () {
+                                          //   _onTapPillInfo;
+                                          // },
+                                        ),
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.black87,
+                                                    width: pillInfoTab == true
+                                                        ? 2.0
+                                                        : 1.0))),
+                                      ),
+                                      Container(
+                                        child: InkWell(
+                                          child: Center(child: Text("리뷰")),
+                                          onTap: _onTapReview,
+                                        ),
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                bottom: BorderSide(
+                                                    color: Colors.black87,
+                                                    width: pillInfoTab == true
+                                                        ? 1.0
+                                                        : 2.0))),
+                                      )
+                                    ],
                                   ),
-                                  onTap: _onTapPillInfo,
-                                  // onTap: () {
-                                  //   _onTapPillInfo;
-                                  // },
+                                  leading: Container(),
+                                  pinned: true,
+                                  backgroundColor: Colors.white,
                                 ),
-                                width: MediaQuery.of(context).size.width / 2,
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.black87,
-                                            width: pillInfoTab == true
-                                                ? 2.0
-                                                : 1.0))),
-                              ),
-                              Container(
-                                child: InkWell(
-                                  child: Center(child:
-                                  Text("리뷰",
-                                      style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                    color: gray300_inactivated,
-                                  ))),
-                                  onTap: _onTapReview,
+                                SliverToBoxAdapter(
+                                    child: Column(
+                                  children: [
+                                    SizedBox(height: 10),
+                                    _underInfo(context, drug, userData),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 10.0,
+                                      child: Container(
+                                        color: Colors.grey[200],
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                                SliverToBoxAdapter(
+                                  child: _totalRating(),
                                 ),
-                                width: MediaQuery.of(context).size.width / 2,
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.black87,
-                                            width: pillInfoTab == true
-                                                ? 1.0
-                                                : 2.0))),
-                              )
-                            ],
-                          ),
-                          leading: Container(),
-                          pinned: true,
-                          backgroundColor: Colors.white,
-                        ),
-                        SliverToBoxAdapter(
-                            child: Column(
-                          children: [
-                            SizedBox(height: 10),
-                            _underInfo(context, widget.drugItemSeq),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 10.0,
-                              child: Container(
-                                color: Colors.grey[200],
-                              ),
+                                SliverToBoxAdapter(
+                                  child: _drugReviews(),
+                                )
+                              ],
                             ),
-                          ],
-                        )),
-                        SliverToBoxAdapter(
-                          child: _totalRating(),
-                        ),
-                        SliverToBoxAdapter(
-                          child: _drugReviews(),
-                        )
-                      ],
-                    ),
-                  );
+                          );
+                        } else {
+                          return Loading();
+                        }
+                      });
                 } else {
                   return Loading();
                 }
               }),
-        )
-
-//            body:  Column(
-//              mainAxisSize: MainAxisSize.max,
-//              children: [
-//                SizedBox(height:10),
-////                _topInfo(context, widget.drugItemSeq),
-//
-//
-//                GetRating(widget.drugItemSeq),
-//                Container(
-//                  height: 4,
-//                  color: Colors.grey[200],
-//                ),
-//                Container(
-//                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-//                    child: Row(
-//                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                      children: <Widget>[
-//                        //TODO EDIT num of reviews
-//                        Text("#",
-//                            style: TextStyle(
-//                              fontSize: 16.5,
-//                              fontWeight: FontWeight.bold,
-//                            )),
-//                        InkWell(
-//                            child: Text('전체리뷰 보기',
-//                                style: TextStyle(
-//                                  fontSize: 14.5,
-//                                )),
-//                            onTap: () {
-//                              //TODO GET ALL REVIEW
-////                          Navigator.push(
-////                              context,
-////                              MaterialPageRoute(
-////                                  builder: (context) => AllReview()));
-//                            }),
-//                      ],
-//                    )),
-//                _searchBar(),
-//                ReviewList(_searchText)
-//              ],
-//            )
-        );
+        ));
   }
 
   /* Top Information */
-  Widget _topInfo(BuildContext context, Drug drug, TheUser user) {
-    return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: user.uid).userData,
-        builder: (context, snapshot2) {
-          if (snapshot2.hasData) {
-            UserData userData = snapshot2.data;
-            bool _isFavorite = userData.favoriteList.contains(drug.itemSeq);
-            bool _isCareful =
-                _carefulDiseaseList(userData.diseaseList, drug.nbDocData)
-                    .isNotEmpty;
+  Widget _topInfo(
+      BuildContext context, Drug drug, TheUser user, UserData userData) {
+    bool _isFavorite = userData.favoriteList.contains(drug.itemSeq);
 
-            return StreamBuilder<List<SavedDrug>>(
-              stream: DatabaseService(uid: user.uid).savedDrugs,
-              builder: (context, snapshot3) {
-                if (snapshot3.hasData) {
-                  List<SavedDrug> savedDrugs = snapshot3.data;
-                  bool _isSaved = false;
-                  for (SavedDrug savedDrug in savedDrugs) {
-                    _isSaved = savedDrug.itemSeq.contains(drug.itemSeq);
-                    if (_isSaved == true) break;
-                  }
+    return StreamBuilder<List<SavedDrug>>(
+      stream: DatabaseService(uid: user.uid).savedDrugs,
+      builder: (context, snapshot3) {
+        if (snapshot3.hasData) {
+          List<SavedDrug> savedDrugs = snapshot3.data;
+          bool _isSaved = false;
+          for (SavedDrug savedDrug in savedDrugs) {
+            _isSaved = savedDrug.itemSeq.contains(drug.itemSeq);
+            if (_isSaved == true) break;
+          }
+
 
                   return Stack(
                     children: [
@@ -515,43 +442,134 @@ class _ReviewPageState extends State<ReviewPage> {
                                   color: gray0_white,
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold
-                                )
+                              )
                             ),
-                            onPressed: () {
-                              if (_isSaved) {
-                                _alreadySaved(context);
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        fullscreenDialog: true,
-                                        builder: (context) {
-                                          if (drug.etcOtcCode == '일반의약품') {
-                                            return ExpirationG(
-                                              drugItemSeq: drug.itemSeq,
-                                            );
-                                          } else {
-                                            return ExpirationS(
-                                              drugItemSeq: drug.itemSeq,
-                                            );
-                                          }
-                                        }));
-                              }
-                            },
                           ),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * (0.8),
+                        child: Text(
+                          _shortenName(drug.itemName),
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 28.0,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ],
-                  );
-                } else {
-                  return Loading();
-                }
-              },
-            );
-          } else {
-            return Loading();
-          }
-        });
+                      SizedBox(height: 10),
+                      Row(children: <Widget>[
+                        Text(
+                          drug.totalRating.toStringAsFixed(1),
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          " (" + drug.numOfReviews.toStringAsFixed(0) + '개)',
+                          style: TextStyle(color: Colors.grey[600]),
+                        )
+                      ]),
+                      Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                        CategoryButton(str: drug.category)
+                      ]),
+                      SizedBox(
+                        height: 20,
+                      )
+                    ]),
+              ),
+              // _isCareful
+              //     ? Positioned(
+              //         top: 0,
+              //         right: 0,
+              //         child: FlatButton(
+              //             child: Column(
+              //               children: [
+              //                 SizedBox(
+              //                   child: Image.asset(
+              //                       'assets/icons/warning_icon.png'),
+              //                   width: 32,
+              //                   height: 32,
+              //                 ),
+              //                 Text(
+              //                   '주의',
+              //                   style: TextStyle(
+              //                     color: Colors.grey,
+              //                   ),
+              //                 )
+              //               ],
+              //             ),
+              //             onPressed: () {
+              //               _showWarning(
+              //                   context,
+              //                   _carefulDiseaseList(
+              //                       userData.diseaseList,
+              //                       drug.nbDocData),
+              //                   drug.itemSeq);
+              //             }))
+              //     : Container(),
+              Positioned(
+                  top: 140,
+                  right: 20,
+                  child: IconButton(
+                      icon: Icon(
+                        _isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: _isFavorite ? Colors.redAccent : null,
+                      ),
+                      onPressed: () async {
+                        if (_isFavorite) {
+                          await DatabaseService(uid: user.uid)
+                              .removeFromFavoriteList(drug.itemSeq);
+                        } else {
+                          _showFavoriteDone(context);
+                          await DatabaseService(uid: user.uid)
+                              .addToFavoriteList(drug.itemSeq);
+                          // _showFavoriteWell(context);
+                        }
+                      })),
+              Positioned(
+                bottom: 20,
+                right: 20,
+                child: ButtonTheme(
+                  minWidth: 20,
+                  height: 30,
+                  child: FlatButton(
+                    color: Colors.teal[300],
+                    child: Text(
+                      '+ 담기',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      if (_isSaved) {
+                        _alreadySaved(context);
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                fullscreenDialog: true,
+                                builder: (context) {
+                                  if (drug.etcOtcCode == '일반의약품') {
+                                    return ExpirationG(
+                                      drugItemSeq: drug.itemSeq,
+                                    );
+                                  } else {
+                                    return ExpirationS(
+                                      drugItemSeq: drug.itemSeq,
+                                    );
+                                  }
+                                }));
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else {
+          return Loading();
+        }
+      },
+    );
   }
 
   String _shortenName(String data) {
@@ -584,81 +602,75 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   /* Top Information - Dialogs */
-  void _showWarning(context, carefulDiseaseList, drugItemSeq) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Column(
+  Widget _warningMessage(context, carefulDiseaseList, drugItemSeq) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      height: 36,
+      decoration: BoxDecoration(
+        // shape: OutlineInputBorder(
+        //     borderSide: BorderSide(
+        //         style: BorderStyle.solid,
+        //         width: 1.0,
+        //         color: gray200),
+        //     borderRadius: BorderRadius.circular(8.0)),
+        color: primary50,
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
             children: [
               SizedBox(
-                  width: 32,
-                  height: 32,
+                  width: 15,
+                  height: 15,
                   child: Image.asset('assets/icons/warning_icon.png')),
-              Text(
-                '주의사항',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              )
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+              SizedBox(width: 6),
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   // Note: Styles for TextSpans must be explicitly defined.
                   // Child text spans will inherit styles from parent
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 12.0,
                     color: Colors.black,
                   ),
                   children: <TextSpan>[
                     TextSpan(
                         text: '${carefulDiseaseList.join(", ")}',
                         style: TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(text: '에 관한 주의사항을 확인해주세요'),
+                    TextSpan(text: '에 관한 주의사항이 있습니다.'),
                   ],
                 ),
               ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(
-                    child: Text(
-                      "닫기",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  TextButton(
-                    child: Text(
-                      "자세히보기",
-                      style: TextStyle(color: Colors.teal[200]),
-                    ),
-                    onPressed: () async {
-                      Navigator.pop(context);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WarningInfo(
-                                    drugItemSeq: drugItemSeq,
-                                    warningList: carefulDiseaseList,
-                                  )));
-                    },
-                  ),
-                ],
-              )
             ],
           ),
-        );
-      },
+          SizedBox(height: 10),
+          ElevatedButton(
+            child: Text(
+              '자세히보기',
+              style: TextStyle(fontSize: 12, color: primary600_bold_text),
+            ),
+            style: ElevatedButton.styleFrom(
+                minimumSize: Size(68, 24),
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                elevation: 0,
+                primary: gray0_white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                    side: BorderSide(color: Colors.grey[300]))),
+            onPressed: () async {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WarningInfo(
+                            drugItemSeq: drugItemSeq,
+                            warningList: carefulDiseaseList,
+                          )));
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -766,9 +778,9 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   /* Under Information */
-  Widget _underInfo(BuildContext context, String drugItemSeq) {
-    return StreamBuilder<Drug>(
-//        key: _key2,
+  Widget _underInfo(BuildContext context, Drug drug, UserData userData) {
+    bool _isCareful =
+        _carefulDiseaseList(userData.diseaseList, drug.nbDocData).isNotEmpty;
 
         stream: DatabaseService(itemSeq: drugItemSeq).drugData,
         builder: (context, snapshot) {
@@ -859,7 +871,6 @@ class _ReviewPageState extends State<ReviewPage> {
                         style: Theme.of(context).textTheme.bodyText2.copyWith(
                           color: gray600,
                         )
-
                     );
                   });
             } else if (type == 'NB') {

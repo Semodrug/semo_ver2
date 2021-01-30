@@ -14,6 +14,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 /*약들의 개수를 length 만큼 보여주고 싶은데 그 length의 인덱스를 어떻게 넘겨주지..?*/
 int num = 0;
@@ -85,8 +86,9 @@ class _HomePageState extends State<HomePage> {
     return StreamBuilder<List<SavedDrug>>(
         stream: DatabaseService(uid: user.uid).savedDrugs,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return LinearProgressIndicator();
-
+          if (!snapshot.hasData) {
+            return LinearProgressIndicator();
+          }
           return _buildList(context, snapshot.data);
         });
   }
@@ -95,6 +97,10 @@ class _HomePageState extends State<HomePage> {
     num = 0;
 
     int count = snapshot.length;
+    if (count == 0) {
+      return _noDrugPage();
+    }
+
     return Column(
       children: [
         SearchBar(),
@@ -106,28 +112,33 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               child: Row(
                 children: <Widget>[
-                  Text('나의 상비약'),
+                  Text('나의 약 보관함',
+                      style: Theme.of(context).textTheme.headline4),
                   SizedBox(width: 8),
-                  Container(
-                      width: 20,
-                      height: 17,
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(width: 0.6, color: Colors.grey[400])
-                          // //bottom:BorderSide(width: 0.6, color: Colors.grey[500]))
-                          ),
-                      child: Center(
-                        child: Text(count.toString(),
-                            style: TextStyle(
-                              color: Colors.tealAccent[700],
-                            )),
-                      )),
+                  // Container(
+                  //     width: 20,
+                  //     height: 17,
+                  //     decoration: BoxDecoration(
+                  //         border:
+                  //             Border.all(width: 0.6, color: Colors.grey[400])
+                  //         // //bottom:BorderSide(width: 0.6, color: Colors.grey[500]))
+                  //         ),
+                  //     child: Center(
+                  //       child: Text(count.toString(),
+                  //           style: Theme.of(context).textTheme.headline4.copyWith(color: primary300_main)),
+                  //     )),
                   // theme 추가
                   Spacer(),
-                  FlatButton(
-                    padding: EdgeInsets.only(left: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: primary300_main, // background
+                    ),
+                    //padding: EdgeInsets.only(left: 10),
                     child: Text('+ 추가하기',
-                        style: TextStyle(color: Colors.tealAccent[700])),
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(color: Colors.white)),
                     onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => AddButton()));
@@ -139,7 +150,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         Divider(
-          thickness: 1,
+          thickness: 0.5,
         ),
         Expanded(
           child: ListView(
@@ -154,8 +165,10 @@ class _HomePageState extends State<HomePage> {
   Widget _buildListItem(BuildContext context, SavedDrug data) {
     TheUser user = Provider.of<TheUser>(context);
     num++;
+    double mw = MediaQuery.of(context).size.width;
 
     /* 너무 긴 이름들 잘라서 보여주기 정보를 바꾸는 건 아님 */
+
     String _checkLongName(SavedDrug data) {
       String newName = data.itemName;
       List splitName = [];
@@ -166,10 +179,15 @@ class _HomePageState extends State<HomePage> {
           newName = splitName[0];
         }
       }
-
+      //미디어 쿼리 기준 width가 370이하면
       if (newName.length > 15) {
-        newName = newName.substring(0, 12);
-        newName = newName + '...';
+        if (mw < 375) {
+          newName = newName.substring(0, 9);
+          newName = newName + '...';
+        } else {
+          newName = newName.substring(0, 12);
+          newName = newName + '...';
+        }
       }
       return newName;
     }
@@ -202,7 +220,6 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-//            builder: (context) => PhilInfoPage(drugItemSeq: data.itemSeq),
             builder: (context) => ReviewPage(data.itemSeq),
           ),
         ),
@@ -228,7 +245,8 @@ class _HomePageState extends State<HomePage> {
                         child: Center(
                           child: Text(
                             num.toString(),
-                            style: TextStyle(fontSize: 12),
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black45),
                           ),
                         ),
                       ),
@@ -249,13 +267,12 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              child: Text(
-                                _checkLongName(data),
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                                child: Text(_checkLongName(data),
+                                    maxLines: 2,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        .copyWith(color: Color(0xFF2C2C2C)))),
                             //SizedBox(height: 2,),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 3),
@@ -270,7 +287,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               data.expiration,
                               style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 13),
+                                  color: Colors.grey[600], fontSize: 11),
                             )
                           ],
                         )),
@@ -278,7 +295,11 @@ class _HomePageState extends State<HomePage> {
                     Align(
                       alignment: Alignment.topRight,
                       child: IconButton(
-                        icon: Icon(Icons.more_vert, size: 20),
+                        icon: Icon(
+                          Icons.more_vert,
+                          size: 20,
+                          color: Color(0xFF898989),
+                        ),
                         onPressed: () {
                           showModalBottomSheet(
                               context: context,
@@ -317,7 +338,8 @@ class _HomePageState extends State<HomePage> {
                                     MaterialButton(
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          _showDeleteDialog(data.itemSeq, user.uid);
+                                          _showDeleteDialog(
+                                              data.itemSeq, user.uid);
 //                                          FirebaseFirestore
 //                                              .instance //user가 가지고 있는 약 data
 //                                              .collection('users')
@@ -366,22 +388,36 @@ class _HomePageState extends State<HomePage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+                Center(
+                    child: Text('정말 삭제하시겠습니까?',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold))),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     TextButton(
-                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+                      child: Text('취소',
+                          style: TextStyle(
+                              color: Colors.black38,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
                     TextButton(
-                      child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+                      child: Text('삭제',
+                          style: TextStyle(
+                              color: Colors.teal[00],
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold)),
                       onPressed: () async {
                         Navigator.of(context).pop();
-                        await DatabaseService(uid: uid).deleteSavedDrugData(record);
+                        await DatabaseService(uid: uid)
+                            .deleteSavedDrugData(record);
                       },
                     ),
                   ],
@@ -389,10 +425,81 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-
         );
       },
     );
+  }
+
+  Widget _noDrugPage() {
+    return Column(children: [
+      SearchBar(),
+      Container(
+        height: 45,
+        margin: EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 16),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Container(
+            child: Row(
+              children: <Widget>[
+                Text('나의 약 보관함',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline4
+                        .copyWith(color: Color(0xFF1F1F1F))),
+                SizedBox(width: 8),
+                // Container(
+                //     width: 20,
+                //     height: 17,
+                //     decoration: BoxDecoration(
+                //         border:
+                //             Border.all(width: 0.6, color: Colors.grey[400])
+                //         // //bottom:BorderSide(width: 0.6, color: Colors.grey[500]))
+                //         ),
+                //     child: Center(
+                //       child: Text(count.toString(),
+                //           style: Theme.of(context).textTheme.headline4.copyWith(color: primary300_main)),
+                //     )),
+                // theme 추가
+                Spacer(),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: primary300_main, // background
+                  ),
+                  //padding: EdgeInsets.only(left: 10),
+                  child: Text('+ 추가하기',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: Colors.white)),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AddButton()));
+                  },
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+      Divider(
+        thickness: 0.5,
+      ),
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 46),
+        child: Center(
+          child: Column(
+            children: [
+              Text('상비약 목록이 비었어요',
+                  style: Theme.of(context).textTheme.headline5),
+              Text(
+                '\'+ 추가하기\' 버튼으로 약을 추가해보세요',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+              )
+            ],
+          ),
+        ),
+      )
+    ]);
   }
 }
 

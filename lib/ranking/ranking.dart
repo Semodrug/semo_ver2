@@ -8,6 +8,7 @@ class RankingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         body: ListView.separated(
             itemBuilder: (context, index) {
               return ListTile(
