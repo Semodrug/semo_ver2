@@ -165,10 +165,10 @@ class _HomePageState extends State<HomePage> {
   Widget _buildListItem(BuildContext context, SavedDrug data) {
     TheUser user = Provider.of<TheUser>(context);
     num++;
-    double width = MediaQuery.of(context).size.width;
+    double mw = MediaQuery.of(context).size.width;
 
     /* 너무 긴 이름들 잘라서 보여주기 정보를 바꾸는 건 아님 */
-    //미디어 쿼리 기준 width가
+
     String _checkLongName(SavedDrug data) {
       String newName = data.itemName;
       List splitName = [];
@@ -179,10 +179,15 @@ class _HomePageState extends State<HomePage> {
           newName = splitName[0];
         }
       }
-
+      //미디어 쿼리 기준 width가 370이하면
       if (newName.length > 15) {
-        newName = newName.substring(0, 12);
-        newName = newName + '...';
+        if (mw < 375) {
+          newName = newName.substring(0, 9);
+          newName = newName + '...';
+        } else {
+          newName = newName.substring(0, 12);
+          newName = newName + '...';
+        }
       }
       return newName;
     }
@@ -290,7 +295,11 @@ class _HomePageState extends State<HomePage> {
                     Align(
                       alignment: Alignment.topRight,
                       child: IconButton(
-                        icon: Icon(Icons.more_vert, size: 20, color: Color(0xFF898989),),
+                        icon: Icon(
+                          Icons.more_vert,
+                          size: 20,
+                          color: Color(0xFF898989),
+                        ),
                         onPressed: () {
                           showModalBottomSheet(
                               context: context,
@@ -432,7 +441,11 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             child: Row(
               children: <Widget>[
-                Text('나의 약 보관함', style: Theme.of(context).textTheme.headline4),
+                Text('나의 약 보관함',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline4
+                        .copyWith(color: Color(0xFF1F1F1F))),
                 SizedBox(width: 8),
                 // Container(
                 //     width: 20,

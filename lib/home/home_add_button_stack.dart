@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:semo_ver2/camera/no_result.dart';
+import 'package:semo_ver2/camera/barcode.dart';
 import 'package:semo_ver2/home/home.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 import 'case_recognition.dart';
 
@@ -48,6 +50,8 @@ class _AddButtonState extends State<AddButton> {
                     }),
               ),
             ),
+            /*
+            //이부분은 검색해서 약 추가하기에지 UI 대한 부분
             Column(
               children: [
                 Row(
@@ -86,9 +90,6 @@ class _AddButtonState extends State<AddButton> {
                           Icons.close,
                           color: Colors.white,
                         ),
-                        // Text(
-                        //     "X",
-                        //     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
                         onPressed: () {
                           Navigator.pushNamed(context, '/bottom_bar');
                         },
@@ -96,29 +97,19 @@ class _AddButtonState extends State<AddButton> {
                     ),
                   ],
                 ),
-
-//            Row(
-//              mainAxisAlignment: MainAxisAlignment.start,
-//              children: [
-//                Container(
-//                  padding: EdgeInsets.symmetric(horizontal: 16),
-//                  height: 25,
-//                  child: Text("검색해서 약 추가하기",
-//                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
-//                ),
-//              ],
-//            ),
                 _goToSearchBar(context),
               ],
-            ),
 
+              //여기까지
+            ),
+            */
             //스낵바처럼 왔따갔따 만들어주는 친구 제스처 디텍트 함
             AnimatedPositioned(
                 curve: Curves.easeInOut,
                 duration: Duration(milliseconds: 200),
                 left: 0,
                 bottom: (showBottomMenu) ? -60 : -(height / 3),
-                child: MenuWidget()),
+                child: FixMenuWidget())// MenuWidget()),
           ],
         ),
       ),
@@ -168,6 +159,146 @@ class _AddButtonState extends State<AddButton> {
   }
 }
 
+class FixMenuWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+      child: Container(
+        color: Colors.white,
+        width: width,
+        height: height/3 + 100,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2.0,horizontal: 10.0),
+          child:
+          Column(
+            children: <Widget>[
+              Container(
+                width: width / 4 * 3.8,
+                height: height / 15,
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Container(
+                        child: Text(
+                          '약 추가하기',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: primary500_light_text),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                width: width / 4 * 3.8,
+                height: height / 10,
+                child: FlatButton(
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: Image.asset('assets/icons/barcode_icon_grey.png'),
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      Container(
+                        child: Center(
+                          child: Text(
+                            "바코드 인식",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Color(0xFF0D0D0D)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              Container(
+                width: width / 4 * 3.8,
+                height: height / 10,
+                child: FlatButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/search');
+                  },
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: Image.asset('assets/icons/search_grey.png'),
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      Container(
+                        child: Center(
+                          child: Text(
+                            "약 이름 검색",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Color(0xFF0D0D0D)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Container(height: 10,decoration: BoxDecoration(
+                  border: Border(bottom:BorderSide(width: 1, color: Color(0XFFA4A4A4))))
+              ),
+              Container(
+                width: width / 4 * 3.8,
+                height: height / 10,
+                child: FlatButton(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      "닫기",
+                      style: TextStyle(fontSize: 14, color: Color(0XFFA4A4A4)),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/*
 class MenuWidget extends StatefulWidget {
   @override
   _MenuWidgetState createState() => _MenuWidgetState();
@@ -225,7 +356,8 @@ class _MenuWidgetState extends State<MenuWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: <Widget>[
-              SizedBox(height: height / 4.5),
+              SizedBox(height: height / 4.3),
+              /*
               Row(children: [
                 Container(
                   width: width / 4,
@@ -350,33 +482,112 @@ class _MenuWidgetState extends State<MenuWidget> {
                       borderRadius: BorderRadius.all(Radius.circular(4))),
                 ),
               ]),
-              SizedBox(
-                height: 20,
+              */
+              Container(
+                width: width / 4 * 3.8,
+                height: height / 15,
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Container(
+                        child: Text(
+                          '약 추가하기',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: primary500_light_text),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
               Container(
                 width: width / 4 * 3.8,
-                height: height / 7,
+                height: height / 10,
                 child: FlatButton(
-                  child: Column(
+                  child: Row(
                     children: <Widget>[
                       SizedBox(height: 10),
-                      SizedBox(
-                        height: 35,
-                        width: 35,
-                        child: Image.asset('assets/icons/camera_icon.png'),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: Image.asset('assets/icons/barcode_icon.png'),
+                        ),
                       ),
+                      SizedBox(width: 15),
                       Container(
                         child: Text(
-                          "촬영해서 약 추가하기",
-                          style:
-                              TextStyle(fontSize: 14, color: Color(0XFFA4A4A4)),
+                          "바코드 인식",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Color(0xFF0D0D0D)),
                           textAlign: TextAlign.center,
                         ),
                       )
                     ],
                   ),
                   onPressed: () {
-                    print('약을 추가하는 페이지!! 인식이 아님!!');
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              Container(
+                width: width / 4 * 3.8,
+                height: height / 10,
+                child: FlatButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/search');
+                  },
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: Image.asset('assets/icons/search_grey.png'),
+                        ),
+                      ),
+                      SizedBox(width: 15),
+                      Container(
+                        child: Text(
+                          "약 이름 검색",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Color(0xFF0D0D0D)),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Container(height: 10,decoration: BoxDecoration(
+                border: Border(bottom:BorderSide(width: 0.6, color: Color(0XFFA4A4A4))))
+              ),
+              Container(
+                width: width / 4 * 3.8,
+                height: height / 10,
+                child: FlatButton(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      "닫기",
+                      style: TextStyle(fontSize: 14, color: Color(0XFFA4A4A4)),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -419,3 +630,7 @@ class CurvePainter extends CustomPainter {
     return true;
   }
 }
+
+*/
+
+
