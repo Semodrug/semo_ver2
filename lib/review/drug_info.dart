@@ -61,7 +61,7 @@ class _ReviewPageState extends State<ReviewPage> {
     double height = renderBox1.size.height /*+ renderBox2.size.height*/ +
         renderBox3.size.height +
         renderBox4.size.height +
-        20;
+        30;
     return height;
   }
 
@@ -76,7 +76,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   void _onTapPillInfo() {
     _scrollController.animateTo(_getPillInfoSize(),
-        duration: Duration(milliseconds: 100), curve: Curves.linear);
+        duration: Duration(milliseconds: 400), curve: Curves.easeOut);
     setState(() {
       pillInfoTab = true;
     });
@@ -84,7 +84,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   void _onTapReview() {
     _scrollController.animateTo(_getReviewSizes(),
-        duration: Duration(milliseconds: 100), curve: Curves.easeOut);
+        duration: Duration(milliseconds: 400), curve: Curves.easeOut);
     setState(() {
       pillInfoTab = false;
     });
@@ -188,6 +188,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                       _topInfo(context, drug, user, userData),
                                 ),
                                 SliverAppBar(
+                                  elevation: 0,
                                   flexibleSpace: Row(
                                     key: _key2,
                                     mainAxisAlignment:
@@ -197,13 +198,10 @@ class _ReviewPageState extends State<ReviewPage> {
                                         child: InkWell(
                                           child: Center(child: Text("약정보",
                                               style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                                color: primary500_light_text,
+                                                color: pillInfoTab == true ? primary500_light_text : gray300_inactivated ,
                                               )
                                           )),
                                           onTap: _onTapPillInfo,
-                                          // onTap: () {
-                                          //   _onTapPillInfo;
-                                          // },
                                         ),
                                         width:
                                             MediaQuery.of(context).size.width /
@@ -211,7 +209,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                         decoration: BoxDecoration(
                                             border: Border(
                                                 bottom: BorderSide(
-                                                    color: Colors.black87,
+                                                    color: pillInfoTab == true ? primary400_line : gray100 ,
                                                     width: pillInfoTab == true
                                                         ? 2.0
                                                         : 1.0))),
@@ -220,7 +218,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                         child: InkWell(
                                           child: Center(child: Text("리뷰",
                                               style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                                color: gray300_inactivated,
+                                                color: pillInfoTab == true ? gray300_inactivated : primary500_light_text  ,
                                               ))),
                                           onTap: _onTapReview,
                                         ),
@@ -230,7 +228,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                         decoration: BoxDecoration(
                                             border: Border(
                                                 bottom: BorderSide(
-                                                    color: Colors.black87,
+                                                    color: pillInfoTab == true ? gray100 : primary400_line,
                                                     width: pillInfoTab == true
                                                         ? 1.0
                                                         : 2.0))),
