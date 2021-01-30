@@ -9,7 +9,6 @@ import 'camera/camera.dart';
 import 'home/home.dart';
 import 'mypage/my_page.dart';
 import 'ranking/ranking.dart';
-import 'drug_info/phil_info.dart';
 import 'review/drug_info.dart';
 
 class BottomBar extends StatefulWidget {
