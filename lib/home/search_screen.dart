@@ -7,7 +7,6 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 
-import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -249,7 +248,7 @@ class _SearchScreenState extends State<SearchScreen> {
         searchList = _searchText;
         assert(searchList != null);
         //검색어 저장 기능 array로 저장해주기
-        userSearchList.add({'searchList': searchList, 'time' : DateTime.now()});
+        userSearchList.add({'searchList': searchList, 'time': DateTime.now()});
       } catch (e) {
         print('Error: $e');
       }
@@ -365,7 +364,7 @@ class _SearchScreenState extends State<SearchScreen> {
             Container(
               padding: EdgeInsets.all(0.0),
               width: double.infinity,
-              height: height - 200,//440.0,
+              height: height - 200, //440.0,
               child: TabBarView(
                 children: [
                   _buildBodyOfAll(context, searchVal),
@@ -462,7 +461,7 @@ class ListDrugOfAll extends StatelessWidget {
         searchList = item_name;
         assert(searchList != null);
         //drug 이름 누르면 저장 기능 array로 저장해주기
-        userSearchList.add({'searchList': searchList, 'time' : DateTime.now()});
+        userSearchList.add({'searchList': searchList, 'time': DateTime.now()});
       } catch (e) {
         print('Error: $e');
       }
@@ -568,7 +567,7 @@ class RecentSearch {
 
   RecentSearch.fromMap(Map<String, dynamic> map, {this.reference})
       : recent = map['searchList'],
-       time = map['time'];
+        time = map['time'];
 
   RecentSearch.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);

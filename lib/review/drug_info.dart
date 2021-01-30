@@ -133,7 +133,6 @@ class _ReviewPageState extends State<ReviewPage> {
           title: Text(
             '약 정보',
             style: Theme.of(context).textTheme.subtitle1,
-
           ),
           elevation: 0,
           flexibleSpace: Container(
@@ -541,7 +540,6 @@ class _ReviewPageState extends State<ReviewPage> {
                     borderRadius: BorderRadius.circular(4.0),
                     side: BorderSide(color: Colors.grey[300]))),
             onPressed: () async {
-              Navigator.pop(context);
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -713,7 +711,10 @@ class _ReviewPageState extends State<ReviewPage> {
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: [Text('자세히 보기'), Icon(Icons.keyboard_arrow_right)],
+                  children: [
+                    Text('약 정보 전체보기'),
+                    Icon(Icons.keyboard_arrow_right)
+                  ],
                 )),
           ]),
     );
@@ -734,7 +735,6 @@ class _ReviewPageState extends State<ReviewPage> {
                     return Text(
                       drug.eeDocData[index].toString(),
                       style: Theme.of(context).textTheme.headline4,
-
                     );
                   });
             } else if (type == 'NB') {
