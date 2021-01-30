@@ -331,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                                                   }));
                                         },
                                         child: Center(
-                                            child: Text("수정하기",
+                                            child: Text("사용기한 수정하기",
                                                 style: TextStyle(
                                                     color: Colors.blue[700],
                                                     fontSize: 16)))),
@@ -339,14 +339,8 @@ class _HomePageState extends State<HomePage> {
                                         onPressed: () {
                                           Navigator.pop(context);
                                           _showDeleteDialog(
-                                              data.itemSeq, user.uid);
-//                                          FirebaseFirestore
-//                                              .instance //user가 가지고 있는 약 data
-//                                              .collection('users')
-//                                              .doc(user.uid)
-//                                              .collection('savedList')
-//                                              .doc(data.itemSeq)
-//                                              .delete();
+                                             context, data.itemSeq, user.uid,);
+//
                                         },
                                         child: Center(
                                             child: Text("삭제하기",
@@ -378,7 +372,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _showDeleteDialog(record, uid) async {
+  void _showDeleteDialog(context, record, uid) async  {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -411,16 +405,64 @@ class _HomePageState extends State<HomePage> {
                     TextButton(
                       child: Text('삭제',
                           style: TextStyle(
-                              color: Colors.teal[00],
+                              color: primary500_light_text,
                               fontSize: 17,
                               fontWeight: FontWeight.bold)),
                       onPressed: () async {
                         Navigator.of(context).pop();
+                        _showDeletedWell(context);
                         await DatabaseService(uid: uid)
                             .deleteSavedDrugData(record);
                       },
                     ),
                   ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDeletedWell(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+          // Navigator.pushReplacementNamed(context, '/bottom_bar');
+        }); // return object of type Dialog
+        return AlertDialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Icon(
+            Icons.check_circle,
+            color: Colors.green,
+            size: 17,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: '약 보관함에서 ',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '삭제 되었습니다.'),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
                 )
               ],
             ),
