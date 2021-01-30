@@ -150,14 +150,14 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
       //padding: const EdgeInsets.symmetric(vertical: 16.0),
       //alignment: Alignment.center,
       width: 400.0,
-      height: 45.0,
+      height: 44.0,
       child: RaisedButton(
         child: Text(
           '로그인',
           style: Theme.of(context)
               .textTheme
               .headline5
-              .copyWith(color: gray0_white),
+              .copyWith(color: gray0_white, fontSize: 15),
         ),
         color: _isIdFilled && _isPasswordFilled ? primary400_line : gray200,
         shape:
