@@ -228,11 +228,8 @@ class _ExpirationGState extends State<ExpirationG> {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
                   minTime: DateTime(2020, 1, 1),
-                  maxTime: DateTime(2100, 12, 31), onChanged: (date) {
-                print('change $date');
-              }, onConfirm: (date) async {
-                print('confirm $date');
-
+                  maxTime: DateTime(2100, 12, 31),
+                  onChanged: (date) {}, onConfirm: (date) async {
                 setState(() {
                   _pickDateTime = date;
                 });
