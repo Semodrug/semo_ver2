@@ -70,12 +70,12 @@ class _WriteReviewState extends State<WriteReview> {
 //        .map(_reviewListFromSnapshot);
 //  }
 
-  void _registerReview() {
+  void _registerReview(nickName) {
     FirebaseFirestore.instance.collection("Reviews").add(
         {
           "seqNum" : widget.drugItemSeq,
           "uid" : auth.currentUser.uid,
-          "id": auth.currentUser.email,
+          // "id": auth.currentUser.email,
           "effect": effect,
           "sideEffect" : sideEffect,
           "starRating": starRating,
@@ -86,9 +86,29 @@ class _WriteReviewState extends State<WriteReview> {
           "noFavorite": noFavorite,
           "registrationDate": DateTime.now(),
           "entpName" : _entpName,
-          "itemName": _itemName
+          "itemName": _itemName,
+          "nickName": nickName
+
+
 //          "name" : "TESTUSER",
         }
+    );
+  }
+
+  Widget _getNickName() {
+    TheUser user = Provider.of<TheUser>(context);
+    return StreamBuilder<UserData> (
+      stream: DatabaseService(uid: user.uid).userData,
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
+          UserData userData = snapshot.data;
+          return Text(
+            userData.nickname
+          );
+        }
+        else
+          return Container();
+      },
     );
   }
 
@@ -694,7 +714,9 @@ class _WriteReviewState extends State<WriteReview> {
               fontSize: 16.0
           );
         else {
-          _registerReview();
+          //await ReviewService(documentId: review.documentId).decreaseFavorite(review.documentId, auth.currentUser.uid);
+          String nickName = await DatabaseService(uid: user.uid).getNickName();
+          _registerReview(nickName);
           Navigator.pop(context);
         }
 //          await findUserWroteReview(itemSeq: widget.drugItemSeq).updateTotalRating(starRating);

@@ -22,6 +22,7 @@ import 'package:semo_ver2/review/all_review.dart';
 import 'package:semo_ver2/review/get_rating.dart';
 import 'package:semo_ver2/review/review_list.dart';
 import 'package:semo_ver2/review/write_review.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 class ReviewPage extends StatefulWidget {
   final String drugItemSeq;
@@ -138,8 +139,10 @@ class _ReviewPageState extends State<ReviewPage> {
           centerTitle: true,
           title: Text(
             '약 정보',
-            style: Theme.of(context).textTheme.subtitle1,
-
+            style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
           ),
           elevation: 0,
           flexibleSpace: Container(
@@ -219,7 +222,12 @@ class _ReviewPageState extends State<ReviewPage> {
 
                               Container(
                                 child: InkWell(
-                                  child: Center(child: Text("약정보")),
+                                  child: Center(child:
+                                  Text("약정보",
+                                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                        color: primary500_light_text,
+                                      ))
+                                  ),
                                   onTap: _onTapPillInfo,
                                   // onTap: () {
                                   //   _onTapPillInfo;
@@ -236,7 +244,11 @@ class _ReviewPageState extends State<ReviewPage> {
                               ),
                               Container(
                                 child: InkWell(
-                                  child: Center(child: Text("리뷰")),
+                                  child: Center(child:
+                                  Text("리뷰",
+                                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                    color: gray300_inactivated,
+                                  ))),
                                   onTap: _onTapReview,
                                 ),
                                 width: MediaQuery.of(context).size.width / 2,
@@ -375,21 +387,24 @@ class _ReviewPageState extends State<ReviewPage> {
                                 children: [
                                   Text(
                                     drug.etcOtcCode,
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                    ),
+                                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                      color: gray300_inactivated,
+                                      fontSize: 14
+                                    )
                                   ),
                                   Text(
                                     '  |  ',
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                    ),
+                                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                          color: gray300_inactivated,
+                                          fontSize: 14
+                                      )
                                   ),
                                   Text(
                                     drug.entpName,
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                    ),
+                                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                          color: gray300_inactivated,
+                                          fontSize: 14
+                                      )
                                   ),
                                 ],
                               ),
@@ -399,25 +414,30 @@ class _ReviewPageState extends State<ReviewPage> {
                                     MediaQuery.of(context).size.width * (0.8),
                                 child: Text(
                                   _shortenName(drug.itemName),
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 28.0,
-                                      fontWeight: FontWeight.bold),
+                                  style: Theme.of(context).textTheme.headline4.copyWith(
+                                      color: gray750_activated,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold
+                                  )
                                 ),
                               ),
                               SizedBox(height: 10),
                               Row(children: <Widget>[
                                 Text(
                                   drug.totalRating.toStringAsFixed(1),
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                        color: gray900,
+                                        fontSize: 14
+                                    )
                                 ),
                                 Text(
                                   " (" +
                                       drug.numOfReviews.toStringAsFixed(0) +
                                       '개)',
-                                  style: TextStyle(color: Colors.grey[600]),
+                                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                        color: gray750_activated,
+                                        fontSize: 12,
+                                    )
                                 )
                               ]),
                               Row(
@@ -491,7 +511,11 @@ class _ReviewPageState extends State<ReviewPage> {
                             color: Colors.teal[300],
                             child: Text(
                               '+ 담기',
-                              style: TextStyle(color: Colors.white),
+                                style: Theme.of(context).textTheme.headline6.copyWith(
+                                  color: gray0_white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold
+                                )
                             ),
                             onPressed: () {
                               if (_isSaved) {
@@ -758,7 +782,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   children: <Widget>[
                     Text(
                       '효능효과',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                          color: gray750_activated,
+                        )
                     ),
                     _drugDocInfo(context, drugItemSeq, 'EE'),
                     Container(
@@ -766,7 +792,9 @@ class _ReviewPageState extends State<ReviewPage> {
                     ),
                     Text(
                       '용법용량',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                          color: gray750_activated,
+                        )
                     ),
                     _drugDocInfo(context, drugItemSeq, 'UD'),
                     Container(
@@ -774,9 +802,14 @@ class _ReviewPageState extends State<ReviewPage> {
                     ),
                     Text(
                       '저장방법',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: gray750_activated,
+                      )
                     ),
-                    Text(drug.storageMethod),
+                    Text(drug.storageMethod,
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: gray600,
+                        )),
                     Container(
                       height: 10,
                     ),
@@ -793,7 +826,11 @@ class _ReviewPageState extends State<ReviewPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text('자세히 보기'),
+                            Text('자세히 보기',
+                                style: Theme.of(context).textTheme.caption.copyWith(
+                                  color: gray500,
+                                  fontSize: 12
+                                )),
                             Icon(Icons.keyboard_arrow_right)
                           ],
                         )),
@@ -819,7 +856,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return Text(
                       drug.eeDocData[index].toString(),
-                      style: Theme.of(context).textTheme.headline4,
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: gray600,
+                        )
 
                     );
                   });
@@ -841,6 +880,9 @@ class _ReviewPageState extends State<ReviewPage> {
                   itemBuilder: (BuildContext context, int index) {
                     return Text(
                       drug.udDocData[index].toString(),
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: gray600,
+                        )
                     );
                   });
             } else {

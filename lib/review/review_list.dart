@@ -66,7 +66,8 @@ class _ReviewListState extends State<ReviewList> {
     String regDate =  year + "." + month + "." + day;
 
     return Container(
-      padding: EdgeInsets.fromLTRB(20,0,20,12),
+      padding: EdgeInsets.fromLTRB(0,10,0,21.5),
+        //padding: EdgeInsets.fromLTRB(20,10,20,21.5),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -76,6 +77,7 @@ class _ReviewListState extends State<ReviewList> {
             children: [
               _starAndIdAndMore(review, context, auth),
               _review(review),
+              Container(height: 11.5),
               _dateAndFavorite(regDate, names, auth, review)
 
             ]));
@@ -83,263 +85,206 @@ class _ReviewListState extends State<ReviewList> {
 
   Widget _starAndIdAndMore(review, context, auth) {
     TheUser user = Provider.of<TheUser>(context);
-    return Row(
-      children: <Widget>[
-        RatingBar.builder(
-          initialRating: review.starRating*1.0,
-          minRating: 1,
-          direction: Axis.horizontal,
-          allowHalfRating: false,
-          itemCount: 5,
-          itemSize: 14,
-          glow: false,
-          itemPadding: EdgeInsets.symmetric(horizontal: 0),
-          unratedColor: Colors.grey[300],
-          itemBuilder: (context, _) => Icon(
-            Icons.star,
-            color: Colors.amberAccent,
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20,0,5,0),
+      child: Row(
+        children: <Widget>[
+          RatingBar.builder(
+            initialRating: review.starRating*1.0,
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: false,
+            itemCount: 5,
+            itemSize: 14,
+            glow: false,
+            itemPadding: EdgeInsets.symmetric(horizontal: 0),
+            unratedColor: Colors.grey[300],
+            itemBuilder: (context, _) => Icon(
+              Icons.star,
+              color: Colors.amberAccent,
+            ),
           ),
-        ),
-        SizedBox(width: 10),
-        Text(review.id, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
-//            SizedBox(width: 145),
-        Expanded(child: Container()),
-        IconButton(
-//          padding: EdgeInsets.only(right:0),
-//          constraints: BoxConstraints(),
-          icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
-          onPressed: () {
+          SizedBox(width: 10),
+          Text(review.nickName, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+          Expanded(child: Container()),
+          IconButton(
+           padding: EdgeInsets.only(right:0),
+           // constraints: BoxConstraints(),
+            icon: Icon(Icons.more_horiz, color: Colors.grey[700], size: 19),
+            onPressed: () {
 //            if(auth.currentUser.uid == review.uid) {
-            if(user.uid == review.uid) {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return SizedBox(
-                        child: Container(
-                            child: Wrap(
-                              children: <Widget>[
-                                MaterialButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      Navigator.push(context, MaterialPageRoute(
-                                        //TODO
-                                          builder: (context) => EditReview(review, "edit")
-                                      ));
-                                    },
-                                    child: Center(child: Text("수정하기",
-                                        style: TextStyle(color: Colors.blue[700],
-                                            fontSize: 16)))
-                                ),
-                                MaterialButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      _showDeleteDialog(review);
-                                    },
-                                    child: Center(child: Text("삭제하기",
-                                        style: TextStyle(color: Colors.red[600],
-                                            fontSize: 16)))
-                                ),
-                                MaterialButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Center(child: Text("취소",
-                                        style: TextStyle(color: Colors.grey[600],
-                                            fontSize: 16)))
-                                )
-                              ],
-                            )
-                        )
-                    );
-                  });
-            }
-            else if(auth.currentUser.uid != review.uid) {
-              showModalBottomSheet(
-                  context: context,
-                  builder: buildBottomSheetAnonymous);
-            }
-          },
-        )
-      ],
+              if(user.uid == review.uid) {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SizedBox(
+                          child: Container(
+                              child: Wrap(
+                                children: <Widget>[
+                                  MaterialButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(context, MaterialPageRoute(
+                                          //TODO
+                                            builder: (context) => EditReview(review, "edit")
+                                        ));
+                                      },
+                                      child: Center(child: Text("수정하기",
+                                          style: TextStyle(color: Colors.blue[700],
+                                              fontSize: 16)))
+                                  ),
+                                  MaterialButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        _showDeleteDialog(review);
+                                      },
+                                      child: Center(child: Text("삭제하기",
+                                          style: TextStyle(color: Colors.red[600],
+                                              fontSize: 16)))
+                                  ),
+                                  MaterialButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Center(child: Text("취소",
+                                          style: TextStyle(color: Colors.grey[600],
+                                              fontSize: 16)))
+                                  )
+                                ],
+                              )
+                          )
+                      );
+                    });
+              }
+              else if(auth.currentUser.uid != review.uid) {
+                showModalBottomSheet(
+                    context: context,
+                    builder: buildBottomSheetAnonymous);
+              }
+            },
+          )
+        ],
+      ),
     );
   }
 
-  Widget _reviewFactor(review, type) {
+  Widget _reviewBox(review, type) {
     return Container(
-      height: 10,
-      width: MediaQuery.of(context).size.width-40,
+      padding: EdgeInsets.all(9.5),
       decoration: BoxDecoration(
         color: gray50,
         border: Border.all(color: gray50),
         borderRadius: BorderRadius.all(Radius.circular(4.0))),
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
+                style: Theme.of(context).textTheme.subtitle2,),
+              Container(width:3),
+              _face(type == "effect" ? review.effect : type == "sideEffect" ? review.sideEffect : "overall",),
+            ],
+          ),
+          Container(height:4),
+          Text(review.effectText),
+        ],
+      )
     );
   }
 
+  Widget _face(face) {
+    if(face == "good" || face == "no")
+      return Icon(
+        Icons.sentiment_satisfied,
+        color: warning,
+        size: 16,
+      );
+    if(face == "soso")
+      return Icon(
+        Icons.sentiment_neutral,
+        color: yellow_line,
+        size: 16,
+      );
+    if(face == "bad" || face == "yes")
+      return Icon(
+        Icons.sentiment_very_dissatisfied,
+        color: primary300_main,
+        size: 16,
+      );
+    if(face == "overall")
+      return Container();
+  }
+
   Widget _review(review) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        //effect
-        _reviewFactor(review, "effect"),
-        if (widget.filter == "sideEffectOnly") Container() else Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-
-            // Container(
-            //     height: 28,
-            //     width: 70,
-            //     decoration: BoxDecoration(
-            //         border: Border.all(
-            //             color: Colors.grey[400], width: 1.0),
-            //         borderRadius:
-            //         BorderRadius.all(Radius.circular(6.0))),
-            //     child: Row(
-            //       crossAxisAlignment: CrossAxisAlignment.center,
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: <Widget>[
-            //         Text("효과", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
-            //         Padding(padding: EdgeInsets.all(2.5)),
-            //         Container(
-            //             width: 17,
-            //             height: 17,
-            //             decoration: BoxDecoration(
-            //               //TODO: COlor: Based on effect color
-            //                 color: review.effect == "soso" ? Color(0xffFFDD66) : review.effect == "bad" ? Color(0xffFF7070) : Color(0xff88F0BE),
-            //                 shape: BoxShape.circle)),
-            //       ],
-            //     )
-            // ),
-            Container(width: MediaQuery.of(context).size.width * 0.025),
-//            Expanded(child: Text(review.effectText, style: TextStyle(fontSize: 17.0))),
-          ],
-        ) ,
-        Container(height:5),
-        widget.filter == "sideEffectOnly" ?
-        Container() :
-        Text(review.effectText, style: TextStyle(fontSize: 17.0)),
-
-        widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
-        Container() :
-        Container(height: MediaQuery.of(context).size.height * 0.01),
-//        SizedBox(height:13),
-        Container(height:5),
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20,0,20,0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          //effect
+          widget.filter == "sideEffectOnly" ? Container()
+           : _reviewBox(review, "effect"),
+          Container(height:4),
 
 
-        //side effect
-        widget.filter == "effectOnly" ?
-          Container() :
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                  height: 28,
-                  width: 80,
-                  //width: 5, height: 5,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Colors.grey[400], width: 1.0),
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(6.0))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("부작용", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
-                      Container(width: MediaQuery.of(context).size.width * 0.0125),
-                      Container(
-                          width: 17,
-                          height: 17,
-                          decoration: BoxDecoration(
-                              color: review.sideEffect == "yes"? Color(0xffFF7070) : Color(0xff88F0BE),
-  //                            color: Colors.redAccent[100],
-                              shape: BoxShape.circle)),
-                    ],
-                  )),
-              Container(width: MediaQuery.of(context).size.width * 0.025),
-  //            Expanded(child: Text(review.sideEffectText, style: TextStyle(fontSize: 17.0)),)
-            ],
-          ),
-        Container(height:5),
-        widget.filter == "effectOnly" ?
-          Container() :
-          Text(review.sideEffectText, style: TextStyle(fontSize: 17.0)),
-        widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
-        Container() :
-        Container(height: MediaQuery.of(context).size.height * 0.01),
-//        SizedBox(height:13),
-        Container(height:5),
+          //side effect
+          widget.filter == "effectOnly" ? Container()
+           : _reviewBox(review, "sideEffect"),
+          Container(height:4),
 
-        //overall
-        widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
-          Container() :
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                  height: 25,
-                  width: 45,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Colors.grey[400], width: 1.0),
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(6.0))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("총평", style: TextStyle(fontSize: 14.5, color: Colors.grey[600])),
-                    ],
-                  )),
-  //            Padding(padding: EdgeInsets.all(5)),
-              Container(width: MediaQuery.of(context).size.width * 0.0145),
-  //            Expanded(child: Text(review.overallText, style: TextStyle(fontSize: 17.0))),
-  //            Container(width: MediaQuery.of(context).size.width * 0.03),
-            ],
-          ),
-        Container(height:5),
-        widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ?
-          Container() :
-          Text(review.overallText, style: TextStyle(fontSize: 17.0)),
-        Container(height: MediaQuery.of(context).size.height * 0.02),
-//        Padding(padding: EdgeInsets.only(top: 6.0)),
-      ],
+          //overall
+          widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ? Container()
+            : _reviewBox(review, "overall"),
+          Container(height:4),
+        ],
+      ),
     );
   }
 
   Widget _dateAndFavorite(regDate, names, auth, review) {
-    return Row(
-      children: <Widget>[
-        Text(regDate,
-            style: TextStyle(color: Colors.grey[500], fontSize: 13)),
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20,0,5,0),
+      child: Row(
+        children: <Widget>[
+          Text(regDate,
+              style: TextStyle(color: Colors.grey[500], fontSize: 13)),
 //        Padding(padding: EdgeInsets.all(18)),
-        Expanded(child: Container( )),
-        Container(
-          child: new Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new GestureDetector(
-                  child: new Icon(
-                    names.contains(auth.currentUser.uid) ? Icons.favorite
-                        : Icons.favorite_border,
+          Expanded(child: Container( )),
+          Container(
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                new GestureDetector(
+                    child: new Icon(
+                      names.contains(auth.currentUser.uid) ? Icons.thumb_up_alt
+                          : Icons.thumb_up_alt_outlined,
 //                                            color: names.contains(auth.currentUser.uid) ?
 //                                                Colors.redAccent[200] : Colors.grey[300],
-                    color: Colors.redAccent[200],
-                    size: 21,
-                  ),
-                  onTap:() async{
-                    if(names.contains(auth.currentUser.uid)) {
-                      await ReviewService(documentId: review.documentId).decreaseFavorite(review.documentId, auth.currentUser.uid);
+                      color: primary400_line,
+                      size: 20,
+                    ),
+                    onTap:() async{
+                      if(names.contains(auth.currentUser.uid)) {
+                        await ReviewService(documentId: review.documentId).decreaseFavorite(review.documentId, auth.currentUser.uid);
+                      }
+                      else {
+                        await ReviewService(documentId: review.documentId).increaseFavorite(review.documentId, auth.currentUser.uid);
+                      }
                     }
-                    else {
-                      await ReviewService(documentId: review.documentId).increaseFavorite(review.documentId, auth.currentUser.uid);
-                    }
-                  }
-              )
-            ],
+                )
+              ],
+            ),
           ),
-        ),
-        Text((review.noFavorite).toString(),
-            style: TextStyle(fontSize: 14, color: Colors.black)),
-        SizedBox(width: 15)
-      ],
+          Container(width:2),
+          Text((review.noFavorite).toString(),
+              style: TextStyle(fontSize: 14, color: Colors.black)),
+          SizedBox(width: 15)
+        ],
+      ),
     );
   }
 
