@@ -205,7 +205,7 @@ class _ExpirationSState extends State<ExpirationS> {
             items: <DropdownMenuItem>[
               DropdownMenuItem(
                 value: 60,
-                child: Text('2개월 - 약국에서 처방받은 알약'),
+                child: Text('[2개월] 약국에서 처방받은 알약'),
                 onTap: () {
                   setState(() {
                     _isSelf = false;
@@ -214,7 +214,7 @@ class _ExpirationSState extends State<ExpirationS> {
               ),
               DropdownMenuItem(
                 value: 14,
-                child: Text('2주 - 개봉된 액체상태의 시럽'),
+                child: Text('[2주] 개봉된 액체상태의 시럽'),
                 onTap: () {
                   setState(() {
                     _isSelf = false;
@@ -223,7 +223,7 @@ class _ExpirationSState extends State<ExpirationS> {
               ),
               DropdownMenuItem(
                 value: 30,
-                child: Text('1개월 - 개봉된 액체상태의 안약'),
+                child: Text('[1개월] 개봉된 액체상태의 안약'),
                 onTap: () {
                   setState(() {
                     _isSelf = false;
@@ -232,7 +232,7 @@ class _ExpirationSState extends State<ExpirationS> {
               ),
               DropdownMenuItem(
                 value: 180,
-                child: Text('6개월 - 개봉된 연고'),
+                child: Text('[6개월] 개봉된 연고'),
                 onTap: () {
                   setState(() {
                     _isSelf = false;
@@ -241,7 +241,7 @@ class _ExpirationSState extends State<ExpirationS> {
               ),
               DropdownMenuItem(
                 value: 0,
-                child: Text('유효기한 직접 입력하기'),
+                child: Text('직접 입력하기'),
                 onTap: () {
                   setState(() {
                     _isSelf = true;
@@ -372,7 +372,7 @@ class _ExpirationSState extends State<ExpirationS> {
   Widget _okButton(context, user, drug, expirationTime) {
     List<String> searchNameList = drug.itemName.split('');
     List<String> searchListOutput = [];
-    for(int i =0; i< searchNameList.length; i++){
+    for (int i = 0; i < searchNameList.length; i++) {
       if (i != searchNameList.length - 1) {
         searchListOutput.add((searchNameList[i]));
       }
@@ -394,8 +394,13 @@ class _ExpirationSState extends State<ExpirationS> {
           onPressed: () async {
             _showSaveWell(context);
             // Navigator.pop(context);
-            await DatabaseService(uid: user.uid).addSavedList(drug.itemName,
-                drug.itemSeq, drug.category, drug.etcOtcCode, expirationTime, searchListOutput);
+            await DatabaseService(uid: user.uid).addSavedList(
+                drug.itemName,
+                drug.itemSeq,
+                drug.category,
+                drug.etcOtcCode,
+                expirationTime,
+                searchListOutput);
           },
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),

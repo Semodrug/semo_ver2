@@ -294,11 +294,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:semo_ver2/camera/no_result.dart';
 import 'package:semo_ver2/home/home.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/db.dart';
-
 import 'package:semo_ver2/home/case_recognition.dart';
 
 class CameraPage extends StatefulWidget {
@@ -482,10 +483,10 @@ class _MenuWidgetState extends State<MenuWidget> {
     VisionText readedText;
 
     final BarcodeDetector barcodeDetector =
-    FirebaseVision.instance.barcodeDetector();
+        FirebaseVision.instance.barcodeDetector();
 
     final List<Barcode> barcodes =
-    await barcodeDetector.detectInImage(visionImage);
+        await barcodeDetector.detectInImage(visionImage);
 
     for (Barcode barcode in barcodes) {
       final String rawValue = barcode.rawValue;
@@ -546,6 +547,8 @@ class _MenuWidgetState extends State<MenuWidget> {
                       ],
                     ),
                     onPressed: () async {
+                      // """here"""
+
                       await pickImage();
 
                       var data = await DatabaseService()
@@ -553,15 +556,15 @@ class _MenuWidgetState extends State<MenuWidget> {
 
                       (barcodeNum != null && data != null)
                           ? Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReviewPage(data),
-                          ))
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReviewPage(data),
+                              ))
                           : Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NoResult(),
-                          ));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NoResult(),
+                              ));
                     },
                   ),
                   padding: EdgeInsets.all(4),
@@ -618,7 +621,7 @@ class _MenuWidgetState extends State<MenuWidget> {
                             height: 24,
                             width: 24,
                             child:
-                            Image.asset('assets/icons/one_drug_icon.png'),
+                                Image.asset('assets/icons/one_drug_icon.png'),
                           ),
                         ),
                         SizedBox(height: 15),
@@ -661,7 +664,7 @@ class _MenuWidgetState extends State<MenuWidget> {
                         child: Text(
                           "촬영해서 약 추가하기",
                           style:
-                          TextStyle(fontSize: 14, color: Color(0XFFA4A4A4)),
+                              TextStyle(fontSize: 14, color: Color(0XFFA4A4A4)),
                           textAlign: TextAlign.center,
                         ),
                       )
@@ -694,7 +697,7 @@ class CurvePainter extends CustomPainter {
         size.width / 2, size.height / 6); //BC
 
     path.quadraticBezierTo(
-      //DE
+        //DE
         (size.width / 4) * 3.2,
         size.height / 6, //size.height / 2,
         size.width,

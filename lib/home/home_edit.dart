@@ -8,7 +8,6 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/home/home_add_button_stack.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/drug_info/phil_info.dart';
 import 'package:semo_ver2/shared/image.dart';
 
 /*약들의 개수를 length 만큼 보여주고 싶은데 그 length의 인덱스를 어떻게 넘겨주지..?*/

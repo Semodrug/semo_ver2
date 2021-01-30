@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/initial/policy_agree.dart';
+import 'package:semo_ver2/initial/1_policy_agree.dart';
 
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/login/login.dart';

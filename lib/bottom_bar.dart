@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:app_settings/app_settings.dart';
+
 import 'package:semo_ver2/home/home_add_button_stack.dart';
 //import 'package:semo_ver2/ranking/past_dart_file/test_ranking.dart';
 
@@ -6,7 +9,6 @@ import 'camera/camera.dart';
 import 'home/home.dart';
 import 'mypage/my_page.dart';
 import 'ranking/ranking.dart';
-import 'drug_info/phil_info.dart';
 import 'review/drug_info.dart';
 
 class BottomBar extends StatefulWidget {
@@ -19,7 +21,7 @@ class _BottomBarState extends State<BottomBar> {
 
   final List<Widget> _widgetOptions = [
     HomePage(),
-   // AddButton(),
+    // AddButton(),
     CameraPage(),
     RankingPage(),
 //    PhilInfoPage(
@@ -29,16 +31,35 @@ class _BottomBarState extends State<BottomBar> {
 //    ReviewPage(),
   ];
 
-  void _onItemTapped(int index) {
+  Future<void> _onItemTapped(int index) async {
     if (index != 1) {
       setState(() {
         _selectedIndex = index;
       });
     } else {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => CameraPage()),
-      );
+      if (await checkIfPermissionGranted()) {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => CameraPage()),
+        );
+      } else {
+        print('권한을 허용해주세요');
+        AppSettings.openAppSettings();
+        // Navigator.of(context).pop();
+      }
     }
+  }
+
+  Future<bool> checkIfPermissionGranted() async {
+    Map<Permission, PermissionStatus> statuses =
+        await [Permission.camera].request();
+
+    bool permitted = true;
+
+    statuses.forEach((permission, permissionStatus) {
+      if (!permissionStatus.isGranted) permitted = false;
+    });
+
+    return permitted;
   }
 
   @override
@@ -98,11 +119,13 @@ class _BottomBarState extends State<BottomBar> {
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: '홈',
+            ),
             BottomNavigationBarItem(
                 icon: Icon(Icons.camera_alt), label: 'camera'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today), label: 'ranking'),
+            BottomNavigationBarItem(icon: Icon(Icons.list), label: '카테고리'),
             // BottomNavigationBarItem(icon: Icon(Icons.create), label: 'review'),
           ],
           currentIndex: _selectedIndex,
