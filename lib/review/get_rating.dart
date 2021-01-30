@@ -5,6 +5,7 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/theme/colors.dart';
 import 'edit_review.dart';
 import 'pie_chart.dart';
 import 'package:flutter/material.dart';
@@ -68,38 +69,61 @@ class _GetRatingState extends State<GetRating> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text("총 평점",
-                              style: TextStyle(
-                                  fontSize: 16.5, fontWeight: FontWeight.bold)),
+                              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                  color: gray750_activated,
+                                  fontSize: 14
+                              )),
                           Padding(padding: EdgeInsets.only(top: 14.0)),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Icon(Icons.star, color: Colors.amber[300], size: 35),
                               //Todo : Rating
-                              Text(ratingResult.toStringAsFixed(2), style: TextStyle(fontSize: 35)),
-                              Text("/5",
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.grey[500])),
-      //                        SizedBox(
-      //                            width:30
-      //                        ),
-                              Expanded(child: Container()),
-                              //pie chart
-                              Column(
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text("효과"),
-                                  //TODO
+                                  Text(ratingResult.toStringAsFixed(2),
+                                      style: Theme.of(context).textTheme.headline1.copyWith(
+                                          color: gray750_activated,
+                                          fontSize: 24
+                                      )),
+                                  Text("/5",
+                                      style: Theme.of(context).textTheme.headline4.copyWith(
+                                          color: gray300_inactivated,
+                                          fontSize: 16
+                                      )),
+
+                                ],) ,
+                              // Expanded(child: Container()),
+
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text("효과",
+                                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                              color: gray600,
+                                          )),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text("부작용",
+                                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                            color: gray600,
+                                          )),
+                                    ],
+                                  ),
                                   MyPieChart("effect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
-      //            _effectPieChart(effectGood, effectSoso, effectBad),
                                 ],
                               ),
-                              Column(
-                                children: [
-                                  Text("부작용"),
-                                  MyPieChart("sideEffect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
-      //            _sideEffectPieChart(sideEffectYes, sideEffectNo),
-                                ],
-                              ),
+                              // Column(
+                              //   children: [
+                              //     Text("부작용"),
+                              //     MyPieChart("sideEffect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
+                              //   ],
+                              // ),
                             ],
                           ),
                           Padding(padding: EdgeInsets.only(top: 20.0)),
