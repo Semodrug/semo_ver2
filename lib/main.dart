@@ -102,7 +102,7 @@ TextTheme _buildTextTheme(TextTheme base) {
     headline3: TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: Color(0xFF666666)),
     headline4: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF2C2C2C)),
     headline5: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF1F1F1F)), //0D0D0D
-    headline6: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[400]),
+    headline6: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF1F1F1F)),
 
     subtitle1: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF1F1F1F)),
     subtitle2: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey[900]),
