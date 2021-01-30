@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 const textInputDecoration = InputDecoration(
-  focusedBorder: UnderlineInputBorder(
-    borderSide: BorderSide(color: Colors.teal),
+  enabledBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: gray100),
   ),
-  hintStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
+  focusedBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: primary300_main),
+  ),
+  hintStyle: TextStyle(fontSize: 16.0, color: gray100),
 );

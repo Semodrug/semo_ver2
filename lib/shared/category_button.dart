@@ -34,7 +34,7 @@ class CategoryButton extends StatelessWidget {
           minimumSize: Size(10, 30),
           padding: EdgeInsets.symmetric(horizontal: 10),
           elevation: 0,
-          primary: gray0_white,
+          primary: gray50,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
               side: BorderSide(color: Colors.grey[300]))),
