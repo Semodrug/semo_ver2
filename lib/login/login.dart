@@ -4,6 +4,7 @@ import 'package:semo_ver2/login/register.dart';
 import 'package:semo_ver2/login/find_password.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 bool _isSecret = true;
 bool _isIdFilled = false;
@@ -73,11 +74,11 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
             _passwordField(),
             SizedBox(height: 40.0),
             _submitButton(),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
             _findPasswordButton(),
             SizedBox(height: 5),
             _registerButton(),
-            SizedBox(height: 20),
+            SizedBox(height: 25),
           ],
         ),
       ),
@@ -87,7 +88,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   Widget _emailField() {
     return TextFormField(
       controller: _emailController,
-      cursorColor: Colors.teal[400],
+      cursorColor: primary400_line,
       decoration: textInputDecoration.copyWith(hintText: '이메일'),
       onChanged: (value) {
         if (value.isNotEmpty) {
@@ -114,13 +115,13 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   Widget _passwordField() {
     return TextFormField(
       controller: _passwordController,
-      cursorColor: Colors.teal[400],
+      cursorColor: primary400_line,
       decoration: textInputDecoration.copyWith(
           hintText: '비밀번호',
           suffixIcon: IconButton(
             icon: Icon(
               Icons.visibility,
-              color: _isSecret ? Colors.grey : Colors.black87,
+              color: _isSecret ? gray200 : Colors.black87,
             ),
             onPressed: () {
               setState(() {
@@ -149,14 +150,16 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
       //padding: const EdgeInsets.symmetric(vertical: 16.0),
       //alignment: Alignment.center,
       width: 400.0,
-      height: 45.0,
+      height: 44.0,
       child: RaisedButton(
         child: Text(
           '로그인',
-          style: TextStyle(color: Colors.white),
+          style: Theme.of(context)
+              .textTheme
+              .headline5
+              .copyWith(color: gray0_white, fontSize: 15),
         ),
-        color:
-            _isIdFilled && _isPasswordFilled ? Colors.teal[400] : Colors.grey,
+        color: _isIdFilled && _isPasswordFilled ? primary400_line : gray200,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         onPressed: () async {
@@ -261,6 +264,8 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
 
   Widget _googleLoginButton() {
     return FlatButton(
+      minWidth: 60,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: EdgeInsets.zero,
       onPressed: () async {
         // setState(() => loading = true);
@@ -284,6 +289,8 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
 
   Widget _kakaoLoginButton() {
     return FlatButton(
+      minWidth: 60,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: EdgeInsets.zero,
       onPressed: () async {
         // setState(() => loading = true);
@@ -305,6 +312,8 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
 
   Widget _appleLoginButton() {
     return FlatButton(
+      minWidth: 60,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: EdgeInsets.zero,
       onPressed: () async {
         // setState(() => loading = true);
