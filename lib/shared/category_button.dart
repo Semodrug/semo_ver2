@@ -32,7 +32,7 @@ class CategoryButton extends StatelessWidget {
       ),
       style: ElevatedButton.styleFrom(
           minimumSize: Size(12, 23),
-          padding: EdgeInsets.symmetric(horizontal: 10, ),
+          padding: EdgeInsets.symmetric(horizontal: 10),
           elevation: 0,
           primary: gray50,
           shape: RoundedRectangleBorder(
