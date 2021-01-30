@@ -55,9 +55,10 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              child: Text(
-                '이약모약',
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              child: SizedBox(
+                child: Image.asset('assets/login/login_logo.png'),
+                width: 120,
+                height: 60,
               ),
               padding: EdgeInsets.all(16),
               alignment: Alignment.center,
@@ -72,8 +73,11 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
             _passwordField(),
             SizedBox(height: 40.0),
             _submitButton(),
+            SizedBox(height: 20),
             _findPasswordButton(),
+            SizedBox(height: 5),
             _registerButton(),
+            SizedBox(height: 20),
           ],
         ),
       ),
@@ -182,16 +186,17 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Text(
         '비밀번호를 잊으셨나요? ',
-        style: TextStyle(fontSize: 13.0, color: Colors.grey[400]),
+        style: Theme.of(context).textTheme.caption,
       ),
       FlatButton(
-        padding: EdgeInsets.zero,
+        height: 20,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         child: Text(
           '비밀번호 재설정',
-          style: TextStyle(
-              decoration: TextDecoration.underline,
-              fontSize: 13.0,
-              color: Colors.grey[400]),
+          style: Theme.of(context)
+              .textTheme
+              .subtitle2
+              .copyWith(decoration: TextDecoration.underline),
         ),
         onPressed: () {
           Navigator.push(
@@ -207,15 +212,17 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Text(
         '혹시, 이약모약 사용이 처음이신가요?',
-        style: TextStyle(fontSize: 12.0, color: Colors.grey[400]),
+        style: Theme.of(context).textTheme.caption,
       ),
       FlatButton(
+        height: 20,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         child: Text(
           '회원가입',
-          style: TextStyle(
-              decoration: TextDecoration.underline,
-              fontSize: 12.0,
-              color: Colors.black),
+          style: Theme.of(context)
+              .textTheme
+              .subtitle2
+              .copyWith(decoration: TextDecoration.underline),
         ),
         onPressed: () {
           // register page로 이동
@@ -254,6 +261,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
 
   Widget _googleLoginButton() {
     return FlatButton(
+      padding: EdgeInsets.zero,
       onPressed: () async {
         // setState(() => loading = true);
         dynamic result = await _auth.signInWithGoogle();
@@ -276,6 +284,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
 
   Widget _kakaoLoginButton() {
     return FlatButton(
+      padding: EdgeInsets.zero,
       onPressed: () async {
         // setState(() => loading = true);
         dynamic result = await _auth.signInWithGoogle();
@@ -296,6 +305,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
 
   Widget _appleLoginButton() {
     return FlatButton(
+      padding: EdgeInsets.zero,
       onPressed: () async {
         // setState(() => loading = true);
         dynamic result = await _auth.signInWithGoogle();

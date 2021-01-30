@@ -198,9 +198,13 @@ class _ExpirationGState extends State<ExpirationG> {
           drug.entpName,
           style: Theme.of(context).textTheme.caption,
         ),
-        Text(
-          drug.itemName,
-          style: Theme.of(context).textTheme.headline5,
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.7,
+          child: Text(
+            drug.itemName,
+            style: Theme.of(context).textTheme.headline5,
+            textAlign: TextAlign.center,
+          ),
         ),
         CategoryButton(str: drug.category),
       ],
@@ -224,11 +228,8 @@ class _ExpirationGState extends State<ExpirationG> {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
                   minTime: DateTime(2020, 1, 1),
-                  maxTime: DateTime(2100, 12, 31), onChanged: (date) {
-                print('change $date');
-              }, onConfirm: (date) async {
-                print('confirm $date');
-
+                  maxTime: DateTime(2100, 12, 31),
+                  onChanged: (date) {}, onConfirm: (date) async {
                 setState(() {
                   _pickDateTime = date;
                 });
@@ -290,6 +291,7 @@ class _ExpirationGState extends State<ExpirationG> {
                     locale: LocaleType.ko); // need currentTime setting?
               },
               child: Container(
+                height: 48,
                 padding: EdgeInsets.symmetric(
                   vertical: 10,
                   horizontal: 16,
@@ -477,53 +479,57 @@ class _ExpirationGState extends State<ExpirationG> {
   // }
 
   Widget _expirationPick() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '유효기한 직접 입력',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        FlatButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              DatePicker.showDatePicker(context,
-                  showTitleActions: true,
-                  minTime: DateTime(2000, 1, 1),
-                  maxTime: DateTime(2030, 12, 31),
-                  onChanged: (date) {}, onConfirm: (date) async {
-                setState(() {
-                  _pickSelfDateTime = date;
-                  _expectedDateString =
-                      DateFormat('yyyy.MM.dd').format(_pickSelfDateTime);
-                });
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '유효기한 직접 입력',
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          FlatButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                DatePicker.showDatePicker(context,
+                    showTitleActions: true,
+                    minTime: DateTime(2000, 1, 1),
+                    maxTime: DateTime(2030, 12, 31),
+                    onChanged: (date) {}, onConfirm: (date) async {
+                  setState(() {
+                    _pickSelfDateTime = date;
+                    _expectedDateString =
+                        DateFormat('yyyy.MM.dd').format(_pickSelfDateTime);
+                  });
+                },
+                    currentTime: DateTime.now(),
+                    locale: LocaleType.ko); // need currentTime setting?
               },
-                  currentTime: DateTime.now(),
-                  locale: LocaleType.ko); // need currentTime setting?
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 16,
-              ),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(4)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${DateFormat('yyyy').format(_pickSelfDateTime)}년 ${DateFormat('MM').format(_pickSelfDateTime)}월 ${DateFormat('dd').format(_pickSelfDateTime)}일',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  Icon(Icons.keyboard_arrow_down)
-                ],
-              ),
-            ))
-      ],
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 16,
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(4)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${DateFormat('yyyy').format(_pickSelfDateTime)}년 ${DateFormat('MM').format(_pickSelfDateTime)}월 ${DateFormat('dd').format(_pickSelfDateTime)}일',
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
+                    Icon(Icons.keyboard_arrow_down)
+                  ],
+                ),
+              )),
+          SizedBox(height: 20),
+        ],
+      ),
     );
   }
 
