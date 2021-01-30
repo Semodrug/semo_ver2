@@ -82,7 +82,8 @@ class _GetRatingState extends State<GetRating> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Image.asset('assets/icons/star_icon.png'),
+                              //#####
+                              Image.asset('assets/icons/star.png'),
                               // Icon(Icons.star, color: Colors.amber[300], size: 35),
                               //Todo : Rating평
                               Container(width: 5),
