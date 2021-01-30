@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/services/auth.dart';
+import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 bool _isSecret = true;
 bool _isIdFilled = false;
@@ -73,19 +75,16 @@ class _RegisterFormState extends State<RegisterForm> {
     return Form(
       key: _formKey,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              child: Text('이메일과 비밀번호를 입력하여\n이약모약 서비스를 이용해보세요',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  )),
+              child: Text('환영합니다\n기본정보를 설정해주세요',
+                  style: Theme.of(context).textTheme.headline3),
             ),
             SizedBox(
-              height: 40,
+              height: 24,
             ),
             emailField(),
             SizedBox(
@@ -112,20 +111,13 @@ class _RegisterFormState extends State<RegisterForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '이메일(아이디)',
-          style: TextStyle(
-              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+          '아이디 (이메일)',
+          style: Theme.of(context).textTheme.subtitle2,
         ),
         TextFormField(
           controller: _emailController,
-          cursorColor: Colors.teal[400],
-          decoration: InputDecoration(
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.teal),
-            ),
-            hintText: '아이디 (이메일)',
-            hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
-          ),
+          cursorColor: primary400_line,
+          decoration: textInputDecoration.copyWith(hintText: 'abc@iymy.com'),
           onChanged: (value) {
             if (value.length > 6) {
               setState(() {
@@ -156,22 +148,17 @@ class _RegisterFormState extends State<RegisterForm> {
       children: [
         Text(
           '비밀번호',
-          style: TextStyle(
-              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.subtitle2,
         ),
         TextFormField(
           controller: _passwordController,
-          cursorColor: Colors.teal[400],
-          decoration: InputDecoration(
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.teal),
-              ),
-              hintText: '비밀번호 (8자리 이상)',
-              hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
+          cursorColor: primary400_line,
+          decoration: textInputDecoration.copyWith(
+              hintText: '8자리 이상',
               suffixIcon: IconButton(
                 icon: Icon(
                   Icons.visibility,
-                  color: _isSecret ? Colors.grey[300] : Colors.grey[600],
+                  color: _isSecret ? gray200 : gray750_activated,
                 ),
                 onPressed: () {
                   setState(() {
@@ -212,11 +199,13 @@ class _RegisterFormState extends State<RegisterForm> {
           child: RaisedButton(
               child: Text(
                 '이약모약 시작하기',
-                style: TextStyle(color: Colors.white),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: gray0_white, fontSize: 15),
               ),
-              color: _isIdFilled && _isPasswordFilled
-                  ? Colors.teal[400]
-                  : Colors.grey,
+              color:
+                  _isIdFilled && _isPasswordFilled ? primary400_line : gray200,
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(10.0)),
               onPressed: () async {

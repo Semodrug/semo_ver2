@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/services/auth.dart';
+import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 bool _isFilled = false;
 final AuthService _auth = AuthService();
@@ -57,29 +59,29 @@ class _FindPasswordState extends State<FindPassword> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('비밀번호 재설정\n이메일을 보내드려요',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        )),
+                    Text(
+                      '비밀번호 재설정\n이메일을 보내드려요',
+                      style: Theme.of(context).textTheme.headline3,
+                    ),
                     SizedBox(
                       height: 10,
                     ),
-                    Text('가입 시 입력한 이메일 주소를 입력해주세요.'),
+                    Text(
+                      '가입 시 입력한 이메일 주소를 입력해주세요.',
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
                     SizedBox(
-                      height: 20,
+                      height: 35,
+                    ),
+                    Text(
+                      '아이디 (이메일)',
+                      style: Theme.of(context).textTheme.subtitle2,
                     ),
                     TextFormField(
                       controller: _emailController,
-                      cursorColor: Colors.teal[400],
-                      decoration: const InputDecoration(
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.teal),
-                        ),
-                        hintText: '아이디(이메일)',
-                        hintStyle:
-                            TextStyle(color: Colors.grey, fontSize: 16.0),
-                      ),
+                      cursorColor: primary400_line,
+                      decoration: textInputDecoration.copyWith(
+                          hintText: 'abc@iymy.com'),
                       onChanged: (value) {
                         if (value.isNotEmpty) {
                           setState(() {
@@ -105,7 +107,7 @@ class _FindPasswordState extends State<FindPassword> {
                       alignment: Alignment.center,
                       child: SizedBox(
                         width: 400.0,
-                        height: 45.0,
+                        height: 44.0,
                         //padding: const EdgeInsets.symmetric(vertical: 16.0),
                         //alignment: Alignment.center,
                         child: RaisedButton(
@@ -113,9 +115,12 @@ class _FindPasswordState extends State<FindPassword> {
                               borderRadius: new BorderRadius.circular(10.0)),
                           child: Text(
                             '전송하기',
-                            style: TextStyle(color: Colors.white),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(color: gray0_white, fontSize: 15),
                           ),
-                          color: Colors.teal[400],
+                          color: _isFilled ? primary400_line : gray200,
                           onPressed: () async {
                             if (_isFilled && _formKey.currentState.validate()) {
                               dynamic result =

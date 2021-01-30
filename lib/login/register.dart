@@ -44,15 +44,20 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             children: [
               SizedBox(
-                height: 50,
+                height: 40,
               ),
               Text('내 약이 궁금할 땐'),
-              Text(
-                '이약모약',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Container(
+                child: SizedBox(
+                  child: Image.asset('assets/login/login_logo.png'),
+                  width: 120,
+                  height: 60,
+                ),
+                padding: EdgeInsets.all(16),
+                alignment: Alignment.center,
               ),
               SizedBox(
-                height: 50,
+                height: 30,
               ),
               FlatButton(
                 child: Image.asset('assets/login/with_email.png'),
@@ -69,21 +74,48 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               Divider(
                 color: Colors.grey,
-                indent: 40,
-                endIndent: 40,
+                indent: 16,
+                endIndent: 16,
               ),
               SizedBox(
                 height: 20,
               ),
-              Image.asset('assets/login/with_google.png'),
-              SizedBox(
-                height: 10,
+              FlatButton(
+                child: Image.asset('assets/login/with_google.png'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RegisterWithEmailPage()),
+                  );
+                },
               ),
-              Image.asset('assets/login/with_kakao.png'),
               SizedBox(
-                height: 10,
+                height: 16,
               ),
-              Image.asset('assets/login/with_apple.png'),
+              FlatButton(
+                child: Image.asset('assets/login/with_kakao.png'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RegisterWithEmailPage()),
+                  );
+                },
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              FlatButton(
+                child: Image.asset('assets/login/with_apple.png'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RegisterWithEmailPage()),
+                  );
+                },
+              ),
             ],
           ),
         ));
