@@ -8,8 +8,6 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/login/login.dart';
 import 'package:semo_ver2/bottom_bar.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'package:semo_ver2/shared/loading.dart';
-import 'package:semo_ver2/services/auth.dart';
 
 class Wrapper extends StatelessWidget {
   @override
@@ -37,17 +35,3 @@ class Wrapper extends StatelessWidget {
     }
   }
 }
-
-// return StreamBuilder<UserData>(
-// stream: DatabaseService(uid: user.uid).userData,
-// builder: (context, snapshot) {
-// UserData userData = snapshot.data;
-//
-// if (userData.agreeDate == null)
-// return PolicyAgreePage();
-// else if (userData.nickname == null)
-// return GetPrivacyPage();
-// else if (userData.isPregnant == null) return GetHealthPage();
-//
-// return BottomBar();
-// });
