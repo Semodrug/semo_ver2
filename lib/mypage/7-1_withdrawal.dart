@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/7-2_withdrawal_done.dart';
 import 'package:semo_ver2/services/auth.dart';
+import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/theme/colors.dart';
+
+bool _isAgree = false;
 
 class WithdrawalPage extends StatefulWidget {
+  final String userId;
+
+  const WithdrawalPage({Key key, this.userId}) : super(key: key);
+
   @override
   _WithdrawalPageState createState() => _WithdrawalPageState();
 }
 
 class _WithdrawalPageState extends State<WithdrawalPage> {
   final AuthService _auth = AuthService();
-  bool _isAgree = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,19 +53,17 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
           ),
         ),
         backgroundColor: Colors.white,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          child: Column(
-            children: [
-              _topWarning(),
-              SizedBox(height: 10),
-              Divider(),
-              SizedBox(height: 10),
-              _checkAgreement(),
-              SizedBox(height: 20),
-              _submitButton(context)
-            ],
-          ),
+        body: Column(
+          children: [
+            SizedBox(height: 24),
+            _topWarning(),
+            SizedBox(height: 10),
+            Divider(),
+            SizedBox(height: 10),
+            _checkAgreement(),
+            SizedBox(height: 40),
+            _submitButton(context)
+          ],
         ));
   }
 
@@ -65,37 +72,65 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
     String str2 = '- 작성된 리뷰는 삭제되지 않으며, 이를 원치 않을 경우 작성한 리뷰를 모두 삭제하신 후 탈퇴해주세요.';
     String str3 = '- 서비스 탈퇴 후, 땡땡정보는 어쩌구에 의하여 몇년간 보관됩니다.';
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(str1),
-        SizedBox(height: 5),
-        Text(str2),
-        SizedBox(height: 5),
-        Text(str3),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            str1,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2
+                .copyWith(color: gray750_activated),
+          ),
+          SizedBox(height: 10),
+          Text(
+            str2,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2
+                .copyWith(color: gray750_activated),
+          ),
+          SizedBox(height: 10),
+          Text(
+            str3,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2
+                .copyWith(color: gray750_activated),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _checkAgreement() {
     return Row(
       children: [
-        Checkbox(
-          activeColor: Colors.teal[300],
-          value: _isAgree,
-          onChanged: (value) {
-            setState(() {
-              _isAgree = !_isAgree;
-            });
-          },
+        Theme(
+          data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+          child: Checkbox(
+            value: _isAgree,
+            activeColor: primary300_main,
+            onChanged: (value) {
+              setState(() {
+                _isAgree = !_isAgree;
+              });
+            },
+          ),
         ),
-        Text('위 사실을 확인하였습니다.')
+        Text(
+          '위 사실을 확인하였습니다.',
+          style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray900),
+        )
       ],
     );
   }
 
   Widget _submitButton(context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
       alignment: Alignment.center,
       child: SizedBox(
         width: 400.0,
@@ -103,14 +138,20 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         child: RaisedButton(
             child: Text(
               '탈퇴하기',
-              style: TextStyle(color: Colors.white),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: gray0_white, fontSize: 15),
             ),
-            color: _isAgree ? Colors.teal[300] : Colors.grey,
+            color: _isAgree ? primary400_line : gray200,
             shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(10.0)),
             onPressed: () async {
               if (_isAgree) {
+                await DatabaseService().deleteUser(widget.userId);
+
                 dynamic result = await _auth.withdrawalAccount();
+
                 if (result is String) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text(result)));

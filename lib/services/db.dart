@@ -73,8 +73,7 @@ class DatabaseService {
         .orderBy('ITEM_NAME', descending: false)
         .limit(limit);
 
-    drugsSnapshots =
-        drugQuery.snapshots().map(_drugListFromSnapshot);
+    drugsSnapshots = drugQuery.snapshots().map(_drugListFromSnapshot);
 
     return drugsSnapshots;
   }
@@ -123,7 +122,6 @@ class DatabaseService {
         totalRating: doc.data()['totalRating'] ?? 0,
         numOfReviews: doc.data()['numOfReviews'] ?? 0,
         searchNameList: doc.data()['searchNameList'] ?? [],
-
       );
     }).toList();
   }
@@ -216,6 +214,10 @@ class DatabaseService {
     return await userCollection.doc(uid).set({
       'agreeDate': agreeDate ?? '',
     });
+  }
+
+  Future<void> deleteUser(userId) async {
+    return await userCollection.doc(userId).delete();
   }
 
   // update user doc
