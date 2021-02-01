@@ -32,71 +32,68 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.teal[200],
-            ),
-            onPressed: () => Navigator.pop(context),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.teal[200],
           ),
-          centerTitle: true,
-          title: Text(
-            widget.title,
-            style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[
-                  Color(0xFFE9FFFB),
-                  Color(0xFFE9FFFB),
-                  Color(0xFFFFFFFF),
-                ])),
-          ),
+          onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: Colors.white,
-        body: Builder(builder: (context) {
-          return GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      topTitle(),
-                      SizedBox(
-                        height: 24,
-                      ),
-                      nickname(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      birthYear(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      sex(),
-                      SizedBox(height: 50.0),
-                      submit(context),
-                    ],
+        centerTitle: true,
+        title: Text(
+          widget.title,
+          style: TextStyle(
+              fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
+                Color(0xFFE9FFFB),
+                Color(0xFFE9FFFB),
+                Color(0xFFFFFFFF),
+              ])),
+        ),
+      ),
+      backgroundColor: Colors.white,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  topTitle(),
+                  SizedBox(
+                    height: 24,
                   ),
-                ),
+                  nickname(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  birthYear(),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  sex(),
+                  SizedBox(height: 50.0),
+                  submit(context),
+                ],
               ),
             ),
-          );
-        }));
+          ),
+        ),
+      ),
+    );
   }
 
   Widget topTitle() {
@@ -123,6 +120,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
           controller: _nicknameController,
           cursorColor: primary400_line,
           decoration: textInputDecoration.copyWith(hintText: '10자 이하의 닉네임'),
+          style: Theme.of(context).textTheme.headline5.copyWith(color: gray900),
           keyboardType: TextInputType.text,
           onChanged: (value) {
             if (value.length >= 1) {
@@ -156,6 +154,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
           controller: _birthYearController,
           cursorColor: primary400_line,
           decoration: textInputDecoration.copyWith(hintText: '출생년도 4자리'),
+          style: Theme.of(context).textTheme.headline5.copyWith(color: gray900),
           keyboardType: TextInputType.number,
           inputFormatters: [birthYearMaskFormatter],
           onChanged: (value) {
@@ -204,7 +203,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
     return Container(
       alignment: Alignment.center,
       child: SizedBox(
-        width: 400.0,
+        width: MediaQuery.of(context).size.width,
         height: 45.0,
         //padding: const EdgeInsets.symmetric(vertical: 16.0),
         //alignment: Alignment.center,
@@ -228,19 +227,19 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                 print(birthYearMaskFormatter.getUnmaskedText().length);
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('입력하신 항목을 다시 확인해주세요')));
-              }
-              if (_nicknameController.text.length >= 10) {
+              } else if (_nicknameController.text.length >= 10) {
                 print(_nicknameController.text);
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('닉네임을 10자 이하로 입력해주세요')));
-              }
-              if (2020 < int.parse(_birthYearController.text) ||
+              } else if (2020 < int.parse(_birthYearController.text) ||
                   int.parse(_birthYearController.text) <= 1900) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text('생년월일을 올바르게 입력해주세요')));
               } else {
                 var result =
                     await DatabaseService().isUnique(_nicknameController.text);
+                // if (_nicknameController.text == widget.userData.nickname)
+                //   result = true;
                 if (result == false) {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));

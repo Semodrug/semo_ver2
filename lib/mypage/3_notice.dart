@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:semo_ver2/models/notice.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/loading.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 class NoticePage extends StatefulWidget {
   @override
@@ -46,31 +47,39 @@ class _NoticePageState extends State<NoticePage> {
           if (snapshot.hasData) {
             List<Notice> notices = snapshot.data;
             return ListView.separated(
-              // reverse: false,
               itemCount: notices.length,
               itemBuilder: (_, index) => Card(
                   elevation: 0,
-                  // shape: Border.all(color: Colors.grey, width: 1),
-                  child: ExpansionTile(
-                    expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
-                    childrenPadding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Theme(
+                    data: Theme.of(context)
+                        .copyWith(accentColor: primary500_light_text),
+                    child: ExpansionTile(
+                      expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+                      childrenPadding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(notices[index].title,
+                              style: TextStyle(
+                                fontSize: 14,
+                              )),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            notices[index].dateString,
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                .copyWith(color: gray300_inactivated),
+                          )
+                        ],
+                      ),
                       children: [
-                        Text(notices[index].title),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          notices[index].dateString,
-                          style: TextStyle(color: Colors.grey),
-                        )
+                        getTextWidgets(notices[index].contents),
                       ],
                     ),
-                    children: [
-                      getTextWidgets(notices[index].contents),
-                    ],
                   )),
               separatorBuilder: (_, index) => Divider(height: 0, thickness: 1),
             );
@@ -89,7 +98,10 @@ class _NoticePageState extends State<NoticePage> {
         children: strings.map((item) {
           return Column(
             children: [
-              Text(item),
+              Text(
+                item,
+                style: Theme.of(context).textTheme.bodyText2,
+              ),
               SizedBox(
                 height: 10,
               )

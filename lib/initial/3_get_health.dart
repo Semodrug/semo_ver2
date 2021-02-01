@@ -77,27 +77,6 @@ class _GetHealthPageState extends State<GetHealthPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // pregnant(),
-                              //                               // TextButton(
-                              //                               //   child: Text(
-                              //                               //     '가족의 약도 관리하시나요?',
-                              //                               //     style: TextStyle(
-                              //                               //       fontFamily: 'Noto Sans KR',
-                              //                               //       color: Colors.grey,
-                              //                               //       fontSize: 12.0,
-                              //                               //       decoration: TextDecoration.underline,
-                              //                               //     ),
-                              //                               //   ),
-                              //                               //   onPressed: () {
-                              //                               //     setState(() {
-                              //                               //       _isFamily = !_isFamily;
-                              //                               //     });
-                              //                               //   },
-                              //                               // ),
-                              //                               // _isFamily ? family() : Container(),
-                              //                               // SizedBox(
-                              //                               //   height: 20.0,
-                              //                               // ),
                               chooseKeywords(),
                               SizedBox(
                                 height: 10,
@@ -155,53 +134,6 @@ class _GetHealthPageState extends State<GetHealthPage> {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget pregnant() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('임산부이신가요?', style: Theme.of(context).textTheme.subtitle1),
-          SizedBox(
-            height: 4.0,
-          ),
-          Row(
-            children: [
-              _exclusiveMultiButton(0, _isKeyword, '해당없음'),
-              SizedBox(width: 10),
-              _exclusiveMultiButton(1, _isKeyword, '임산부'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget family() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('가족 중 노약자가 있으신가요?',
-              style: Theme.of(context).textTheme.subtitle1),
-          SizedBox(
-            height: 4.0,
-          ),
-          Row(
-            children: [
-              _exclusiveMultiButton(0, _isKeyword, '없음'),
-              SizedBox(width: 10),
-              _exclusiveMultiButton(1, _isKeyword, '고령자'),
-              SizedBox(width: 10),
-              _exclusiveMultiButton(2, _isKeyword, '소아'),
-            ],
           ),
         ],
       ),
@@ -299,14 +231,14 @@ class _GetHealthPageState extends State<GetHealthPage> {
           color: primary400_line,
           onPressed: () async {
             if (_isKeyword[1] == true) _keywordList.add('임산부');
-            if (_isKeyword[1] == true) _keywordList.add('고령자');
-            if (_isKeyword[2] == true) _keywordList.add('소아');
-            if (_isKeyword[1] == true) _keywordList.add('간');
-            if (_isKeyword[2] == true) _keywordList.add('신장');
-            if (_isKeyword[3] == true) _keywordList.add('심장');
-            if (_isKeyword[4] == true) _keywordList.add('고혈압');
-            if (_isKeyword[5] == true) _keywordList.add('당뇨');
-            if (_isKeyword[6] == true) _keywordList.add('유당불내증');
+            if (_isKeyword[2] == true) _keywordList.add('고령자');
+            if (_isKeyword[3] == true) _keywordList.add('소아');
+            if (_isKeyword[4] == true) _keywordList.add('간');
+            if (_isKeyword[5] == true) _keywordList.add('신장');
+            if (_isKeyword[6] == true) _keywordList.add('심장');
+            if (_isKeyword[7] == true) _keywordList.add('고혈압');
+            if (_isKeyword[8] == true) _keywordList.add('당뇨');
+            if (_isKeyword[9] == true) _keywordList.add('유당불내증');
 
             if (_selfWritingController.text.isNotEmpty)
               _keywordList.add(_selfWritingController.text);

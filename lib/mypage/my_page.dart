@@ -14,6 +14,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/loading.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 class MyPage extends StatefulWidget {
   @override
@@ -109,41 +110,8 @@ class _MyPageState extends State<MyPage> {
                         _myPageMenu('기타', context, Others()),
                         Container(
                           color: Colors.grey[50],
-                          height: 10,
+                          height: 2,
                         ),
-                        // Container(
-                        //   color: Colors.white,
-                        //   padding: EdgeInsets.fromLTRB(20.0, 0, 10.0, 0),
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       Text(
-                        //         '로그아웃',
-                        //       ),
-                        //       IconButton(
-                        //           icon: Icon(
-                        //             Icons.navigate_next,
-                        //             color: Colors.teal[200],
-                        //           ),
-                        //           onPressed: () async {
-                        //             // TODO: when log-out, we should go to login page by Wrapper
-                        //             await _auth.signOut();
-                        //
-                        //             Navigator.of(context)
-                        //                 .pushNamedAndRemoveUntil('/start',
-                        //                     (Route<dynamic> route) => false);
-                        //
-                        //             // Navigator.pushNamedAndRemoveUntil(context, "/start",
-                        //             //     (Route<dynamic> route) => false);
-                        //             // Navigator.of(context)
-                        //             //     .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-                        //             // Navigator.pushReplacementNamed(context, '/login');
-                        //             // Navigator.pop(context);
-                        //           }),
-                        //     ],
-                        //   ),
-                        // ),
-                        // _myPageMenu('로그아웃', context, RegisterThirdPage()),
                       ],
                     ),
                   );
@@ -168,17 +136,32 @@ class _MyPageState extends State<MyPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '${userData.nickname}님, \n오늘도 건강하세요!',
-                      style: TextStyle(fontSize: 20),
+                    RichText(
+                      textAlign: TextAlign.start,
+                      text: TextSpan(
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline3
+                            .copyWith(color: gray900),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '${userData.nickname}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline2
+                                .copyWith(color: gray900),
+                          ),
+                          TextSpan(
+                            text: '님, \n오늘도 건강하세요!',
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 3,
                     ),
-                    Text(
-                      _auth.userEmail,
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    )
+                    Text(_auth.userEmail,
+                        style: Theme.of(context).textTheme.caption)
                   ],
                 ),
                 // TODO: image picker
@@ -213,19 +196,15 @@ class _MyPageState extends State<MyPage> {
 Widget _myMenu(String name, String count, BuildContext context, var nextPage) {
   return Column(
     children: [
-      Text(
-        name,
-        style: TextStyle(color: Colors.grey, fontSize: 14),
-      ),
+      Text(name,
+          style:
+              Theme.of(context).textTheme.bodyText2.copyWith(color: gray500)),
       TextButton(
-        child: Text(
-          count,
-          style: TextStyle(
-            color: Colors.teal[300],
-            fontSize: 20,
-            decoration: TextDecoration.underline,
-          ),
-        ),
+        child: Text(count,
+            style: Theme.of(context)
+                .textTheme
+                .headline2
+                .copyWith(color: primary500_light_text)),
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => nextPage),
@@ -241,13 +220,15 @@ Widget _myPageMenu(String name, BuildContext context, var nextPage) {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          name,
-        ),
+        Text(name,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2
+                .copyWith(color: gray900, fontWeight: FontWeight.normal)),
         IconButton(
           icon: Icon(
             Icons.navigate_next,
-            color: Colors.teal[200],
+            color: primary400_line,
           ),
           onPressed: () => Navigator.push(
             context,
