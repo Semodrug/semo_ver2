@@ -66,6 +66,19 @@ class DatabaseService {
     return drugsSnapshots;
   }
 
+  //for search from User drugs
+  Stream<List<Drug>> setForSearchFromAll(String searchVal, int limit) {
+    drugQuery = drugQuery
+        .where('searchNameList', arrayContains: searchVal)
+        .orderBy('ITEM_NAME', descending: false)
+        .limit(limit);
+
+    drugsSnapshots =
+        drugQuery.snapshots().map(_drugListFromSnapshot);
+
+    return drugsSnapshots;
+  }
+
   //drug list from snapshot
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
@@ -109,6 +122,8 @@ class DatabaseService {
 
         totalRating: doc.data()['totalRating'] ?? 0,
         numOfReviews: doc.data()['numOfReviews'] ?? 0,
+        searchNameList: doc.data()['searchNameList'] ?? [],
+
       );
     }).toList();
   }
