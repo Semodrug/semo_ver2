@@ -5,11 +5,9 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/initial/3_get_health.dart';
+import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
-// var phoneMaskFormatter = new MaskTextInputFormatter(
-//     mask: '###-####-####', filter: {"#": RegExp(r'[0-9]')});
-// var birthMaskFormatter = new MaskTextInputFormatter(
-//     mask: '####.##.##', filter: {"#": RegExp(r'[0-9]')});
 var birthYearMaskFormatter =
     new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
 
@@ -33,8 +31,6 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
 
   @override
   Widget build(BuildContext context) {
-    TheUser user = Provider.of<TheUser>(context);
-
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -75,13 +71,13 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
               child: Form(
                 key: _formKey,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+                  padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       topTitle(),
                       SizedBox(
-                        height: 40,
+                        height: 24,
                       ),
                       nickname(),
                       SizedBox(
@@ -91,7 +87,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                       SizedBox(
                         height: 20.0,
                       ),
-                      gender(),
+                      sex(),
                       SizedBox(height: 50.0),
                       submit(context),
                     ],
@@ -108,19 +104,8 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '개인 정보 설정',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(
-          height: 6,
-        ),
-        Text(
-          '서비스 이용을 도와드려요.',
-          style: TextStyle(
-              color: Colors.grey[700],
-              fontSize: 12.0,
-              fontWeight: FontWeight.w200),
+          '서비스 이용을 위해\n개인정보를 입력해주세요 :)',
+          style: Theme.of(context).textTheme.headline3,
         ),
       ],
     );
@@ -132,46 +117,15 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
       children: [
         Text(
           '닉네임',
-          style: TextStyle(
-              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.subtitle2.copyWith(color: gray500),
         ),
         TextFormField(
           controller: _nicknameController,
-          cursorColor: Colors.teal[400],
-          decoration: InputDecoration(
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.teal),
-            ),
-            hintText: '닉네임 입력 (10자 이하)',
-            hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
-            // suffixIcon: _checkButton('중복확인')
-            //    OutlineButton(
-            //   color: _isFilled ? Colors.teal : Colors.grey,
-            //   child: Text(
-            //     "중복확인",
-            //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
-            //   ),
-            //   onPressed: () async {
-            //     bool result =
-            //         await DatabaseService().isUnique(nicknameController.text);
-            //
-            //     setState(() {
-            //       if (result == true) _isError = true;
-            //     });
-            //   },
-            // )
-
-            //     TextButton(
-            //   child: Text(
-            //     "중복확인",
-            //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
-            //   ),
-            //   onPressed: () {},
-            // )
-          ),
+          cursorColor: primary400_line,
+          decoration: textInputDecoration.copyWith(hintText: '10자 이하의 닉네임'),
           keyboardType: TextInputType.text,
           onChanged: (value) {
-            if (value.length >= 1 && value.length <= 10) {
+            if (value.length >= 1) {
               setState(() {
                 _isNicknameFilled = true;
               });
@@ -196,18 +150,12 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
       children: [
         Text(
           '출생년도',
-          style: TextStyle(
-              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.subtitle2.copyWith(color: gray500),
         ),
         TextFormField(
           controller: _birthYearController,
-          cursorColor: Colors.teal[400],
-          decoration: InputDecoration(
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.teal),
-              ),
-              hintText: '출생년도',
-              hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0)),
+          cursorColor: primary400_line,
+          decoration: textInputDecoration.copyWith(hintText: '출생년도 4자리'),
           keyboardType: TextInputType.number,
           inputFormatters: [birthYearMaskFormatter],
           onChanged: (value) {
@@ -222,7 +170,7 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
             }
           },
           validator: (String value) {
-            if (value.isEmpty) return "생년월일을 입력하세요.";
+            if (value.isEmpty) return "출생년도를 입력하세요.";
             return null;
           },
         ),
@@ -230,14 +178,13 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
     );
   }
 
-  Widget gender() {
+  Widget sex() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           '성별',
-          style: TextStyle(
-              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.subtitle2.copyWith(color: gray500),
         ),
         SizedBox(height: 5),
         Row(
@@ -266,18 +213,31 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
               borderRadius: new BorderRadius.circular(10.0)),
           child: Text(
             '다음',
-            style: TextStyle(color: Colors.white),
+            style: Theme.of(context)
+                .textTheme
+                .headline5
+                .copyWith(color: gray0_white, fontSize: 15),
           ),
           color: (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled)
-              ? Colors.teal[400]
-              : Colors.grey,
+              ? primary400_line
+              : gray200,
           onPressed: () async {
             if (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled) {
-              // phoneMaskFormatter.getUnmaskedText().length != 11 ||
+              // validation check
               if (birthYearMaskFormatter.getUnmaskedText().length != 4) {
                 print(birthYearMaskFormatter.getUnmaskedText().length);
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('입력하신 항목을 다시 확인해주세요')));
+              }
+              if (_nicknameController.text.length >= 10) {
+                print(_nicknameController.text);
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('닉네임을 10자 이하로 입력해주세요')));
+              }
+              if (2020 < int.parse(_birthYearController.text) ||
+                  int.parse(_birthYearController.text) <= 1900) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('생년월일을 올바르게 입력해주세요')));
               } else {
                 var result =
                     await DatabaseService().isUnique(_nicknameController.text);
@@ -308,9 +268,8 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6.0),
             side: BorderSide(
-                color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
+                color: isPressed[index] ? primary300_main : gray200)),
         color: Colors.white,
-        textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
         onPressed: () {
           setState(() {
@@ -327,12 +286,10 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
             }
           });
         },
-        child: Text(
-          buttonName,
-          style: TextStyle(
-            fontSize: 14.0,
-          ),
-        ),
+        child: Text(buttonName,
+            style: Theme.of(context).textTheme.headline6.copyWith(
+                  color: isPressed[index] ? primary500_light_text : gray400,
+                )),
       ),
     );
   }
