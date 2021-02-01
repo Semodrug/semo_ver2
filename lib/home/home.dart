@@ -931,10 +931,6 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   // width: 63,
                   // height: 20,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: yellow),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: primary300_main, // background
