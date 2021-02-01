@@ -10,6 +10,7 @@ import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 class EditReview extends StatefulWidget {
   Review review;
@@ -104,6 +105,7 @@ class _EditReviewState extends State<EditReview> {
     );
   }
 
+
   Widget _pillInfo(review) {
     //TODO: Bring pill information
     return Container(
@@ -195,7 +197,10 @@ class _EditReviewState extends State<EditReview> {
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text("약을 사용해보셨나요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+            Text("약을 사용해보셨나요?",
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: gray900, fontSize: 16)
+            ),
             SizedBox(height: 10),
             RatingBar.builder(
               itemSize: 48,
@@ -232,7 +237,10 @@ class _EditReviewState extends State<EditReview> {
               },
             ),
             SizedBox(height: 10),
-            Text(starRatingText)
+            Text(starRatingText,
+                style: Theme.of(context).textTheme.caption.copyWith(
+                    color: primary600_bold_text, fontSize: 12)
+            )
           ],
         )
     );
@@ -250,7 +258,9 @@ class _EditReviewState extends State<EditReview> {
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text("약의 효과는 어땠나요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+            Text("약의 효과는 어땠나요?",
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: gray900, fontSize: 16)),
             Padding(padding: EdgeInsets.only(top: 15)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -371,7 +381,10 @@ class _EditReviewState extends State<EditReview> {
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text("약의 부작용은 어떤가요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+            Text("약의 부작용은 없었나요?",
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: gray900, fontSize: 16)
+            ),
             Padding(padding: EdgeInsets.only(top: 15)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -457,7 +470,9 @@ class _EditReviewState extends State<EditReview> {
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text("약에 대한 총평", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+            Text("약에 대한 총평",
+        style: Theme.of(context).textTheme.headline5.copyWith(
+            color: gray900, fontSize: 16)),
 //              Padding(padding: EdgeInsets.only(top: 25)),
 //              Padding(
 //                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),

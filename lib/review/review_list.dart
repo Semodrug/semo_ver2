@@ -197,7 +197,7 @@ class _ReviewListState extends State<ReviewList> {
             ],
           ),
           Container(height:4),
-          Text(review.effectText,
+          Text(type == "effect" ? review.effectText : type == "sideEffect" ? review.sideEffectText : review.overallText,
             style: Theme.of(context).textTheme.subtitle2.copyWith(
                 color: gray600,
               fontSize: 14
