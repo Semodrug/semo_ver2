@@ -196,11 +196,17 @@ class _ReviewPageState extends State<ReviewPage> {
                                     children: [
                                       Container(
                                         child: InkWell(
-                                          child: Center(child: Text("약정보",
-                                              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                                color: pillInfoTab == true ? primary500_light_text : gray300_inactivated ,
-                                              )
-                                          )),
+                                          child: Center(
+                                              child: Text("약정보",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .subtitle1
+                                                      .copyWith(
+                                                        color: pillInfoTab ==
+                                                                true
+                                                            ? primary500_light_text
+                                                            : gray300_inactivated,
+                                                      ))),
                                           onTap: _onTapPillInfo,
                                         ),
                                         width:
@@ -209,17 +215,26 @@ class _ReviewPageState extends State<ReviewPage> {
                                         decoration: BoxDecoration(
                                             border: Border(
                                                 bottom: BorderSide(
-                                                    color: pillInfoTab == true ? primary400_line : gray100 ,
+                                                    color: pillInfoTab == true
+                                                        ? primary400_line
+                                                        : gray100,
                                                     width: pillInfoTab == true
                                                         ? 2.0
                                                         : 1.0))),
                                       ),
                                       Container(
                                         child: InkWell(
-                                          child: Center(child: Text("리뷰",
-                                              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                                color: pillInfoTab == true ? gray300_inactivated : primary500_light_text  ,
-                                              ))),
+                                          child: Center(
+                                              child: Text("리뷰",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .subtitle1
+                                                      .copyWith(
+                                                        color: pillInfoTab ==
+                                                                true
+                                                            ? gray300_inactivated
+                                                            : primary500_light_text,
+                                                      ))),
                                           onTap: _onTapReview,
                                         ),
                                         width:
@@ -228,7 +243,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                         decoration: BoxDecoration(
                                             border: Border(
                                                 bottom: BorderSide(
-                                                    color: pillInfoTab == true ? gray100 : primary400_line,
+                                                    color: pillInfoTab == true
+                                                        ? gray100
+                                                        : primary400_line,
                                                     width: pillInfoTab == true
                                                         ? 1.0
                                                         : 2.0))),
@@ -308,36 +325,38 @@ class _ReviewPageState extends State<ReviewPage> {
                       SizedBox(height: 20),
                       Row(
                         children: [
-                          Text(
-                            drug.etcOtcCode,
-                              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                color: gray300_inactivated,
-                              )
-                          ),
-                          Text(
-                            '  |  ',
-                              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                color: gray300_inactivated,
-                              )
-                          ),
-                          Text(
-                            drug.entpName,
-                              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                color: gray300_inactivated,
-                              )
-                          ),
+                          Text(drug.etcOtcCode,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(
+                                    color: gray300_inactivated,
+                                  )),
+                          Text('  |  ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(
+                                    color: gray300_inactivated,
+                                  )),
+                          Text(drug.entpName,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(
+                                    color: gray300_inactivated,
+                                  )),
                         ],
                       ),
                       SizedBox(height: 4),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * (0.8),
-                        child: Text(
-                          _shortenName(drug.itemName),
-                            style: Theme.of(context).textTheme.headline4.copyWith(
-                              color: gray750_activated,
-                              fontSize: 16
-                            )
-                        ),
+                        child: Text(_shortenName(drug.itemName),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline4
+                                .copyWith(
+                                    color: gray750_activated, fontSize: 16)),
                       ),
                       SizedBox(height: 10),
                       Row(children: <Widget>[
@@ -353,27 +372,26 @@ class _ReviewPageState extends State<ReviewPage> {
                           itemBuilder: (context, _) => Icon(
                             Icons.star,
                             color: yellow,
-
                           ),
                         ),
-                        Container(width:5),
-                        Text(
-                          drug.totalRating.toStringAsFixed(1),
-                            style: Theme.of(context).textTheme.subtitle1.copyWith(
-                              color: gray900,
-                            )
-                        ),
-                        Text(
-                          " (" + drug.numOfReviews.toStringAsFixed(0) + '개)',
-                            style: Theme.of(context).textTheme.subtitle2.copyWith(
-                              color: gray300_inactivated,
-                              fontSize: 12
-                            )
-                        )
+                        Container(width: 5),
+                        Text(drug.totalRating.toStringAsFixed(1),
+                            style:
+                                Theme.of(context).textTheme.subtitle1.copyWith(
+                                      color: gray900,
+                                    )),
+                        Text(" (" + drug.numOfReviews.toStringAsFixed(0) + '개)',
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle2
+                                .copyWith(
+                                    color: gray300_inactivated, fontSize: 12))
                       ]),
                       Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
                         CategoryButton(str: drug.category),
-                        Expanded(child: Container(),),
+                        Expanded(
+                          child: Container(),
+                        ),
                         InkWell(
                           onTap: () async {
                             if (_isFavorite) {
@@ -395,24 +413,31 @@ class _ReviewPageState extends State<ReviewPage> {
                               borderRadius: BorderRadius.circular(4.0),
                             ),
                             child: Icon(
-                              _isFavorite ? Icons.favorite : Icons.favorite_border,
-                              color: _isFavorite ? warning : gray300_inactivated,
+                              _isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color:
+                                  _isFavorite ? warning : gray300_inactivated,
                               size: 20,
                             ),
                           ),
                         ),
-                        Container(width: 8,),
+                        Container(
+                          width: 8,
+                        ),
                         ButtonTheme(
                           minWidth: 20,
                           height: 30,
                           child: FlatButton(
                             color: primary300_main,
-
                             child: Text(
                               '+ 담기',
-                              style: Theme.of(context).textTheme.headline6.copyWith(
-                                color: gray0_white,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                    color: gray0_white,
+                                  ),
                             ),
                             onPressed: () {
                               if (_isSaved) {
@@ -439,7 +464,6 @@ class _ReviewPageState extends State<ReviewPage> {
                         ),
                       ]),
                     ]),
-
               ),
               SizedBox(
                 width: double.infinity,
@@ -473,17 +497,49 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   List _carefulDiseaseList(List diseaseList, List nbDocData) {
-    List newList = new List();
+    print(diseaseList);
+
+    List _searchList = diseaseList;
+    List _resultList = new List();
+
+    if (diseaseList.contains('임산부')) {
+      _searchList.add('임부');
+      _searchList.add('임신');
+      _searchList.add('수유');
+      _searchList.add('모유');
+    }
+
+    if (diseaseList.contains('고령자')) {
+      _searchList.add('노인');
+    }
+
+    if (diseaseList.contains('소아')) {
+      _searchList.add('유아');
+    }
+
+    if (diseaseList.contains('신장')) {
+      _searchList.add('콩팥');
+      _searchList.add('신부전');
+    }
+
+    if (diseaseList.contains('유당불내증')) {
+      _searchList.add('유당분해효소결핍증');
+      _searchList.add('유당분해효소 결핍증');
+      _searchList.add('유당 분해효소 결핍증');
+      _searchList.add('유당 분해 효소 결핍증');
+    }
 
     for (int i = 0; i < nbDocData.length; i++) {
-      for (int j = 0; j < diseaseList.length; j++) {
-        if (nbDocData[i].contains(diseaseList[j])) {
-          if (!newList.contains(diseaseList[j])) newList.add(diseaseList[j]);
+      for (int j = 0; j < _searchList.length; j++) {
+        if (nbDocData[i].contains(_searchList[j])) {
+          if (!_resultList.contains(_searchList[j]))
+            _resultList.add(_searchList[j]);
         }
       }
     }
 
-    return newList;
+    print(_resultList);
+    return _resultList;
   }
 
   /* Top Information - Dialogs */
@@ -516,17 +572,17 @@ class _ReviewPageState extends State<ReviewPage> {
                 text: TextSpan(
                   // Note: Styles for TextSpans must be explicitly defined.
                   // Child text spans will inherit styles from parent
-                    style: Theme.of(context).textTheme.subtitle2.copyWith(
-                      color: gray600,
-                      fontSize: 12
-                    ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      .copyWith(color: gray600, fontSize: 12),
                   children: <TextSpan>[
                     TextSpan(
                         text: '${carefulDiseaseList.join(", ")}',
-                        style: Theme.of(context).textTheme.subtitle1.copyWith(
-                          color: gray900,
-                          fontSize: 12
-                        )),
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(color: gray900, fontSize: 12)),
                     TextSpan(text: '에 관한 주의사항이 있습니다.'),
                   ],
                 ),
@@ -535,13 +591,11 @@ class _ReviewPageState extends State<ReviewPage> {
           ),
           SizedBox(height: 10),
           ElevatedButton(
-            child: Text(
-              '자세히보기',
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                  color: primary600_bold_text,
-                  fontSize: 12
-                )
-            ),
+            child: Text('자세히보기',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(color: primary600_bold_text, fontSize: 12)),
             style: ElevatedButton.styleFrom(
                 minimumSize: Size(68, 24),
                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
@@ -671,7 +725,7 @@ class _ReviewPageState extends State<ReviewPage> {
   /* Under Information */
   Widget _underInfo(BuildContext context, Drug drug, UserData userData) {
     bool _isCareful =
-        _carefulDiseaseList(userData.diseaseList, drug.nbDocData).isNotEmpty;
+        _carefulDiseaseList(userData.keywordList, drug.nbDocData).isNotEmpty;
 
     return Padding(
       key: _key3,
@@ -682,40 +736,34 @@ class _ReviewPageState extends State<ReviewPage> {
             _isCareful
                 ? _warningMessage(
                     context,
-                    _carefulDiseaseList(userData.diseaseList, drug.nbDocData),
+                    _carefulDiseaseList(userData.keywordList, drug.nbDocData),
                     drug.itemSeq)
                 : Container(),
             _isCareful ? SizedBox(height: 20) : Container(),
-            Text(
-              '효능효과',
+            Text('효능효과',
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
-                  color: gray750_activated,
-                )
-            ),
+                      color: gray750_activated,
+                    )),
             _drugDocInfo(context, drug.itemSeq, 'EE'),
             SizedBox(
               height: 10,
             ),
-            Text(
-              '용법용량',
+            Text('용법용량',
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
-                  color: gray750_activated,
-                )
-            ),
+                      color: gray750_activated,
+                    )),
             _drugDocInfo(context, drug.itemSeq, 'UD'),
             SizedBox(
               height: 10,
             ),
-            Text(
-              '저장방법',
+            Text('저장방법',
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
-                  color: gray750_activated,
-                )
-            ),
+                      color: gray750_activated,
+                    )),
             Text(drug.storageMethod,
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
-                  color: gray600,
-                )),
+                      color: gray600,
+                    )),
             SizedBox(
               height: 10,
             ),
@@ -733,10 +781,10 @@ class _ReviewPageState extends State<ReviewPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text('약 정보 전체보기',
-                        style: Theme.of(context).textTheme.caption.copyWith(
-                          color: gray500,
-                          fontSize: 12
-                        )),
+                        style: Theme.of(context)
+                            .textTheme
+                            .caption
+                            .copyWith(color: gray500, fontSize: 12)),
                     Icon(Icons.keyboard_arrow_right)
                   ],
                 )),
@@ -756,12 +804,10 @@ class _ReviewPageState extends State<ReviewPage> {
                   physics: const ClampingScrollPhysics(),
                   itemCount: drug.eeDocData.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Text(
-                      drug.eeDocData[index].toString(),
+                    return Text(drug.eeDocData[index].toString(),
                         style: Theme.of(context).textTheme.bodyText2.copyWith(
-                          color: gray600,
-                        )
-                    );
+                              color: gray600,
+                            ));
                   });
             } else if (type == 'NB') {
               return ListView.builder(
@@ -779,12 +825,10 @@ class _ReviewPageState extends State<ReviewPage> {
                   shrinkWrap: true,
                   itemCount: drug.udDocData.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Text(
-                      drug.udDocData[index].toString(),
+                    return Text(drug.udDocData[index].toString(),
                         style: Theme.of(context).textTheme.bodyText2.copyWith(
-                          color: gray600,
-                        )
-                    );
+                              color: gray600,
+                            ));
                   });
             } else {
               return Container();
@@ -827,8 +871,8 @@ class _ReviewPageState extends State<ReviewPage> {
                       return Text(
                           "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
                           style: Theme.of(context).textTheme.subtitle1.copyWith(
-                              color: gray750_activated,
-                          ));
+                                color: gray750_activated,
+                              ));
                     } else
                       return Loading();
                   }),
@@ -837,10 +881,10 @@ class _ReviewPageState extends State<ReviewPage> {
                   ? Container()
                   : InkWell(
                       child: Text('전체리뷰 보기',
-                          style: Theme.of(context).textTheme.caption.copyWith(
-                              color: gray500,
-                              fontSize: 12
-                          )),
+                          style: Theme.of(context)
+                              .textTheme
+                              .caption
+                              .copyWith(color: gray500, fontSize: 12)),
                       onTap: () {
                         //TODO GET ALL REVIEW
                         Navigator.push(
@@ -856,7 +900,7 @@ class _ReviewPageState extends State<ReviewPage> {
         // ReviewList(_searchText, "all"),
         checkIfNoReview() == true ? Container() : _searchBar(),
         Padding(
-          padding: const EdgeInsets.fromLTRB(20,0,20,5),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
             height: 36,
@@ -873,26 +917,27 @@ class _ReviewPageState extends State<ReviewPage> {
             child: Row(
               children: [
                 SizedBox(
-                    width: 15,
-                    height: 15,
-                    child: Image.asset('assets/icons/warning_icon_green.png'),),
+                  width: 15,
+                  height: 15,
+                  child: Image.asset('assets/icons/warning_icon_green.png'),
+                ),
                 SizedBox(width: 6),
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     // Note: Styles for TextSpans must be explicitly defined.
                     // Child text spans will inherit styles from parent
-                    style: Theme.of(context).textTheme.subtitle2.copyWith(
-                        color: gray600,
-                        fontSize: 12
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        .copyWith(color: gray600, fontSize: 12),
                     children: <TextSpan>[
                       TextSpan(
                           text: "효과 및 부작용은 개인에 따라 다를 수 있습니다.",
-                          style: Theme.of(context).textTheme.subtitle2.copyWith(
-                              color: gray600,
-                              fontSize: 12
-                          )),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle2
+                              .copyWith(color: gray600, fontSize: 12)),
                       // TextSpan(text: '은 개인에 따라 다를 수 있습니다.'),
                     ],
                   ),
@@ -901,7 +946,6 @@ class _ReviewPageState extends State<ReviewPage> {
             ),
           ),
         ),
-
 
         checkIfNoReview() == true
             ? Container(
@@ -922,9 +966,6 @@ class _ReviewPageState extends State<ReviewPage> {
                   ],
                 ))
             : ReviewList(_searchText, "all"),
-
-
-
       ],
     );
   }
@@ -960,8 +1001,8 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                       hintText: '어떤 리뷰를 찾고계세요?',
                       hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
-                        color: gray300_inactivated,
-                      ),
+                            color: gray300_inactivated,
+                          ),
                       contentPadding: EdgeInsets.zero,
                       labelStyle: TextStyle(color: Colors.grey),
                       focusedBorder: OutlineInputBorder(

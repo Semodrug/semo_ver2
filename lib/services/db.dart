@@ -179,7 +179,7 @@ class DatabaseService {
       nickname: snapshot.data()['nickname'] ?? '',
       birthYear: snapshot.data()['birthYear'] ?? '',
       isPregnant: snapshot.data()['isPregnant'] ?? false,
-      diseaseList: snapshot.data()['diseaseList'] ?? [],
+      keywordList: snapshot.data()['keywordList'] ?? [],
       favoriteList: snapshot.data()['favoriteList'] ?? [],
       searchList: snapshot.data()['searchList'] ?? [],
     );
@@ -212,16 +212,15 @@ class DatabaseService {
     });
   }
 
-  Future<void> updateUserHealth(isPregnant, diseaseList) async {
+  Future<void> updateUserHealth(keywordList) async {
     return await userCollection.doc(uid).update({
-      'isPregnant': isPregnant ?? '',
-      'diseaseList': diseaseList ?? [],
+      'keywordList': keywordList ?? [],
     });
   }
 
-  Future<List> getDiseaseList() async {
+  Future<List> getKeywordList() async {
     DocumentSnapshot ds = await userCollection.doc(uid).get();
-    return ds.data()['diseaseList'];
+    return ds.data()['keywordList'];
   }
 
   /* Saved List */
@@ -258,7 +257,11 @@ class DatabaseService {
   }
 
   Future<void> deleteSavedDrugData(String drugItemSeq) async {
-    return await userCollection.doc(uid).collection('savedList').doc(drugItemSeq).delete();
+    return await userCollection
+        .doc(uid)
+        .collection('savedList')
+        .doc(drugItemSeq)
+        .delete();
   }
 
   //get drug list stream
@@ -270,8 +273,8 @@ class DatabaseService {
         .map(_savedDrugListFromSnapshot);
   }
 
-  Future<void> addSavedList(
-      itemName, itemSeq, category, etcOtcCode, expiration, searchNameList) async {
+  Future<void> addSavedList(itemName, itemSeq, category, etcOtcCode, expiration,
+      searchNameList) async {
     return await userCollection
         .doc(uid)
         .collection('savedList')
@@ -319,6 +322,7 @@ class DatabaseService {
     DocumentSnapshot ds = await drugCollection.doc(itemSeq).get();
     return ds.data()["totalRating"];
   }
+
   Future<String> getCategoryOfDrug() async {
     DocumentSnapshot snap = await drugCollection.doc(itemSeq).get();
     return snap.data()["PRDUCT_TYPE"];
