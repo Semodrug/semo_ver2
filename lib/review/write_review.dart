@@ -47,7 +47,7 @@ class _WriteReviewState extends State<WriteReview> {
   String id = '';
   String effect = '';
   String sideEffect = '';
-  double starRating =  3;
+  double starRating =  0;
   String effectText = '';
   String sideEffectText = '';
   String overallText = '';
@@ -420,14 +420,13 @@ class _WriteReviewState extends State<WriteReview> {
               itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
               itemBuilder: (context, _) => Icon(
                   Icons.star,
-//                color: Colors.amber[300],
-                  color: _green
+                  color: primary300_main
               ),
               onRatingUpdate: (rating) {
                 starRating = rating;
                 setState(() {
-                  if(starRating == 0)
-                    starRatingText = "선택하세요.";
+                  //if(starRating == 0)
+                  //  starRatingText = "선택하세요.";
                   if(starRating == 1)
                     starRatingText =  "1점 (별로에요)";
                   if(starRating == 2)
@@ -740,13 +739,22 @@ class _WriteReviewState extends State<WriteReview> {
         effectText = myControllerEffect.text;
         sideEffectText = myControllerSideEffect.text;
         overallText = myControllerOverall.text;
+
+
+
         if(overallText.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
         if(sideEffectText.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+        if(sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
         if(effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
+        if(effect.isEmpty) _warning = "효과 별점을 등록해주세요";
+        // if(starRating == 0) _warning = "별점을 등록해주세요";
+        if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
 
 
 
-        if(effectText.length < 10 || sideEffectText.length < 10 || overallText.length < 10)
+
+        if(effectText.length < 10 || sideEffectText.length < 10 || overallText.length < 10 || starRatingText.isEmpty||
+          effect.isEmpty || effect.isEmpty)
           Fluttertoast.showToast(
               msg: _warning,
               toastLength: Toast.LENGTH_SHORT,
