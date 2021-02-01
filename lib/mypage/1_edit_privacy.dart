@@ -5,6 +5,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/constants.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -243,10 +244,15 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                         SnackBar(content: Text('이미 존재하는 닉네임입니다')));
                   } else {
                     await DatabaseService(uid: user.uid).updateUserPrivacy(
-                      _isSelected[0] ? 'male' : 'female',
-                      _birthYearController.text,
                       _nicknameController.text,
+                      _birthYearController.text,
+                      _isSelected[0] ? 'male' : 'female',
                     );
+
+                    // await ReviewService().updateNickname(
+                    //   user.uid,
+                    //   _nicknameController.text,
+                    // );
                     _showEditedWell(context);
                   }
                 }

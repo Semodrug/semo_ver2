@@ -221,11 +221,11 @@ class DatabaseService {
   }
 
   // update user doc
-  Future<void> updateUserPrivacy(sex, birthYear, nickname) async {
+  Future<void> updateUserPrivacy(nickname, birthYear, sex) async {
     return await userCollection.doc(uid).update({
-      'sex': sex ?? '',
-      'birthYear': birthYear ?? '',
       'nickname': nickname ?? '',
+      'birthYear': birthYear ?? '',
+      'sex': sex ?? '',
     });
   }
 
