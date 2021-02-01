@@ -933,8 +933,8 @@ class _HomePageState extends State<HomePage> {
                 // theme 추가
                 Spacer(),
                 Container(
-                  width: 63,
-                  height: 20,
+                  // width: 63,
+                  // height: 20,
                   decoration: BoxDecoration(
                     border: Border.all(color: yellow),
                     borderRadius: BorderRadius.circular(5),

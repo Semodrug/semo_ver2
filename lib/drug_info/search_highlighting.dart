@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-//TODO: 검색 바 UI 수정
-//TODO: 효능효과 밑의 간격!
-//TODO: 글씨 색이 뭔가 흐릿
+
 String search;
-TextStyle posRes = TextStyle(
+TextStyle posRes =
+        TextStyle(
         fontFamily: 'NotoSansKR',
         fontSize: 14,
         fontWeight: FontWeight.w800,
-        color: Colors.grey[500],
-        backgroundColor: warning.withOpacity(0.3)),
+        color: Color(0xFF666666),
+        backgroundColor: warning.withOpacity(0.3)
+        ),
+
     negRes = TextStyle(
         fontFamily: 'NotoSansKR',
         fontSize: 14,
         fontWeight: FontWeight.w400,
-        color: Colors.grey[500],
+        color: gray600,//Color(0xFF666666),
         backgroundColor: Colors.white);
 
 TextSpan searchMatch(String match) {
@@ -100,8 +101,16 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
     }
     //잘라져 있는 형태라면 이부분을 없애면 될 거 같다.
     textFinish = textFinish.replaceAll(" \"", "\n\"");
+    textFinish = textFinish.substring(0, textFinish.length - 1);
 
-    return RichText(textScaleFactor: 1.08, text: searchMatch(textFinish));
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3.0),
+      child: RichText(textScaleFactor: 1.08,
+          text: searchMatch(textFinish),
+
+
+      ),
+    );
   }
 
   Widget _alreadyText(BuildContext context, String text) {
@@ -110,139 +119,68 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: Container(
-            width: double.infinity,
-            height: 35,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              color: Colors.grey[200],
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                    child: TextField(
-                  onChanged: (t) {
-                    setState(() {
-                      search = t;
-                    });
-                  },
-                  focusNode: focusNode,
-                  style: TextStyle(fontSize: 15),
-                  autofocus: true,
-                  controller: _filter,
-                  decoration: InputDecoration(
-                    fillColor: Colors.white12,
-                    filled: true,
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                      size: 20,
-                    ),
-                    suffixIcon: IconButton(
-                      icon:
-                          Icon(Icons.cancel, size: 20, color: Colors.teal[400]),
-                      onPressed: () {
-                        setState(() {
-                          _filter.clear();
-                          search = "";
-                        });
-                      },
-                    ),
-                    //hintText: '어떤 약 정보를 찾고 계세요?',
-                    labelStyle: TextStyle(color: Colors.grey),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                  ),
-                )),
-              ],
-            ),
-          ),
-        ),
-        //Text('약 정보', style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),),
-        leading: SizedBox(
-          //width: 20,
-          //height: 20,
-          child: IconButton(
-              onPressed: () {
-                //Navigator.pushNamed(context, '/bottom_bar');
-                Navigator.pop(context);
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                size: 25,
-                color: Colors.teal[400],
-              )),
-        ),
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
-        ),
-      ),
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+      body:
+
+      Padding(
+        padding: const EdgeInsets.fromLTRB(20, 10, 10, 20),
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
               child: Column(
+                children: [_searchBar(context)],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Column(
                 children: [
                   SizedBox(
-                    height: 7,
+                    height: 18,
                   ),
                   Scrollbar(
-                      child: SingleChildScrollView(
+                      child: Container(
+                        height: height - 90, //440.0,
+                        child: SingleChildScrollView(
                     child: Column(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '효능효과',
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
-                            _changeToText(context, widget.infoEE),
-                            Divider(height: 30),
-                            Text('용법용량',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15)),
-                            _changeToText(context, widget.infoUD),
-                            Divider(height: 30),
-                            Text('저장방법',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15)),
-                            _alreadyText(context, widget.storage),
-                            Divider(height: 30),
-                            Text('회사명',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15)),
-                            _alreadyText(context, widget.entp_name),
-                            Divider(height: 30),
-                            Text('주의사항',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15)),
-                            _changeToText(context, widget.infoNB),
-                          ],
-                        ),
-                      ],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '효능효과',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                         // SizedBox(height: 5,),
+                          _changeToText(context, widget.infoEE),
+                          Divider(height: 16),
+                          Text('용법용량',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                          //SizedBox(height: 5,),
+                          _changeToText(context, widget.infoUD),
+                          Divider(height: 16),
+                          Text('저장방법',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                         // SizedBox(height: 5,),
+                          _alreadyText(context, widget.storage),
+                          Divider(height: 16),
+                          Text('회사명',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                         // SizedBox(height: 5,),
+                          _alreadyText(context, widget.entp_name),
+                          Divider(height: 16),
+                          Text('주의사항',
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                         // SizedBox(height: 5,),
+                          _changeToText(context, widget.infoNB),
+                        ],
                     ),
-                  ))
+                  ),
+                      ))
                 ],
               ),
             ),
@@ -251,11 +189,100 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
       ),
     );
   }
-}
 
-// for test
-final text = '''
-Call me Ishmael. Some years ago—never mind how long precisely—having
-of the world. '''
-    .replaceAll("", "\n")
-    .replaceAll("  ", "");
+  Widget _searchBar(BuildContext context) {
+
+    return Row(
+      children: [
+        SizedBox(
+          width: 10,
+          child: FlatButton(
+              //padding: EdgeInsets.only(left: 10),
+              onPressed: () {
+                Navigator.pop(context);
+                //Navigator.pushNamed(context, '/bottom_bar');
+              },
+              child: Icon(Icons.arrow_back, color: primary300_main,)),
+        ),
+        Spacer(),
+        Container(
+          width: 300,
+          height: 35,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            color: Colors.grey[200],
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                  child: TextFormField(
+                    onChanged: (t) {
+                      setState(() {
+                        search = t;
+                      });
+                    },
+                    cursorColor: Colors.teal[400],
+                    focusNode: focusNode,
+                    style: TextStyle(fontSize: 15),
+                    autofocus: true,
+                    controller: _filter,
+                    decoration: InputDecoration(
+                      //여기서 언덜라인 없애주기
+                      border: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      fillColor: Colors.white12,
+                      filled: true,
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
+                      ),
+                      suffixIcon: IconButton(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        icon: Icon(
+                          Icons.cancel,
+                          size: 20,
+                          color: Colors.teal,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _filter.clear();
+                          });
+                        },
+                      ),
+                      hintText: '어떤 정보를 찾고 계신가요',
+                      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      labelStyle: TextStyle(color: Colors.grey),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent)),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide(color: Colors.transparent)),
+                    ),
+                  )
+
+              ),
+            ],
+          ),
+        ),
+        //TODO:수미가 원하는 디자인
+        //Spacer(),
+        // SizedBox(
+        //   width: 50,
+        //   child: FlatButton(
+        //       padding: EdgeInsets.only(right: 10),
+        //       onPressed: () {
+        //         Navigator.pop(context);
+        //         //Navigator.pushNamed(context, '/bottom_bar');
+        //       },
+        //       child: Text('취소')),
+        // )
+      ],
+    );
+  }
+
+}
