@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/7-1_withdrawal.dart';
 import 'package:semo_ver2/services/auth.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 class Others extends StatelessWidget {
   final AuthService _auth = AuthService();
@@ -51,18 +52,19 @@ class Others extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '회원탈퇴',
-                      ),
+                      Text('회원 탈퇴',
+                          style: Theme.of(context).textTheme.bodyText2.copyWith(
+                              color: gray900, fontWeight: FontWeight.normal)),
                       IconButton(
                         icon: Icon(
                           Icons.navigate_next,
-                          color: Colors.teal[200],
+                          color: primary400_line,
                         ),
                         onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => WithdrawalPage()),
+                              builder: (context) =>
+                                  WithdrawalPage(userId: user.uid)),
                         ),
                       ),
                     ],
@@ -73,18 +75,17 @@ class Others extends StatelessWidget {
                   height: 2,
                 ),
                 Container(
-                  // color: Colors.white,
-                  padding: EdgeInsets.fromLTRB(20.0, 0, 10.0, 0),
+                  padding: EdgeInsets.fromLTRB(20.0, 0, 12.0, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '로그아웃',
-                      ),
+                      Text('로그아웃',
+                          style: Theme.of(context).textTheme.bodyText2.copyWith(
+                              color: gray900, fontWeight: FontWeight.normal)),
                       IconButton(
                           icon: Icon(
                             Icons.navigate_next,
-                            color: Colors.teal[200],
+                            color: primary400_line,
                           ),
                           onPressed: () async {
                             _showWarning(context);
@@ -94,7 +95,7 @@ class Others extends StatelessWidget {
                 ),
                 Container(
                   color: Colors.grey[50],
-                  height: 10,
+                  height: 2,
                 ),
               ],
             ));
@@ -107,37 +108,60 @@ class Others extends StatelessWidget {
         return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Text(
-            '정말 로그아웃하시겠어요?',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-          ),
+          // title:
           content: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 18),
+              Text('정말 로그아웃하시겠어요?',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 24),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
+                  ElevatedButton(
                     child: Text(
-                      "취소",
-                      style: TextStyle(color: Colors.grey),
+                      '취소',
+                      style: TextStyle(fontSize: 12, color: primary400_line),
                     ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(100, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: BorderSide(color: gray75))),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  TextButton(
+                  SizedBox(width: 16),
+                  ElevatedButton(
                     child: Text(
-                      "로그아웃",
-                      style: TextStyle(color: Colors.teal[200]),
+                      '로그아웃',
+                      style: TextStyle(fontSize: 12, color: gray0_white),
                     ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(100, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: primary300_main,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: BorderSide(color: gray75))),
                     onPressed: () async {
                       await _auth.signOut();
 
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           '/start', (Route<dynamic> route) => false);
                     },
-                  ),
+                  )
                 ],
               )
             ],

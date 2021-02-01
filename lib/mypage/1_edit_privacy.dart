@@ -5,6 +5,9 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 var birthYearMaskFormatter =
     new MaskTextInputFormatter(mask: '####', filter: {"#": RegExp(r'[0-9]')});
@@ -33,17 +36,17 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
 
   @override
   void dispose() {
-    _birthYearController.dispose();
     _nicknameController.dispose();
+    _birthYearController.dispose();
     super.dispose();
   }
 
   void initState() {
     super.initState();
+    _nicknameController.text = widget.userData.nickname;
+    _birthYearController.text = widget.userData.birthYear;
     _isSelected =
         (widget.userData.sex == 'female') ? [false, true] : [true, false];
-    _birthYearController.text = widget.userData.birthYear;
-    _nicknameController.text = widget.userData.nickname;
   }
 
   @override
@@ -85,15 +88,14 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
           child: Form(
             key: _formKey,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  topTitle(widget.userData),
                   SizedBox(
-                    height: 40,
+                    height: 24,
                   ),
-                  gender(),
+                  nickname(),
                   SizedBox(
                     height: 20.0,
                   ),
@@ -101,7 +103,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  nickname(),
+                  sex(),
                   SizedBox(height: 50.0),
                   submit(context),
                 ],
@@ -113,84 +115,22 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
     );
   }
 
-  Widget topTitle(userData) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${userData.nickname}님',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              _auth.userEmail,
-              style: TextStyle(fontSize: 12, color: Colors.grey),
-            )
-          ],
-        ),
-        // TODO: image picker
-        IconButton(
-          icon: Icon(
-            Icons.person,
-            color: Colors.teal[200],
-          ),
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
-
   Widget nickname() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           '닉네임',
-          style: TextStyle(
-              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.subtitle2.copyWith(color: gray500),
         ),
         TextFormField(
           controller: _nicknameController,
-          cursorColor: Colors.teal[400],
-          decoration: InputDecoration(
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.teal),
-            ),
-            hintText: '닉네임 입력 (10자 이하)',
-            hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0),
-            // suffixIcon: _checkButton('중복확인')
-            //    OutlineButton(
-            //   color: _isFilled ? Colors.teal : Colors.grey,
-            //   child: Text(
-            //     "중복확인",
-            //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
-            //   ),
-            //   onPressed: () async {
-            //     bool result =
-            //         await DatabaseService().isUnique(nicknameController.text);
-            //
-            //     setState(() {
-            //       if (result == true) _isError = true;
-            //     });
-            //   },
-            // )
-
-            //     TextButton(
-            //   child: Text(
-            //     "중복확인",
-            //     style: TextStyle(color: _isFilled ? Colors.teal : Colors.grey),
-            //   ),
-            //   onPressed: () {},
-            // )
-          ),
+          cursorColor: primary400_line,
+          decoration: textInputDecoration.copyWith(hintText: '10자 이하의 닉네임'),
+          style: Theme.of(context).textTheme.headline5.copyWith(color: gray900),
           keyboardType: TextInputType.text,
           onChanged: (value) {
-            if (value.length >= 1 && value.length <= 10) {
+            if (value.length >= 1) {
               setState(() {
                 _isNicknameFilled = true;
               });
@@ -215,18 +155,13 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
       children: [
         Text(
           '출생년도',
-          style: TextStyle(
-              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.subtitle2.copyWith(color: gray500),
         ),
         TextFormField(
           controller: _birthYearController,
-          cursorColor: Colors.teal[400],
-          decoration: InputDecoration(
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.teal),
-              ),
-              hintText: '출생년도',
-              hintStyle: TextStyle(color: Colors.grey[300], fontSize: 16.0)),
+          cursorColor: primary400_line,
+          decoration: textInputDecoration.copyWith(hintText: '출생년도 4자리'),
+          style: Theme.of(context).textTheme.headline5.copyWith(color: gray900),
           keyboardType: TextInputType.number,
           inputFormatters: [birthYearMaskFormatter],
           onChanged: (value) {
@@ -241,7 +176,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
             }
           },
           validator: (String value) {
-            if (value.isEmpty) return "생년월일을 입력하세요.";
+            if (value.isEmpty) return "출생년도를 입력하세요.";
             return null;
           },
         ),
@@ -249,14 +184,13 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
     );
   }
 
-  Widget gender() {
+  Widget sex() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           '성별',
-          style: TextStyle(
-              fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.subtitle2.copyWith(color: gray500),
         ),
         SizedBox(height: 5),
         Row(
@@ -283,31 +217,44 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                 borderRadius: new BorderRadius.circular(10.0)),
             child: Text(
               '저장',
-              style: TextStyle(color: Colors.white),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: gray0_white, fontSize: 15),
             ),
-            color: (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled)
-                ? Colors.teal[400]
-                : Colors.grey,
+            color: (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled)
+                ? primary400_line
+                : gray200,
             onPressed: () async {
-              print('_isGenderFilled is $_isGenderFilled');
-              print('_isBirthYearFilled is $_isBirthYearFilled');
-              print('_isNicknameFilled is $_isNicknameFilled');
-
               if (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled) {
-                var result =
-                    await DatabaseService().isUnique(_nicknameController.text);
-                if (_nicknameController.text == widget.userData.nickname)
-                  result = true;
-                if (result == false) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
+                if (_nicknameController.text.length >= 10) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('닉네임을 10자 이하로 입력해주세요')));
+                } else if (2020 < int.parse(_birthYearController.text) ||
+                    int.parse(_birthYearController.text) <= 1900) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('생년월일을 올바르게 입력해주세요')));
                 } else {
-                  await DatabaseService(uid: user.uid).updateUserPrivacy(
-                    _isSelected[0] ? 'male' : 'female',
-                    _birthYearController.text,
-                    _nicknameController.text,
-                  );
-                  _showEditedWell(context);
+                  var result = await DatabaseService()
+                      .isUnique(_nicknameController.text);
+                  if (_nicknameController.text == widget.userData.nickname)
+                    result = true;
+                  if (result == false) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('이미 존재하는 닉네임입니다')));
+                  } else {
+                    await DatabaseService(uid: user.uid).updateUserPrivacy(
+                      _nicknameController.text,
+                      _birthYearController.text,
+                      _isSelected[0] ? 'male' : 'female',
+                    );
+
+                    // await ReviewService().updateNickname(
+                    //   user.uid,
+                    //   _nicknameController.text,
+                    // );
+                    _showEditedWell(context);
+                  }
                 }
               }
             }),
@@ -322,9 +269,8 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6.0),
             side: BorderSide(
-                color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
+                color: isPressed[index] ? primary300_main : gray200)),
         color: Colors.white,
-        textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
         onPressed: () {
           setState(() {
@@ -341,12 +287,10 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
             }
           });
         },
-        child: Text(
-          buttonName,
-          style: TextStyle(
-            fontSize: 14.0,
-          ),
-        ),
+        child: Text(buttonName,
+            style: Theme.of(context).textTheme.headline6.copyWith(
+                  color: isPressed[index] ? primary500_light_text : gray400,
+                )),
       ),
     );
   }

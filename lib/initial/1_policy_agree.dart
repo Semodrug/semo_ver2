@@ -84,6 +84,7 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
           data: ThemeData(unselectedWidgetColor: gray300_inactivated),
           child: Checkbox(
             value: _isTermsAgreed && _isPrivacyAgreed,
+            activeColor: primary300_main,
             onChanged: (value) {
               setState(() {
                 if (_isTermsAgreed != _isPrivacyAgreed) {
@@ -95,7 +96,6 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
                 }
               });
             },
-            activeColor: primary300_main,
           ),
         ),
         SizedBox(

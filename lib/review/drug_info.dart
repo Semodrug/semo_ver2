@@ -502,8 +502,6 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   List _carefulDiseaseList(List diseaseList, List nbDocData) {
-    print(diseaseList);
-
     List _searchList = diseaseList;
     List _resultList = new List();
 
@@ -543,7 +541,6 @@ class _ReviewPageState extends State<ReviewPage> {
       }
     }
 
-    print(_resultList);
     return _resultList;
   }
 
