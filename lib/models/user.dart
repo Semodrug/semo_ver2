@@ -13,7 +13,7 @@ class UserData {
   final String birthYear;
 
   final bool isPregnant;
-  final List diseaseList;
+  final List keywordList;
   final List favoriteList;
   final List searchList;
 
@@ -24,7 +24,7 @@ class UserData {
       this.nickname,
       this.birthYear,
       this.isPregnant,
-      this.diseaseList,
+      this.keywordList,
       this.favoriteList,
       this.searchList});
 }

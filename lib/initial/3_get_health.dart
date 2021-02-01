@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
+bool _isChoose = false;
 bool _isFind = false;
 
 class GetHealthPage extends StatefulWidget {
@@ -14,9 +17,8 @@ class GetHealthPage extends StatefulWidget {
 class _GetHealthPageState extends State<GetHealthPage> {
   TextEditingController _selfWritingController = TextEditingController();
 
-  List<bool> _isPregnant = List.generate(2, (_) => false);
-  List<bool> _isDisease = List.generate(7, (_) => false);
-  List<String> _diseaseList = [];
+  List<bool> _isKeyword = List.generate(10, (_) => false);
+  List<String> _keywordList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class _GetHealthPageState extends State<GetHealthPage> {
         body: Builder(builder: (context) {
           return SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 30.0, 16.0, 20.0),
+              padding: const EdgeInsets.fromLTRB(8.0, 16.0, 16.0, 0.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -75,27 +77,44 @@ class _GetHealthPageState extends State<GetHealthPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              pregnant(),
-                              SizedBox(
-                                height: 20.0,
-                              ),
-                              disease(),
+                              // pregnant(),
+                              //                               // TextButton(
+                              //                               //   child: Text(
+                              //                               //     '가족의 약도 관리하시나요?',
+                              //                               //     style: TextStyle(
+                              //                               //       fontFamily: 'Noto Sans KR',
+                              //                               //       color: Colors.grey,
+                              //                               //       fontSize: 12.0,
+                              //                               //       decoration: TextDecoration.underline,
+                              //                               //     ),
+                              //                               //   ),
+                              //                               //   onPressed: () {
+                              //                               //     setState(() {
+                              //                               //       _isFamily = !_isFamily;
+                              //                               //     });
+                              //                               //   },
+                              //                               // ),
+                              //                               // _isFamily ? family() : Container(),
+                              //                               // SizedBox(
+                              //                               //   height: 20.0,
+                              //                               // ),
+                              chooseKeywords(),
                               SizedBox(
                                 height: 10,
                               ),
                               TextButton(
                                 child: Text(
-                                  '찾으시는 질병이 없으신가요?',
+                                  '원하는 키워드가 없으신가요?',
                                   style: TextStyle(
+                                    fontFamily: 'Noto Sans KR',
                                     color: Colors.grey,
                                     fontSize: 12.0,
-                                    fontWeight: FontWeight.w400,
                                     decoration: TextDecoration.underline,
                                   ),
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    _isFind = true;
+                                    _isFind = !_isFind;
                                   });
                                 },
                               ),
@@ -114,95 +133,143 @@ class _GetHealthPageState extends State<GetHealthPage> {
   }
 
   Widget topTitle() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '건강 정보 설정',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(
-          height: 6,
-        ),
-        Text(
-          '맞춤형 주의사항을 알려드려요.',
-          style: TextStyle(
-              color: Colors.grey[700],
-              fontSize: 12.0,
-              fontWeight: FontWeight.w200),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            textAlign: TextAlign.start,
+            text: TextSpan(
+              style: Theme.of(context).textTheme.headline3,
+              children: <TextSpan>[
+                TextSpan(
+                  text: '단어를 선택해주시면\n',
+                ),
+                TextSpan(
+                  text: '맞춤형 키워드 알림',
+                  style: Theme.of(context).textTheme.headline2,
+                ),
+                TextSpan(
+                  text: '을 드려요',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget pregnant() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('임산부이신가요?', style: TextStyle(fontSize: 14.0)),
-        SizedBox(
-          height: 4.0,
-        ),
-        Row(
-          children: [
-            _exclusiveButton(0, _isPregnant, '해당없음'),
-            SizedBox(width: 10),
-            _exclusiveButton(1, _isPregnant, '임산부'),
-          ],
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('임산부이신가요?', style: Theme.of(context).textTheme.subtitle1),
+          SizedBox(
+            height: 4.0,
+          ),
+          Row(
+            children: [
+              _exclusiveMultiButton(0, _isKeyword, '해당없음'),
+              SizedBox(width: 10),
+              _exclusiveMultiButton(1, _isKeyword, '임산부'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget disease() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('특이사항', style: TextStyle(fontSize: 14.0)),
-        SizedBox(
-          height: 4.0,
-        ),
-        Row(
-          children: [
-            _multiButton(0, _isDisease, '고혈압'),
-            SizedBox(width: 6),
-            _multiButton(1, _isDisease, '심장질환'),
-            SizedBox(width: 6),
-            _multiButton(2, _isDisease, '고지혈증'),
-            SizedBox(width: 6),
-            _multiButton(3, _isDisease, '당뇨병'),
-          ],
-        ),
-        Container(
-          height: 36.0,
-          child: Row(
+  Widget family() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('가족 중 노약자가 있으신가요?',
+              style: Theme.of(context).textTheme.subtitle1),
+          SizedBox(
+            height: 4.0,
+          ),
+          Row(
             children: [
-              _multiButton(4, _isDisease, '간장애'),
-              SizedBox(width: 6),
-              _multiButton(5, _isDisease, '신장'),
-              SizedBox(width: 6),
-              _multiButton(6, _isDisease, '심장'),
+              _exclusiveMultiButton(0, _isKeyword, '없음'),
+              SizedBox(width: 10),
+              _exclusiveMultiButton(1, _isKeyword, '고령자'),
+              SizedBox(width: 10),
+              _exclusiveMultiButton(2, _isKeyword, '소아'),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  Widget chooseKeywords() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text('알림을 받고싶은 키워드를 선택해주세요 ',
+                  style: Theme.of(context).textTheme.subtitle1),
+              Text('(복수선택가능)',
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      .copyWith(fontWeight: FontWeight.w100))
+            ],
+          ),
+          SizedBox(height: 12.0),
+          Row(
+            children: [
+              _exclusiveMultiButton(0, _isKeyword, '없음'),
+              SizedBox(width: 6),
+              _exclusiveMultiButton(1, _isKeyword, '임산부'),
+              SizedBox(width: 6),
+              _exclusiveMultiButton(2, _isKeyword, '고령자'),
+              SizedBox(width: 6),
+              _exclusiveMultiButton(3, _isKeyword, '소아'),
+            ],
+          ),
+          SizedBox(height: 4.0),
+          Row(
+            children: [
+              _exclusiveMultiButton(4, _isKeyword, '간'),
+              SizedBox(width: 6),
+              _exclusiveMultiButton(5, _isKeyword, '신장(콩팥)'),
+              SizedBox(width: 6),
+              _exclusiveMultiButton(6, _isKeyword, '심장'),
+            ],
+          ),
+          SizedBox(height: 4.0),
+          Row(
+            children: [
+              _exclusiveMultiButton(7, _isKeyword, '고혈압'),
+              SizedBox(width: 6),
+              _exclusiveMultiButton(8, _isKeyword, '당뇨'),
+              SizedBox(width: 6),
+              _exclusiveMultiButton(9, _isKeyword, '유당분해요소 결핍증'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget selfWrite() {
     return Container(
-      padding: EdgeInsets.all(8),
-      height: 40,
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      height: 30,
       child: TextField(
         controller: _selfWritingController,
-        cursorColor: Colors.teal[400],
-        decoration: InputDecoration(
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.teal),
-            ),
-            hintText: '질병명 직접 입력하기',
-            hintStyle: TextStyle(color: Colors.grey, fontSize: 14.0)),
+        cursorColor: primary400_line,
+        decoration: textInputDecoration.copyWith(hintText: '키워드 직접 입력하기'),
         keyboardType: TextInputType.text,
       ),
     );
@@ -212,6 +279,7 @@ class _GetHealthPageState extends State<GetHealthPage> {
     TheUser user = Provider.of<TheUser>(context);
 
     return Container(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
       alignment: Alignment.center,
       child: SizedBox(
         width: 400.0,
@@ -222,16 +290,28 @@ class _GetHealthPageState extends State<GetHealthPage> {
           shape: RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(10.0)),
           child: Text(
-            '완료',
-            style: TextStyle(color: Colors.white),
+            _isChoose ? '완료' : '건너뛰기',
+            style: Theme.of(context)
+                .textTheme
+                .headline5
+                .copyWith(color: gray0_white, fontSize: 15),
           ),
-          color: Colors.teal[400],
+          color: primary400_line,
           onPressed: () async {
-            if (_selfWritingController.text.isNotEmpty)
-              _diseaseList.add(_selfWritingController.text);
+            if (_isKeyword[1] == true) _keywordList.add('임산부');
+            if (_isKeyword[1] == true) _keywordList.add('고령자');
+            if (_isKeyword[2] == true) _keywordList.add('소아');
+            if (_isKeyword[1] == true) _keywordList.add('간');
+            if (_isKeyword[2] == true) _keywordList.add('신장');
+            if (_isKeyword[3] == true) _keywordList.add('심장');
+            if (_isKeyword[4] == true) _keywordList.add('고혈압');
+            if (_isKeyword[5] == true) _keywordList.add('당뇨');
+            if (_isKeyword[6] == true) _keywordList.add('유당불내증');
 
-            await DatabaseService(uid: user.uid)
-                .updateUserHealth(_isPregnant[1], _diseaseList);
+            if (_selfWritingController.text.isNotEmpty)
+              _keywordList.add(_selfWritingController.text);
+
+            await DatabaseService(uid: user.uid).updateUserHealth(_keywordList);
 
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/start', (Route<dynamic> route) => false);
@@ -241,66 +321,39 @@ class _GetHealthPageState extends State<GetHealthPage> {
     );
   }
 
-  /* buttons */
-  Widget _exclusiveButton(index, isPressed, buttonName) {
+  Widget _exclusiveMultiButton(index, isPressed, buttonName) {
     return ButtonTheme(
       minWidth: 40.0,
       child: FlatButton(
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6.0),
             side: BorderSide(
-                color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
+                color: isPressed[index] ? primary300_main : gray200)),
         color: Colors.white,
-        textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
         onPressed: () {
+          _isChoose = true;
+
           setState(() {
-            for (int buttonIndex = 0;
-                buttonIndex < isPressed.length;
-                buttonIndex++) {
-              if (buttonIndex == index) {
-                isPressed[buttonIndex] = true;
-              } else {
-                isPressed[buttonIndex] = false;
+            // 0번 버튼을 누르면 나머지 버튼 값은 모두 false
+            if (index == 0) {
+              isPressed[0] = true;
+              for (int i = 1; i < isPressed.length; i++) {
+                isPressed[i] = false;
               }
+            }
+            // 0번 버튼이 아닌 버튼을 누르면 0번 버튼은 false
+            else {
+              isPressed[index] = !isPressed[index];
+              isPressed[0] = false;
             }
           });
         },
-        child: Text(
-          buttonName,
-          style: TextStyle(
-            fontSize: 14.0,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _multiButton(index, isPressed, buttonName) {
-    return ButtonTheme(
-      minWidth: 40.0,
-      child: FlatButton(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6.0),
-            side: BorderSide(
-                color: isPressed[index] ? Colors.teal[200] : Colors.grey)),
-        color: Colors.white,
-        textColor: isPressed[index] ? Colors.teal[200] : Colors.grey,
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-        onPressed: () {
-          setState(() {
-            isPressed[index] = !isPressed[index];
-            isPressed[index]
-                ? _diseaseList.add(buttonName)
-                : _diseaseList.remove(buttonName);
-          });
-        },
-        child: Text(
-          buttonName,
-          style: TextStyle(
-            fontSize: 14.0,
-          ),
-        ),
+        child: Text(buttonName,
+            style: Theme.of(context).textTheme.headline6.copyWith(
+                  color: isPressed[index] ? primary500_light_text : gray400,
+                )),
       ),
     );
   }

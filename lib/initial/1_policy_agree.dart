@@ -6,8 +6,8 @@ import 'package:semo_ver2/models/user.dart';
 
 import 'package:semo_ver2/mypage/6_policy_privacy.dart';
 import 'package:semo_ver2/mypage/5_policy_terms.dart';
-import 'package:semo_ver2/login/register_withEmail.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 bool _isTermsAgreed = false;
 bool _isPrivacyAgreed = false;
@@ -52,23 +52,20 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
       ),
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.fromLTRB(16, 40, 16, 0),
+        padding: EdgeInsets.fromLTRB(8, 20, 16, 0),
         child: Column(
           children: [
             allCheckbox(),
-            SizedBox(
-              height: 20,
-            ),
             Divider(
               color: Colors.grey,
-            ),
-            SizedBox(
-              height: 20,
+              indent: 8,
+              endIndent: 8,
+              // height: 30,
             ),
             termsCheckbox(),
-            SizedBox(
-              height: 20,
-            ),
+            // SizedBox(
+            //   height: 10,
+            // ),
             privacyCheckbox(),
             SizedBox(
               height: 50,
@@ -83,33 +80,30 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
   Widget allCheckbox() {
     return Row(
       children: [
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              if (_isTermsAgreed != _isPrivacyAgreed) {
-                _isTermsAgreed = true;
-                _isPrivacyAgreed = true;
-              } else {
-                _isTermsAgreed = !_isTermsAgreed;
-                _isPrivacyAgreed = !_isPrivacyAgreed;
-              }
-            });
-          },
-          child: Container(
-            child: Icon(
-              Icons.check_circle_outline,
-              color: _isTermsAgreed && _isPrivacyAgreed
-                  ? Colors.teal[400]
-                  : Colors.grey,
-            ),
+        Theme(
+          data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+          child: Checkbox(
+            value: _isTermsAgreed && _isPrivacyAgreed,
+            onChanged: (value) {
+              setState(() {
+                if (_isTermsAgreed != _isPrivacyAgreed) {
+                  _isTermsAgreed = true;
+                  _isPrivacyAgreed = true;
+                } else {
+                  _isTermsAgreed = !_isTermsAgreed;
+                  _isPrivacyAgreed = !_isPrivacyAgreed;
+                }
+              });
+            },
+            activeColor: primary300_main,
           ),
         ),
         SizedBox(
-          width: 10,
+          width: 2,
         ),
         Text(
           '전체동의',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.subtitle1,
         ),
       ],
     );
@@ -121,29 +115,36 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
       children: [
         Row(
           children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isTermsAgreed = !_isTermsAgreed;
-                });
-              },
-              child: Container(
-                child: Icon(
-                  Icons.check_circle_outline,
-                  color: _isTermsAgreed ? Colors.teal[400] : Colors.grey,
-                ),
+            Theme(
+              data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+              child: Checkbox(
+                onChanged: (bool value) {
+                  setState(() {
+                    _isTermsAgreed = !_isTermsAgreed;
+                  });
+                },
+                value: _isTermsAgreed,
+                activeColor: primary300_main,
               ),
             ),
             SizedBox(
-              width: 10,
+              width: 2,
             ),
-            Text('(필수) 이용약관'),
+            Text('(필수) 이용약관',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .copyWith(color: gray900))
           ],
         ),
         Row(
           children: [
             InkWell(
-              child: Center(child: Text('보기')),
+              child: Center(
+                  child: Text(
+                '보기',
+                style: Theme.of(context).textTheme.caption,
+              )),
               onTap: () {
                 Navigator.push(
                   context,
@@ -166,29 +167,36 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
       children: [
         Row(
           children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isPrivacyAgreed = !_isPrivacyAgreed;
-                });
-              },
-              child: Container(
-                child: Icon(
-                  Icons.check_circle_outline,
-                  color: _isPrivacyAgreed ? Colors.teal[400] : Colors.grey,
-                ),
+            Theme(
+              data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+              child: Checkbox(
+                onChanged: (bool value) {
+                  setState(() {
+                    _isPrivacyAgreed = !_isPrivacyAgreed;
+                  });
+                },
+                value: _isPrivacyAgreed,
+                activeColor: primary300_main,
               ),
             ),
             SizedBox(
-              width: 10,
+              width: 2,
             ),
-            Text('(필수) 개인정보 처리방침'),
+            Text('(필수) 개인정보 처리방침',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .copyWith(color: gray900)),
           ],
         ),
         Row(
           children: [
             InkWell(
-              child: Center(child: Text('보기')),
+              child: Center(
+                  child: Text(
+                '보기',
+                style: Theme.of(context).textTheme.caption,
+              )),
               onTap: () {
                 Navigator.push(
                   context,
@@ -209,32 +217,38 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
     return Container(
       alignment: Alignment.center,
       child: SizedBox(
-        width: 400.0,
-        height: 45.0,
+        width: MediaQuery.of(context).size.width,
+        height: 44.0,
         //padding: const EdgeInsets.symmetric(vertical: 16.0),
         //alignment: Alignment.center,
-        child: RaisedButton(
-          child: Text(
-            '확인',
-            style: TextStyle(color: Colors.white),
-          ),
-          color: _isTermsAgreed && _isPrivacyAgreed
-              ? Colors.teal[400]
-              : Colors.grey,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          onPressed: () async {
-            if (_isTermsAgreed && _isPrivacyAgreed) {
-              // 이용약관 동의 날짜 저장
-              String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
-              await DatabaseService(uid: user.uid).addUser(nowDT);
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+          child: RaisedButton(
+            child: Text(
+              '다음',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: gray0_white, fontSize: 15),
+            ),
+            color: _isTermsAgreed && _isPrivacyAgreed
+                ? gradient_button_long_end
+                : gray200,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            onPressed: () async {
+              if (_isTermsAgreed && _isPrivacyAgreed) {
+                // 이용약관 동의 날짜 저장
+                String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
+                await DatabaseService(uid: user.uid).addUser(nowDT);
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GetPrivacyPage()),
-              );
-            }
-          },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GetPrivacyPage()),
+                );
+              }
+            },
+          ),
         ),
       ),
     );

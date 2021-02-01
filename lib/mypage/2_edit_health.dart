@@ -27,40 +27,40 @@ class _EditHealthPageState extends State<EditHealthPage> {
     super.initState();
     _isPregnant =
         (widget.userData.isPregnant == true) ? [true, false] : [false, true];
-    if (widget.userData.diseaseList.contains('고혈압')) {
+    if (widget.userData.keywordList.contains('고혈압')) {
       _isDisease[0] = true;
       _diseaseList.add('고혈압');
     }
-    if (widget.userData.diseaseList.contains('심장질환')) {
+    if (widget.userData.keywordList.contains('심장질환')) {
       _isDisease[1] = true;
       _diseaseList.add('심장질환');
     }
-    if (widget.userData.diseaseList.contains('고지혈증')) {
+    if (widget.userData.keywordList.contains('고지혈증')) {
       _isDisease[2] = true;
       _diseaseList.add('고지혈증');
     }
-    if (widget.userData.diseaseList.contains('당뇨병')) {
+    if (widget.userData.keywordList.contains('당뇨병')) {
       _isDisease[3] = true;
       _diseaseList.add('당뇨병');
     }
-    if (widget.userData.diseaseList.contains('간장애')) {
+    if (widget.userData.keywordList.contains('간장애')) {
       _isDisease[4] = true;
       _diseaseList.add('간장애');
     }
-    if (widget.userData.diseaseList.contains('콩팥장애')) {
+    if (widget.userData.keywordList.contains('콩팥장애')) {
       _isDisease[5] = true;
       _diseaseList.add('콩팥장애');
     }
-    if (widget.userData.diseaseList.contains('신장')) {
+    if (widget.userData.keywordList.contains('신장')) {
       _isDisease[5] = true;
       _diseaseList.add('신장');
     }
 
-    if (widget.userData.diseaseList.isNotEmpty &&
+    if (widget.userData.keywordList.isNotEmpty &&
         !['고혈압', '심장질환', '고지혈증', '당뇨병', '간장애', '콩팥장애', '신장']
-            .contains(widget.userData.diseaseList.last)) {
+            .contains(widget.userData.keywordList.last)) {
       _isFind = true;
-      _selfWritingController.text = widget.userData.diseaseList.last;
+      _selfWritingController.text = widget.userData.keywordList.last;
     }
   }
 
@@ -285,8 +285,7 @@ class _EditHealthPageState extends State<EditHealthPage> {
             if (_selfWritingController.text.isNotEmpty)
               _diseaseList.add(_selfWritingController.text);
 
-            await DatabaseService(uid: user.uid)
-                .updateUserHealth(_isPregnant[1], _diseaseList);
+            await DatabaseService(uid: user.uid).updateUserHealth(_diseaseList);
 
             _showEditedWell(context);
           },
