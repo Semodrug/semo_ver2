@@ -851,15 +851,13 @@ class _HomePageState extends State<HomePage> {
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Colors.black,
-                  ),
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 12),
                   children: <TextSpan>[
                   TextSpan(text: '사용기한이 '),
                     TextSpan(
                         text: '$dayRemain일',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                      style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
                     TextSpan(text: ' 남았습니다'),
                   ],
                 ),
@@ -893,15 +891,13 @@ class _HomePageState extends State<HomePage> {
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Colors.black,
-                  ),
-                  children: <TextSpan>[
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 12),
+                children: <TextSpan>[
                     TextSpan(text: '사용기한이 '),
                     TextSpan(
                         text: '${dayOver[1]}일',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                      style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
                     TextSpan(text: ' 지났습니다'),
                   ],
                 ),
@@ -933,8 +929,8 @@ class _HomePageState extends State<HomePage> {
                 // theme 추가
                 Spacer(),
                 Container(
-                  width: 63,
-                  height: 20,
+                  // width: 63,
+                  // height: 20,
                   decoration: BoxDecoration(
                     border: Border.all(color: yellow),
                     borderRadius: BorderRadius.circular(5),

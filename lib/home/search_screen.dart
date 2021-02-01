@@ -51,7 +51,7 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Align(
           alignment: Alignment.topCenter,
           child: Text(
-            '일치하는 약이 없습니다',
+            '검색 결과가 없습니다',
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -128,30 +128,151 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  Widget _drugFromUserInAll( context, userDrug ) {
+    //여기는 user 안에 있는 친구들 불러오는 거!!
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+          border: Border.all(color: gray400),
+          borderRadius: BorderRadius.circular(10)),
+      height: 68,
+      width: MediaQuery.of(context).size.width - 20,
+      //color: Colors.red,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 8.0,
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.bookmark_border,
+                    size: 20,
+                  ),
+                  Text('나의 약'),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  userDrug.itemName,
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      .copyWith(color: primary500_light_text),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  userDrug.expiration,
+                  style: TextStyle(color: gray500, fontSize: 10),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildBodyOfAll(BuildContext context, String searchVal) {
+    TheUser user = Provider.of<TheUser>(context);
+
     return StreamBuilder<List<Drug>>(
       stream: DatabaseService() //categoryName: widget.categoryName
-          .setForSearch(searchVal, 20),
+          .setForSearchFromAll(searchVal, 30),
       builder: (context, stream) {
         if (!stream.hasData) {
           return Center(child: CircularProgressIndicator());
         }
         if (searchVal == '' || searchVal.length < 2) {
           return _streamOfSearch(context);
-        } else
-          return _buildListOfAll(context, stream.data);
+        }
+        // else
+        //   return _buildListOfAll(context, stream.data);
+        else {
+          var streamFromAll = stream.data;
+          return StreamBuilder<Object>(
+              stream: DatabaseService(
+                      uid: user.uid) //categoryName: widget.categoryName
+                  .setForSearchFromUser(searchVal, 30),
+              builder: (context, snapshot) {
+                return _buildListOfAll(context, streamFromAll, snapshot.data);
+              });
+        }
       },
     );
     //}
   }
 
-  Widget _buildListOfAll(BuildContext context, List<Drug> drugs) {
+  Widget _buildListOfAll(
+      BuildContext context, List<Drug> drugs, List<SavedDrug> userDrugs) {
     if (_searchText.length < 2) {
       return _noResultContainer();
     } else if (_searchText.length != 0) {
+      if (userDrugs != null) {
+        return Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: userDrugs.length,
+                itemBuilder: (context, index) {
+                  return _drugFromUserInAll(context, userDrugs[index]);
+                },
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: drugs.length,
+                itemBuilder: (context, index) {
+//////////////////////////////
+                  //if (userDrugs != null) {
+                    for (int j = 0; j < userDrugs.length; j++) {
+                      if (drugs[index].itemName == userDrugs[j].itemName) {
+                        print(userDrugs[j].itemName);
+                        return Container(height: 0.5);
+                      } else {
+                        return ListDrugOfAll(
+                            _checkLongName(drugs[index].itemName),
+                            drugs[index].category,
+                            drugs[index].itemSeq);
+                      }
+                    }
+                 // }
+////////////////////////////
+                  return ListDrugOfAll(
+                      _checkLongName(drugs[index].itemName),
+                      drugs[index].category,
+                      drugs[index]
+                          .itemSeq); //DrugTile(drug: drugs[index], index: (index + 1));
+                },
+              ),
+            ),
+          ],
+        );
+      }
+
       return ListView.builder(
         itemCount: drugs.length,
         itemBuilder: (context, index) {
+//////////////////////////////
+          //Saved Drug에 저장이 되어있던 친구라면 안보여준다
+          if (userDrugs != null) {
+            for (int j = 0; j < userDrugs.length; j++) {
+              if (drugs[index].itemName == userDrugs[j].itemName) {
+                return Container(height: 0.5);
+              } else {
+                return ListDrugOfAll(_checkLongName(drugs[index].itemName),
+                    drugs[index].category, drugs[index].itemSeq);
+              }
+            }
+          }
+////////////////////////////
           return ListDrugOfAll(
               _checkLongName(drugs[index].itemName),
               drugs[index].category,
