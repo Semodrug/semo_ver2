@@ -92,12 +92,17 @@ class _ReviewPageState extends State<ReviewPage> {
 
   bool pillInfoTab = false;
 
-  bool _ifZeroReview = false;
-  void _ifNoReview() {
+  bool _ifZeroReview = true;
+
+  void _noReview() {
     _ifZeroReview = true;
   }
 
-  bool checkIfNoReview() {
+  void _existReview() {
+    _ifZeroReview = false;
+  }
+
+  bool checkReviewIsZero() {
     return _ifZeroReview;
   }
 
@@ -106,6 +111,7 @@ class _ReviewPageState extends State<ReviewPage> {
     TheUser user = Provider.of<TheUser>(context);
 
     return Scaffold(
+        backgroundColor: gray0_white,
         appBar: AppBar(
           leading: IconButton(
               icon: Icon(
@@ -162,7 +168,6 @@ class _ReviewPageState extends State<ReviewPage> {
                         builder: (context) =>
                             WriteReview(drugItemSeq: widget.drugItemSeq)));
             }),
-        backgroundColor: Colors.white,
         body: StreamProvider<List<Review>>.value(
           value: ReviewService().getReviews(widget.drugItemSeq),
           child: StreamBuilder<Drug>(
@@ -867,7 +872,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       Drug drug = snapshot.data;
-                      if (drug.numOfReviews == 0) _ifNoReview();
+                      if (drug.numOfReviews > 0) _existReview();
                       return Text(
                           "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
                           style: Theme.of(context).textTheme.subtitle1.copyWith(
@@ -877,7 +882,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       return Loading();
                   }),
 
-              checkIfNoReview() == true
+              checkReviewIsZero() == true
                   ? Container()
                   : InkWell(
                       child: Text('전체리뷰 보기',
@@ -898,7 +903,7 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
         // _searchBar(),
         // ReviewList(_searchText, "all"),
-        checkIfNoReview() == true ? Container() : _searchBar(),
+        checkReviewIsZero() == true ? Container() : _searchBar(),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
           child: Container(
@@ -947,7 +952,7 @@ class _ReviewPageState extends State<ReviewPage> {
           ),
         ),
 
-        checkIfNoReview() == true
+        checkReviewIsZero() == true
             ? Container(
                 height: 310,
                 width: MediaQuery.of(context).size.width,

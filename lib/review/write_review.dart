@@ -12,6 +12,7 @@ import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/loading.dart';
+import 'package:semo_ver2/theme/colors.dart';
 import 'review.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -57,6 +58,8 @@ class _WriteReviewState extends State<WriteReview> {
   static const _grey = Color(0x95C4C4C4);
   String _entpName =''; //약 제조사
   String _itemName =''; //약 이름
+
+  String starRatingText = '';
 
   void setItemNames(itemName, entpName) {
     _itemName = itemName;
@@ -116,17 +119,19 @@ class _WriteReviewState extends State<WriteReview> {
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
     return Scaffold(
+      backgroundColor: gray0_white,
         appBar: AppBar(
-          title: Text('Write Review',
-              style: GoogleFonts.roboto(
-                  fontSize: 16.5,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
-          centerTitle: true,
-          elevation: 0.0,
-          backgroundColor: Colors.teal[200],
+          title: Text('리뷰 쓰기',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4
+                  .copyWith(
+                  color: gray800, fontSize: 16)) ,
+          // centerTitle: true,
+          //elevation: 0.0,
+          backgroundColor: gray0_white,
           leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
+              icon: Icon(Icons.close, color: primary300_main),
               onPressed: () {
                 Navigator.pop(context);
               }),
@@ -166,16 +171,12 @@ class _WriteReviewState extends State<WriteReview> {
                 BorderSide(width: 0.8, color: Colors.grey[300], ))),
         child: Row(
           children: <Widget>[
-//            Container(
-//              width: 100, height: 100,
-//              color: Colors.teal[100],
-//            ),
             SizedBox(
               child: DrugImage(drugItemSeq: widget.drugItemSeq),
               width: 100.0,
               height: 100.0,
             ),
-            Padding(padding: EdgeInsets.only(left: 15)),
+            Container(width:15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -188,30 +189,40 @@ class _WriteReviewState extends State<WriteReview> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(drug.entpName, style: TextStyle(fontSize: 11, color: Colors.grey, )),
-                            Text(drug.itemName, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
+                            Text(drug.entpName,
+                                style: Theme.of(context).textTheme.overline.copyWith(
+                                    color: gray300_inactivated, fontSize: 10)),
+                            Text(drug.itemName,
+                                style: Theme.of(context).textTheme.headline6.copyWith(
+                                    color: gray900)
+                                ),
                             Container(height: 2,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 RatingBar.builder(
-                                  itemSize: 20,
+                                  itemSize: 16,
                                   initialRating: drug.totalRating ,
-                                  //!= null ? widget.tapToRatingResult: 0,
                                   minRating: 0,
                                   direction: Axis.horizontal,
                                   allowHalfRating: true,
                                   itemCount: 5,
-                                  unratedColor: _grey,
+                                  unratedColor: gray75,
                                   itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
                                   itemBuilder: (context, _) => Icon(
                                     Icons.star, color: Colors.amber[300],
                                   ),
                                 ),
                                 Container(width:5),
-                                Text(drug.totalRating.toStringAsFixed(2), style: TextStyle(fontSize: 15, color: Colors.black, )),
+                                Text(drug.totalRating.toStringAsFixed(2),
+                                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                        color: gray900, fontSize: 12)
+                                    ),
                                 Container(width:3),
-                                Text("("+drug.numOfReviews.toStringAsFixed(0)+"개)", style: TextStyle(fontSize: 13, color: Colors.grey, )),
+                                Text("("+drug.numOfReviews.toStringAsFixed(0)+"개)",
+                                    style: Theme.of(context).textTheme.overline.copyWith(
+                                        color: gray300_inactivated, fontSize: 10)
+                                ),
                               ],
                             ),
                             CategoryButton(str: drug.category)
@@ -380,7 +391,6 @@ class _WriteReviewState extends State<WriteReview> {
 
 
   Widget _rating() {
-    String starRatingText = '';
     return Container(
 //          height: 150,
         padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
@@ -392,7 +402,10 @@ class _WriteReviewState extends State<WriteReview> {
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text("약을 사용해보셨나요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+            Text("약을 사용해보셨나요?",
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: gray900, fontSize: 16)
+                ),
             SizedBox(height: 10),
             RatingBar.builder(
               itemSize: 48,
@@ -429,7 +442,11 @@ class _WriteReviewState extends State<WriteReview> {
               },
             ),
             SizedBox(height: 10),
-            Text(starRatingText)
+            Text(starRatingText,
+                style: Theme.of(context).textTheme.caption.copyWith(
+                    color: primary600_bold_text, fontSize: 12)
+
+            ),
           ],
         )
     );
@@ -447,7 +464,10 @@ class _WriteReviewState extends State<WriteReview> {
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text("약의 효과는 어땠나요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+            Text("약의 효과는 어땠나요?",
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: gray900, fontSize: 16)
+            ),
             Padding(padding: EdgeInsets.only(top: 15)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -456,8 +476,11 @@ class _WriteReviewState extends State<WriteReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            width: 35,
-                            height: 35,
+                            width: 40,
+                            height: 40,
+                            child: Icon(Icons.sentiment_dissatisfied,
+                              size: 30,
+                            color: Color(0xffDADADA),),
                             decoration: BoxDecoration(
                                 color: effect == "bad" ? _green: Colors.grey[300],
                                 shape: BoxShape.circle)),
@@ -469,17 +492,22 @@ class _WriteReviewState extends State<WriteReview> {
                     ),
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text("별로에요", style: effect == "bad"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: primary600_bold_text, fontSize: 12) :
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: gray0_white, fontSize: 12),)
                   ],
                 ),
-                Padding(padding: EdgeInsets.only(left: 20)),
+                Container(width:30),
                 Column(
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            width: 35,
-                            height: 35,
+                          child: Icon(Icons.sentiment_dissatisfied,
+                              color: Color(0xffDADADA),
+                            size: 30,),
+                            width: 40,
+                            height: 40,
                             decoration: BoxDecoration(
                                 color: effect == "soso" ? _green : Colors.grey[300],
                                 shape: BoxShape.circle)),
@@ -493,17 +521,22 @@ class _WriteReviewState extends State<WriteReview> {
 
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text("보통이에요", style: effect == "soso"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
+                    Theme.of(context).textTheme.caption.copyWith(
+                          color: primary600_bold_text, fontSize: 12) :
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: gray0_white, fontSize: 12),)
                   ],
                 ),
-                Padding(padding: EdgeInsets.only(left: 20)),
+                Container(width:30),
                 Column(
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            width: 35,
-                            height: 35,
+                            child: Icon(Icons.sentiment_satisfied,
+                              color: Color(0xffDADADA),
+                            size:30),
+                            width: 40,
+                            height: 40,
                             decoration: BoxDecoration(
                                 color: effect == "good" ? _green : Colors.grey[300],
                                 shape: BoxShape.circle)),
@@ -513,10 +546,12 @@ class _WriteReviewState extends State<WriteReview> {
                           });
                         }
                     ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Padding(padding: EdgeInsets.only(top: 10)) ,
                     Text("좋아요", style: effect == "good"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: primary600_bold_text, fontSize: 12) :
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: gray0_white, fontSize: 12),)
                   ],
                 ),
 
@@ -537,30 +572,29 @@ class _WriteReviewState extends State<WriteReview> {
     else if(type == "sideEffect")
       hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
     else if(type == "overall")
-      hintText = "전체적인 만족도에 대한 후기를 남겨주세요 \n(최소 10자 이상)\n";
+      hintText = "전체적인 만족도에 대한 후기를 남겨주세요\n(최소 10자 이상)\n";
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal:0),
       child: Container(
-//        width: 400,
-//                height: 100,
         child: TextField(
+            maxLength: 500,
             controller: txtController,
             keyboardType: TextInputType.multiline,
             maxLines: null,
             decoration: new InputDecoration(
               hintText: hintText,
-              border: InputBorder.none,
-//                        border: OutlineInputBorder(
-//                          borderRadius: const BorderRadius.all(
-//                            const Radius.circular(8.0)
-//                          ),
-//                          borderSide: BorderSide(color:Colors.white)
-//                        ),
+              hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
+                color: gray750_activated, ),
+              enabledBorder: OutlineInputBorder(
+                borderSide:  BorderSide(color: gray75),
+                borderRadius: const BorderRadius.all(
+                    const Radius.circular(4.0)
+                ),
+              ),
               filled: true,
-//                        fillColor: _grey,
               fillColor: Colors.grey[200],
-            )),
+            ))
       ),
     );
   }
@@ -577,20 +611,27 @@ class _WriteReviewState extends State<WriteReview> {
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text("약의 부작용은 어떤가요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
+            Text("약의 부작용은 없었나요?",
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: gray900, fontSize: 16)
+            ),
             Padding(padding: EdgeInsets.only(top: 15)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Column(
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            width: 35,
-                            height: 35,
+                            child: Icon(Icons.sentiment_dissatisfied,
+                              size: 30,
+                              color: Color(0xffDADADA),),
+                            width: 40,
+                            height: 40,
                             decoration: BoxDecoration(
-//                                                    color: widget.review.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
-                                color: sideEffect == "yes" ? _green : Colors.grey[300],
+//                              color: widget.review.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
+                                color: sideEffect == "yes" ? primary300_main : gray75,
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(() {
@@ -599,19 +640,31 @@ class _WriteReviewState extends State<WriteReview> {
                         }
                     ),
                     Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("있어요", style: sideEffect == "yes"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
+                    Text("부작용 있어요", style: sideEffect == "yes"?
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: primary600_bold_text, fontSize: 12) :
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: gray0_white, fontSize: 12),)
+                    // Text("있어요", style: sideEffect == "yes"?
+                    // TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
+                    // TextStyle(color:Colors.black87)),
                   ],
                 ),
-                Padding(padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
-                    child: Text("VS", style: TextStyle(color: Colors.grey[700]))),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
+                  child: Text("VS",
+                      style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: gray500, fontSize: 14)),
+                ),
                 Column(
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            width: 35,
-                            height: 35,
+                            child: Icon(Icons.sentiment_satisfied,
+                                color: Color(0xffDADADA),
+                                size:30),
+                            width: 40,
+                            height: 40,
                             decoration: BoxDecoration(
 //                                                    color: widget.review.sideEffect == "no" ? Colors.greenAccent[100]: Colors.grey[300],
                                 color: sideEffect == "no" ? _green : Colors.grey[300],
@@ -623,9 +676,14 @@ class _WriteReviewState extends State<WriteReview> {
                         }
                     ),
                     Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("없어요", style: sideEffect == "no"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
+                    Text("부작용 없어요", style: sideEffect == "no"?
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: primary600_bold_text, fontSize: 12) :
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: gray0_white, fontSize: 12),)
+                    // Text("없어요", style: sideEffect == "no"?
+                    // TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
+                    // TextStyle(color:Colors.black87)),
                   ],
                 ),
               ],
@@ -648,25 +706,10 @@ class _WriteReviewState extends State<WriteReview> {
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text("약에 대한 총평", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
-//              Padding(padding: EdgeInsets.only(top: 25)),
-//              Padding(
-//                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
-//                child: Container(
-//                  width: 400,
-//                  height: 100,
-//                  child: TextField(
-//                      controller: myControllerOverall,
-////                          keyboardType: TextInputType.multiline,
-//                      maxLines: null,
-//                      decoration: new InputDecoration(
-//                          border: InputBorder.none
-////                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,
-////                        color: Colors.grey[400])
-//                      )),
-//                ),
-//
-//              ),
+            Text("약에 대한 총평",
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: gray900, fontSize: 16)
+            ),
             _textField("overall", myControllerOverall),
             Padding(padding: EdgeInsets.only(top: 25)),
           ],
