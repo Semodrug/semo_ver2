@@ -3,13 +3,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:app_settings/app_settings.dart';
 
 import 'package:semo_ver2/home/home_add_button_stack.dart';
-//import 'package:semo_ver2/ranking/past_dart_file/test_ranking.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 import 'camera/camera.dart';
 import 'home/home.dart';
 import 'mypage/my_page.dart';
 import 'ranking/ranking.dart';
-import 'review/drug_info.dart';
 
 class BottomBar extends StatefulWidget {
   @override
@@ -21,14 +20,8 @@ class _BottomBarState extends State<BottomBar> {
 
   final List<Widget> _widgetOptions = [
     HomePage(),
-    // AddButton(),
-    CameraPage(),
+    Container(),
     RankingPage(),
-//    PhilInfoPage(
-//      drugItemSeq: '199303108',
-//    )
-//     ReviewPage("199303108")
-//    ReviewPage(),
   ];
 
   Future<void> _onItemTapped(int index) async {
@@ -117,19 +110,35 @@ class _BottomBarState extends State<BottomBar> {
 //        ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: gray0_white,
+          selectedItemColor: gray750_activated,
+          unselectedItemColor: gray300_inactivated,
+          iconSize: 40,
+          selectedFontSize: 0,
+          unselectedFontSize: 0,
           type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: ImageIcon(
+                AssetImage('assets/icons/bottom_home.png'),
+                // color: Color(0xFF3A5A98),
+              ),
               label: '홈',
             ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.camera_alt), label: 'camera'),
-            BottomNavigationBarItem(icon: Icon(Icons.list), label: '카테고리'),
-            // BottomNavigationBarItem(icon: Icon(Icons.create), label: 'review'),
+                icon: ImageIcon(
+                  AssetImage('assets/icons/bottom_camera.png'),
+                  // color: primary400_line,
+                ),
+                label: '카메라'),
+            BottomNavigationBarItem(
+                icon: ImageIcon(
+                  AssetImage('assets/icons/bottom_category.png'),
+                  // color: Color(0xFF3A5A98),
+                ),
+                label: '카테고리'),
           ],
-          currentIndex: _selectedIndex,
-//          selectedItemColor: Theme.of(context).bottomAppBarColor,
           onTap: _onItemTapped),
     );
   }

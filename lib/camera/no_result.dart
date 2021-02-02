@@ -53,13 +53,13 @@ class _NoResultState extends State<NoResult> {
             SizedBox(
                 width: 32,
                 height: 32,
-                child: Image.asset('assets/icons/warning_icon.png')),
+                child: Image.asset('assets/icons/no_result.png')),
             SizedBox(
               height: 10,
             ),
             Text(
               '검색결과가 없습니다',
-              // style: TextStyle(fontSize: 14, color: Colors.grey),
+              style: Theme.of(context).textTheme.bodyText1,
             )
           ],
         ),
