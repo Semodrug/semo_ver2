@@ -27,7 +27,6 @@ class _GetRatingState extends State<GetRating> {
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
-    double _tapToRatingResult = 0.0;
     bool _isRated = false;
     return StreamBuilder<Drug> (
       stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
@@ -63,8 +62,8 @@ class _GetRatingState extends State<GetRating> {
                   double good = (effectGood / (effectGood + effectSoso + effectBad))*100;
                   double soso = (effectSoso / (effectGood + effectSoso + effectBad))*100;
                   double bad = (effectBad / (effectGood + effectSoso + effectBad))*100;
-                  double yes = sideEffectYes / (sideEffectYes + sideEffectNo);
-                  double no = sideEffectNo / (sideEffectYes + sideEffectNo);
+                  double yes = (sideEffectYes / (sideEffectYes + sideEffectNo))*100;
+                  double no = (sideEffectNo / (sideEffectYes + sideEffectNo))*100;
 
                   if (good.isNaN) good = 0;
                   if (soso.isNaN) soso = 0;
@@ -134,7 +133,7 @@ class _GetRatingState extends State<GetRating> {
                                     children: [
                                       //effect
                                       effectBad > effectSoso && effectBad > effectGood ?
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "별로에요 " + good.toStringAsFixed(0) + "%",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "별로에요  " + good.toStringAsFixed(0) + "%",
                                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                             color: gray600,
                                           )
@@ -145,22 +144,21 @@ class _GetRatingState extends State<GetRating> {
                                             color: gray600,
                                           )
                                       ) :
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "좋아요 " + bad.toStringAsFixed(0) + "%",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "좋아요         " + bad.toStringAsFixed(0) + "%",
                                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                             color: gray600,
                                           )
                                       ),
-
                                       Container(height: 6),
 
                                       //side effect
                                       sideEffectYes > sideEffectNo ?
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "있어요 " +  yes.toStringAsFixed(0) + "%",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "있어요         " +  yes.toStringAsFixed(0) + "%",
                                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                             color: gray600,
                                           )
                                       ) :
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "없어요 " +  no.toStringAsFixed(0) + "%",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "없어요         " +  no.toStringAsFixed(0) + "%",
                                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                             color: gray600,
                                           )
@@ -241,7 +239,7 @@ class _GetRatingState extends State<GetRating> {
                         //TODO: GOTO Edit Review
                         Navigator.of(context).pop();
                         Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq, tapToRatingResult: rating)
+                            builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq,)
                         ));
                       },
                     ),

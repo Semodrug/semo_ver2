@@ -785,6 +785,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+
                     Text('약 정보 전체보기',
                         style: Theme.of(context)
                             .textTheme
@@ -859,134 +860,179 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /* Review */
   Widget _drugReviews() {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              //TODO EDIT num of reviews
-              StreamBuilder<Drug>(
-                  stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      Drug drug = snapshot.data;
-                      if (drug.numOfReviews > 0) _existReview();
-                      return Text(
+    return StreamBuilder<Drug>(
+        stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Drug drug = snapshot.data;
+            if (drug.numOfReviews > 0) _existReview();
+            return Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      //TODO EDIT num of reviews
+                      Text(
                           "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
                           style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                color: gray750_activated,
-                              ));
-                    } else
-                      return Loading();
-                  }),
-
-              checkReviewIsZero() == true
-                  ? Container()
-                  : InkWell(
-                      child: Text('전체리뷰 보기',
-                          style: Theme.of(context)
-                              .textTheme
-                              .caption
-                              .copyWith(color: gray500, fontSize: 12)),
-                      onTap: () {
-                        //TODO GET ALL REVIEW
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    AllReview(widget.drugItemSeq)));
-                      }),
-            ],
-          ),
-        ),
-        // _searchBar(),
-        // ReviewList(_searchText, "all"),
-        checkReviewIsZero() == true ? Container() : _searchBar(),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            height: 36,
-            decoration: BoxDecoration(
-              // shape: OutlineInputBorder(
-              //     borderSide: BorderSide(
-              //         style: BorderStyle.solid,
-              //         width: 1.0,
-              //         color: gray200),
-              //     borderRadius: BorderRadius.circular(8.0)),
-              color: gray50,
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 15,
-                  height: 15,
-                  child: Image.asset('assets/icons/warning_icon_green.png'),
-                ),
-                SizedBox(width: 6),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2
-                        .copyWith(color: gray600, fontSize: 12),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: "효과 및 부작용은 개인에 따라 다를 수 있습니다.",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle2
-                              .copyWith(color: gray600, fontSize: 12)),
-                      // TextSpan(text: '은 개인에 따라 다를 수 있습니다.'),
+                            color: gray750_activated,
+                          )),
+                      //Text("EEEEE"+checkReviewIsZero().toString()),
+                      checkReviewIsZero() == true
+                          ? Container()
+                          : InkWell(
+                          child: Text('전체리뷰 보기',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  .copyWith(color: gray500, fontSize: 12)),
+                          onTap: () {
+                            //TODO GET ALL REVIEW
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        AllReview(widget.drugItemSeq)));
+                          }),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
+                // _searchBar(),
+                // ReviewList(_searchText, "all"),
+                checkReviewIsZero() == true ? Container() : _searchBar(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    height: 36,
+                    decoration: BoxDecoration(
+                      // shape: OutlineInputBorder(
+                      //     borderSide: BorderSide(
+                      //         style: BorderStyle.solid,
+                      //         width: 1.0,
+                      //         color: gray200),
+                      //     borderRadius: BorderRadius.circular(8.0)),
+                      color: gray50,
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 15,
+                          height: 15,
+                          child: Image.asset('assets/icons/warning_icon_green.png'),
+                        ),
+                        SizedBox(width: 6),
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            // Note: Styles for TextSpans must be explicitly defined.
+                            // Child text spans will inherit styles from parent
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle2
+                                .copyWith(color: gray600, fontSize: 12),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: "효과 및 부작용은 개인에 따라 다를 수 있습니다.",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2
+                                      .copyWith(color: gray600, fontSize: 12)),
+                              // TextSpan(text: '은 개인에 따라 다를 수 있습니다.'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
-        checkReviewIsZero() == true
-            ? Container(
-                height: 310,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: [
-                    Container(
-                      height: 30,
-                    ),
-                    Image.asset(
-                      'assets/images/Group 257.png',
-                    ),
-                    Container(
-                      height: 10,
-                    ),
-                    Text("아직 작성된 리뷰가 없어요")
-                  ],
-                ))
-            : ReviewList(_searchText, "all"),
-      ],
-    );
+                checkReviewIsZero() == true
+                    ? Container(
+                    height: 310,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 30,
+                        ),
+                        Image.asset(
+                          'assets/images/Group 257.png',
+                        ),
+                        Container(
+                          height: 10,
+                        ),
+                        Text("아직 작성된 리뷰가 없어요")
+                      ],
+                    ))
+                    : ReviewList(_searchText, "all"),
+              ],
+            );
+
+          } else
+            return Loading();
+        });
+
   }
 
   Widget _searchBar() {
+    // return Center(
+    //   child: Column(
+    //     children: [
+    //       Container(
+    //         margin: EdgeInsets.fromLTRB(20, 12, 20, 0),
+    //         child: SizedBox(
+    //             height: 35,
+    //             child: FlatButton(
+    //               child: Row(
+    //                 mainAxisAlignment: MainAxisAlignment.start,
+    //                 children: [
+    //                   Icon(Icons.search, size: 20),
+    //                   Padding(
+    //                     padding:
+    //                     const EdgeInsets.symmetric(horizontal: 10.0),
+    //                     child: Text(
+    //                       "어떤 약정보를 찾고 계세요?",
+    //                       style: Theme.of(context).textTheme.bodyText2,
+    //                     ),
+    //                   ),
+    //                 ],
+    //               ),
+    //               // onPressed: () {
+    //               //   Navigator.push(
+    //               //       context,
+    //               //       MaterialPageRoute(
+    //               //           builder: (BuildContext context) =>
+    //               //               SearchHighlightingScreen(
+    //               //                   infoEE: infoEE,
+    //               //                   infoNB: infoNB,
+    //               //                   infoUD: infoUD,
+    //               //                   storage: storage,
+    //               //                   entp_name: entpName)));
+    //               // },
+    //               textColor: gray300_inactivated,
+    //               color: gray50,
+    //               shape: OutlineInputBorder(
+    //                   borderSide: BorderSide(
+    //                       style: BorderStyle.solid,
+    //                       width: 1.0,
+    //                       color: gray200),
+    //                   borderRadius: BorderRadius.circular(8.0)),
+    //             )),
+    //       ),
+    //       SizedBox(height: 10)
+    //     ],
+    //   ),
+    // );
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
-//        width: 370,
-//        width: MediaQuery.of(context).size.width*0.9,
-        height: 45,
+        height: 35,
         margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          color: Colors.grey[200],
-        ),
         child: Row(
           children: [
             Expanded(
@@ -1006,40 +1052,25 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                       hintText: '어떤 리뷰를 찾고계세요?',
                       hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
-                            color: gray300_inactivated,
-                          ),
+                            color: gray300_inactivated,),
                       contentPadding: EdgeInsets.zero,
                       labelStyle: TextStyle(color: Colors.grey),
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.transparent)),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(color: gray75)),
                       enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.transparent)),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(color: gray75)),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.transparent))),
-                )),
-//            focusNode.hasFocus
-//                ? Expanded(
-//              child: FlatButton(
-//                child: Text(
-//                  'clear',
-//                  style: TextStyle(fontSize: 13),
-//                ),
-//                onPressed: () {
-//                  setState(() {
-//                    _filter.clear();
-//                    _searchText = "";
-//                    focusNode.unfocus();
-//                  });
-//                },
-//              ),
-//            )
-//                : Expanded(
-//              flex: 0,
-//              child: Container(),
-//            )
+                                          borderSide: BorderSide(
+                                              style: BorderStyle.solid,
+                                              width: 1.0,
+                                              color: gray75),
+                                          borderRadius: BorderRadius.circular(8.0))
+                  ),
+                )
+            ),
+
           ],
         ),
       ),

@@ -60,7 +60,6 @@ class _DetailInfoState extends State<DetailInfo> {
                 Container(
                   margin: EdgeInsets.fromLTRB(16, 11, 16, 0),
                   child: SizedBox(
-                      //width: 370,
                       height: 35,
                       child: FlatButton(
                         child: Row(
