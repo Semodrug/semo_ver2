@@ -181,6 +181,14 @@ class _ExpirationGState extends State<ExpirationG> {
     );
   }
 
+  String _shortenName(String drugName) {
+    List splitName = [];
+
+    if (drugName.contains('(')) splitName = drugName.split('(');
+
+    return splitName[0];
+  }
+
   Widget _topInfo(BuildContext context, drug) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -198,10 +206,11 @@ class _ExpirationGState extends State<ExpirationG> {
           drug.entpName,
           style: Theme.of(context).textTheme.caption,
         ),
+        SizedBox(height: 2),
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.7,
           child: Text(
-            drug.itemName,
+            _shortenName(drug.itemName),
             style: Theme.of(context).textTheme.headline5,
             textAlign: TextAlign.center,
           ),
@@ -252,7 +261,10 @@ class _ExpirationGState extends State<ExpirationG> {
                 children: [
                   Text(
                     '${DateFormat('yyyy').format(_pickDateTime)}년 ${DateFormat('MM').format(_pickDateTime)}월 ${DateFormat('dd').format(_pickDateTime)}일',
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray750_activated),
                   ),
                   Icon(Icons.keyboard_arrow_down)
                 ],
@@ -304,7 +316,10 @@ class _ExpirationGState extends State<ExpirationG> {
                   children: [
                     Text(
                       '${DateFormat('yyyy').format(_pickDateTime)}년 ${DateFormat('MM').format(_pickDateTime)}월 ${DateFormat('dd').format(_pickDateTime)}일',
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: gray750_activated),
                     ),
                     Icon(Icons.keyboard_arrow_down)
                   ],
@@ -348,7 +363,10 @@ class _ExpirationGState extends State<ExpirationG> {
                   value: 60,
                   child: Text(
                     '[2개월] 약국에서 처방받은 알약',
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray750_activated),
                   ),
                   onTap: () {
                     setState(() {
@@ -360,7 +378,10 @@ class _ExpirationGState extends State<ExpirationG> {
                   value: 14,
                   child: Text(
                     '[2주] 개봉된 액체상태의 시럽',
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray750_activated),
                   ),
                   onTap: () {
                     setState(() {
@@ -372,7 +393,10 @@ class _ExpirationGState extends State<ExpirationG> {
                   value: 30,
                   child: Text(
                     '[1개월] 개봉된 액체상태의 안약',
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray750_activated),
                   ),
                   onTap: () {
                     setState(() {
@@ -384,7 +408,10 @@ class _ExpirationGState extends State<ExpirationG> {
                   value: 180,
                   child: Text(
                     '[6개월] 개봉된 연고',
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray750_activated),
                   ),
                   onTap: () {
                     setState(() {
@@ -396,7 +423,10 @@ class _ExpirationGState extends State<ExpirationG> {
                   value: 0,
                   child: Text(
                     '직접 입력하기',
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray750_activated),
                   ),
                   onTap: () {
                     setState(() {
@@ -457,27 +487,6 @@ class _ExpirationGState extends State<ExpirationG> {
     );
   }
 
-  // Widget selfWrite() {
-  //   return TextFormField(
-  //       controller: _selfWritingController,
-  //       cursorColor: Colors.teal[400],
-  //       decoration: InputDecoration(
-  //           focusedBorder: UnderlineInputBorder(
-  //             borderSide: BorderSide(color: Colors.teal),
-  //           ),
-  //           hintText: '예상 사용가능 기간이 몇일인가요? 예) 30',
-  //           hintStyle: TextStyle(color: Colors.grey, fontSize: 14.0)),
-  //       keyboardType: TextInputType.number,
-  //       onChanged: (value) {
-  //         setState(() {
-  //           DateTime _expectedDateTime =
-  //               _pickDateTime.add(Duration(days: int.parse(value)));
-  //           _expectedDateString =
-  //               DateFormat('yyyy.MM.dd').format(_expectedDateTime);
-  //         });
-  //       });
-  // }
-
   Widget _expirationPick() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -521,7 +530,10 @@ class _ExpirationGState extends State<ExpirationG> {
                   children: [
                     Text(
                       '${DateFormat('yyyy').format(_pickSelfDateTime)}년 ${DateFormat('MM').format(_pickSelfDateTime)}월 ${DateFormat('dd').format(_pickSelfDateTime)}일',
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: gray750_activated),
                     ),
                     Icon(Icons.keyboard_arrow_down)
                   ],
@@ -555,25 +567,27 @@ class _ExpirationGState extends State<ExpirationG> {
         //padding: const EdgeInsets.symmetric(vertical: 16.0),
         //alignment: Alignment.center,
         child: RaisedButton(
-          onPressed: () async {
-            _showSaveWell(context);
-            // Navigator.pop(context);
-            await DatabaseService(uid: user.uid).addSavedList(
-                drug.itemName,
-                drug.itemSeq,
-                drug.category,
-                drug.etcOtcCode,
-                expirationTime,
-                searchListOutput);
-          },
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          child: Text(
-            '추가하기',
-            style: TextStyle(color: Colors.white),
-          ),
-          color: Colors.teal[400],
-        ),
+            onPressed: () async {
+              _showSaveWell(context);
+              // Navigator.pop(context);
+              await DatabaseService(uid: user.uid).addSavedList(
+                  drug.itemName,
+                  drug.itemSeq,
+                  drug.category,
+                  drug.etcOtcCode,
+                  expirationTime,
+                  searchListOutput);
+            },
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            child: Text(
+              '추가하기',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: gray0_white, fontSize: 15),
+            ),
+            color: primary400_line),
       ),
     );
   }
