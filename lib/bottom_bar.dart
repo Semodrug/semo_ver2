@@ -4,13 +4,11 @@ import 'package:app_settings/app_settings.dart';
 
 import 'package:semo_ver2/home/home_add_button_stack.dart';
 import 'package:semo_ver2/theme/colors.dart';
-//import 'package:semo_ver2/ranking/past_dart_file/test_ranking.dart';
 
 import 'camera/camera.dart';
 import 'home/home.dart';
 import 'mypage/my_page.dart';
 import 'ranking/ranking.dart';
-import 'review/drug_info.dart';
 
 class BottomBar extends StatefulWidget {
   @override
@@ -22,14 +20,8 @@ class _BottomBarState extends State<BottomBar> {
 
   final List<Widget> _widgetOptions = [
     HomePage(),
-    // AddButton(),
-    CameraPage(),
+    Container(),
     RankingPage(),
-//    PhilInfoPage(
-//      drugItemSeq: '199303108',
-//    )
-//     ReviewPage("199303108")
-//    ReviewPage(),
   ];
 
   Future<void> _onItemTapped(int index) async {
@@ -40,7 +32,7 @@ class _BottomBarState extends State<BottomBar> {
     } else {
       if (await checkIfPermissionGranted()) {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => AddButton()),
+          MaterialPageRoute(builder: (context) => CameraPage()),
         );
       } else {
         print('권한을 허용해주세요');
@@ -125,6 +117,7 @@ class _BottomBarState extends State<BottomBar> {
           selectedFontSize: 0,
           unselectedFontSize: 0,
           type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: ImageIcon(
@@ -145,10 +138,7 @@ class _BottomBarState extends State<BottomBar> {
                   // color: Color(0xFF3A5A98),
                 ),
                 label: '카테고리'),
-            // BottomNavigationBarItem(icon: Icon(Icons.create), label: 'review'),
           ],
-          currentIndex: _selectedIndex,
-//          selectedItemColor: Theme.of(context).bottomAppBarColor,
           onTap: _onItemTapped),
     );
   }
