@@ -95,9 +95,10 @@ TextTheme _buildTextTheme(TextTheme base) {
             fontWeight: FontWeight.w500,
             color: Color(0xFF1F1F1F)),
         subtitle2: TextStyle(
-            fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey[900]),
+            fontSize: 12, fontWeight: FontWeight.w500, color: gray900),
 
-        bodyText1: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+        bodyText1: TextStyle(
+            fontSize: 16, fontWeight: FontWeight.w400, color: gray500),
         bodyText2: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
