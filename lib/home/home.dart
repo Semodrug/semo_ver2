@@ -608,7 +608,7 @@ class _HomePageState extends State<HomePage> {
                           child: Container(
                               width: 80,
                               child: AspectRatio(
-                                  aspectRatio: 3.5 / 2,
+                                  aspectRatio: 2.5 / 2,
                                   child:
                                       DrugImage(drugItemSeq: data.itemSeq)))),
                       Container(
