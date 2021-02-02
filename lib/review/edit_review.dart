@@ -168,7 +168,7 @@ class _EditReviewState extends State<EditReview> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 RatingBar.builder(
-                                  itemSize: 20,
+                                  itemSize: 16,
                                   initialRating: drug.totalRating ,
                                   minRating: 0,
                                   direction: Axis.horizontal,
@@ -177,13 +177,17 @@ class _EditReviewState extends State<EditReview> {
                                   unratedColor: gray75,
                                   itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
                                   itemBuilder: (context, _) => Icon(
-                                    Icons.star, color: Colors.amber[300],
+                                    Icons.star, color: yellow,
                                   ),
                                 ),
                                 Container(width:5),
-                                Text(drug.totalRating.toStringAsFixed(2), style: TextStyle(fontSize: 15, color: Colors.black, )),
+                                Text(drug.totalRating.toStringAsFixed(2),
+                                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                        color: gray900, fontSize: 12),),
                                 Container(width:3),
-                                Text("("+drug.numOfReviews.toStringAsFixed(0)+"개)", style: TextStyle(fontSize: 13, color: Colors.grey, )),
+                                Text("("+drug.numOfReviews.toStringAsFixed(0)+"개)",
+                                    style: Theme.of(context).textTheme.overline.copyWith(
+                                        color: gray300_inactivated, fontSize: 10)),
                               ],
                             ),
                             CategoryButton(str: drug.category)
@@ -240,8 +244,8 @@ class _EditReviewState extends State<EditReview> {
               onRatingUpdate: (rating) {
                 starRating = rating;
                 setState(() {
-                  if(starRating == 0)
-                    starRatingText = "선택하세요.";
+                  // if(starRating == 0)
+                  //   starRatingText = "선택하세요.";
                   if(starRating == 1)
                     starRatingText =  "1점 (별로에요)";
                   if(starRating == 2)

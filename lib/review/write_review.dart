@@ -208,7 +208,7 @@ class _WriteReviewState extends State<WriteReview> {
                                   unratedColor: gray75,
                                   itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
                                   itemBuilder: (context, _) => Icon(
-                                    Icons.star, color: Colors.amber[300],
+                                    Icons.star, color: yellow,
                                   ),
                                 ),
                                 Container(width:5),
