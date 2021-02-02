@@ -97,11 +97,11 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                   ),
                   nickname(),
                   SizedBox(
-                    height: 20.0,
+                    height: 25.0,
                   ),
                   birthYear(),
                   SizedBox(
-                    height: 20.0,
+                    height: 25.0,
                   ),
                   sex(),
                   SizedBox(height: 50.0),
