@@ -3,6 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:app_settings/app_settings.dart';
 
 import 'package:semo_ver2/home/home_add_button_stack.dart';
+import 'package:semo_ver2/theme/colors.dart';
 //import 'package:semo_ver2/ranking/past_dart_file/test_ranking.dart';
 
 import 'camera/camera.dart';
@@ -39,7 +40,7 @@ class _BottomBarState extends State<BottomBar> {
     } else {
       if (await checkIfPermissionGranted()) {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => CameraPage()),
+          MaterialPageRoute(builder: (context) => AddButton()),
         );
       } else {
         print('권한을 허용해주세요');
@@ -117,15 +118,33 @@ class _BottomBarState extends State<BottomBar> {
 //        ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: gray0_white,
+          selectedItemColor: gray750_activated,
+          unselectedItemColor: gray300_inactivated,
+          iconSize: 40,
+          selectedFontSize: 0,
+          unselectedFontSize: 0,
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: ImageIcon(
+                AssetImage('assets/icons/bottom_home.png'),
+                // color: Color(0xFF3A5A98),
+              ),
               label: '홈',
             ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.camera_alt), label: 'camera'),
-            BottomNavigationBarItem(icon: Icon(Icons.list), label: '카테고리'),
+                icon: ImageIcon(
+                  AssetImage('assets/icons/bottom_camera.png'),
+                  // color: primary400_line,
+                ),
+                label: '카메라'),
+            BottomNavigationBarItem(
+                icon: ImageIcon(
+                  AssetImage('assets/icons/bottom_category.png'),
+                  // color: Color(0xFF3A5A98),
+                ),
+                label: '카테고리'),
             // BottomNavigationBarItem(icon: Icon(Icons.create), label: 'review'),
           ],
           currentIndex: _selectedIndex,
