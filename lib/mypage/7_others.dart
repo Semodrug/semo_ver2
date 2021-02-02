@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/7-1_withdrawal.dart';
 import 'package:semo_ver2/services/auth.dart';
+import 'package:semo_ver2/shared/custom_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class Others extends StatelessWidget {
@@ -88,7 +89,8 @@ class Others extends StatelessWidget {
                             color: primary400_line,
                           ),
                           onPressed: () async {
-                            _showWarning(context);
+                            CustomDialog().showWarning(context, '정말 로그아웃하시겠어요?',
+                                '취소', '로그아웃', 'logout', _action);
                           }),
                     ],
                   ),
@@ -99,6 +101,13 @@ class Others extends StatelessWidget {
                 ),
               ],
             ));
+  }
+
+  Future<void> _action(context) async {
+    await _auth.signOut();
+
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/start', (Route<dynamic> route) => false);
   }
 
   void _showWarning(context) {

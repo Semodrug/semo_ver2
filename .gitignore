@@ -92,3 +92,4 @@ pubspec.lock
 .settings/
 .vscode/
 pubspec.lock
+*.xml
