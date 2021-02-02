@@ -34,7 +34,7 @@ class _EditHealthPageState extends State<EditHealthPage> {
     if (widget.userData.keywordList.contains('심장')) _isKeyword[6] = true;
     if (widget.userData.keywordList.contains('고혈압')) _isKeyword[7] = true;
     if (widget.userData.keywordList.contains('당뇨')) _isKeyword[8] = true;
-    if (widget.userData.keywordList.contains('유당불내증')) _isKeyword[8] = true;
+    if (widget.userData.keywordList.contains('유당불내증')) _isKeyword[9] = true;
 
     if (widget.userData.keywordList.isNotEmpty &&
         !['임산부', '고령자', '소아', '간', '신장', '심장', '고혈압', '당뇨', '유당불내증']
