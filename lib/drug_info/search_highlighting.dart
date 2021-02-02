@@ -122,11 +122,36 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.teal[200],
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        centerTitle: true,
+        title: Text(
+          '약 정보 전체보기',
+          style: TextStyle(
+              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
+                    Color(0xFFE9FFFB),
+                    Color(0xFFE9FFFB),
+                    Color(0xFFFFFFFF),
+                  ])),
+        ),
+      ),
       backgroundColor: Colors.white,
-      body:
-
-      Padding(
-        padding: const EdgeInsets.fromLTRB(20, 10, 10, 20),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
@@ -142,7 +167,7 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                   ),
                   Scrollbar(
                       child: Container(
-                        height: height - 90, //440.0,
+                        height: height - 80, //440.0,
                         child: SingleChildScrollView(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,24 +219,21 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
 
     return Row(
       children: [
-        SizedBox(
-          width: 10,
-          child: FlatButton(
-              //padding: EdgeInsets.only(left: 10),
-              onPressed: () {
-                Navigator.pop(context);
-                //Navigator.pushNamed(context, '/bottom_bar');
-              },
-              child: Icon(Icons.arrow_back, color: primary300_main,)),
-        ),
-        Spacer(),
         Container(
-          width: 300,
+          width: MediaQuery.of(context).size.width - 35,
           height: 35,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            color: Colors.grey[200],
+              color: gray50,
+              border: Border.all(
+                  style: BorderStyle.solid,
+                  width: 1.0,
+                  color: gray200),
+              borderRadius: BorderRadius.circular(8.0)
           ),
+          // decoration: BoxDecoration(
+          //   borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          //   color: Colors.grey[200],
+          // ),
           child: Row(
             children: [
               Expanded(
@@ -223,7 +245,7 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                     },
                     cursorColor: Colors.teal[400],
                     focusNode: focusNode,
-                    style: TextStyle(fontSize: 15),
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15),
                     autofocus: true,
                     controller: _filter,
                     decoration: InputDecoration(
@@ -254,7 +276,8 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                           });
                         },
                       ),
-                      hintText: '어떤 정보를 찾고 계신가요',
+                      hintText: '어떤 약정보를 찾고 계세요?',
+                      hintStyle: Theme.of(context).textTheme.bodyText2,
                       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       labelStyle: TextStyle(color: Colors.grey),
                       focusedBorder: OutlineInputBorder(
