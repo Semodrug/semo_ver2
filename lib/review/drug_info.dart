@@ -549,7 +549,11 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget _warningMessage(context, carefulDiseaseList, drugItemSeq) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
-      height: carefulDiseaseList.join(", ").length < 7 ? 36 : 60,
+      height: carefulDiseaseList.join(", ").length < 7
+          ? 36
+          : carefulDiseaseList.join(", ").length < 32
+              ? 58
+              : 120,
       decoration: BoxDecoration(
         color: primary50,
         borderRadius: BorderRadius.circular(4.0),
@@ -559,10 +563,18 @@ class _ReviewPageState extends State<ReviewPage> {
         children: [
           Row(
             children: [
-              SizedBox(
-                  width: 15,
-                  height: 15,
-                  child: Image.asset('assets/icons/warning_icon.png')),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      width: 15,
+                      height: 15,
+                      child: Image.asset('assets/icons/warning_icon.png')),
+                  carefulDiseaseList.join(", ").length < 7
+                      ? Container()
+                      : SizedBox(height: 13),
+                ],
+              ),
               SizedBox(width: 6),
               Container(
                 width: MediaQuery.of(context).size.width - 165,
@@ -589,30 +601,60 @@ class _ReviewPageState extends State<ReviewPage> {
             ],
           ),
           SizedBox(height: 10),
-          ElevatedButton(
-            child: Text('자세히보기',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    .copyWith(color: primary600_bold_text, fontSize: 12)),
-            style: ElevatedButton.styleFrom(
-                minimumSize: Size(68, 24),
-                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                elevation: 0,
-                primary: gray0_white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    side: BorderSide(color: Colors.grey[300]))),
-            onPressed: () async {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => WarningInfo(
-                            drugItemSeq: drugItemSeq,
-                            warningList: carefulDiseaseList,
-                          )));
-            },
-          ),
+          carefulDiseaseList.join(", ").length < 7
+              ? ElevatedButton(
+                  child: Text('자세히보기',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: primary600_bold_text, fontSize: 12)),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(68, 24),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                      elevation: 0,
+                      primary: gray0_white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          side: BorderSide(color: Colors.grey[300]))),
+                  onPressed: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WarningInfo(
+                                  drugItemSeq: drugItemSeq,
+                                  warningList: carefulDiseaseList,
+                                )));
+                  },
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      child: Text('자세히보기',
+                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                              color: primary600_bold_text, fontSize: 12)),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(68, 24),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                          elevation: 0,
+                          primary: gray0_white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                              side: BorderSide(color: Colors.grey[300]))),
+                      onPressed: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WarningInfo(
+                                      drugItemSeq: drugItemSeq,
+                                      warningList: carefulDiseaseList,
+                                    )));
+                      },
+                    ),
+                  ],
+                )
         ],
       ),
     );
