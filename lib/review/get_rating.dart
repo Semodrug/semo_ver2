@@ -75,7 +75,7 @@ class _GetRatingState extends State<GetRating> {
                   DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(ratingResult, length);
 
                   return Container(
-                      padding: EdgeInsets.fromLTRB(20,15,10,20),
+                      padding: EdgeInsets.fromLTRB(20,20,10,20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -84,13 +84,11 @@ class _GetRatingState extends State<GetRating> {
                                   color: gray750_activated,
                                   fontSize: 14
                               )),
-                          Padding(padding: EdgeInsets.only(top: 14.0)),
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
                               //#####
                               Image.asset('assets/icons/star.png'),
-                              // Icon(Icons.star, color: Colors.amber[300], size: 35),
                               //Todo : Rating평
                               Container(width: 5),
                               Row(
@@ -101,12 +99,16 @@ class _GetRatingState extends State<GetRating> {
                                           color: gray750_activated,
                                           fontSize: 24
                                       )),
-                                  Text("/5",
-                                      style: Theme.of(context).textTheme.headline4.copyWith(
-                                          color: gray300_inactivated,
-                                          fontSize: 16
-                                      )),
-
+                                  Column(
+                                    children: [
+                                      Text(" /5",
+                                          style: Theme.of(context).textTheme.headline4.copyWith(
+                                              color: gray300_inactivated,
+                                              fontSize: 16
+                                          )),
+                                      Container(height:4)
+                                    ],
+                                  ),
                                 ],) ,
                               Expanded(child: Container()),
 
@@ -116,12 +118,12 @@ class _GetRatingState extends State<GetRating> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "효과",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "효과  ",
                                           style: Theme.of(context).textTheme.subtitle1.copyWith(
                                             color: gray600,
                                           )),
                                       Container(height: 6),
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "부작용",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "부작용  ",
                                           style: Theme.of(context).textTheme.subtitle1.copyWith(
                                             color: gray600,
                                           )),
@@ -133,36 +135,104 @@ class _GetRatingState extends State<GetRating> {
                                     children: [
                                       //effect
                                       effectBad > effectSoso && effectBad > effectGood ?
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "별로에요  " + good.toStringAsFixed(0) + "%",
-                                          style: Theme.of(context).textTheme.bodyText2.copyWith(
-                                            color: gray600,
-                                          )
-                                      ) :
+                                      RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                            color: gray300_inactivated),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: good == 0 && soso == 0 && bad == 0 ? "" : "별로에요  ",
+                                              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                                color: gray600,)),
+                                            TextSpan(
+                                              text:good == 0 && soso == 0 && bad == 0 ? "" :
+                                              bad.toStringAsFixed(0) + "%"),
+                                          ],
+                                        ),
+                                      )
+                                          :
                                       effectSoso > effectGood && effectSoso > effectBad ?
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "보통이에요 " + soso.toStringAsFixed(0) + "%",
-                                          style: Theme.of(context).textTheme.bodyText2.copyWith(
-                                            color: gray600,
-                                          )
-                                      ) :
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "좋아요         " + bad.toStringAsFixed(0) + "%",
-                                          style: Theme.of(context).textTheme.bodyText2.copyWith(
-                                            color: gray600,
-                                          )
+                                      RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                              color: gray300_inactivated),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text: good == 0 && soso == 0 && bad == 0 ? "" : "보통이에요  ",
+                                                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                                  color: gray600,)),
+                                            TextSpan(
+                                                text:good == 0 && soso == 0 && bad == 0 ? "" :
+                                                soso.toStringAsFixed(0) + "%"),
+                                          ],
+                                        ),
+                                      )
+                                          :
+                                      RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                              color: gray300_inactivated),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text: good == 0 && soso == 0 && bad == 0 ? "" : "좋아요  ",
+                                                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                                  color: gray600,)),
+                                            TextSpan(
+                                                text:good == 0 && soso == 0 && bad == 0 ? "" :
+                                                good.toStringAsFixed(0) + "%"),
+                                          ],
+                                        ),
                                       ),
+                                      // Text(good == 0 && soso == 0 && bad == 0 ? "" : "좋아요  " + bad.toStringAsFixed(0) + "%",
+                                      //     style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                      //       color: gray600,
+                                      //     )
+                                      // ),
                                       Container(height: 6),
 
                                       //side effect
                                       sideEffectYes > sideEffectNo ?
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "있어요         " +  yes.toStringAsFixed(0) + "%",
-                                          style: Theme.of(context).textTheme.bodyText2.copyWith(
-                                            color: gray600,
-                                          )
-                                      ) :
-                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "없어요         " +  no.toStringAsFixed(0) + "%",
-                                          style: Theme.of(context).textTheme.bodyText2.copyWith(
-                                            color: gray600,
-                                          )
+                                      RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                              color: gray300_inactivated),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text: good == 0 && soso == 0 && bad == 0 ? "" : "있어요  ",
+                                                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                                  color: gray600,)),
+                                            TextSpan(
+                                                text:good == 0 && soso == 0 && bad == 0 ? "" :
+                                                yes.toStringAsFixed(0) + "%"),
+                                          ],
+                                        ),
                                       )
+                                          :
+                                      RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                              color: gray300_inactivated),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text: good == 0 && soso == 0 && bad == 0 ? "" : "없어요  ",
+                                                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                                  color: gray600,)),
+                                            TextSpan(
+                                                text:good == 0 && soso == 0 && bad == 0 ? "" :
+                                                no.toStringAsFixed(0) + "%"),
+                                          ],
+                                        ),
+                                      )
+                                      // Text(good == 0 && soso == 0 && bad == 0 ? "" : "없어요  " +  no.toStringAsFixed(0) + "%",
+                                      //     style: Theme.of(context).textTheme.bodyText2.copyWith(
+                                      //       color: gray600,
+                                      //     )
+                                      // )
                                     ],
                                   ),
                                   Container(width:MediaQuery.of(context).size.width*0.15)
@@ -177,19 +247,7 @@ class _GetRatingState extends State<GetRating> {
                               // ),
                             ],
                           ),
-                          // Padding(padding: EdgeInsets.only(top: 20.0)),
-      //                    Text("탭해서 평가하기",
-      //                        style: TextStyle(
-      //                            fontSize: 14.0, color: Colors.grey[700])),
-      //                    StreamBuilder<Review>(
-      //                      stream: ReviewService().getSingleReview("7nXbIzuWESZhHFEcRwyv"),
-      //                      builder: (context, snapshot) {
-      //                        Review review = snapshot.data;
-      //                        print("*******"+review.starRating.toString());
-      //                        return _tapToRate(review.starRating, user);
-      //                      }
-      //                    ),
-                          //TODO Save tap to RATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#######################
+
 
                         ],
                       ));
