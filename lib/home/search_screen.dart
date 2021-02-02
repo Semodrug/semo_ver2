@@ -220,7 +220,7 @@ class _SearchScreenState extends State<SearchScreen> {
     if (_searchText.length < 2) {
       return _noResultContainer();
     } else if (_searchText.length != 0) {
-      if (userDrugs != null) {
+      if (!userDrugs.isEmpty) {
         if (type == 'USER') {
           return Padding(
             padding: const EdgeInsets.all(8.0),
