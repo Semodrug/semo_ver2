@@ -548,8 +548,17 @@ class _ExpirationGState extends State<ExpirationG> {
   }
 
   Widget _okButton(context, user, drug, expirationTime) {
-    List<String> searchNameList = drug.itemName.split('');
+    String newName = drug.itemName;
+    List splitName = [];
+
+    if (newName.contains('(')) {
+      splitName = newName.split('(');
+      newName = splitName[0];
+    }
+
+    List<String> searchNameList = newName.split('');
     List<String> searchListOutput = [];
+
     for (int i = 0; i < searchNameList.length; i++) {
       if (i != searchNameList.length - 1) {
         searchListOutput.add((searchNameList[i]));

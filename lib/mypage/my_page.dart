@@ -168,7 +168,7 @@ class _MyPageState extends State<MyPage> {
                 IconButton(
                   icon: Icon(
                     Icons.person,
-                    color: Colors.teal[200],
+                    color: primary300_main,
                   ),
                   onPressed: () {},
                 ),
@@ -177,14 +177,27 @@ class _MyPageState extends State<MyPage> {
             SizedBox(
               height: 20,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // TODO: 리뷰 갯수
-                _myMenu('리뷰', '0', context, MyReviews()),
-                _myMenu('찜', '0', context, MyReviews()),
-                //_myMenu('1:1 문의', '0', context, MyReviews())
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // TODO: 리뷰 갯수
+                  Container(
+                      width: 136,
+                      child: _myMenu('리뷰', '0', context, MyReviews())),
+                  Container(
+                    height: 44,
+                    child: VerticalDivider(
+                      color: gray75,
+                    ),
+                  ),
+                  Container(
+                      width: 136,
+                      child: _myMenu('찜', '0', context, MyReviews())),
+                  //_myMenu('1:1 문의', '0', context, MyReviews())
+                ],
+              ),
             )
           ],
         ),
@@ -194,48 +207,55 @@ class _MyPageState extends State<MyPage> {
 }
 
 Widget _myMenu(String name, String count, BuildContext context, var nextPage) {
-  return Column(
-    children: [
-      Text(name,
-          style:
-              Theme.of(context).textTheme.bodyText2.copyWith(color: gray500)),
-      TextButton(
-        child: Text(count,
-            style: Theme.of(context)
-                .textTheme
-                .headline2
-                .copyWith(color: primary500_light_text)),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => nextPage),
-        ),
-      )
-    ],
+  return InkWell(
+    child: Container(
+      padding: const EdgeInsets.all(2.0),
+      child: Column(
+        children: [
+          Text(name,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText2
+                  .copyWith(color: gray500)),
+          Text(count,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline2
+                  .copyWith(color: primary500_light_text)),
+        ],
+      ),
+    ),
+    onTap: () => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => nextPage),
+    ),
   );
 }
 
 Widget _myPageMenu(String name, BuildContext context, var nextPage) {
-  return Container(
-    padding: EdgeInsets.fromLTRB(20.0, 0, 12.0, 0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(name,
-            style: Theme.of(context)
-                .textTheme
-                .bodyText2
-                .copyWith(color: gray900, fontWeight: FontWeight.normal)),
-        IconButton(
-          icon: Icon(
-            Icons.navigate_next,
-            color: primary400_line,
-          ),
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => nextPage),
-          ),
+  return InkWell(
+      child: Container(
+        height: 48,
+        padding: EdgeInsets.fromLTRB(20.0, 0, 12.0, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(name,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .copyWith(color: gray900, fontWeight: FontWeight.normal)),
+            Icon(
+              Icons.navigate_next,
+              color: gray100,
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => nextPage),
+        );
+      });
 }

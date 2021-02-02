@@ -34,7 +34,7 @@ class _EditHealthPageState extends State<EditHealthPage> {
     if (widget.userData.keywordList.contains('심장')) _isKeyword[6] = true;
     if (widget.userData.keywordList.contains('고혈압')) _isKeyword[7] = true;
     if (widget.userData.keywordList.contains('당뇨')) _isKeyword[8] = true;
-    if (widget.userData.keywordList.contains('유당불내증')) _isKeyword[8] = true;
+    if (widget.userData.keywordList.contains('유당불내증')) _isKeyword[9] = true;
 
     if (widget.userData.keywordList.isNotEmpty &&
         !['임산부', '고령자', '소아', '간', '신장', '심장', '고혈압', '당뇨', '유당불내증']
@@ -236,40 +236,44 @@ class _EditHealthPageState extends State<EditHealthPage> {
 
     return Container(
       alignment: Alignment.center,
-      child: SizedBox(
-        width: 400.0,
-        height: 45.0,
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-        //alignment: Alignment.center,
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-          child: Text(
-            '저장',
-            style: Theme.of(context)
-                .textTheme
-                .headline5
-                .copyWith(color: gray0_white, fontSize: 15),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+        child: SizedBox(
+          width: 400.0,
+          height: 45.0,
+          //padding: const EdgeInsets.symmetric(vertical: 16.0),
+          //alignment: Alignment.center,
+          child: RaisedButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(10.0)),
+            child: Text(
+              '저장하기',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: gray0_white, fontSize: 15),
+            ),
+            color: primary400_line,
+            onPressed: () async {
+              if (_isKeyword[1] == true) _keywordList.add('임산부');
+              if (_isKeyword[2] == true) _keywordList.add('고령자');
+              if (_isKeyword[3] == true) _keywordList.add('소아');
+              if (_isKeyword[4] == true) _keywordList.add('간');
+              if (_isKeyword[5] == true) _keywordList.add('신장');
+              if (_isKeyword[6] == true) _keywordList.add('심장');
+              if (_isKeyword[7] == true) _keywordList.add('고혈압');
+              if (_isKeyword[8] == true) _keywordList.add('당뇨');
+              if (_isKeyword[9] == true) _keywordList.add('유당불내증');
+
+              if (_selfWritingController.text.isNotEmpty)
+                _keywordList.add(_selfWritingController.text);
+
+              await DatabaseService(uid: user.uid)
+                  .updateUserHealth(_keywordList);
+
+              _showEditedWell(context);
+            },
           ),
-          color: primary400_line,
-          onPressed: () async {
-            if (_isKeyword[1] == true) _keywordList.add('임산부');
-            if (_isKeyword[2] == true) _keywordList.add('고령자');
-            if (_isKeyword[3] == true) _keywordList.add('소아');
-            if (_isKeyword[4] == true) _keywordList.add('간');
-            if (_isKeyword[5] == true) _keywordList.add('신장');
-            if (_isKeyword[6] == true) _keywordList.add('심장');
-            if (_isKeyword[7] == true) _keywordList.add('고혈압');
-            if (_isKeyword[8] == true) _keywordList.add('당뇨');
-            if (_isKeyword[9] == true) _keywordList.add('유당불내증');
-
-            if (_selfWritingController.text.isNotEmpty)
-              _keywordList.add(_selfWritingController.text);
-
-            await DatabaseService(uid: user.uid).updateUserHealth(_keywordList);
-
-            _showEditedWell(context);
-          },
         ),
       ),
     );

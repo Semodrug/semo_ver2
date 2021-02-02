@@ -97,11 +97,11 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                   ),
                   nickname(),
                   SizedBox(
-                    height: 20.0,
+                    height: 25.0,
                   ),
                   birthYear(),
                   SizedBox(
-                    height: 20.0,
+                    height: 25.0,
                   ),
                   sex(),
                   SizedBox(height: 50.0),
@@ -216,7 +216,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(10.0)),
             child: Text(
-              '저장',
+              '저장하기',
               style: Theme.of(context)
                   .textTheme
                   .headline5

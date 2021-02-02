@@ -366,7 +366,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       SizedBox(height: 10),
                       Row(children: <Widget>[
                         RatingBar.builder(
-                          initialRating: drug.totalRating,
+                          initialRating: drug.totalRating * 1.0,
                           direction: Axis.horizontal,
                           allowHalfRating: true,
                           itemCount: 5,
@@ -489,6 +489,7 @@ class _ReviewPageState extends State<ReviewPage> {
   String _shortenName(String data) {
     String newName = data;
     List splitName = [];
+
     if (data.contains('(수출')) {
       splitName = newName.split('(수출');
       newName = splitName[0];
@@ -548,14 +549,12 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget _warningMessage(context, carefulDiseaseList, drugItemSeq) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
-      height: 36,
+      height: carefulDiseaseList.join(", ").length < 7
+          ? 36
+          : carefulDiseaseList.join(", ").length < 32
+              ? 58
+              : 120,
       decoration: BoxDecoration(
-        // shape: OutlineInputBorder(
-        //     borderSide: BorderSide(
-        //         style: BorderStyle.solid,
-        //         width: 1.0,
-        //         color: gray200),
-        //     borderRadius: BorderRadius.circular(8.0)),
         color: primary50,
         borderRadius: BorderRadius.circular(4.0),
       ),
@@ -564,58 +563,98 @@ class _ReviewPageState extends State<ReviewPage> {
         children: [
           Row(
             children: [
-              SizedBox(
-                  width: 15,
-                  height: 15,
-                  child: Image.asset('assets/icons/warning_icon.png')),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      width: 15,
+                      height: 15,
+                      child: Image.asset('assets/icons/warning_icon.png')),
+                  carefulDiseaseList.join(", ").length < 7
+                      ? Container()
+                      : SizedBox(height: 13),
+                ],
+              ),
               SizedBox(width: 6),
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  // Note: Styles for TextSpans must be explicitly defined.
-                  // Child text spans will inherit styles from parent
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(color: gray600, fontSize: 12),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text: '${carefulDiseaseList.join(", ")}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: gray900, fontSize: 12)),
-                    TextSpan(text: '에 관한 주의사항이 있습니다.'),
-                  ],
+              Container(
+                width: MediaQuery.of(context).size.width - 165,
+                child: RichText(
+                  text: TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        .copyWith(color: gray600, fontSize: 12),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: '${carefulDiseaseList.join(", ")}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: gray900, fontSize: 12)),
+                      TextSpan(text: '에 관한 주의사항이 있습니다.'),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 10),
-          ElevatedButton(
-            child: Text('자세히보기',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    .copyWith(color: primary600_bold_text, fontSize: 12)),
-            style: ElevatedButton.styleFrom(
-                minimumSize: Size(68, 24),
-                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                elevation: 0,
-                primary: gray0_white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
-                    side: BorderSide(color: Colors.grey[300]))),
-            onPressed: () async {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => WarningInfo(
-                            drugItemSeq: drugItemSeq,
-                            warningList: carefulDiseaseList,
-                          )));
-            },
-          ),
+          carefulDiseaseList.join(", ").length < 7
+              ? ElevatedButton(
+                  child: Text('자세히보기',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: primary600_bold_text, fontSize: 12)),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(68, 24),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                      elevation: 0,
+                      primary: gray0_white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          side: BorderSide(color: Colors.grey[300]))),
+                  onPressed: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WarningInfo(
+                                  drugItemSeq: drugItemSeq,
+                                  warningList: carefulDiseaseList,
+                                )));
+                  },
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      child: Text('자세히보기',
+                          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                              color: primary600_bold_text, fontSize: 12)),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(68, 24),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                          elevation: 0,
+                          primary: gray0_white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                              side: BorderSide(color: Colors.grey[300]))),
+                      onPressed: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WarningInfo(
+                                      drugItemSeq: drugItemSeq,
+                                      warningList: carefulDiseaseList,
+                                    )));
+                      },
+                    ),
+                  ],
+                )
         ],
       ),
     );
@@ -782,7 +821,6 @@ class _ReviewPageState extends State<ReviewPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-
                     Text('약 정보 전체보기',
                         style: Theme.of(context)
                             .textTheme
@@ -871,28 +909,27 @@ class _ReviewPageState extends State<ReviewPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       //TODO EDIT num of reviews
-                      Text(
-                          "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
+                      Text("리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
                           style: Theme.of(context).textTheme.subtitle1.copyWith(
-                            color: gray750_activated,
-                          )),
+                                color: gray750_activated,
+                              )),
                       //Text("EEEEE"+checkReviewIsZero().toString()),
                       checkReviewIsZero() == true
                           ? Container()
                           : InkWell(
-                          child: Text('전체리뷰 보기',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .caption
-                                  .copyWith(color: gray500, fontSize: 12)),
-                          onTap: () {
-                            //TODO GET ALL REVIEW
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        AllReview(widget.drugItemSeq)));
-                          }),
+                              child: Text('전체리뷰 보기',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(color: gray500, fontSize: 12)),
+                              onTap: () {
+                                //TODO GET ALL REVIEW
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AllReview(widget.drugItemSeq)));
+                              }),
                     ],
                   ),
                 ),
@@ -914,7 +951,8 @@ class _ReviewPageState extends State<ReviewPage> {
                         SizedBox(
                           width: 15,
                           height: 15,
-                          child: Image.asset('assets/icons/warning_icon_green.png'),
+                          child: Image.asset(
+                              'assets/icons/warning_icon_green.png'),
                         ),
                         SizedBox(width: 6),
                         RichText(
@@ -945,30 +983,28 @@ class _ReviewPageState extends State<ReviewPage> {
 
                 checkReviewIsZero() == true
                     ? Container(
-                    height: 310,
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 30,
-                        ),
-                        Image.asset(
-                          'assets/images/Group 257.png',
-                        ),
-                        Container(
-                          height: 10,
-                        ),
-                        Text("아직 작성된 리뷰가 없어요")
-                      ],
-                    ))
+                        height: 310,
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 30,
+                            ),
+                            Image.asset(
+                              'assets/images/Group 257.png',
+                            ),
+                            Container(
+                              height: 10,
+                            ),
+                            Text("아직 작성된 리뷰가 없어요")
+                          ],
+                        ))
                     : ReviewList(_searchText, "all"),
               ],
             );
-
           } else
             return Loading();
         });
-
   }
 
   Widget _searchBar() {
@@ -1045,7 +1081,8 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                       hintText: '어떤 리뷰를 찾고계세요?',
                       hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
-                            color: gray300_inactivated,),
+                            color: gray300_inactivated,
+                          ),
                       contentPadding: EdgeInsets.zero,
                       labelStyle: TextStyle(color: Colors.grey),
                       focusedBorder: OutlineInputBorder(
@@ -1055,15 +1092,12 @@ class _ReviewPageState extends State<ReviewPage> {
                           borderRadius: BorderRadius.all(Radius.circular(8)),
                           borderSide: BorderSide(color: gray75)),
                       border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              style: BorderStyle.solid,
-                                              width: 1.0,
-                                              color: gray75),
-                                          borderRadius: BorderRadius.circular(8.0))
-                  ),
-                )
-            ),
-
+                          borderSide: BorderSide(
+                              style: BorderStyle.solid,
+                              width: 1.0,
+                              color: gray75),
+                          borderRadius: BorderRadius.circular(8.0))),
+                )),
           ],
         ),
       ),

@@ -245,9 +245,9 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                       .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
                 } else {
                   await DatabaseService(uid: user.uid).updateUserPrivacy(
-                    _isSelected[0] ? 'male' : 'female',
-                    _birthYearController.text,
                     _nicknameController.text,
+                    _birthYearController.text,
+                    _isSelected[0] ? 'male' : 'female',
                   );
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => GetHealthPage()));
