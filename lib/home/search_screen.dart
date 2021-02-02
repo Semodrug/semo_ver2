@@ -10,9 +10,6 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-bool _isFromUser = false;
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -31,6 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
       });
     });
   }
+
   //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
   String _checkLongName(String data) {
     String newName = data;
@@ -53,7 +51,8 @@ class _SearchScreenState extends State<SearchScreen> {
           alignment: Alignment.topCenter,
           child: Text(
             '검색 결과가 없습니다',
-           style: Theme.of(context).textTheme.headline5.copyWith(color: gray500),
+            style:
+                Theme.of(context).textTheme.headline5.copyWith(color: gray500),
           )),
     );
   }
@@ -74,10 +73,11 @@ class _SearchScreenState extends State<SearchScreen> {
             padding: EdgeInsets.only(top: 30),
             child: Align(
                 alignment: Alignment.topCenter,
-                child: Text(
-                  '찾고자 하는 약을 검색해주세요',
-                    style: Theme.of(context).textTheme.headline5.copyWith(color: gray500)
-                )),
+                child: Text('찾고자 하는 약을 검색해주세요',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        .copyWith(color: gray500))),
           );
         return Column(
           children: [
@@ -125,11 +125,11 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _drugFromUserInAll(context, userDrug) {
+  Widget _drugListFromUser(context, userDrug) {
     //여기는 user 안에 있는 친구들 불러오는 거!!
     return GestureDetector(
         onTap: () => {
-              Navigator.pop(context),
+              //Navigator.pop(context),
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -137,9 +137,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   )),
             },
         child: Container(
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(width: 0.4, color: Colors.grey[400]))),
+          padding: EdgeInsets.only(left: 16, bottom: 4),
           height: 40,
           child: Row(
             children: [
@@ -153,18 +151,15 @@ class _SearchScreenState extends State<SearchScreen> {
               SizedBox(
                 width: 10,
               ),
-              Text(
-                userDrug.expiration,
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 10, color: gray300_inactivated)
-              )
+              Text(userDrug.expiration,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(fontSize: 10, color: gray300_inactivated))
             ],
           ),
         ));
   }
-
-  // Widget _buildWithUserOfAll(BuildContext context, String searchVal) {
-  //   return _buildBodyOfAll(context, searchVal);
-  // }
 
   Widget _buildBodyOfAll(BuildContext context, String searchVal) {
     TheUser user = Provider.of<TheUser>(context);
@@ -180,11 +175,9 @@ class _SearchScreenState extends State<SearchScreen> {
           return _streamOfSearch(context);
         }
         // else
-        //   return _buildListOfAll(context, stream.data);
-        else if(stream.data.isEmpty){
+        else if (stream.data.isEmpty) {
           return _noResultContainer();
-        }
-        else {
+        } else {
           var streamFromAll = stream.data;
           return StreamBuilder<Object>(
               stream: DatabaseService(
@@ -199,10 +192,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       SliverToBoxAdapter(
                         child: Column(
                           children: [
+                            //유저가 가지고 있는 부분
                             _buildListOfAll(
                                 context, streamFromAll, snapshot.data, 'USER'),
-                            _buildListOfAll(
-                                context, streamFromAll, snapshot.data, 'withoutUser'),
+                            _buildListOfAll(context, streamFromAll,
+                                snapshot.data, 'withoutUser'),
                           ],
                         ),
                       ),
@@ -215,25 +209,28 @@ class _SearchScreenState extends State<SearchScreen> {
     //}
   }
 
+
+
   Widget _buildListOfAll(BuildContext context, List<Drug> drugs,
       List<SavedDrug> userDrugs, String type) {
     if (_searchText.length < 2) {
       return _noResultContainer();
-    } else if (_searchText.length != 0) {
+    }
+    else if (_searchText.length != 0) {
       if (!userDrugs.isEmpty) {
         if (type == 'USER') {
           return Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(16.0),
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Color(0xFFCACCCC)),
                 borderRadius: BorderRadius.circular(5),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              //padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.only(top: 12.0, left: 12, bottom: 4),
                     child: Row(
                       children: [
                         Icon(
@@ -241,7 +238,13 @@ class _SearchScreenState extends State<SearchScreen> {
                           color: Color(0xFFCACCCC),
                           size: 22,
                         ),
-                        Text(' 나의 약 리스트', style: Theme.of(context).textTheme.subtitle1.copyWith(color: gray500),)
+                        Text(
+                          ' 나의 약 리스트',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: gray500),
+                        )
                       ],
                     ),
                   ),
@@ -250,14 +253,16 @@ class _SearchScreenState extends State<SearchScreen> {
                     physics: const ClampingScrollPhysics(),
                     itemCount: userDrugs.length,
                     itemBuilder: (context, index) {
-                      return _drugFromUserInAll(context, userDrugs[index]);
+                      return _drugListFromUser(context, userDrugs[index]);
                     },
                   ),
                 ],
               ),
             ),
           );
-        } else if (type == 'withoutUser') {
+        }
+
+        else if (type == 'withoutUser') {
           return ListView.builder(
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
@@ -273,20 +278,39 @@ class _SearchScreenState extends State<SearchScreen> {
             },
           );
         }
-      } else
-        //원래는 이것만 있었음
+
+      }
+      else if (type == 'withoutUser') {
         return ListView.builder(
           shrinkWrap: true,
           physics: const ClampingScrollPhysics(),
           itemCount: drugs.length,
           itemBuilder: (context, index) {
-            return ListDrugOfAll(
-                _checkLongName(drugs[index].itemName),
-                drugs[index].category,
-                drugs[index]
-                    .itemSeq); //DrugTile(drug: drugs[index], index: (index + 1));
+            for (int j = 0; j < userDrugs.length; j++) {
+              if (drugs[index].itemName == userDrugs[j].itemName) {
+                return Container();
+              }
+            }
+            return ListDrugOfAll(_checkLongName(drugs[index].itemName),
+                drugs[index].category, drugs[index].itemSeq);
           },
         );
+      }
+      else return Container();
+      // else
+      //   //원래는 이것만 있었음
+      //   return ListView.builder(
+      //     shrinkWrap: true,
+      //     physics: const ClampingScrollPhysics(),
+      //     itemCount: drugs.length,
+      //     itemBuilder: (context, index) {
+      //       return ListDrugOfAll(
+      //           _checkLongName(drugs[index].itemName),
+      //           drugs[index].category,
+      //           drugs[index]
+      //               .itemSeq); //DrugTile(drug: drugs[index], index: (index + 1));
+      //     },
+      //   );
     }
   }
 
@@ -302,32 +326,72 @@ class _SearchScreenState extends State<SearchScreen> {
         }
         if (searchVal == '' || searchVal.length < 2) {
           return _streamOfSearch(context);
-        }
-        else if(stream.data.isEmpty){
+        } else if (stream.data.isEmpty) {
           return _noResultContainer();
-        }
-        else
-          return _buildListOfUser(context, stream.data);
+        } else
+          //return _buildListOfUser(context, stream.data);
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    //유저가 가지고 있는 부분
+                    _buildListOfUser(context, stream.data)
+                  ],
+                ),
+              ),
+            ],
+          );
       },
     );
   }
 
-  Widget _buildListOfUser(BuildContext context, List<SavedDrug> drugs) {
+  Widget _buildListOfUser(BuildContext context, List<SavedDrug> userDrugs) {
     if (_searchText.length < 2) {
       return _noResultContainer();
-    } else // if (_searchText.length != 0)
+    } else
     {
-      return ListView.builder(
-        itemCount: drugs.length,
-        itemBuilder: (context, index) {
-          //print('총 몇개인가유? ==> ${drugs.length}, ${drugs[index].itemName}');
-          return ListDrugOfUser(
-              _checkLongName(drugs[index].itemName),
-              drugs[index].itemSeq,
-              drugs[index]
-                  .expiration); //DrugTile(drug: drugs[index], index: (index + 1));
-        },
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Color(0xFFCACCCC)),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, left: 12, bottom:4),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.bookmark_border,
+                      color: Color(0xFFCACCCC),
+                      size: 22,
+                    ),
+                    Text(
+                      ' 나의 약 리스트',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: gray500),
+                    )
+                  ],
+                ),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemCount: userDrugs.length,
+                itemBuilder: (context, index) {
+                  return _drugListFromUser(context, userDrugs[index]);
+                },
+              ),
+            ],
+          ),
+        ),
       );
+
     }
   }
 
@@ -402,58 +466,70 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Row(
               children: [
                 Expanded(
+                    flex: 5,
                     child: TextFormField(
-                  cursorColor: Colors.teal[400],
-                  onFieldSubmitted: (val) {
-                    if (val != '' || val.length > 2) {
-                      addRecentSearchList();
-                      focusNode.unfocus();
-                    }
-                  },
-                  focusNode: focusNode,
-                  style: Theme.of(context).textTheme.bodyText2,
-                  autofocus: true,
-                  controller: _filter,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    fillColor: Colors.white12,
-                    filled: true,
-
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                        size: 20,
-                      ),
-                    ),
-                    //이부분 auto focus 일 때만,
-                    suffixIcon: IconButton(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      icon: Icon(
-                        Icons.cancel,
-                        size: 20,
-                        color: Colors.teal,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _filter.clear();
-                          _searchText = "";
-                        });
+                      cursorColor: primary300_main,
+                      onFieldSubmitted: (val) {
+                        if (val != '' || val.length > 2) {
+                          addRecentSearchList();
+                          focusNode.unfocus();
+                        }
                       },
-                    ),
-                    hintText: '두 글자 이상 검색해주세요',
-                    contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    labelStyle: TextStyle(color: Colors.grey),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Colors.transparent)),
-                  ),
-                )),
+                      focusNode: focusNode,
+                      style: Theme.of(context).textTheme.bodyText2,
+                      autofocus: true,
+                      controller: _filter,
+                      decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            icon: Icon(
+                              Icons.cancel,
+                              size: 20,
+                              color: primary300_main,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _filter.clear();
+                                _searchText = "";
+                              });
+                            },
+                          ),
+                          fillColor: gray50,
+                          filled: true,
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: SizedBox(
+                              height: 24,
+                              width: 24,
+                              child:
+                                  Image.asset('assets/icons/search_grey.png'),
+                            ),
+                          ),
+                          hintText: '두 글자 이상 입력해주세요',
+                          hintStyle:
+                              Theme.of(context).textTheme.bodyText2.copyWith(
+                                    color: gray300_inactivated,
+                                  ),
+                          contentPadding: EdgeInsets.zero,
+                          labelStyle:
+                              Theme.of(context).textTheme.bodyText2.copyWith(
+                                    color: gray300_inactivated,
+                                  ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                              borderSide: BorderSide(color: gray75)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                              borderSide: BorderSide(color: gray75)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  style: BorderStyle.solid,
+                                  width: 1.0,
+                                  color: gray75),
+                              borderRadius: BorderRadius.circular(8.0))),
+                    )),
               ],
             ),
           ),
@@ -465,7 +541,6 @@ class _SearchScreenState extends State<SearchScreen> {
               padding: EdgeInsets.only(right: 10),
               onPressed: () {
                 Navigator.pop(context);
-                //Navigator.pushNamed(context, '/bottom_bar');
               },
               child: Text(
                 '취소',
@@ -491,13 +566,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   .textTheme
                   .subtitle1
                   .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
-              //TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               unselectedLabelStyle: Theme.of(context)
                   .textTheme
                   .subtitle1
                   .copyWith(fontWeight: FontWeight.w100),
-
-              // TextStyle(color: gray500, fontWeight: FontWeight.w100),
               tabs: [
                 Tab(
                     child: Text(
@@ -621,7 +693,7 @@ class ListDrugOfAll extends StatelessWidget {
     return GestureDetector(
       onTap: () => {
         addRecentSearchList(),
-        Navigator.pop(context),
+        //Navigator.pop(context),
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -634,15 +706,13 @@ class ListDrugOfAll extends StatelessWidget {
                 bottom: BorderSide(width: 0.4, color: Colors.grey[400]))),
         padding: EdgeInsets.symmetric(horizontal: 16),
         width: double.infinity,
-        height: 45.0,
+        height: 40.0,
         child: Row(
           children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                item_name,
-                  style: Theme.of(context).textTheme.bodyText2
-              ),
+              child:
+                  Text(item_name, style: Theme.of(context).textTheme.bodyText2),
             )
           ],
         ),
@@ -651,60 +721,6 @@ class ListDrugOfAll extends StatelessWidget {
   }
 }
 
-class ListDrugOfUser extends StatelessWidget {
-  final String item_name;
-  final String item_seq;
-  final String expiration;
-
-  const ListDrugOfUser(
-    this.item_name,
-    this.item_seq,
-    this.expiration, {
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => {
-        Navigator.pop(context),
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReviewPage(item_seq),
-            )),
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(width: 0.4, color: Colors.grey[400]))),
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        width: double.infinity,
-        height: 45.0,
-        child: Row(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                item_name,
-                style: Theme.of(context).textTheme.bodyText2
-              ),
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            SizedBox(
-              child: Text(
-                expiration,
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 10, color: gray300_inactivated)
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class RecentSearch {
   final String recent;
