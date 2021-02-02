@@ -68,10 +68,17 @@ class _WriteReviewState extends State<WriteReview> {
 
 
 
-//  Stream<List<Review>> get reviews {
-//    return reviewCollection.snapshots()
-//        .map(_reviewListFromSnapshot);
-//  }
+  String _shortenName(String drugName) {
+    String newName;
+    List splitName = [];
+
+    if (drugName.contains('(')) {
+      splitName = drugName.split('(');
+      newName = splitName[0];
+    }
+
+    return newName;
+  }
 
   void _registerReview(nickName) {
     FirebaseFirestore.instance.collection("Reviews").add(
@@ -192,10 +199,15 @@ class _WriteReviewState extends State<WriteReview> {
                             Text(drug.entpName,
                                 style: Theme.of(context).textTheme.overline.copyWith(
                                     color: gray300_inactivated, fontSize: 10)),
-                            Text(drug.itemName,
-                                style: Theme.of(context).textTheme.headline6.copyWith(
-                                    color: gray900)
-                                ),
+                            Container(
+                              width: MediaQuery.of(context).size.width-155,
+                              padding: new EdgeInsets.only(right: 10.0),
+                              child: Text(_shortenName(drug.itemName),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.headline6.copyWith(
+                                      color: gray900)
+                                  ),
+                            ),
                             Container(height: 2,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
