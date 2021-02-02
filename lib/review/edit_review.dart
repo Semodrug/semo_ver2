@@ -119,11 +119,11 @@ class _EditReviewState extends State<EditReview> {
   Widget _pillInfo(review) {
     //TODO: Bring pill information
     return Container(
-        padding: EdgeInsets.fromLTRB(20,10,20,10),
+        padding: EdgeInsets.fromLTRB(20,30,20,15),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
-                BorderSide(width: 0.8, color: Colors.grey[300], ))),
+                BorderSide(width: 12, color: gray50, ))),
         child: Row(
           children: <Widget>[
 //            Container(
@@ -260,10 +260,31 @@ class _EditReviewState extends State<EditReview> {
               },
             ),
             SizedBox(height: 10),
-            Text(starRatingText,
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
                 style: Theme.of(context).textTheme.caption.copyWith(
-                    color: primary600_bold_text, fontSize: 12)
-            )
+                  color: primary500_light_text, fontSize: 12,),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: starRatingText.isNotEmpty ? '${starRatingText.split(" ")[0]}' :
+                    review.starRating == 1 ? "1점 " :
+                    review.starRating == 2 ? "2점 " :
+                    review.starRating == 3 ? "3점 " :
+                    review.starRating == 4 ? "4점 " :
+                    "5점 (최고예요)" ,
+                    style: Theme.of(context).textTheme.caption.copyWith(
+                        color: primary600_bold_text, fontSize: 12, fontWeight: FontWeight.bold),),
+                  TextSpan(
+                      text: starRatingText.isNotEmpty ? ' '+'${starRatingText.split(" ")[1]}' :
+                      review.starRating == 1 ? "(별로에요)" :
+                      review.starRating == 2 ? "(그저그래요)" :
+                      review.starRating == 3 ? "(괜찮아요)" :
+                      review.starRating == 4 ? "(좋아요)" :
+                      "5점 (최고예요)" ,),
+                ],
+              ),
+            ),
           ],
         )
     );
@@ -292,10 +313,14 @@ class _EditReviewState extends State<EditReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            width: 35,
-                            height: 35,
+                            width: 40,
+                            height: 40,
+                            // child: Image.asset('assets/icons/sentiment_satisfied.png.png'),
+                            child: Icon(Icons.sentiment_dissatisfied_rounded,
+                              size: 30,
+                              color: Color(0xffF7F7F7),),
                             decoration: BoxDecoration(
-                                color: effect == "bad" ? primary300_main: Colors.grey[300],
+                                color: effect == "bad" ? primary300_main: gray75,
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(()  {
@@ -305,8 +330,10 @@ class _EditReviewState extends State<EditReview> {
                     ),
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text("별로에요", style: effect == "bad"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: primary600_bold_text, fontSize: 12) :
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: gray0_white, fontSize: 12),)
                   ],
                 ),
                 Padding(padding: EdgeInsets.only(left: 20)),
@@ -314,23 +341,27 @@ class _EditReviewState extends State<EditReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            width: 35,
-                            height: 35,
+                            width: 40,
+                            height: 40,
+                            // child: Image.asset('assets/icons/sentiment_satisfied.png.png'),
+                            child: Icon(Icons.sentiment_neutral_rounded,
+                              size: 30,
+                              color: Color(0xffF7F7F7),),
                             decoration: BoxDecoration(
-                                color: effect == "soso" ? primary300_main : Colors.grey[300],
+                                color: effect == "soso" ? primary300_main: gray75,
                                 shape: BoxShape.circle)),
                         onTap: ()  {
-                          effect = "soso";
                           setState(()  {
                             effect = "soso";
                           });
                         }
                     ),
-
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text("보통이에요", style: effect == "soso"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: primary600_bold_text, fontSize: 12) :
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: gray0_white, fontSize: 12),)
                   ],
                 ),
                 Padding(padding: EdgeInsets.only(left: 20)),
@@ -338,10 +369,14 @@ class _EditReviewState extends State<EditReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            width: 35,
-                            height: 35,
+                            width: 40,
+                            height: 40,
+                            // child: Image.asset('assets/icons/sentiment_satisfied.png.png'),
+                            child: Icon(Icons.sentiment_satisfied_rounded,
+                              size: 30,
+                              color: Color(0xffF7F7F7),),
                             decoration: BoxDecoration(
-                                color: effect == "good" ? primary300_main : Colors.grey[300],
+                                color: effect == "good" ? primary300_main: gray75,
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(()  {
@@ -351,8 +386,10 @@ class _EditReviewState extends State<EditReview> {
                     ),
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Text("좋아요", style: effect == "good"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: primary600_bold_text, fontSize: 12) :
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: gray0_white, fontSize: 12),)
                   ],
                 ),
 
@@ -373,21 +410,40 @@ class _EditReviewState extends State<EditReview> {
         width: 400,
 //                height: 100,
         child: TextField(
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+              color: gray750_activated, ),
+            maxLength: 500,
             controller: myControllerEffect,
             keyboardType: TextInputType.multiline,
             maxLines: null,
             decoration: new InputDecoration(
-              border: InputBorder.none,
-//                        border: OutlineInputBorder(
-//                          borderRadius: const BorderRadius.all(
-//                            const Radius.circular(8.0)
-//                          ),
-//                          borderSide: BorderSide(color:Colors.white)
-//                        ),
+              enabledBorder: OutlineInputBorder(
+                borderSide:  BorderSide(color: gray75),
+                borderRadius: const BorderRadius.all(
+                    const Radius.circular(4.0)
+                ),
+              ),
               filled: true,
-//                        fillColor: _grey,
-              fillColor: Colors.grey[200],
-            )),
+              fillColor: gray50,
+            ))
+
+
+//         TextField(
+//             controller: myControllerEffect,
+//             keyboardType: TextInputType.multiline,
+//             maxLines: null,
+//             decoration: new InputDecoration(
+//               border: InputBorder.none,
+// //                        border: OutlineInputBorder(
+// //                          borderRadius: const BorderRadius.all(
+// //                            const Radius.circular(8.0)
+// //                          ),
+// //                          borderSide: BorderSide(color:Colors.white)
+// //                        ),
+//               filled: true,
+// //                        fillColor: _grey,
+//               fillColor: Colors.grey[200],
+//             )),
       ),
     );
   }
@@ -416,11 +472,14 @@ class _EditReviewState extends State<EditReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            width: 35,
-                            height: 35,
+                            child: Icon(Icons.sentiment_dissatisfied_rounded,
+                              size: 30,
+                              color: Color(0xffF7F7F7),),
+                            width: 40,
+                            height: 40,
                             decoration: BoxDecoration(
-//                                                    color: widget.review.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
-                                color: sideEffect == "yes" ? primary300_main : Colors.grey[300],
+//                              color: widget.review.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
+                                color: sideEffect == "yes" ? primary300_main : gray75,
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(() {
@@ -429,9 +488,11 @@ class _EditReviewState extends State<EditReview> {
                         }
                     ),
                     Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("있어요", style: sideEffect == "yes"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
+                    Text("부작용 있어요", style: sideEffect == "yes"?
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: primary600_bold_text, fontSize: 12) :
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: gray0_white, fontSize: 12),)
                   ],
                 ),
                 Padding(padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
@@ -440,11 +501,14 @@ class _EditReviewState extends State<EditReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            width: 35,
-                            height: 35,
+                            child: Icon(Icons.sentiment_satisfied_rounded,
+                              size: 30,
+                              color: Color(0xffF7F7F7),),
+                            width: 40,
+                            height: 40,
                             decoration: BoxDecoration(
-//                                                    color: widget.review.sideEffect == "no" ? Colors.greenAccent[100]: Colors.grey[300],
-                                color: sideEffect == "no" ? primary300_main : Colors.grey[300],
+//                              color: widget.review.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
+                                color: sideEffect == "no" ? primary300_main : gray75,
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(() {
@@ -453,9 +517,11 @@ class _EditReviewState extends State<EditReview> {
                         }
                     ),
                     Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("없어요", style: sideEffect == "no"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
+                    Text("부작용 없어요", style: sideEffect == "no"?
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: primary600_bold_text, fontSize: 12) :
+                    Theme.of(context).textTheme.caption.copyWith(
+                        color: gray0_white, fontSize: 12),)
                   ],
                 ),
               ],

@@ -899,18 +899,13 @@ class _ReviewPageState extends State<ReviewPage> {
                 // _searchBar(),
                 // ReviewList(_searchText, "all"),
                 checkReviewIsZero() == true ? Container() : _searchBar(),
+
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     height: 36,
                     decoration: BoxDecoration(
-                      // shape: OutlineInputBorder(
-                      //     borderSide: BorderSide(
-                      //         style: BorderStyle.solid,
-                      //         width: 1.0,
-                      //         color: gray200),
-                      //     borderRadius: BorderRadius.circular(8.0)),
                       color: gray50,
                       borderRadius: BorderRadius.circular(4.0),
                     ),
@@ -942,6 +937,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             ],
                           ),
                         ),
+
                       ],
                     ),
                   ),

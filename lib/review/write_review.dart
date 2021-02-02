@@ -157,11 +157,11 @@ class _WriteReviewState extends State<WriteReview> {
   Widget _pillInfo() {
     //TODO: Bring pill information
     return Container(
-        padding: EdgeInsets.fromLTRB(20,10,20,10),
+        padding: EdgeInsets.fromLTRB(20,30,20,15),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
-                BorderSide(width: 0.8, color: Colors.grey[300], ))),
+                BorderSide(width: 12, color: gray50, ))),
         child: Row(
           children: <Widget>[
             SizedBox(
@@ -292,10 +292,21 @@ class _WriteReviewState extends State<WriteReview> {
               },
             ),
             SizedBox(height: 10),
-            Text(starRatingText,
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
                 style: Theme.of(context).textTheme.caption.copyWith(
-                    color: primary600_bold_text, fontSize: 12)
-
+                    color: primary500_light_text, fontSize: 12,),
+                children: <TextSpan>[
+                  TextSpan(
+                      text: starRatingText.isEmpty ? "" :
+                      '${starRatingText.split(" ")[0]}',
+                      style: Theme.of(context).textTheme.caption.copyWith(
+                      color: primary600_bold_text, fontSize: 12, fontWeight: FontWeight.bold),),
+                  TextSpan(text: starRatingText.isEmpty ? "" :
+                  ' '+'${starRatingText.split(" ")[1]}',),
+                ],
+              ),
             ),
           ],
         )
@@ -309,7 +320,7 @@ class _WriteReviewState extends State<WriteReview> {
         decoration: BoxDecoration(
             border: Border(
                 bottom:
-                BorderSide(width: 0.8, color: Colors.grey[300], ))),
+                BorderSide(width: 0.8, color: gray75, ))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
@@ -328,9 +339,10 @@ class _WriteReviewState extends State<WriteReview> {
                         child: Container(
                             width: 40,
                             height: 40,
-                            child: Icon(Icons.sentiment_dissatisfied,
+                            // child: Image.asset('assets/icons/sentiment_satisfied.png.png'),
+                            child: Icon(Icons.sentiment_dissatisfied_rounded,
                               size: 30,
-                            color: Color(0xffDADADA),),
+                            color: Color(0xffF7F7F7),),
                             decoration: BoxDecoration(
                                 color: effect == "bad" ? primary300_main: gray75,
                                 shape: BoxShape.circle)),
@@ -353,8 +365,8 @@ class _WriteReviewState extends State<WriteReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                          child: Icon(Icons.sentiment_dissatisfied,
-                              color: Color(0xffDADADA),
+                          child: Icon(Icons.sentiment_neutral_rounded,
+                              color: Color(0xffF7F7F7),
                             size: 30,),
                             width: 40,
                             height: 40,
@@ -382,8 +394,8 @@ class _WriteReviewState extends State<WriteReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            child: Icon(Icons.sentiment_satisfied,
-                              color: Color(0xffDADADA),
+                            child: Icon(Icons.sentiment_satisfied_rounded,
+                              color: Color(0xffF7F7F7),
                             size:30),
                             width: 40,
                             height: 40,
@@ -433,7 +445,7 @@ class _WriteReviewState extends State<WriteReview> {
             decoration: new InputDecoration(
               hintText: hintText,
               hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
-                color: gray750_activated, ),
+                color: gray300_inactivated, ),
               enabledBorder: OutlineInputBorder(
                 borderSide:  BorderSide(color: gray75),
                 borderRadius: const BorderRadius.all(
@@ -472,9 +484,9 @@ class _WriteReviewState extends State<WriteReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            child: Icon(Icons.sentiment_dissatisfied,
+                            child: Icon(Icons.sentiment_dissatisfied_rounded,
                               size: 30,
-                              color: Color(0xffDADADA),),
+                              color: Color(0xffF7F7F7),),
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
@@ -508,8 +520,8 @@ class _WriteReviewState extends State<WriteReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            child: Icon(Icons.sentiment_satisfied,
-                                color: Color(0xffDADADA),
+                            child: Icon(Icons.sentiment_satisfied_rounded,
+                                color: Color(0xffF7F7F7),
                                 size:30),
                             width: 40,
                             height: 40,
@@ -575,12 +587,14 @@ class _WriteReviewState extends State<WriteReview> {
         child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                color: Colors.teal[300]
+                color: primary300_main
             ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
 //            width: 350,
             height: 50,
             child: Center(
-                child: Text("등록하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
+                child: Text("등록하기",
+                    style: Theme.of(context).textTheme.headline6.copyWith(
+                        color: gray0_white, fontSize: 16))
             )
         ),
       ),
