@@ -66,6 +66,13 @@ class _GetRatingState extends State<GetRating> {
                   double yes = sideEffectYes / (sideEffectYes + sideEffectNo);
                   double no = sideEffectNo / (sideEffectYes + sideEffectNo);
 
+                  if (good.isNaN) good = 0;
+                  if (soso.isNaN) soso = 0;
+                  if (bad.isNaN) bad = 0;
+                  if (yes.isNaN) yes = 0;
+                  if (no.isNaN) no = 0;
+
+
                   DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(ratingResult, length);
 
                   return Container(
@@ -110,12 +117,12 @@ class _GetRatingState extends State<GetRating> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text("효과",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "효과",
                                           style: Theme.of(context).textTheme.subtitle1.copyWith(
                                             color: gray600,
                                           )),
                                       Container(height: 6),
-                                      Text("부작용",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "부작용",
                                           style: Theme.of(context).textTheme.subtitle1.copyWith(
                                             color: gray600,
                                           )),
@@ -127,18 +134,18 @@ class _GetRatingState extends State<GetRating> {
                                     children: [
                                       //effect
                                       effectBad > effectSoso && effectBad > effectGood ?
-                                      Text("별로에요 " + good.toStringAsFixed(0) + "%",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "별로에요 " + good.toStringAsFixed(0) + "%",
                                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                             color: gray600,
                                           )
                                       ) :
                                       effectSoso > effectGood && effectSoso > effectBad ?
-                                      Text("보통이에요 " + soso.toStringAsFixed(0) + "%",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "보통이에요 " + soso.toStringAsFixed(0) + "%",
                                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                             color: gray600,
                                           )
                                       ) :
-                                      Text("좋아요 " + bad.toStringAsFixed(0) + "%",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "좋아요 " + bad.toStringAsFixed(0) + "%",
                                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                             color: gray600,
                                           )
@@ -148,12 +155,12 @@ class _GetRatingState extends State<GetRating> {
 
                                       //side effect
                                       sideEffectYes > sideEffectNo ?
-                                      Text("있어요 " +  yes.toStringAsFixed(0) + "%",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "있어요 " +  yes.toStringAsFixed(0) + "%",
                                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                             color: gray600,
                                           )
                                       ) :
-                                      Text("없어요 " +  no.toStringAsFixed(0) + "%",
+                                      Text(good == 0 && soso == 0 && bad == 0 ? "" : "없어요 " +  no.toStringAsFixed(0) + "%",
                                           style: Theme.of(context).textTheme.bodyText2.copyWith(
                                             color: gray600,
                                           )
