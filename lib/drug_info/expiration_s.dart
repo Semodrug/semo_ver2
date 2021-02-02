@@ -9,6 +9,7 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 class ExpirationS extends StatefulWidget {
   final String drugItemSeq;
@@ -98,6 +99,14 @@ class _ExpirationSState extends State<ExpirationS> {
     );
   }
 
+  String _shortenName(String drugName) {
+    List splitName = [];
+
+    if (drugName.contains('(')) splitName = drugName.split('(');
+
+    return splitName[0];
+  }
+
   Widget _topInfo(BuildContext context, drug) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -108,17 +117,16 @@ class _ExpirationSState extends State<ExpirationS> {
               aspectRatio: 3.5 / 2,
               child: DrugImage(drugItemSeq: drug.itemSeq)),
         ),
-        SizedBox(
-          height: 20,
-        ),
+        SizedBox(height: 20),
         Text(
           drug.entpName,
           style: Theme.of(context).textTheme.caption,
         ),
+        SizedBox(height: 2),
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.7,
           child: Text(
-            drug.itemName,
+            _shortenName(drug.itemName),
             style: Theme.of(context).textTheme.headline5,
             textAlign: TextAlign.center,
           ),
@@ -167,7 +175,10 @@ class _ExpirationSState extends State<ExpirationS> {
                 children: [
                   Text(
                     '${DateFormat('yyyy').format(_pickDateTime)}년 ${DateFormat('MM').format(_pickDateTime)}월 ${DateFormat('dd').format(_pickDateTime)}일',
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray750_activated),
                   ),
                   Icon(Icons.keyboard_arrow_down)
                 ],
@@ -208,7 +219,10 @@ class _ExpirationSState extends State<ExpirationS> {
                 value: 60,
                 child: Text(
                   '[2개월] 약국에서 처방받은 알약',
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: gray750_activated),
                 ),
                 onTap: () {
                   setState(() {
@@ -220,7 +234,10 @@ class _ExpirationSState extends State<ExpirationS> {
                 value: 14,
                 child: Text(
                   '[2주] 개봉된 액체상태의 시럽',
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: gray750_activated),
                 ),
                 onTap: () {
                   setState(() {
@@ -232,7 +249,10 @@ class _ExpirationSState extends State<ExpirationS> {
                 value: 30,
                 child: Text(
                   '[1개월] 개봉된 액체상태의 안약',
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: gray750_activated),
                 ),
                 onTap: () {
                   setState(() {
@@ -244,7 +264,10 @@ class _ExpirationSState extends State<ExpirationS> {
                 value: 180,
                 child: Text(
                   '[6개월] 개봉된 연고',
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: gray750_activated),
                 ),
                 onTap: () {
                   setState(() {
@@ -256,7 +279,10 @@ class _ExpirationSState extends State<ExpirationS> {
                 value: 0,
                 child: Text(
                   '직접 입력하기',
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: gray750_activated),
                 ),
                 onTap: () {
                   setState(() {
@@ -410,25 +436,27 @@ class _ExpirationSState extends State<ExpirationS> {
         //padding: const EdgeInsets.symmetric(vertical: 16.0),
         //alignment: Alignment.center,
         child: RaisedButton(
-          onPressed: () async {
-            _showSaveWell(context);
-            // Navigator.pop(context);
-            await DatabaseService(uid: user.uid).addSavedList(
-                drug.itemName,
-                drug.itemSeq,
-                drug.category,
-                drug.etcOtcCode,
-                expirationTime,
-                searchListOutput);
-          },
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          child: Text(
-            '추가하기',
-            style: TextStyle(color: Colors.white),
-          ),
-          color: Colors.teal[400],
-        ),
+            onPressed: () async {
+              _showSaveWell(context);
+              // Navigator.pop(context);
+              await DatabaseService(uid: user.uid).addSavedList(
+                  drug.itemName,
+                  drug.itemSeq,
+                  drug.category,
+                  drug.etcOtcCode,
+                  expirationTime,
+                  searchListOutput);
+            },
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            child: Text(
+              '추가하기',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: gray0_white, fontSize: 15),
+            ),
+            color: primary400_line),
       ),
     );
   }

@@ -37,23 +37,11 @@ Future<String> downloadURLExample(String itemSeq) async {
   } on firebase_storage.FirebaseException catch (e) {
     if (e.code == 'object-not-found') {
       String downloadURL = await firebase_storage.FirebaseStorage.instance
-          .ref('noImage.png')
+          .ref('null.png')
           // .ref('Image/195900043.png')
           .getDownloadURL();
 
       return downloadURL;
     }
   }
-
-  // String downloadURL = await firebase_storage.FirebaseStorage.instance
-  //   //     .ref('Image/$itemSeq.png')
-  //   //     .getDownloadURL();
-  //   //
-  //   // if (downloadURL == null) {
-  //   //   downloadURL = await firebase_storage.FirebaseStorage.instance
-  //   //       .ref('noImage.png')
-  //   //       .getDownloadURL();
-  //   // }
-  //   //
-  //   // return downloadURL;
 }
