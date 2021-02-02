@@ -184,9 +184,11 @@ class _ExpirationGState extends State<ExpirationG> {
   String _shortenName(String drugName) {
     List splitName = [];
 
-    if (drugName.contains('(')) splitName = drugName.split('(');
-
-    return splitName[0];
+    if (drugName.contains('(')) {
+      splitName = drugName.split('(');
+      return splitName[0];
+    } else
+      return drugName;
   }
 
   Widget _topInfo(BuildContext context, drug) {
