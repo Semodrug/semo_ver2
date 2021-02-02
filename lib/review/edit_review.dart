@@ -41,12 +41,21 @@ class _EditReviewState extends State<EditReview> {
   String effectText = '';
   String sideEffectText = '';
   String overallText = '';
-
   String starRatingText = '';
-  static const _green = Color(0xff57C8B8);
-  static const _grey = Color(0x95C4C4C4);
 
 //  String editOrWrite = 'edit'; // 'write'
+
+  String _shortenName(String drugName) {
+    String newName;
+    List splitName = [];
+
+    if (drugName.contains('(')) {
+      splitName = drugName.split('(');
+      newName = splitName[0];
+      return newName;
+    }
+    else return drugName;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,16 +74,17 @@ class _EditReviewState extends State<EditReview> {
             return Scaffold(
                 resizeToAvoidBottomInset: true,
                 appBar: AppBar(
-                  title: Text(widget.editOrWrite == 'edit'? 'Edit Review': "Write Review",
-                      style: GoogleFonts.roboto(
-                          fontSize: 16.5,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
-                  centerTitle: true,
-                  elevation: 0.0,
-                  backgroundColor: Colors.teal[200],
+                  title: Text('리뷰 수정',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4
+                          .copyWith(
+                          color: gray800, fontSize: 16)) ,
+                  // centerTitle: true,
+                  //elevation: 0.0,
+                  backgroundColor: gray0_white,
                   leading: IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.white),
+                      icon: Icon(Icons.close, color: primary300_main),
                       onPressed: () {
                         Navigator.pop(context);
                       }),
@@ -141,30 +151,43 @@ class _EditReviewState extends State<EditReview> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(drug.entpName, style: TextStyle(fontSize: 11, color: Colors.grey, )),
-                            Text(drug.itemName, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
+                            Text(drug.entpName,
+                                style: Theme.of(context).textTheme.overline.copyWith(
+                                    color: gray300_inactivated, fontSize: 10)),
+                            Container(
+                              width: MediaQuery.of(context).size.width-155,
+                              padding: new EdgeInsets.only(right: 10.0),
+                              child: Text(_shortenName(drug.itemName),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.headline6.copyWith(
+                                      color: gray900)
+                              ),
+                            ),
                             Container(height: 2,),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 RatingBar.builder(
-                                  itemSize: 20,
+                                  itemSize: 16,
                                   initialRating: drug.totalRating ,
-                                  //!= null ? widget.tapToRatingResult: 0,
                                   minRating: 0,
                                   direction: Axis.horizontal,
                                   allowHalfRating: true,
                                   itemCount: 5,
-                                  unratedColor: _grey,
+                                  unratedColor: gray75,
                                   itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
                                   itemBuilder: (context, _) => Icon(
-                                    Icons.star, color: Colors.amber[300],
+                                    Icons.star, color: yellow,
                                   ),
                                 ),
                                 Container(width:5),
-                                Text(drug.totalRating.toStringAsFixed(2), style: TextStyle(fontSize: 15, color: Colors.black, )),
+                                Text(drug.totalRating.toStringAsFixed(2),
+                                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                        color: gray900, fontSize: 12),),
                                 Container(width:3),
-                                Text("("+drug.numOfReviews.toStringAsFixed(0)+"개)", style: TextStyle(fontSize: 13, color: Colors.grey, )),
+                                Text("("+drug.numOfReviews.toStringAsFixed(0)+"개)",
+                                    style: Theme.of(context).textTheme.overline.copyWith(
+                                        color: gray300_inactivated, fontSize: 10)),
                               ],
                             ),
                             CategoryButton(str: drug.category)
@@ -211,18 +234,18 @@ class _EditReviewState extends State<EditReview> {
               allowHalfRating: false,
               itemCount: 5,
 //              unratedColor: Colors.grey[500],
-              unratedColor: _grey,
+              unratedColor: gray75,
               itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
               itemBuilder: (context, _) => Icon(
                   Icons.star,
 //                color: Colors.amber[300],
-                  color: _green
+                  color: primary300_main
               ),
               onRatingUpdate: (rating) {
                 starRating = rating;
                 setState(() {
-                  if(starRating == 0)
-                    starRatingText = "선택하세요.";
+                  // if(starRating == 0)
+                  //   starRatingText = "선택하세요.";
                   if(starRating == 1)
                     starRatingText =  "1점 (별로에요)";
                   if(starRating == 2)
@@ -272,7 +295,7 @@ class _EditReviewState extends State<EditReview> {
                             width: 35,
                             height: 35,
                             decoration: BoxDecoration(
-                                color: effect == "bad" ? _green: Colors.grey[300],
+                                color: effect == "bad" ? primary300_main: Colors.grey[300],
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(()  {
@@ -294,7 +317,7 @@ class _EditReviewState extends State<EditReview> {
                             width: 35,
                             height: 35,
                             decoration: BoxDecoration(
-                                color: effect == "soso" ? _green : Colors.grey[300],
+                                color: effect == "soso" ? primary300_main : Colors.grey[300],
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           effect = "soso";
@@ -318,7 +341,7 @@ class _EditReviewState extends State<EditReview> {
                             width: 35,
                             height: 35,
                             decoration: BoxDecoration(
-                                color: effect == "good" ? _green : Colors.grey[300],
+                                color: effect == "good" ? primary300_main : Colors.grey[300],
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(()  {
@@ -397,7 +420,7 @@ class _EditReviewState extends State<EditReview> {
                             height: 35,
                             decoration: BoxDecoration(
 //                                                    color: widget.review.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
-                                color: sideEffect == "yes" ? _green : Colors.grey[300],
+                                color: sideEffect == "yes" ? primary300_main : Colors.grey[300],
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(() {
@@ -421,7 +444,7 @@ class _EditReviewState extends State<EditReview> {
                             height: 35,
                             decoration: BoxDecoration(
 //                                                    color: widget.review.sideEffect == "no" ? Colors.greenAccent[100]: Colors.grey[300],
-                                color: sideEffect == "no" ? _green : Colors.grey[300],
+                                color: sideEffect == "no" ? primary300_main : Colors.grey[300],
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(() {

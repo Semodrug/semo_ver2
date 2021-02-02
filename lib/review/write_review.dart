@@ -8,20 +8,16 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'review.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class WriteReview extends StatefulWidget {
   String drugItemSeq;
-  double tapToRatingResult;
-
-  WriteReview({this.drugItemSeq, this.tapToRatingResult});
+  WriteReview({this.drugItemSeq});
 
 
   _WriteReviewState createState() => _WriteReviewState();
@@ -54,8 +50,6 @@ class _WriteReviewState extends State<WriteReview> {
   List<String> favoriteSelected = [];
   var noFavorite = 0;
   DateTime regDate = DateTime.now();
-  static const _green = Color(0xff57C8B8);
-  static const _grey = Color(0x95C4C4C4);
   String _entpName =''; //약 제조사
   String _itemName =''; //약 이름
 
@@ -66,8 +60,6 @@ class _WriteReviewState extends State<WriteReview> {
     _entpName = entpName;
   }
 
-
-
   String _shortenName(String drugName) {
     String newName;
     List splitName = [];
@@ -75,9 +67,9 @@ class _WriteReviewState extends State<WriteReview> {
     if (drugName.contains('(')) {
       splitName = drugName.split('(');
       newName = splitName[0];
+      return newName;
     }
-
-    return newName;
+    else return drugName;
   }
 
   void _registerReview(nickName) {
@@ -85,7 +77,6 @@ class _WriteReviewState extends State<WriteReview> {
         {
           "seqNum" : widget.drugItemSeq,
           "uid" : auth.currentUser.uid,
-          // "id": auth.currentUser.email,
           "effect": effect,
           "sideEffect" : sideEffect,
           "starRating": starRating,
@@ -98,9 +89,6 @@ class _WriteReviewState extends State<WriteReview> {
           "entpName" : _entpName,
           "itemName": _itemName,
           "nickName": nickName
-
-
-//          "name" : "TESTUSER",
         }
     );
   }
@@ -134,8 +122,6 @@ class _WriteReviewState extends State<WriteReview> {
                   .headline4
                   .copyWith(
                   color: gray800, fontSize: 16)) ,
-          // centerTitle: true,
-          //elevation: 0.0,
           backgroundColor: gray0_white,
           leading: IconButton(
               icon: Icon(Icons.close, color: primary300_main),
@@ -222,7 +208,7 @@ class _WriteReviewState extends State<WriteReview> {
                                   unratedColor: gray75,
                                   itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
                                   itemBuilder: (context, _) => Icon(
-                                    Icons.star, color: Colors.amber[300],
+                                    Icons.star, color: yellow,
                                   ),
                                 ),
                                 Container(width:5),
@@ -255,153 +241,6 @@ class _WriteReviewState extends State<WriteReview> {
     );
   }
 
-//  Widget _starRating() {
-//    return Container(
-//        height: 150,
-//        padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-//        decoration: BoxDecoration(
-//            border: Border(
-//                bottom:
-//                BorderSide(width: 0.8, color: Colors.grey[300], ))),
-//        child: Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
-////              crossAxisAlignment: CrossAxisAlignment.center,
-//          children: <Widget>[
-//            Text("약을 사용해보셨나요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
-//            Padding(padding: EdgeInsets.only(top: 3)),
-//            RatingBar.builder(
-//              itemSize: 48,
-//              glow: true,
-//              glowRadius: 2,
-//              glowColor: _green,
-//              initialRating: widget.tapToRatingResult != null ? widget.tapToRatingResult: 0,
-//              minRating: 1,
-//              direction: Axis.horizontal,
-//              allowHalfRating: false,
-//              itemCount: 5,
-//              itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
-//              unratedColor: _grey,
-//              itemBuilder: (context, _) => Icon(
-//                Icons.star,
-//                color: _green,
-//              ),
-//              onRatingUpdate: (rating) {
-//                starRating = rating;
-//                print(rating);
-//              },
-//            ),
-//            Padding(padding: EdgeInsets.only(top: 3)),
-//          ],
-//        )
-//    );
-//  }
-/*  Widget _effect(context, value, child) {
-    return Container(
-        height: 280,
-        padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-        decoration: BoxDecoration(
-            border: Border(
-                bottom:
-                BorderSide(width: 0.8, color: Colors.grey[300], ))),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-//              crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text("약의 효과는 어땠나요?", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)),
-            Padding(padding: EdgeInsets.only(top: 15)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    GestureDetector(
-                        child: Container(
-                            width: 35,
-                            height: 35,
-                            decoration: BoxDecoration(
-                                color: value.getEffect() == "bad" ? _green: Colors.grey[300],
-                                shape: BoxShape.circle)),
-                        onTap: () {
-                          value.effectToBad();
-                          effect = "bad";
-                        }
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("별로에요", style: value.getEffect() == "bad"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
-                  ],
-                ),
-                Padding(padding: EdgeInsets.only(left: 20)),
-                Column(
-                  children: <Widget>[
-                    GestureDetector(
-                        child: Container(
-                            width: 35,
-                            height: 35,
-                            decoration: BoxDecoration(
-                                color: value.getEffect() == "soso" ? _green: Colors.grey[300],
-                                shape: BoxShape.circle)),
-                        onTap: () {
-                          setState((){
-                            value.effectToSoSo();
-                            effect = "soso";
-                          });
-                        }
-                    ),
-
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("보통이에요", style: value.getEffect() == "soso"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
-                  ],
-                ),
-                Padding(padding: EdgeInsets.only(left: 20)),
-                Column(
-                  children: <Widget>[
-                    GestureDetector(
-                        child: Container(
-                            width: 35,
-                            height: 35,
-                            decoration: BoxDecoration(
-                                color: value.getEffect() == "good" ? _green: Colors.grey[300],
-                                shape: BoxShape.circle)),
-                        onTap: () {
-                          value.effectToGood();
-                          effect = "good";
-                        }
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("좋아요", style: value.getEffect() == "good"?
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black87) :
-                    TextStyle(color:Colors.black87)),
-                  ],
-                ),
-
-              ],
-            ),
-            Padding(padding: EdgeInsets.only(top: 25)),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Container(
-                width: 400,
-                height: 100,
-                child: TextField(
-                    controller: myControllerEffect,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    decoration: new InputDecoration(
-                        hintText: "이 제품을 복용하시면서 만족도(효과, 효능,성분 등)\n에 대한 후기를 남겨주세요 (최소 10자 이상)",
-                        border: InputBorder.none
-                    )),
-              ),
-            )
-          ],
-        )
-    );
-  }*/
-
-
   Widget _rating() {
     return Container(
 //          height: 150,
@@ -422,13 +261,13 @@ class _WriteReviewState extends State<WriteReview> {
             RatingBar.builder(
               itemSize: 48,
               glow: false,
-              initialRating: widget.tapToRatingResult != null ? widget.tapToRatingResult: 0,
+              initialRating: starRating != null ? starRating: 0,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: false,
               itemCount: 5,
 //              unratedColor: Colors.grey[500],
-              unratedColor: _grey,
+              unratedColor: gray75,
               itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
               itemBuilder: (context, _) => Icon(
                   Icons.star,
@@ -493,7 +332,7 @@ class _WriteReviewState extends State<WriteReview> {
                               size: 30,
                             color: Color(0xffDADADA),),
                             decoration: BoxDecoration(
-                                color: effect == "bad" ? _green: Colors.grey[300],
+                                color: effect == "bad" ? primary300_main: gray75,
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(()  {
@@ -520,7 +359,7 @@ class _WriteReviewState extends State<WriteReview> {
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
-                                color: effect == "soso" ? _green : Colors.grey[300],
+                                color: effect == "soso" ? primary300_main : gray75,
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           effect = "soso";
@@ -549,7 +388,7 @@ class _WriteReviewState extends State<WriteReview> {
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
-                                color: effect == "good" ? _green : Colors.grey[300],
+                                color: effect == "good" ? primary300_main : gray75,
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(()  {
@@ -568,8 +407,6 @@ class _WriteReviewState extends State<WriteReview> {
 
               ],
             ),
-//              SizedBox(height: 20),
-//              Padding(padding: EdgeInsets.only(top: 25)),
             _textField("effect", myControllerEffect)
           ],
         )
@@ -604,7 +441,7 @@ class _WriteReviewState extends State<WriteReview> {
                 ),
               ),
               filled: true,
-              fillColor: Colors.grey[200],
+              fillColor: gray50,
             ))
       ),
     );
@@ -678,7 +515,7 @@ class _WriteReviewState extends State<WriteReview> {
                             height: 40,
                             decoration: BoxDecoration(
 //                                                    color: widget.review.sideEffect == "no" ? Colors.greenAccent[100]: Colors.grey[300],
-                                color: sideEffect == "no" ? _green : Colors.grey[300],
+                                color: sideEffect == "no" ? primary300_main : gray75,
                                 shape: BoxShape.circle)),
                         onTap: ()  {
                           setState(() {
@@ -752,8 +589,6 @@ class _WriteReviewState extends State<WriteReview> {
         sideEffectText = myControllerSideEffect.text;
         overallText = myControllerOverall.text;
 
-
-
         if(overallText.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
         if(sideEffectText.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
         if(sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
@@ -761,9 +596,6 @@ class _WriteReviewState extends State<WriteReview> {
         if(effect.isEmpty) _warning = "효과 별점을 등록해주세요";
         // if(starRating == 0) _warning = "별점을 등록해주세요";
         if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
-
-
-
 
         if(effectText.length < 10 || sideEffectText.length < 10 || overallText.length < 10 || starRatingText.isEmpty||
           effect.isEmpty || effect.isEmpty)
@@ -777,16 +609,11 @@ class _WriteReviewState extends State<WriteReview> {
               fontSize: 16.0
           );
         else {
-          //await ReviewService(documentId: review.documentId).decreaseFavorite(review.documentId, auth.currentUser.uid);
           String nickName = await DatabaseService(uid: user.uid).getNickName();
           _registerReview(nickName);
           Navigator.pop(context);
         }
-//          await findUserWroteReview(itemSeq: widget.drugItemSeq).updateTotalRating(starRating);
-//          print("HERE"+ReviewService(documentId: widget.drugItemSeq).findUserWroteReview(widget.drugItemSeq, user.toString()).toString());
-
       },
     );
   }
-
 }

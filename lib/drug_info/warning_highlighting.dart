@@ -38,8 +38,7 @@ class _WarningInfoState extends State<WarningInfo> {
         centerTitle: true,
         title: Text(
           '자세히보기',
-          style: TextStyle(
-              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
+          style: Theme.of(context).textTheme.headline5,
         ),
         elevation: 0,
         flexibleSpace: Container(

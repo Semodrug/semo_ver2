@@ -262,7 +262,7 @@ class _HomePageState extends State<HomePage> {
                           child: Container(
                               width: 80,
                               child: AspectRatio(
-                                  aspectRatio: 3.5 / 2,
+                                  aspectRatio: 2.5 / 2,
                                   child:
                                       DrugImage(drugItemSeq: data.itemSeq)))),
                       Container(
@@ -377,8 +377,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+                padding: const EdgeInsets.fromLTRB(20,0,20,10),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: yellow),
@@ -436,7 +435,7 @@ class _HomePageState extends State<HomePage> {
                           child: Container(
                               width: 80,
                               child: AspectRatio(
-                                  aspectRatio: 3.5 / 2,
+                                  aspectRatio: 2.5 / 2,
                                   child:
                                       DrugImage(drugItemSeq: data.itemSeq)))),
                       Container(
@@ -551,8 +550,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+                padding: const EdgeInsets.fromLTRB(20,0,20,10),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: warning),
@@ -931,10 +929,6 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   // width: 63,
                   // height: 20,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: yellow),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: primary300_main, // background
@@ -998,7 +992,9 @@ class SearchBar extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                Text("어떤 약을 찾고 계세요? "),
+                Text("어떤 약을 찾고 계세요? ",
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray300_inactivated),
+      ),
               ],
             ),
             onPressed: () {
