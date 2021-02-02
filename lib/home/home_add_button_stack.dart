@@ -221,7 +221,7 @@ class FixMenuWidget extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText1
-                                .copyWith(color: Color(0xFF0D0D0D)),
+                                .copyWith(color: gray900),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -260,7 +260,7 @@ class FixMenuWidget extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText1
-                                .copyWith(color: Color(0xFF0D0D0D)),
+                                .copyWith(color: gray900),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -270,7 +270,7 @@ class FixMenuWidget extends StatelessWidget {
                 ),
               ),
               Container(height: 10,decoration: BoxDecoration(
-                  border: Border(bottom:BorderSide(width: 1, color: Color(0XFFA4A4A4))))
+                  border: Border(bottom:BorderSide(width: 1, color: gray500)))
               ),
               Container(
                 width: width / 4 * 3.8,
@@ -280,7 +280,7 @@ class FixMenuWidget extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     child: Text(
                       "닫기",
-                      style: TextStyle(fontSize: 14, color: Color(0XFFA4A4A4)),
+                      style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 14, color: gray500),
                       textAlign: TextAlign.center,
                     ),
                   ),

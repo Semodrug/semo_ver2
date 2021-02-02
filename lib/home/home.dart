@@ -377,8 +377,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+                padding: const EdgeInsets.fromLTRB(20,0,20,10),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: yellow),
@@ -551,8 +550,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
+                padding: const EdgeInsets.fromLTRB(20,0,20,10),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: warning),
@@ -994,7 +992,9 @@ class SearchBar extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                Text("어떤 약을 찾고 계세요? "),
+                Text("어떤 약을 찾고 계세요? ",
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray300_inactivated),
+      ),
               ],
             ),
             onPressed: () {
