@@ -245,7 +245,7 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                     },
                     cursorColor: Colors.teal[400],
                     focusNode: focusNode,
-                    style: TextStyle(fontSize: 15),
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15),
                     autofocus: true,
                     controller: _filter,
                     decoration: InputDecoration(
