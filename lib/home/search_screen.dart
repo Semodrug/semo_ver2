@@ -10,7 +10,6 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-
 class SearchScreen extends StatefulWidget {
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -27,6 +26,87 @@ class _SearchScreenState extends State<SearchScreen> {
         _searchText = _filter.text;
       });
     });
+  }
+
+  //전체삭제했을 때 dialog
+  void showWarning(BuildContext context, String bodyString, String actionName1,
+      String actionName2, String actionCode, String uid) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          // title:
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 18),
+              Text(bodyString,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    child: Text(
+                      actionName1,
+                      style: TextStyle(fontSize: 12, color: primary400_line),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(100, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(width: 16),
+                  ElevatedButton(
+                    child: Text(
+                      actionName2,
+                      style: TextStyle(fontSize: 12, color: gray0_white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(100, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: primary300_main,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () async {
+                      if (actionCode == 'deleteSearchedList') {
+                        await Navigator.of(context).pop();
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(uid)
+                            .collection('searchList')
+                            .get()
+                            .then((snapshot) {
+                          for (DocumentSnapshot ds in snapshot.docs) {
+                            ds.reference.delete();
+                          }
+                        });
+                      }
+                    },
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
@@ -97,16 +177,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           .copyWith(fontSize: 13)),
                   onPressed: () {
                     //print('삭제되었음');
-                    FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(user.uid)
-                        .collection('searchList')
-                        .get()
-                        .then((snapshot) {
-                      for (DocumentSnapshot ds in snapshot.docs) {
-                        ds.reference.delete();
-                      }
-                    });
+                    showWarning(context, '전체 삭제 하시겠습니까?', '취소', '삭제',
+                        'deleteSearchedList', user.uid);
                   },
                 )
               ],
@@ -127,8 +199,41 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _drugListFromUser(context, userDrug) {
     //여기는 user 안에 있는 친구들 불러오는 거!!
+    String searchList;
+    TheUser user = Provider.of<TheUser>(context);
+
+    CollectionReference userSearchList = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('searchList');
+
+    Future<void> addRecentSearchList() async {
+      try {
+        assert(userDrug.itemName != null);
+
+        searchList = userDrug.itemName;
+        assert(searchList != null);
+        //drug 이름 누르면 저장 기능
+        userSearchList.add({
+          'searchList': searchList,
+          'time': DateTime.now(),
+          'itemSeq': userDrug.itemSeq
+        });
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
+
+    QuerySnapshot _query;
     return GestureDetector(
-        onTap: () => {
+        onTap: () async => {
+          _query = await userSearchList
+              .where('searchList', isEqualTo: userDrug.itemName)
+              .get(),
+          if (_query.docs.length == 0)
+            {
+              addRecentSearchList(),
+            },
               //Navigator.pop(context),
               Navigator.push(
                   context,
@@ -209,14 +314,11 @@ class _SearchScreenState extends State<SearchScreen> {
     //}
   }
 
-
-
   Widget _buildListOfAll(BuildContext context, List<Drug> drugs,
       List<SavedDrug> userDrugs, String type) {
     if (_searchText.length < 2) {
       return _noResultContainer();
-    }
-    else if (_searchText.length != 0) {
+    } else if (_searchText.length != 0) {
       if (!userDrugs.isEmpty) {
         if (type == 'USER') {
           return Padding(
@@ -230,7 +332,8 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 12.0, left: 12, bottom: 4),
+                    padding:
+                        const EdgeInsets.only(top: 12.0, left: 12, bottom: 4),
                     child: Row(
                       children: [
                         Icon(
@@ -260,9 +363,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           );
-        }
-
-        else if (type == 'withoutUser') {
+        } else if (type == 'withoutUser') {
           return ListView.builder(
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
@@ -278,9 +379,7 @@ class _SearchScreenState extends State<SearchScreen> {
             },
           );
         }
-
-      }
-      else if (type == 'withoutUser') {
+      } else if (type == 'withoutUser') {
         return ListView.builder(
           shrinkWrap: true,
           physics: const ClampingScrollPhysics(),
@@ -295,22 +394,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 drugs[index].category, drugs[index].itemSeq);
           },
         );
-      }
-      else return Container();
-      // else
-      //   //원래는 이것만 있었음
-      //   return ListView.builder(
-      //     shrinkWrap: true,
-      //     physics: const ClampingScrollPhysics(),
-      //     itemCount: drugs.length,
-      //     itemBuilder: (context, index) {
-      //       return ListDrugOfAll(
-      //           _checkLongName(drugs[index].itemName),
-      //           drugs[index].category,
-      //           drugs[index]
-      //               .itemSeq); //DrugTile(drug: drugs[index], index: (index + 1));
-      //     },
-      //   );
+      } else
+        return Container();
     }
   }
 
@@ -349,8 +434,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildListOfUser(BuildContext context, List<SavedDrug> userDrugs) {
     if (_searchText.length < 2) {
       return _noResultContainer();
-    } else
-    {
+    } else {
       return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
@@ -361,7 +445,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 8.0, left: 12, bottom:4),
+                padding: const EdgeInsets.only(top: 8.0, left: 12, bottom: 4),
                 child: Row(
                   children: [
                     Icon(
@@ -391,7 +475,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       );
-
     }
   }
 
@@ -469,9 +552,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     flex: 5,
                     child: TextFormField(
                       cursorColor: primary300_main,
-                      onFieldSubmitted: (val) {
+                      onFieldSubmitted: (val) async {
                         if (val != '' || val.length > 2) {
-                          addRecentSearchList();
+                          QuerySnapshot _query = await userSearchList
+                              .where('searchList', isEqualTo: val)
+                              .get();
+                          if (_query.docs.length == 0) {
+                            addRecentSearchList();
+                          }
                           focusNode.unfocus();
                         }
                       },
@@ -605,13 +693,26 @@ class _SearchScreenState extends State<SearchScreen> {
     final docID = data.id;
     TheUser user = Provider.of<TheUser>(context);
 
+    CollectionReference userSearchList = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('searchList');
+
     return Column(
       children: [
         GestureDetector(
-          onTap: () => {
+          onTap: () async => {
+            if (searchSnapshot.itemSeq != null)
+              {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReviewPage(searchSnapshot.itemSeq),
+                    )),
+              }
             //print('search ==> ${searchSnapshot.recent}'),
-            _searchText = searchSnapshot.recent,
-            _filter.text = _searchText
+            else
+              {_searchText = searchSnapshot.recent, _filter.text = _searchText}
           },
           child: Container(
             decoration: BoxDecoration(
@@ -634,16 +735,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       padding: EdgeInsets.zero,
                       onPressed: () {
                         //print(docID);
-                        FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(user.uid)
-                            .collection('searchList')
-                            .doc(docID)
-                            .delete();
+                        userSearchList.doc(docID).delete();
                       },
                       child: Icon(
                         Icons.close,
                         size: 18,
+                        color: Color(0xffB1B2B2),
                       )),
                 )
               ],
@@ -683,17 +780,27 @@ class ListDrugOfAll extends StatelessWidget {
 
         searchList = item_name;
         assert(searchList != null);
-        //drug 이름 누르면 저장 기능 array로 저장해주기
-        userSearchList.add({'searchList': searchList, 'time': DateTime.now()});
+        //drug 이름 누르면 저장 기능
+        userSearchList.add({
+          'searchList': searchList,
+          'time': DateTime.now(),
+          'itemSeq': item_seq
+        });
       } catch (e) {
         print('Error: $e');
       }
     }
 
+    QuerySnapshot _query;
     return GestureDetector(
-      onTap: () => {
-        addRecentSearchList(),
-        //Navigator.pop(context),
+      onTap: () async => {
+        _query = await userSearchList
+            .where('searchList', isEqualTo: item_name)
+            .get(),
+        if (_query.docs.length == 0)
+          {
+            addRecentSearchList(),
+          },
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -721,15 +828,16 @@ class ListDrugOfAll extends StatelessWidget {
   }
 }
 
-
 class RecentSearch {
   final String recent;
   final Timestamp time;
+  final String itemSeq;
 
   final DocumentReference reference;
 
   RecentSearch.fromMap(Map<String, dynamic> map, {this.reference})
       : recent = map['searchList'],
+        itemSeq = map['itemSeq'],
         time = map['time'];
 
   RecentSearch.fromSnapshot(DocumentSnapshot snapshot)
