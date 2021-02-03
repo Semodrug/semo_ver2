@@ -71,45 +71,45 @@ class _MyPageState extends State<MyPage> {
                       children: [
                         _topMyInfo(userData),
                         Container(
-                          color: Colors.grey[50],
+                          color: gray50,
                           height: 10,
                         ),
                         _myPageMenu('회원정보 수정', context,
                             EditPrivacyPage(userData: userData)),
                         Container(
-                          color: Colors.grey[50],
+                          color: gray50,
                           height: 2,
                         ),
                         _myPageMenu('나의 건강정보 관리', context,
                             EditHealthPage(userData: userData)),
                         Container(
-                          color: Colors.grey[50],
+                          color: gray50,
                           height: 10,
                         ),
                         // TODO: 공지사항, 1:1문의, 이용약관, 환경설정 페이지
                         _myPageMenu('공지사항', context, NoticePage()),
                         Container(
-                          color: Colors.grey[50],
+                          color: gray50,
                           height: 2,
                         ),
                         _myPageMenu('1:1 문의', context, InquiryPage()),
                         Container(
-                          color: Colors.grey[50],
+                          color: gray50,
                           height: 2,
                         ),
                         _myPageMenu('이용약관', context, PolicyTermPage()),
                         Container(
-                          color: Colors.grey[50],
+                          color: gray50,
                           height: 2,
                         ),
                         _myPageMenu('개인정보 처리방침', context, PolicyPrivacyPage()),
                         Container(
-                          color: Colors.grey[50],
+                          color: gray50,
                           height: 10,
                         ),
                         _myPageMenu('기타', context, Others()),
                         Container(
-                          color: Colors.grey[50],
+                          color: gray50,
                           height: 2,
                         ),
                       ],
