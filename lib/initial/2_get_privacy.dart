@@ -17,7 +17,7 @@ bool _isBirthYearFilled = false;
 bool _isGenderFilled = false;
 
 class GetPrivacyPage extends StatefulWidget {
-  final String title = '회원가입';
+  final String title = '개인정보 입력';
 
   @override
   _GetPrivacyPageState createState() => _GetPrivacyPageState();
@@ -39,7 +39,8 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
             Icons.arrow_back,
             color: Colors.teal[200],
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+              '/policy_agree', (Route<dynamic> route) => false),
         ),
         centerTitle: true,
         title: Text(
@@ -98,14 +99,9 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
   }
 
   Widget topTitle() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '서비스 이용을 위해\n개인정보를 입력해주세요 :)',
-          style: Theme.of(context).textTheme.headline3,
-        ),
-      ],
+    return Text(
+      '서비스 이용을 위해\n개인정보를 입력해주세요 :)',
+      style: Theme.of(context).textTheme.headline3,
     );
   }
 
@@ -229,13 +225,14 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
             } else {
-              await DatabaseService(uid: user.uid).updateUserPrivacy(
-                _nicknameController.text,
-                _birthYearController.text,
-                _isSelected[0] ? 'male' : 'female',
-              );
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => GetHealthPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => GetHealthPage(
+                            nickname: _nicknameController.text,
+                            birthYear: _birthYearController.text,
+                            sex: _isSelected[0] ? 'male' : 'female',
+                          )));
             }
           }
         }

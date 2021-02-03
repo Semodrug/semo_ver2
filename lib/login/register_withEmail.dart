@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/shared/constants.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
@@ -191,6 +193,8 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   Widget submitField(context) {
+    final TheUser user = Provider.of<TheUser>(context);
+
     return IYMYSubmitButton(
         context: context,
         isDone: _isIdFilled && _isPasswordFilled,
@@ -207,19 +211,30 @@ class _RegisterFormState extends State<RegisterForm> {
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(result)));
             }
-            /* 정상적으로 넘어간 경우 로그인도 동시에 진행해줌 */
+            /* 정상적으로 넘어간 경우  */
             else {
-              dynamic result = await _auth.signInWithEmail(
-                  _emailController.text, _passwordController.text);
+              await _auth.signOut();
 
-              if (result == null) {
-                print('알 수 없는 오류 발생');
-              }
+              // dynamic result = await _auth.signInWithEmail(
+              //     _emailController.text, _passwordController.text);
+              // //
+              // // if (result == null) {
+              // //   print('알 수 없는 오류 발생');
+              // // }
+              // print('회원가입 완료');
+              // print(user.uid);
+
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    '회원가입이 완료되었습니다.',
+                    textAlign: TextAlign.center,
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.black.withOpacity(0.87)));
+
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/start', (Route<dynamic> route) => false);
             }
-          } else {
-            // 바로바로?
           }
         });
   }

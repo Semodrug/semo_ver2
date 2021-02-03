@@ -11,6 +11,13 @@ bool _isChoose = false;
 bool _isFind = false;
 
 class GetHealthPage extends StatefulWidget {
+  final String nickname;
+  final String birthYear;
+  final String sex;
+
+  const GetHealthPage({Key key, this.nickname, this.birthYear, this.sex})
+      : super(key: key);
+
   @override
   _GetHealthPageState createState() => _GetHealthPageState();
 }
@@ -34,7 +41,7 @@ class _GetHealthPageState extends State<GetHealthPage> {
           ),
           centerTitle: true,
           title: Text(
-            '회원가입',
+            '키워드 입력',
             style: TextStyle(
                 fontSize: 14.0,
                 fontWeight: FontWeight.bold,
@@ -216,8 +223,11 @@ class _GetHealthPageState extends State<GetHealthPage> {
         child: IYMYSubmitButton(
           context: context,
           isDone: true,
-          textString: _isChoose ? '완료' : '건너뛰기',
+          textString: '이약모약 시작하기',
           onPressed: () async {
+            await DatabaseService(uid: user.uid).updateUserPrivacy(
+                widget.nickname, widget.birthYear, widget.sex);
+
             if (_isKeyword[1] == true) _keywordList.add('임산부');
             if (_isKeyword[2] == true) _keywordList.add('고령자');
             if (_isKeyword[3] == true) _keywordList.add('소아');

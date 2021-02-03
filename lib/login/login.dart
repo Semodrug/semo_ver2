@@ -159,8 +159,13 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
               _emailController.text, _passwordController.text);
 
           if (result is String) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(result)));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  result,
+                  textAlign: TextAlign.center,
+                ),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.black.withOpacity(0.87)));
           } else if (result == null) {
             setState(() {
               // loading = false;

@@ -25,13 +25,6 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[200],
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
         centerTitle: true,
         title: Text(
           '이용약관',
@@ -53,9 +46,14 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
       ),
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.fromLTRB(8, 20, 16, 0),
+        padding: EdgeInsets.fromLTRB(8, 16, 16, 0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            topTitle(),
+            SizedBox(
+              height: 24,
+            ),
             allCheckbox(),
             Divider(
               color: Colors.grey,
@@ -74,6 +72,16 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
             submitField(user)
           ],
         ),
+      ),
+    );
+  }
+
+  Widget topTitle() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: Text(
+        '서비스 이용을 위해\n이용약관에 동의해주세요 :)',
+        style: Theme.of(context).textTheme.headline3,
       ),
     );
   }
