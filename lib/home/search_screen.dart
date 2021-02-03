@@ -740,6 +740,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Icon(
                         Icons.close,
                         size: 18,
+                        color: Color(0xffB1B2B2),
                       )),
                 )
               ],
