@@ -4,12 +4,20 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 bool _isChoose = false;
 bool _isFind = false;
 
 class GetHealthPage extends StatefulWidget {
+  final String nickname;
+  final String birthYear;
+  final String sex;
+
+  const GetHealthPage({Key key, this.nickname, this.birthYear, this.sex})
+      : super(key: key);
+
   @override
   _GetHealthPageState createState() => _GetHealthPageState();
 }
@@ -33,7 +41,7 @@ class _GetHealthPageState extends State<GetHealthPage> {
           ),
           centerTitle: true,
           title: Text(
-            '회원가입',
+            '키워드 입력',
             style: TextStyle(
                 fontSize: 14.0,
                 fontWeight: FontWeight.bold,
@@ -210,26 +218,16 @@ class _GetHealthPageState extends State<GetHealthPage> {
   Widget submit() {
     TheUser user = Provider.of<TheUser>(context);
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 400.0,
-        height: 45.0,
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-        //alignment: Alignment.center,
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-          child: Text(
-            _isChoose ? '완료' : '건너뛰기',
-            style: Theme.of(context)
-                .textTheme
-                .headline5
-                .copyWith(color: gray0_white, fontSize: 15),
-          ),
-          color: primary400_line,
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+        child: IYMYSubmitButton(
+          context: context,
+          isDone: true,
+          textString: '이약모약 시작하기',
           onPressed: () async {
+            await DatabaseService(uid: user.uid).updateUserPrivacy(
+                widget.nickname, widget.birthYear, widget.sex);
+
             if (_isKeyword[1] == true) _keywordList.add('임산부');
             if (_isKeyword[2] == true) _keywordList.add('고령자');
             if (_isKeyword[3] == true) _keywordList.add('소아');
@@ -248,9 +246,7 @@ class _GetHealthPageState extends State<GetHealthPage> {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/start', (Route<dynamic> route) => false);
           },
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _exclusiveMultiButton(index, isPressed, buttonName) {

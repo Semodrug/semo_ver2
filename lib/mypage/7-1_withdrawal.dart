@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/7-2_withdrawal_done.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 bool _isAgree = false;
@@ -106,30 +105,63 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   }
 
   Widget _checkAgreement() {
-    return Row(
-      children: [
-        Theme(
-          data: ThemeData(unselectedWidgetColor: gray300_inactivated),
-          child: Checkbox(
-            value: _isAgree,
-            activeColor: primary300_main,
-            onChanged: (value) {
-              setState(() {
-                _isAgree = !_isAgree;
-              });
-            },
+    return InkWell(
+      child: Row(
+        children: [
+          Theme(
+            data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+            child: Checkbox(
+              value: _isAgree,
+              activeColor: primary300_main,
+              onChanged: (value) {
+                setState(() {
+                  _isAgree = !_isAgree;
+                });
+              },
+            ),
           ),
-        ),
-        Text(
-          '위 사실을 확인하였습니다.',
-          style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray900),
-        )
-      ],
+          Text(
+            '위 사실을 확인하였습니다.',
+            style:
+                Theme.of(context).textTheme.bodyText2.copyWith(color: gray900),
+          )
+        ],
+      ),
+      onTap: () {
+        setState(() {
+          _isAgree = !_isAgree;
+        });
+      },
     );
   }
 
   Widget _submitButton(context) {
-    return Container(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: IYMYSubmitButton(
+          context: context,
+          isDone: _isAgree,
+          textString: '탈퇴하기',
+          onPressed: () async {
+            if (_isAgree) {
+              await DatabaseService().deleteUser(widget.userId);
+
+              dynamic result = await _auth.withdrawalAccount();
+
+              if (result is String) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(result)));
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WithdrawalDonePage()),
+                );
+              }
+            }
+          }),
+    );
+
+    Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
       alignment: Alignment.center,
       child: SizedBox(
