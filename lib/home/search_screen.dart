@@ -10,7 +10,6 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-
 class SearchScreen extends StatefulWidget {
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -28,6 +27,7 @@ class _SearchScreenState extends State<SearchScreen> {
       });
     });
   }
+
   //전체삭제했을 때 dialog
   void showWarning(BuildContext context, String bodyString, String actionName1,
       String actionName2, String actionCode, String uid) {
@@ -36,7 +36,7 @@ class _SearchScreenState extends State<SearchScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           // title:
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -109,7 +109,6 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-
   //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
   String _checkLongName(String data) {
     String newName = data;
@@ -178,8 +177,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           .copyWith(fontSize: 13)),
                   onPressed: () {
                     //print('삭제되었음');
-                    showWarning(context, '전체 삭제 하시겠습니까?',
-                        '취소', '삭제', 'deleteSearchedList',  user.uid);
+                    showWarning(context, '전체 삭제 하시겠습니까?', '취소', '삭제',
+                        'deleteSearchedList', user.uid);
                   },
                 )
               ],
@@ -282,14 +281,11 @@ class _SearchScreenState extends State<SearchScreen> {
     //}
   }
 
-
-
   Widget _buildListOfAll(BuildContext context, List<Drug> drugs,
       List<SavedDrug> userDrugs, String type) {
     if (_searchText.length < 2) {
       return _noResultContainer();
-    }
-    else if (_searchText.length != 0) {
+    } else if (_searchText.length != 0) {
       if (!userDrugs.isEmpty) {
         if (type == 'USER') {
           return Padding(
@@ -303,7 +299,8 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 12.0, left: 12, bottom: 4),
+                    padding:
+                        const EdgeInsets.only(top: 12.0, left: 12, bottom: 4),
                     child: Row(
                       children: [
                         Icon(
@@ -333,9 +330,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           );
-        }
-
-        else if (type == 'withoutUser') {
+        } else if (type == 'withoutUser') {
           return ListView.builder(
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
@@ -351,9 +346,7 @@ class _SearchScreenState extends State<SearchScreen> {
             },
           );
         }
-
-      }
-      else if (type == 'withoutUser') {
+      } else if (type == 'withoutUser') {
         return ListView.builder(
           shrinkWrap: true,
           physics: const ClampingScrollPhysics(),
@@ -368,22 +361,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 drugs[index].category, drugs[index].itemSeq);
           },
         );
-      }
-      else return Container();
-      // else
-      //   //원래는 이것만 있었음
-      //   return ListView.builder(
-      //     shrinkWrap: true,
-      //     physics: const ClampingScrollPhysics(),
-      //     itemCount: drugs.length,
-      //     itemBuilder: (context, index) {
-      //       return ListDrugOfAll(
-      //           _checkLongName(drugs[index].itemName),
-      //           drugs[index].category,
-      //           drugs[index]
-      //               .itemSeq); //DrugTile(drug: drugs[index], index: (index + 1));
-      //     },
-      //   );
+      } else
+        return Container();
     }
   }
 
@@ -422,8 +401,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildListOfUser(BuildContext context, List<SavedDrug> userDrugs) {
     if (_searchText.length < 2) {
       return _noResultContainer();
-    } else
-    {
+    } else {
       return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
@@ -434,7 +412,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 8.0, left: 12, bottom:4),
+                padding: const EdgeInsets.only(top: 8.0, left: 12, bottom: 4),
                 child: Row(
                   children: [
                     Icon(
@@ -464,7 +442,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       );
-
     }
   }
 
@@ -542,9 +519,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     flex: 5,
                     child: TextFormField(
                       cursorColor: primary300_main,
-                      onFieldSubmitted: (val) {
+                      onFieldSubmitted: (val) async {
                         if (val != '' || val.length > 2) {
-                          addRecentSearchList();
+                          QuerySnapshot _query = await userSearchList
+                              .where('searchList', isEqualTo: val)
+                              .get();
+                          if (_query.docs.length == 0) {
+                            addRecentSearchList();
+                          }
                           focusNode.unfocus();
                         }
                       },
@@ -686,20 +668,18 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       children: [
         GestureDetector(
-          onTap: () async =>  {
-            if(searchSnapshot.itemSeq != null) {
-             await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ReviewPage(searchSnapshot.itemSeq),
-                  )),
-            }
+          onTap: () async => {
+            if (searchSnapshot.itemSeq != null)
+              {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReviewPage(searchSnapshot.itemSeq),
+                    )),
+              }
             //print('search ==> ${searchSnapshot.recent}'),
-            else {
-              _searchText = searchSnapshot.recent,
-              _filter.text = _searchText
-            }
-
+            else
+              {_searchText = searchSnapshot.recent, _filter.text = _searchText}
           },
           child: Container(
             decoration: BoxDecoration(
@@ -722,9 +702,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       padding: EdgeInsets.zero,
                       onPressed: () {
                         //print(docID);
-                        userSearchList
-                            .doc(docID)
-                            .delete();
+                        userSearchList.doc(docID).delete();
                       },
                       child: Icon(
                         Icons.close,
@@ -769,16 +747,26 @@ class ListDrugOfAll extends StatelessWidget {
         searchList = item_name;
         assert(searchList != null);
         //drug 이름 누르면 저장 기능
-        userSearchList.add({'searchList': searchList, 'time': DateTime.now(), 'itemSeq' : item_seq});
+        userSearchList.add({
+          'searchList': searchList,
+          'time': DateTime.now(),
+          'itemSeq': item_seq
+        });
       } catch (e) {
         print('Error: $e');
       }
     }
 
+    QuerySnapshot _query;
     return GestureDetector(
-      onTap: () => {
-        addRecentSearchList(),
-        //Navigator.pop(context),
+      onTap: () async => {
+        _query = await userSearchList
+            .where('searchList', isEqualTo: item_name)
+            .get(),
+        if (_query.docs.length == 0)
+          {
+            addRecentSearchList(),
+          },
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -805,7 +793,6 @@ class ListDrugOfAll extends StatelessWidget {
     );
   }
 }
-
 
 class RecentSearch {
   final String recent;
