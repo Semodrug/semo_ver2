@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
         SearchBar(),
         Container(
           height: 45,
-          margin: EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 16),
+          margin: EdgeInsets.only(left: 16, top: 0, bottom: 8, right: 16),
           child: Padding(
             padding: const EdgeInsets.only(top: 15.0),
             child: Container(
@@ -148,7 +148,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         Divider(
+            height: 0,
           thickness: 0.5,
+            indent: 1,
+            endIndent:  0
         ),
         Expanded(
           child: ListView(
@@ -957,7 +960,7 @@ class _HomePageState extends State<HomePage> {
       SearchBar(),
       Container(
         height: 45,
-        margin: EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 16),
+        margin: EdgeInsets.only(left: 16, top: 0, bottom: 8, right: 16),
         child: Padding(
           padding: const EdgeInsets.only(top: 15.0),
           child: Container(
@@ -1004,8 +1007,12 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       Divider(
-        thickness: 0.5,
+          height: 0,
+          thickness: 0.5,
+          indent: 1,
+          endIndent:  0
       ),
+
       Container(
         padding: EdgeInsets.symmetric(vertical: 46),
         child: Center(
