@@ -208,8 +208,13 @@ class _RegisterFormState extends State<RegisterForm> {
 
             /* 오류 발생시 snackbar로 알려줌 */
             if (result is String) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(result)));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    result,
+                    textAlign: TextAlign.center,
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.black.withOpacity(0.87)));
             }
             /* 정상적으로 넘어간 경우  */
             else {

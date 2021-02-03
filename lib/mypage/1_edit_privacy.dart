@@ -211,20 +211,35 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
         onPressed: () async {
           if (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled) {
             if (_nicknameController.text.length >= 10) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('닉네임을 10자 이하로 입력해주세요')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    '닉네임을 10자 이하로 입력해주세요',
+                    textAlign: TextAlign.center,
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.black.withOpacity(0.87)));
             } else if (2020 < int.parse(_birthYearController.text) ||
                 int.parse(_birthYearController.text) <= 1900) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('생년월일을 올바르게 입력해주세요')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    '생년월일을 올바르게 입력해주세요',
+                    textAlign: TextAlign.center,
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.black.withOpacity(0.87)));
             } else {
               var result =
                   await DatabaseService().isUnique(_nicknameController.text);
               if (_nicknameController.text == widget.userData.nickname)
                 result = true;
               if (result == false) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                      '이미 존재하는 닉네임입니다',
+                      textAlign: TextAlign.center,
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.black.withOpacity(0.87)));
               } else {
                 await DatabaseService(uid: user.uid).updateUserPrivacy(
                   _nicknameController.text,

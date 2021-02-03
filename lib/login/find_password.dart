@@ -113,12 +113,24 @@ class _FindPasswordState extends State<FindPassword> {
                           dynamic result = await _auth
                               .sendPasswordResetEmail(_emailController.text);
                           if (result is String) {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text(result)));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                  result,
+                                  textAlign: TextAlign.center,
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor:
+                                    Colors.black.withOpacity(0.87)));
                           }
                           if (result == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('이메일이 전송되었습니다.')));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                  '이메일이 전송되었습니다.',
+                                  textAlign: TextAlign.center,
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor:
+                                    Colors.black.withOpacity(0.87)));
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 '/start', (Route<dynamic> route) => false);
                           }
