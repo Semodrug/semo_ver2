@@ -199,8 +199,41 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _drugListFromUser(context, userDrug) {
     //여기는 user 안에 있는 친구들 불러오는 거!!
+    String searchList;
+    TheUser user = Provider.of<TheUser>(context);
+
+    CollectionReference userSearchList = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('searchList');
+
+    Future<void> addRecentSearchList() async {
+      try {
+        assert(userDrug.itemName != null);
+
+        searchList = userDrug.itemName;
+        assert(searchList != null);
+        //drug 이름 누르면 저장 기능
+        userSearchList.add({
+          'searchList': searchList,
+          'time': DateTime.now(),
+          'itemSeq': userDrug.itemSeq
+        });
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
+
+    QuerySnapshot _query;
     return GestureDetector(
-        onTap: () => {
+        onTap: () async => {
+          _query = await userSearchList
+              .where('searchList', isEqualTo: userDrug.itemName)
+              .get(),
+          if (_query.docs.length == 0)
+            {
+              addRecentSearchList(),
+            },
               //Navigator.pop(context),
               Navigator.push(
                   context,
