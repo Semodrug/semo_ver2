@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:semo_ver2/drug_info/expiration_g.dart';
 import 'package:semo_ver2/drug_info/expiration_s.dart';
 import 'package:semo_ver2/review/drug_info.dart';
@@ -9,16 +8,13 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/home/search_screen.dart';
 //import 'package:semo_ver2/home/_past_search_screen.dart';
 
-import 'package:semo_ver2/home/home_add_button_stack.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/theme/colors.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
-/*약들의 개수를 length 만큼 보여주고 싶은데 그 length의 인덱스를 어떻게 넘겨주지..?*/
 int num = 0;
 
 class HomePage extends StatefulWidget {
@@ -146,24 +142,6 @@ class _HomePageState extends State<HomePage> {
                           .copyWith(color: Colors.white),)
                     ),
                   ),
-                  /*
-                  ElevatedButton(
-
-                    style: ElevatedButton.styleFrom(
-                      primary: primary300_main, // background
-                    ),
-                    //padding: EdgeInsets.only(left: 10),
-                    child: Text('+ 추가하기',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: Colors.white)),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AddButton()));
-                    },
-                  )
-                  */
                 ],
               ),
             ),
@@ -699,7 +677,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget _popUpMenu( context, data, user){
     return Container(
-      //color: yellow,
       decoration: new BoxDecoration(
           color: Colors.white,
           borderRadius: new BorderRadius.only(
@@ -743,12 +720,8 @@ class _HomePageState extends State<HomePage> {
             child: MaterialButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  _showDeleteDialog(
-                    context,
-                    data.itemSeq,
-                    user.uid,
-                  );
-//
+                  showWarning(context, '정말 삭제 하시겠습니까?',
+                      '취소', '삭제', 'deleteUserDrug',  user.uid, data.itemSeq );
                 },
                 child: Center(
                     child: Text("삭제하기",
@@ -769,53 +742,73 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showDeleteDialog(context, record, uid) async {
-    return showDialog<void>(
+  void showWarning(BuildContext context, String bodyString, String actionName1,
+      String actionName2, String actionCode, String uid, String record) {
+    showDialog(
       context: context,
-      barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-//          title: Center(child: Text('AlertDialog Title')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Center(
-                    child: Text('정말 삭제하시겠습니까?',
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold))),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      child: Text('취소',
-                          style: TextStyle(
-                              color: Colors.black38,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          // title:
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 18),
+              Text(bodyString,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    child: Text(
+                      actionName1,
+                      style: TextStyle(fontSize: 12, color: primary400_line),
                     ),
-                    TextButton(
-                      child: Text('삭제',
-                          style: TextStyle(
-                              color: primary500_light_text,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold)),
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        _showDeletedWell(context);
-                        await DatabaseService(uid: uid)
-                            .deleteSavedDrugData(record);
-                      },
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(100, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(width: 16),
+                  ElevatedButton(
+                    child: Text(
+                      actionName2,
+                      style: TextStyle(fontSize: 12, color: gray0_white),
                     ),
-                  ],
-                )
-              ],
-            ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(100, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: primary300_main,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () async {
+                      if (actionCode == 'deleteUserDrug') {
+                          Navigator.of(context).pop();
+                          _showDeletedWell(context);
+                          await DatabaseService(uid: uid)
+                              .deleteSavedDrugData(record);
+                      }
+                    },
+                  )
+                ],
+              )
+            ],
           ),
         );
       },
