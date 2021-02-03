@@ -4,15 +4,15 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/bottom_bar.dart';
 import 'package:semo_ver2/drug_info/expiration_s.dart';
 import 'package:semo_ver2/drug_info/search_highlighting.dart';
 import 'package:semo_ver2/drug_info/warning_highlighting.dart';
-
-import 'package:semo_ver2/drug_info/detail_info.dart';
 import 'package:semo_ver2/drug_info/expiration_g.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/mypage/my_favorites.dart';
 import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
@@ -23,6 +23,7 @@ import 'package:semo_ver2/review/all_review.dart';
 import 'package:semo_ver2/review/get_rating.dart';
 import 'package:semo_ver2/review/review_list.dart';
 import 'package:semo_ver2/review/write_review.dart';
+import 'package:semo_ver2/shared/shortcut_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 List infoEE;
@@ -376,7 +377,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           rating: drug.totalRating * 1.0,
                           itemBuilder: (context, index) => Icon(
                             // _selectedIcon ??
-                                Icons.star,
+                            Icons.star,
                             color: yellow,
                           ),
                           itemCount: 5,
@@ -410,7 +411,26 @@ class _ReviewPageState extends State<ReviewPage> {
                               await DatabaseService(uid: user.uid)
                                   .removeFromFavoriteList(drug.itemSeq);
                             } else {
-                              _showFavoriteDone(context);
+                              IYMYShortCutDialog(
+                                context: context,
+                                dialogIcon:
+                                    Icon(Icons.favorite, color: warning),
+                                boldBodyString: '찜 목록',
+                                normalBodyString: '에 추가되었습니다',
+                                topButtonName: '바로가기',
+                                bottomButtonName: '확인',
+                                onPressedTop: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyFavorites()));
+                                },
+                                onPressedBottom: () {
+                                  Navigator.pop(context);
+                                },
+                              ).showWarning();
+
                               await DatabaseService(uid: user.uid)
                                   .addToFavoriteList(drug.itemSeq);
                               // _showFavoriteWell(context);
@@ -453,7 +473,28 @@ class _ReviewPageState extends State<ReviewPage> {
                             ),
                             onPressed: () {
                               if (_isSaved) {
-                                _alreadySaved(context);
+                                IYMYShortCutDialog(
+                                  context: context,
+                                  dialogIcon: SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: Image.asset(
+                                          'assets/icons/warning_icon_primary.png')),
+                                  boldBodyString: '',
+                                  normalBodyString: '이미 저장한 약입니다',
+                                  topButtonName: '나의 약 보관함 바로가기',
+                                  bottomButtonName: '확인',
+                                  onPressedTop: () {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => BottomBar()));
+                                  },
+                                  onPressedBottom: () {
+                                    Navigator.pop(context);
+                                  },
+                                ).showWarning();
                               } else {
                                 Navigator.push(
                                     context,
@@ -667,109 +708,6 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  void _showFavoriteDone(context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.of(context).pop(true);
-        }); // return object of type Dialog
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Icon(
-            Icons.favorite,
-            color: Colors.red,
-            size: 17,
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: '찜 목록',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: '에 추가되었습니다.'),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  '마이페이지에서 확인하실 수 있습니다',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                SizedBox(
-                  height: 10,
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _alreadySaved(context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.of(context).pop(true);
-        }); //
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Icon(
-            Icons.warning,
-            color: Colors.orangeAccent,
-            size: 17,
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(text: '이미 '),
-                      TextSpan(
-                          text: '보관함',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: '에 저장되어있습니다.'),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  '약보관함에서 확인하실 수 있습니다',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                SizedBox(
-                  height: 10,
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   /* Under Information */
   Widget _underInfo(BuildContext context, Drug drug, UserData userData) {
     bool _isCareful =
@@ -846,7 +784,11 @@ class _ReviewPageState extends State<ReviewPage> {
                                 .textTheme
                                 .caption
                                 .copyWith(color: gray500, fontSize: 12)),
-                        Icon(Icons.keyboard_arrow_right, color: gray500, size: 20,)
+                        Icon(
+                          Icons.keyboard_arrow_right,
+                          color: gray500,
+                          size: 20,
+                        )
                       ],
                     )),
               ],
@@ -943,32 +885,37 @@ class _ReviewPageState extends State<ReviewPage> {
                       //Text("EEEEE"+checkReviewIsZero().toString()),
                       checkReviewIsZero() == true
                           ? Container()
-                          :
-                          Row(
-                        children: [
-                          // Expanded(child: Container()),
-                          FlatButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AllReview(widget.drugItemSeq)));
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text('전체리뷰 보기',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .caption
-                                          .copyWith(color: gray500, fontSize: 12)),
-                                  Icon(Icons.keyboard_arrow_right, color: gray500, size: 20,)
-                                ],
-                              )),
-                        ],
-                      ),
+                          : Row(
+                              children: [
+                                // Expanded(child: Container()),
+                                FlatButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => AllReview(
+                                                  widget.drugItemSeq)));
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text('전체리뷰 보기',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption
+                                                .copyWith(
+                                                    color: gray500,
+                                                    fontSize: 12)),
+                                        Icon(
+                                          Icons.keyboard_arrow_right,
+                                          color: gray500,
+                                          size: 20,
+                                        )
+                                      ],
+                                    )),
+                              ],
+                            ),
                     ],
                   ),
                 ),
@@ -1014,7 +961,6 @@ class _ReviewPageState extends State<ReviewPage> {
                             ],
                           ),
                         ),
-
                       ],
                     ),
                   ),
