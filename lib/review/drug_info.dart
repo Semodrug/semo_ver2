@@ -90,7 +90,7 @@ class _ReviewPageState extends State<ReviewPage> {
     });
   }
 
-  bool pillInfoTab = false;
+  bool pillInfoTab = true;
 
   bool _ifZeroReview = true;
 
@@ -285,7 +285,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             ),
                           );
                         } else {
-                          return Loading();
+                          return Container();
                         }
                       });
                 } else {
@@ -365,19 +365,19 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                       SizedBox(height: 10),
                       Row(children: <Widget>[
-                        RatingBar.builder(
-                          initialRating: drug.totalRating * 1.0,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 5,
-                          itemSize: 18,
-                          glow: false,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 0),
-                          unratedColor: gray50,
-                          itemBuilder: (context, _) => Icon(
-                            Icons.star,
+                        RatingBarIndicator(
+                          rating: drug.totalRating * 1.0,
+                          itemBuilder: (context, index) => Icon(
+                            // _selectedIcon ??
+                                Icons.star,
                             color: yellow,
                           ),
+                          itemCount: 5,
+                          itemSize: 18.0,
+                          unratedColor: gray75,
+                          //unratedColor: Colors.amber.withAlpha(50),
+                          direction: Axis.horizontal,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 0),
                         ),
                         Container(width: 5),
                         Text(drug.totalRating.toStringAsFixed(1),
@@ -480,7 +480,7 @@ class _ReviewPageState extends State<ReviewPage> {
             ],
           );
         } else {
-          return Loading();
+          return Container();
         }
       },
     );
@@ -808,27 +808,32 @@ class _ReviewPageState extends State<ReviewPage> {
             SizedBox(
               height: 10,
             ),
-            FlatButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailInfo(
-                                drugItemSeq: drug.itemSeq,
-                              )));
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text('약 정보 전체보기',
-                        style: Theme.of(context)
-                            .textTheme
-                            .caption
-                            .copyWith(color: gray500, fontSize: 12)),
-                    Icon(Icons.keyboard_arrow_right)
-                  ],
-                )),
+            Row(
+              children: [
+                Expanded(child: Container()),
+                FlatButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetailInfo(
+                                    drugItemSeq: drug.itemSeq,
+                                  )));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text('약 정보 전체보기',
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                .copyWith(color: gray500, fontSize: 12)),
+                        Icon(Icons.keyboard_arrow_right, color: gray500, size: 20,)
+                      ],
+                    )),
+              ],
+            ),
           ]),
     );
   }
@@ -875,7 +880,7 @@ class _ReviewPageState extends State<ReviewPage> {
               return Container();
             }
           } else {
-            return Loading();
+            return Container();
           }
         });
   }
@@ -916,20 +921,32 @@ class _ReviewPageState extends State<ReviewPage> {
                       //Text("EEEEE"+checkReviewIsZero().toString()),
                       checkReviewIsZero() == true
                           ? Container()
-                          : InkWell(
-                              child: Text('전체리뷰 보기',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .caption
-                                      .copyWith(color: gray500, fontSize: 12)),
-                              onTap: () {
-                                //TODO GET ALL REVIEW
+                          :
+                          Row(
+                        children: [
+                          // Expanded(child: Container()),
+                          FlatButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             AllReview(widget.drugItemSeq)));
-                              }),
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text('전체리뷰 보기',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption
+                                          .copyWith(color: gray500, fontSize: 12)),
+                                  Icon(Icons.keyboard_arrow_right, color: gray500, size: 20,)
+                                ],
+                              )),
+                        ],
+                      ),
                     ],
                   ),
                 ),

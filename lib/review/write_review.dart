@@ -10,7 +10,6 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
-import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'review.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -232,7 +231,7 @@ class _WriteReviewState extends State<WriteReview> {
                         //     fontWeight: FontWeight.bold,
                         //   ));
                       } else
-                        return Loading();
+                        return Container();
                     }),
               ],
             )
@@ -299,7 +298,7 @@ class _WriteReviewState extends State<WriteReview> {
                     color: primary500_light_text, fontSize: 12,),
                 children: <TextSpan>[
                   TextSpan(
-                      text: starRatingText.isEmpty ? "" :
+                      text: starRatingText.isEmpty ? "선택하세요" :
                       '${starRatingText.split(" ")[0]}',
                       style: Theme.of(context).textTheme.caption.copyWith(
                       color: primary600_bold_text, fontSize: 12, fontWeight: FontWeight.bold),),
@@ -611,8 +610,8 @@ class _WriteReviewState extends State<WriteReview> {
         // if(starRating == 0) _warning = "별점을 등록해주세요";
         if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
 
-        if(effectText.length < 10 || sideEffectText.length < 10 || overallText.length < 10 || starRatingText.isEmpty||
-          effect.isEmpty || effect.isEmpty)
+        if(overallText.length < 10 || sideEffectText.length < 10 || sideEffect.length < 10 ||
+            effectText.isEmpty|| effect.isEmpty || starRatingText.isEmpty)
           Fluttertoast.showToast(
               msg: _warning,
               toastLength: Toast.LENGTH_SHORT,
