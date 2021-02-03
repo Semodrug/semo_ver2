@@ -65,6 +65,14 @@ ThemeData _buildIYMYTheme() {
 TextTheme _buildTextTheme(TextTheme base) {
   return base
       .copyWith(
+        caption: TextStyle(
+            fontSize: 12,
+            color: Color(0xFFC4C4C4),
+            letterSpacing: 0),
+        overline: TextStyle(
+            fontSize: 10,
+            color: Color(0xFFC4C4C4),
+            letterSpacing: 0),
         headline1: TextStyle(
             fontSize: 34,
             fontWeight: FontWeight.bold,
