@@ -3,12 +3,14 @@ import 'package:semo_ver2/theme/colors.dart';
 
 class CustomButton extends StatelessWidget {
   final BuildContext context;
+  final bool isDone;
   final String textString;
   final Function onPressed;
 
   const CustomButton({
     Key key,
     this.context,
+    @required this.isDone,
     @required this.textString,
     @required this.onPressed,
   }) : super(key: key);
@@ -21,16 +23,24 @@ class CustomButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
-          color: primary400_line,
+          color: isDone ? primary400_line : gray300_inactivated,
           width: 1,
         ),
-        gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: <Color>[
-              gradient_button_long_start,
-              gradient_button_long_end,
-            ]),
+        gradient: isDone
+            ? LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+                    gradient_button_long_start,
+                    gradient_button_long_end,
+                  ])
+            : LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+                    gradient_button_inactivated_start,
+                    gradient_button_inactivated_end,
+                  ]),
       ),
       child: Material(
         color: Colors.transparent,

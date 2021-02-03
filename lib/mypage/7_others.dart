@@ -50,6 +50,7 @@ class Others extends StatelessWidget {
               children: [
                 InkWell(
                   child: Container(
+                    height: 48,
                     padding: EdgeInsets.fromLTRB(20.0, 0, 12.0, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,12 +62,10 @@ class Others extends StatelessWidget {
                                 .copyWith(
                                     color: gray900,
                                     fontWeight: FontWeight.normal)),
-                        IconButton(
-                            icon: Icon(
-                              Icons.navigate_next,
-                              color: gray100,
-                            ),
-                            onPressed: () {}),
+                        Icon(
+                          Icons.navigate_next,
+                          color: gray100,
+                        ),
                       ],
                     ),
                   ),
@@ -82,6 +81,7 @@ class Others extends StatelessWidget {
                 ),
                 InkWell(
                   child: Container(
+                    height: 48,
                     padding: EdgeInsets.fromLTRB(20.0, 0, 12.0, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,12 +93,10 @@ class Others extends StatelessWidget {
                                 .copyWith(
                                     color: gray900,
                                     fontWeight: FontWeight.normal)),
-                        IconButton(
-                            icon: Icon(
-                              Icons.navigate_next,
-                              color: gray100,
-                            ),
-                            onPressed: () {}),
+                        Icon(
+                          Icons.navigate_next,
+                          color: gray100,
+                        ),
                       ],
                     ),
                   ),
