@@ -52,54 +52,54 @@ class _ListViewReviewWidgetState extends State<ListViewReviewWidget> {
      );
    }
 
+   Widget _FAB(){
+     return  Container(
+       decoration: BoxDecoration(
+         border: Border.all(color: gray50),
+         borderRadius: BorderRadius.circular(10.0),
+       ),
+       width: 36,
+       height: 36,
+       child:
+       FittedBox(
+         child:
+         FloatingActionButton(
+           onPressed: (){
+             _onTap();
+           },
+           child: Icon(Icons.arrow_upward, size: 35, color: gray300_inactivated,),
+           backgroundColor: gray50,
+           shape: RoundedRectangleBorder(
+               borderRadius: BorderRadius.all(Radius.circular(15.0))
+           ),
+         ),
+       ),
+     );
+   }
+
   Widget build(BuildContext context) {
     if (widget.drugsProvider.drugs.isEmpty) {
       return Center(child: CircularProgressIndicator());
     } else
-      return Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: widget.drugsProvider.drugs.length,
-              itemBuilder: (context, index) {
-                //print('${widget.drugsProvider.drugs[index].itemName}');
-                return RankingTile(
-                    drug: widget.drugsProvider.drugs[index],
-                    index: (index + 1));
-              },
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0, bottom: 12),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: gray50),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  width: 36,
-                  height: 36,
-                  child:
-                  FittedBox(
-                    child: FloatingActionButton(
-                      onPressed: (){
-                        _onTap();
-                      },
-                      child: Icon(Icons.arrow_upward, size: 35, color: gray300_inactivated,),
-                      backgroundColor: gray50,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0))
-                      ),
-                    ),
-                  ),
-                ),
+      return Scaffold(
+        floatingActionButton:
+        _FAB(),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: widget.drugsProvider.drugs.length,
+                itemBuilder: (context, index) {
+                  //print('${widget.drugsProvider.drugs[index].itemName}');
+                  return RankingTile(
+                      drug: widget.drugsProvider.drugs[index],
+                      index: (index + 1));
+                },
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       );
   }
 }
@@ -153,54 +153,55 @@ class _ListViewTotalRankingWidgetState
     );
   }
 
+  Widget _FAB(){
+   return  Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: gray50),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      width: 36,
+      height: 36,
+      child:
+      FittedBox(
+        child:
+        FloatingActionButton(
+          onPressed: (){
+            _onTap();
+          },
+          child: Icon(Icons.arrow_upward, size: 35, color: gray300_inactivated,),
+          backgroundColor: gray50,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15.0))
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     if (widget.drugsProvider.drugs.isEmpty) {
       return Center(child: CircularProgressIndicator());
     } else
-      return Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: widget.drugsProvider.drugs.length,
-              itemBuilder: (context, index) {
-                //print('${widget.drugsProvider.drugs[index].itemName}');
-                return RankingTile(
-                    drug: widget.drugsProvider.drugs[index],
-                    index: (index + 1));
-              },
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0, bottom: 12),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: gray50),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  width: 36,
-                  height: 36,
-                  child:
-                  FittedBox(
-                    child: FloatingActionButton(
-                      onPressed: (){
-                        _onTap();
-                      },
-                      child: Icon(Icons.arrow_upward, size: 35, color: gray300_inactivated,),
-                      backgroundColor: gray50,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0))
-                      ),
-                    ),
-                  ),
-                ),
+      return Scaffold(
+        floatingActionButton:
+        _FAB(),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: widget.drugsProvider.drugs.length,
+                itemBuilder: (context, index) {
+                  //print('${widget.drugsProvider.drugs[index].itemName}');
+                  return RankingTile(
+                      drug: widget.drugsProvider.drugs[index],
+                      index: (index + 1));
+                },
               ),
-            ],
-          ),
-        ],
+            ),
+
+          ],
+        ),
       );
   }
 
