@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-class CustomDialog {
-  void showWarning(BuildContext context, String bodyString, String actionName1,
-      String actionName2, String actionCode, Function action) {
+class CustomDialog extends StatelessWidget {
+  final BuildContext context;
+  final String bodyString;
+  final String leftButtonName;
+  final String rightButtonName;
+  final Function onPressed;
+
+  const CustomDialog(
+      {Key key,
+      this.context,
+      @required this.bodyString,
+      @required this.leftButtonName,
+      @required this.rightButtonName,
+      @required this.onPressed})
+      : super(key: key);
+
+  void showWarning() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -30,7 +44,7 @@ class CustomDialog {
                   /* LEFT ACTION BUTTON */
                   ElevatedButton(
                     child: Text(
-                      actionName1,
+                      leftButtonName,
                       style: Theme.of(context)
                           .textTheme
                           .headline5
@@ -51,27 +65,22 @@ class CustomDialog {
                   SizedBox(width: 16),
                   /* RIGHT ACTION BUTTON */
                   ElevatedButton(
-                    child: Text(
-                      actionName2,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(color: gray0_white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(120, 40),
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        elevation: 0,
-                        primary: primary300_main,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            side: BorderSide(color: primary400_line))),
-                    onPressed: () async {
-                      if (actionCode == 'logout') {
-                        action(context);
-                      }
-                    },
-                  )
+                      child: Text(
+                        rightButtonName,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: gray0_white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(120, 40),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          elevation: 0,
+                          primary: primary300_main,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(color: primary400_line))),
+                      onPressed: onPressed)
                 ],
               )
             ],
@@ -79,5 +88,10 @@ class CustomDialog {
         );
       },
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

@@ -102,9 +102,17 @@ class Others extends StatelessWidget {
                       ],
                     ),
                   ),
-                  onTap: () async {
-                    CustomDialog().showWarning(context, '정말 로그아웃하시겠어요?', '취소',
-                        '로그아웃', 'logout', _action);
+                  onTap: () {
+                    CustomDialog(
+                        context: context,
+                        bodyString: '정말 로그아웃하시겠어요?',
+                        leftButtonName: '취소',
+                        rightButtonName: '로그아웃',
+                        onPressed: () async {
+                          await _auth.signOut();
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/start', (Route<dynamic> route) => false);
+                        }).showWarning();
                   },
                 ),
                 Container(
@@ -115,10 +123,5 @@ class Others extends StatelessWidget {
             ));
   }
 
-  Future<void> _action(context) async {
-    await _auth.signOut();
-
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/start', (Route<dynamic> route) => false);
-  }
+  // Future<void> _onPressed(context) async {}
 }
