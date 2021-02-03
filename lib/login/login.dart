@@ -4,6 +4,7 @@ import 'package:semo_ver2/login/register.dart';
 import 'package:semo_ver2/login/find_password.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 bool _isSecret = true;
@@ -146,42 +147,28 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   }
 
   Widget _submitButton() {
-    return SizedBox(
-      //padding: const EdgeInsets.symmetric(vertical: 16.0),
-      //alignment: Alignment.center,
-      width: 400.0,
-      height: 44.0,
-      child: RaisedButton(
-        child: Text(
-          '로그인',
-          style: Theme.of(context)
-              .textTheme
-              .headline5
-              .copyWith(color: gray0_white, fontSize: 15),
-        ),
-        color: _isIdFilled && _isPasswordFilled ? primary400_line : gray200,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        onPressed: () async {
-          if (_isIdFilled &&
-              _isPasswordFilled &&
-              _formKey.currentState.validate()) {
-            // setState(() => loading = true);
-            dynamic result = await _auth.signInWithEmail(
-                _emailController.text, _passwordController.text);
+    return IYMYSubmitButton(
+      context: context,
+      isDone: _isIdFilled && _isPasswordFilled,
+      textString: '로그인',
+      onPressed: () async {
+        if (_isIdFilled &&
+            _isPasswordFilled &&
+            _formKey.currentState.validate()) {
+          dynamic result = await _auth.signInWithEmail(
+              _emailController.text, _passwordController.text);
 
-            if (result is String) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(result)));
-            } else if (result == null) {
-              setState(() {
-                // loading = false;
-                error = 'Could not sign in with those credentials';
-              });
-            }
+          if (result is String) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(result)));
+          } else if (result == null) {
+            setState(() {
+              // loading = false;
+              error = 'Could not sign in with those credentials';
+            });
           }
-        },
-      ),
+        }
+      },
     );
   }
 

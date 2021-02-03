@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 bool _isFilled = false;
@@ -55,7 +56,7 @@ class _FindPasswordState extends State<FindPassword> {
             child: Form(
               key: _formKey,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
+                padding: EdgeInsets.fromLTRB(16, 40, 16, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -103,43 +104,26 @@ class _FindPasswordState extends State<FindPassword> {
                     SizedBox(
                       height: 60,
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 400.0,
-                        height: 44.0,
-                        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        //alignment: Alignment.center,
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0)),
-                          child: Text(
-                            '전송하기',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(color: gray0_white, fontSize: 15),
-                          ),
-                          color: _isFilled ? primary400_line : gray200,
-                          onPressed: () async {
-                            if (_isFilled && _formKey.currentState.validate()) {
-                              dynamic result =
-                                  await _auth.sendPasswordResetEmail(
-                                      _emailController.text);
-                              if (result is String) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(result)));
-                              }
-                              if (result == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('이메일이 전송되었습니다.')));
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    '/start', (Route<dynamic> route) => false);
-                              }
-                            }
-                          },
-                        ),
-                      ),
+                    IYMYSubmitButton(
+                      context: context,
+                      isDone: _isFilled,
+                      textString: '전송하기',
+                      onPressed: () async {
+                        if (_isFilled && _formKey.currentState.validate()) {
+                          dynamic result = await _auth
+                              .sendPasswordResetEmail(_emailController.text);
+                          if (result is String) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text(result)));
+                          }
+                          if (result == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('이메일이 전송되었습니다.')));
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/start', (Route<dynamic> route) => false);
+                          }
+                        }
+                      },
                     ),
                   ],
                 ),

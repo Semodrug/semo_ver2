@@ -7,6 +7,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/6_policy_privacy.dart';
 import 'package:semo_ver2/mypage/5_policy_terms.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 bool _isTermsAgreed = false;
@@ -214,42 +215,24 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
   }
 
   Widget submitField(user) {
-    return Container(
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: 44.0,
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-        //alignment: Alignment.center,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-          child: RaisedButton(
-            child: Text(
-              '다음',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: gray0_white, fontSize: 15),
-            ),
-            color: _isTermsAgreed && _isPrivacyAgreed
-                ? gradient_button_long_end
-                : gray200,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            onPressed: () async {
-              if (_isTermsAgreed && _isPrivacyAgreed) {
-                // 이용약관 동의 날짜 저장
-                String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
-                await DatabaseService(uid: user.uid).addUser(nowDT);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: IYMYSubmitButton(
+        context: context,
+        isDone: _isTermsAgreed && _isPrivacyAgreed,
+        textString: '다음',
+        onPressed: () async {
+          if (_isTermsAgreed && _isPrivacyAgreed) {
+            // 이용약관 동의 날짜 저장
+            String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
+            await DatabaseService(uid: user.uid).addUser(nowDT);
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => GetPrivacyPage()),
-                );
-              }
-            },
-          ),
-        ),
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => GetPrivacyPage()),
+            );
+          }
+        },
       ),
     );
   }

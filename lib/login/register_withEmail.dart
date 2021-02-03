@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 bool _isSecret = true;
@@ -190,54 +191,36 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   Widget submitField(context) {
-    return Builder(builder: (BuildContext context) {
-      return Container(
-        alignment: Alignment.center,
-        child: SizedBox(
-          width: 400.0,
-          height: 45.0,
-          child: RaisedButton(
-              child: Text(
-                '이약모약 시작하기',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(color: gray0_white, fontSize: 15),
-              ),
-              color:
-                  _isIdFilled && _isPasswordFilled ? primary400_line : gray200,
-              shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(10.0)),
-              onPressed: () async {
-                if (_isIdFilled &&
-                    _isPasswordFilled &&
-                    _formKey.currentState.validate()) {
-                  dynamic result = await _auth.signUpWithEmail(
-                      _emailController.text, _passwordController.text);
+    return IYMYSubmitButton(
+        context: context,
+        isDone: _isIdFilled && _isPasswordFilled,
+        textString: '이약모약 시작하기',
+        onPressed: () async {
+          if (_isIdFilled &&
+              _isPasswordFilled &&
+              _formKey.currentState.validate()) {
+            dynamic result = await _auth.signUpWithEmail(
+                _emailController.text, _passwordController.text);
 
-                  if (result is String) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(result)));
-                  } else {
-                    dynamic result = await _auth.signInWithEmail(
-                        _emailController.text, _passwordController.text);
+            /* 오류 발생시 snackbar로 알려줌 */
+            if (result is String) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(result)));
+            }
+            /* 정상적으로 넘어간 경우 로그인도 동시에 진행해줌 */
+            else {
+              dynamic result = await _auth.signInWithEmail(
+                  _emailController.text, _passwordController.text);
 
-                    if (result == null) {
-                      print('알 수 없는 오류 발생');
-                      // setState(() {
-                      //   loading = false;
-                      //   error = 'Could not sign in with those credentials';
-                      // });
-                    }
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/start', (Route<dynamic> route) => false);
-                  }
-                } else {
-                  // 바로바로?
-                }
-              }),
-        ),
-      );
-    });
+              if (result == null) {
+                print('알 수 없는 오류 발생');
+              }
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/start', (Route<dynamic> route) => false);
+            }
+          } else {
+            // 바로바로?
+          }
+        });
   }
 }

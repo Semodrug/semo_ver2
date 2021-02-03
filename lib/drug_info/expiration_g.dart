@@ -9,6 +9,7 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class ExpirationG extends StatefulWidget {
@@ -115,8 +116,8 @@ class _ExpirationGState extends State<ExpirationG> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child:
-                        _okButton(context, user, drug, _expirationDateString),
+                    child: _submitButton(
+                        context, user, drug, _expirationDateString),
                   )
                 ],
               );
@@ -166,8 +167,8 @@ class _ExpirationGState extends State<ExpirationG> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child:
-                          _okButton(context, user, drug, _expectedDateString),
+                      child: _submitButton(
+                          context, user, drug, _expectedDateString),
                     )
                   ],
                 ),
@@ -547,7 +548,7 @@ class _ExpirationGState extends State<ExpirationG> {
     );
   }
 
-  Widget _okButton(context, user, drug, expirationTime) {
+  Widget _submitButton(context, user, drug, expirationTime) {
     String newName = drug.itemName;
     List splitName = [];
 
@@ -570,36 +571,20 @@ class _ExpirationGState extends State<ExpirationG> {
       }
     }
 
-    return Container(
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 400.0,
-        height: 45.0,
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-        //alignment: Alignment.center,
-        child: RaisedButton(
-            onPressed: () async {
-              _showSaveWell(context);
-              // Navigator.pop(context);
-              await DatabaseService(uid: user.uid).addSavedList(
-                  drug.itemName,
-                  drug.itemSeq,
-                  drug.category,
-                  drug.etcOtcCode,
-                  expirationTime,
-                  searchListOutput);
-            },
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            child: Text(
-              '추가하기',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: gray0_white, fontSize: 15),
-            ),
-            color: primary400_line),
-      ),
+    return IYMYSubmitButton(
+      context: context,
+      isDone: true,
+      textString: '추가하기',
+      onPressed: () async {
+        _showSaveWell(context);
+        await DatabaseService(uid: user.uid).addSavedList(
+            drug.itemName,
+            drug.itemSeq,
+            drug.category,
+            drug.etcOtcCode,
+            expirationTime,
+            searchListOutput);
+      },
     );
   }
 

@@ -6,6 +6,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/initial/3_get_health.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 var birthYearMaskFormatter =
@@ -200,63 +201,45 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
   Widget submit(context) {
     TheUser user = Provider.of<TheUser>(context);
 
-    return Container(
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: 45.0,
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-        //alignment: Alignment.center,
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-          child: Text(
-            '다음',
-            style: Theme.of(context)
-                .textTheme
-                .headline5
-                .copyWith(color: gray0_white, fontSize: 15),
-          ),
-          color: (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled)
-              ? primary400_line
-              : gray200,
-          onPressed: () async {
-            if (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled) {
-              // validation check
-              if (birthYearMaskFormatter.getUnmaskedText().length != 4) {
-                print(birthYearMaskFormatter.getUnmaskedText().length);
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('입력하신 항목을 다시 확인해주세요')));
-              } else if (_nicknameController.text.length >= 10) {
-                print(_nicknameController.text);
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('닉네임을 10자 이하로 입력해주세요')));
-              } else if (2020 < int.parse(_birthYearController.text) ||
-                  int.parse(_birthYearController.text) <= 1900) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text('생년월일을 올바르게 입력해주세요')));
-              } else {
-                var result =
-                    await DatabaseService().isUnique(_nicknameController.text);
-                // if (_nicknameController.text == widget.userData.nickname)
-                //   result = true;
-                if (result == false) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
-                } else {
-                  await DatabaseService(uid: user.uid).updateUserPrivacy(
-                    _nicknameController.text,
-                    _birthYearController.text,
-                    _isSelected[0] ? 'male' : 'female',
-                  );
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => GetHealthPage()));
-                }
-              }
+    return IYMYSubmitButton(
+      context: context,
+      isDone: _isNicknameFilled && _isBirthYearFilled && _isGenderFilled,
+      textString: '다음',
+      onPressed: () async {
+        if (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled) {
+          // validation check
+          if (birthYearMaskFormatter.getUnmaskedText().length != 4) {
+            print(birthYearMaskFormatter.getUnmaskedText().length);
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('입력하신 항목을 다시 확인해주세요')));
+          } else if (_nicknameController.text.length >= 10) {
+            print(_nicknameController.text);
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('닉네임을 10자 이하로 입력해주세요')));
+          } else if (2020 < int.parse(_birthYearController.text) ||
+              int.parse(_birthYearController.text) <= 1900) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('생년월일을 올바르게 입력해주세요')));
+          } else {
+            var result =
+                await DatabaseService().isUnique(_nicknameController.text);
+            // if (_nicknameController.text == widget.userData.nickname)
+            //   result = true;
+            if (result == false) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('이미 존재하는 닉네임입니다')));
+            } else {
+              await DatabaseService(uid: user.uid).updateUserPrivacy(
+                _nicknameController.text,
+                _birthYearController.text,
+                _isSelected[0] ? 'male' : 'female',
+              );
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => GetHealthPage()));
             }
-          },
-        ),
-      ),
+          }
+        }
+      },
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 bool _isChoose = false;
@@ -210,25 +211,12 @@ class _GetHealthPageState extends State<GetHealthPage> {
   Widget submit() {
     TheUser user = Provider.of<TheUser>(context);
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 400.0,
-        height: 45.0,
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-        //alignment: Alignment.center,
-        child: RaisedButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0)),
-          child: Text(
-            _isChoose ? '완료' : '건너뛰기',
-            style: Theme.of(context)
-                .textTheme
-                .headline5
-                .copyWith(color: gray0_white, fontSize: 15),
-          ),
-          color: primary400_line,
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+        child: IYMYSubmitButton(
+          context: context,
+          isDone: true,
+          textString: _isChoose ? '완료' : '건너뛰기',
           onPressed: () async {
             if (_isKeyword[1] == true) _keywordList.add('임산부');
             if (_isKeyword[2] == true) _keywordList.add('고령자');
@@ -248,9 +236,7 @@ class _GetHealthPageState extends State<GetHealthPage> {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/start', (Route<dynamic> route) => false);
           },
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _exclusiveMultiButton(index, isPressed, buttonName) {
