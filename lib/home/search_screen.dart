@@ -678,13 +678,28 @@ class _SearchScreenState extends State<SearchScreen> {
     final docID = data.id;
     TheUser user = Provider.of<TheUser>(context);
 
+    CollectionReference userSearchList = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('searchList');
+
     return Column(
       children: [
         GestureDetector(
-          onTap: () => {
+          onTap: () async =>  {
+            if(searchSnapshot.itemSeq != null) {
+             await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReviewPage(searchSnapshot.itemSeq),
+                  )),
+            }
             //print('search ==> ${searchSnapshot.recent}'),
-            _searchText = searchSnapshot.recent,
-            _filter.text = _searchText
+            else {
+              _searchText = searchSnapshot.recent,
+              _filter.text = _searchText
+            }
+
           },
           child: Container(
             decoration: BoxDecoration(
@@ -707,10 +722,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       padding: EdgeInsets.zero,
                       onPressed: () {
                         //print(docID);
-                        FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(user.uid)
-                            .collection('searchList')
+                        userSearchList
                             .doc(docID)
                             .delete();
                       },
@@ -756,8 +768,8 @@ class ListDrugOfAll extends StatelessWidget {
 
         searchList = item_name;
         assert(searchList != null);
-        //drug 이름 누르면 저장 기능 array로 저장해주기
-        userSearchList.add({'searchList': searchList, 'time': DateTime.now()});
+        //drug 이름 누르면 저장 기능
+        userSearchList.add({'searchList': searchList, 'time': DateTime.now(), 'itemSeq' : item_seq});
       } catch (e) {
         print('Error: $e');
       }
@@ -798,11 +810,13 @@ class ListDrugOfAll extends StatelessWidget {
 class RecentSearch {
   final String recent;
   final Timestamp time;
+  final String itemSeq;
 
   final DocumentReference reference;
 
   RecentSearch.fromMap(Map<String, dynamic> map, {this.reference})
       : recent = map['searchList'],
+        itemSeq = map['itemSeq'],
         time = map['time'];
 
   RecentSearch.fromSnapshot(DocumentSnapshot snapshot)
