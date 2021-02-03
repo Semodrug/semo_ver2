@@ -28,6 +28,87 @@ class _SearchScreenState extends State<SearchScreen> {
       });
     });
   }
+  //전체삭제했을 때 dialog
+  void showWarning(BuildContext context, String bodyString, String actionName1,
+      String actionName2, String actionCode, String uid) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          // title:
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 18),
+              Text(bodyString,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    child: Text(
+                      actionName1,
+                      style: TextStyle(fontSize: 12, color: primary400_line),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(100, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(width: 16),
+                  ElevatedButton(
+                    child: Text(
+                      actionName2,
+                      style: TextStyle(fontSize: 12, color: gray0_white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(100, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: primary300_main,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () async {
+                      if (actionCode == 'deleteSearchedList') {
+                        await Navigator.of(context).pop();
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(uid)
+                            .collection('searchList')
+                            .get()
+                            .then((snapshot) {
+                          for (DocumentSnapshot ds in snapshot.docs) {
+                            ds.reference.delete();
+                          }
+                        });
+                      }
+                    },
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 
   //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
   String _checkLongName(String data) {
@@ -97,16 +178,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           .copyWith(fontSize: 13)),
                   onPressed: () {
                     //print('삭제되었음');
-                    FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(user.uid)
-                        .collection('searchList')
-                        .get()
-                        .then((snapshot) {
-                      for (DocumentSnapshot ds in snapshot.docs) {
-                        ds.reference.delete();
-                      }
-                    });
+                    showWarning(context, '전체 삭제 하시겠습니까?',
+                        '취소', '삭제', 'deleteSearchedList',  user.uid);
                   },
                 )
               ],
