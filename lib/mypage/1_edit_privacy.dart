@@ -5,7 +5,6 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/constants.dart';
 import 'package:semo_ver2/shared/custom_submit.dart';
 import 'package:semo_ver2/theme/colors.dart';
@@ -28,8 +27,6 @@ class EditPrivacyPage extends StatefulWidget {
 }
 
 class _EditPrivacyPageState extends State<EditPrivacyPage> {
-  final AuthService _auth = AuthService();
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<bool> _isSelected;
   TextEditingController _birthYearController = TextEditingController();
@@ -210,6 +207,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
 
     return CustomButton(
         context: context,
+        isDone: _isGenderFilled && _isBirthYearFilled && _isNicknameFilled,
         textString: '저장하기',
         onPressed: () async {
           if (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled) {
