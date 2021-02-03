@@ -676,7 +676,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   style: Theme.of(context).textTheme.subtitle1,
                 )),
               ],
-              indicatorColor: Colors.teal[400],
+              indicatorColor: primary300_main,
             ),
             Container(
               padding: EdgeInsets.all(0.0),
