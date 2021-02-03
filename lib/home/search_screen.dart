@@ -56,7 +56,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   ElevatedButton(
                     child: Text(
                       actionName1,
-                      style: TextStyle(fontSize: 12, color: primary400_line),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: primary400_line),
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(100, 40),
@@ -74,7 +77,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   ElevatedButton(
                     child: Text(
                       actionName2,
-                      style: TextStyle(fontSize: 12, color: gray0_white),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: gray0_white),
                     ),
                     style: ElevatedButton.styleFrom(
                         minimumSize: Size(100, 40),
