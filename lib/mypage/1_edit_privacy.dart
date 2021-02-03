@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/constants.dart';
-import 'package:semo_ver2/shared/custom_submit.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 var birthYearMaskFormatter =
@@ -205,7 +204,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
   Widget submit(context) {
     TheUser user = Provider.of<TheUser>(context);
 
-    return CustomButton(
+    return IYMYSubmitButton(
         context: context,
         isDone: _isGenderFilled && _isBirthYearFilled && _isNicknameFilled,
         textString: '저장하기',

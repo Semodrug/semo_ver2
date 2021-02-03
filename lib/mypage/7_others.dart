@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/7-1_withdrawal.dart';
 import 'package:semo_ver2/services/auth.dart';
-import 'package:semo_ver2/shared/custom_dialog.dart';
+import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class Others extends StatelessWidget {
@@ -101,7 +101,7 @@ class Others extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    CustomDialog(
+                    IYMYDialog(
                         context: context,
                         bodyString: '정말 로그아웃하시겠어요?',
                         leftButtonName: '취소',

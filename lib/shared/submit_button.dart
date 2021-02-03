@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-class CustomButton extends StatelessWidget {
+class IYMYSubmitButton extends StatelessWidget {
   final BuildContext context;
   final bool isDone;
   final String textString;
   final Function onPressed;
 
-  const CustomButton({
+  const IYMYSubmitButton({
     Key key,
-    this.context,
+    @required this.context,
     @required this.isDone,
     @required this.textString,
     @required this.onPressed,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ctx) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 44.0,

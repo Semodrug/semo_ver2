@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-class CustomDialog extends StatelessWidget {
+class IYMYDialog extends StatelessWidget {
   final BuildContext context;
   final String bodyString;
   final String leftButtonName;
   final String rightButtonName;
   final Function onPressed;
 
-  const CustomDialog(
+  const IYMYDialog(
       {Key key,
       this.context,
       @required this.bodyString,
