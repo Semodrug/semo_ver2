@@ -170,7 +170,7 @@ class _AllReveiewState extends State<AllReview> {
                                   fontWeight: FontWeight.bold,
                                 ));
                           } else
-                            return Loading();
+                            return Container();
                         }),
 
 //                    InkWell(

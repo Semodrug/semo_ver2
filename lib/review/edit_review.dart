@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -43,6 +43,8 @@ class _EditReviewState extends State<EditReview> {
   String overallText = '';
   String starRatingText = '';
 
+  bool editSwitch = false;
+
 //  String editOrWrite = 'edit'; // 'write'
 
   String _shortenName(String drugName) {
@@ -67,9 +69,12 @@ class _EditReviewState extends State<EditReview> {
 
             if(effect == '') effect = review.effect;
             if(sideEffect == '') sideEffect = review.sideEffect;
-            myControllerEffect.text = review.effectText;
-            myControllerSideEffect.text = review.sideEffectText;
-            myControllerOverall.text = review.overallText;
+            if(editSwitch == false) {
+              myControllerEffect.text = review.effectText;
+              myControllerSideEffect.text = review.sideEffectText;
+              myControllerOverall.text = review.overallText;
+              editSwitch = true;
+            }
 
             return Scaffold(
                 resizeToAvoidBottomInset: true,
@@ -199,7 +204,7 @@ class _EditReviewState extends State<EditReview> {
                         //     fontWeight: FontWeight.bold,
                         //   ));
                       } else
-                        return Loading();
+                        return Container();
                     }),
               ],
             )
@@ -588,6 +593,13 @@ class _EditReviewState extends State<EditReview> {
   }
 
   Widget _edit(Review review) {
+    String _warning = '';
+
+
+
+
+
+
     return GestureDetector(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20,20,20,40),
@@ -604,18 +616,40 @@ class _EditReviewState extends State<EditReview> {
         ),
       ),
       onTap: () async {
-        effectText = myControllerEffect.text;
-        sideEffectText = myControllerSideEffect.text;
-        overallText = myControllerOverall.text;
-        await ReviewService(documentId: widget.review.documentId).updateReviewData(
-            effect /*?? review.effect*/,
-            sideEffect /*?? review.sideEffect*/,
-            myControllerEffect.text /*?? review.effectText*/,
-            myControllerSideEffect.text /*?? review.sideEffectText*/,
-            myControllerOverall.text /*?? review.overallText*/,
-            starRating == 0 ? review.starRating : starRating/*?? value.starRating*/
-        );
-        Navigator.pop(context);
+        // editSwitch = true;
+        // effectText = myControllerEffect.text;
+        // sideEffectText = myControllerSideEffect.text;
+        // overallText = myControllerOverall.text;
+        //
+        if(myControllerOverall.text.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
+        if(myControllerSideEffect.text.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+        if(myControllerEffect.text.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
+
+        if(myControllerOverall.text.length < 10 || myControllerSideEffect.text.length < 10 ||
+            myControllerEffect.text.length < 10 )
+          Fluttertoast.showToast(
+              msg: _warning,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        else {
+          await ReviewService(documentId: widget.review.documentId).updateReviewData(
+              effect /*?? review.effect*/,
+              sideEffect /*?? review.sideEffect*/,
+              myControllerEffect.text /*?? review.effectText*/,
+              myControllerSideEffect.text /*?? review.sideEffectText*/,
+              myControllerOverall.text /*?? review.overallText*/,
+              starRating == 0 ? review.starRating : starRating/*?? value.starRating*/
+          );
+          Navigator.pop(context);
+          editSwitch = true;
+        }
+
+
       },
     );
   }

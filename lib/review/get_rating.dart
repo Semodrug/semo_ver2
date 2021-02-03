@@ -3,15 +3,9 @@ import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
-import 'package:semo_ver2/shared/loading.dart';
-import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/theme/colors.dart';
-import 'edit_review.dart';
-import 'pie_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-//import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'write_review.dart';
 
 class GetRating extends StatefulWidget {
@@ -253,12 +247,12 @@ class _GetRatingState extends State<GetRating> {
                       ));
                 }
                 else {
-                  return Loading();
+                  return Container();
                 }
               }
           );
         }
-        else return Loading();
+        else return Container();
       }
     );
 

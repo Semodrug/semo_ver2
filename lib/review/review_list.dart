@@ -98,7 +98,7 @@ class _ReviewListState extends State<ReviewList> {
             itemSize: 14,
             glow: false,
             itemPadding: EdgeInsets.symmetric(horizontal: 0),
-            unratedColor: Colors.grey[300],
+            unratedColor: gray75,
             itemBuilder: (context, _) => Icon(
               Icons.star,
               color: Colors.amberAccent,
@@ -210,20 +210,20 @@ class _ReviewListState extends State<ReviewList> {
   Widget _face(face) {
     if(face == "good" || face == "no")
       return Icon(
-        Icons.sentiment_satisfied,
-        color: warning,
+        Icons.sentiment_satisfied_rounded,
+        color: primary300_main,
         size: 16,
       );
     if(face == "soso")
       return Icon(
-        Icons.sentiment_neutral,
+        Icons.sentiment_neutral_rounded,
         color: yellow_line,
         size: 16,
       );
     if(face == "bad" || face == "yes")
       return Icon(
-        Icons.sentiment_very_dissatisfied,
-        color: primary300_main,
+        Icons.sentiment_very_dissatisfied_rounded,
+        color:  warning,
         size: 16,
       );
     if(face == "overall")
