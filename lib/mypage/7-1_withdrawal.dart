@@ -105,25 +105,33 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   }
 
   Widget _checkAgreement() {
-    return Row(
-      children: [
-        Theme(
-          data: ThemeData(unselectedWidgetColor: gray300_inactivated),
-          child: Checkbox(
-            value: _isAgree,
-            activeColor: primary300_main,
-            onChanged: (value) {
-              setState(() {
-                _isAgree = !_isAgree;
-              });
-            },
+    return InkWell(
+      child: Row(
+        children: [
+          Theme(
+            data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+            child: Checkbox(
+              value: _isAgree,
+              activeColor: primary300_main,
+              onChanged: (value) {
+                setState(() {
+                  _isAgree = !_isAgree;
+                });
+              },
+            ),
           ),
-        ),
-        Text(
-          '위 사실을 확인하였습니다.',
-          style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray900),
-        )
-      ],
+          Text(
+            '위 사실을 확인하였습니다.',
+            style:
+                Theme.of(context).textTheme.bodyText2.copyWith(color: gray900),
+          )
+        ],
+      ),
+      onTap: () {
+        setState(() {
+          _isAgree = !_isAgree;
+        });
+      },
     );
   }
 

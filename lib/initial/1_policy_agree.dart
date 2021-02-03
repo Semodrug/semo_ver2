@@ -87,34 +87,47 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
   }
 
   Widget allCheckbox() {
-    return Row(
-      children: [
-        Theme(
-          data: ThemeData(unselectedWidgetColor: gray300_inactivated),
-          child: Checkbox(
-            value: _isTermsAgreed && _isPrivacyAgreed,
-            activeColor: primary300_main,
-            onChanged: (value) {
-              setState(() {
-                if (_isTermsAgreed != _isPrivacyAgreed) {
-                  _isTermsAgreed = true;
-                  _isPrivacyAgreed = true;
-                } else {
-                  _isTermsAgreed = !_isTermsAgreed;
-                  _isPrivacyAgreed = !_isPrivacyAgreed;
-                }
-              });
-            },
+    return InkWell(
+      child: Row(
+        children: [
+          Theme(
+            data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+            child: Checkbox(
+              value: _isTermsAgreed && _isPrivacyAgreed,
+              activeColor: primary300_main,
+              onChanged: (value) {
+                setState(() {
+                  if (_isTermsAgreed != _isPrivacyAgreed) {
+                    _isTermsAgreed = true;
+                    _isPrivacyAgreed = true;
+                  } else {
+                    _isTermsAgreed = !_isTermsAgreed;
+                    _isPrivacyAgreed = !_isPrivacyAgreed;
+                  }
+                });
+              },
+            ),
           ),
-        ),
-        SizedBox(
-          width: 2,
-        ),
-        Text(
-          '전체동의',
-          style: Theme.of(context).textTheme.subtitle1,
-        ),
-      ],
+          SizedBox(
+            width: 2,
+          ),
+          Text(
+            '전체동의',
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+        ],
+      ),
+      onTap: () {
+        setState(() {
+          if (_isTermsAgreed != _isPrivacyAgreed) {
+            _isTermsAgreed = true;
+            _isPrivacyAgreed = true;
+          } else {
+            _isTermsAgreed = !_isTermsAgreed;
+            _isPrivacyAgreed = !_isPrivacyAgreed;
+          }
+        });
+      },
     );
   }
 
@@ -122,50 +135,54 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Theme(
-              data: ThemeData(unselectedWidgetColor: gray300_inactivated),
-              child: Checkbox(
-                onChanged: (bool value) {
-                  setState(() {
-                    _isTermsAgreed = !_isTermsAgreed;
-                  });
-                },
-                value: _isTermsAgreed,
-                activeColor: primary300_main,
-              ),
+        Expanded(
+          child: InkWell(
+            child: Row(
+              children: [
+                Theme(
+                  data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+                  child: Checkbox(
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isTermsAgreed = !_isTermsAgreed;
+                      });
+                    },
+                    value: _isTermsAgreed,
+                    activeColor: primary300_main,
+                  ),
+                ),
+                SizedBox(
+                  width: 2,
+                ),
+                Text('(필수) 이용약관',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray900)),
+              ],
             ),
-            SizedBox(
-              width: 2,
-            ),
-            Text('(필수) 이용약관',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2
-                    .copyWith(color: gray900))
-          ],
+            onTap: () {
+              setState(() {
+                _isTermsAgreed = !_isTermsAgreed;
+              });
+            },
+          ),
         ),
-        Row(
-          children: [
-            InkWell(
-              child: Center(
-                  child: Text(
-                '보기',
-                style: Theme.of(context).textTheme.caption,
-              )),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PolicyTermPage()),
-                );
-              },
+        InkWell(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              '보기',
+              style: Theme.of(context).textTheme.caption,
             ),
-            SizedBox(
-              width: 10,
-            )
-          ],
-        )
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PolicyTermPage()),
+            );
+          },
+        ),
       ],
     );
   }
@@ -174,50 +191,53 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Theme(
-              data: ThemeData(unselectedWidgetColor: gray300_inactivated),
-              child: Checkbox(
-                onChanged: (bool value) {
-                  setState(() {
-                    _isPrivacyAgreed = !_isPrivacyAgreed;
-                  });
-                },
-                value: _isPrivacyAgreed,
-                activeColor: primary300_main,
-              ),
+        Expanded(
+          child: InkWell(
+            child: Row(
+              children: [
+                Theme(
+                  data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+                  child: Checkbox(
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isPrivacyAgreed = !_isPrivacyAgreed;
+                      });
+                    },
+                    value: _isPrivacyAgreed,
+                    activeColor: primary300_main,
+                  ),
+                ),
+                SizedBox(
+                  width: 2,
+                ),
+                Text('(필수) 개인정보 처리방침',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray900)),
+              ],
             ),
-            SizedBox(
-              width: 2,
-            ),
-            Text('(필수) 개인정보 처리방침',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2
-                    .copyWith(color: gray900)),
-          ],
+            onTap: () {
+              setState(() {
+                _isPrivacyAgreed = !_isPrivacyAgreed;
+              });
+            },
+          ),
         ),
-        Row(
-          children: [
-            InkWell(
-              child: Center(
-                  child: Text(
+        InkWell(
+          child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
                 '보기',
                 style: Theme.of(context).textTheme.caption,
               )),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PolicyPrivacyPage()),
-                );
-              },
-            ),
-            SizedBox(
-              width: 10,
-            )
-          ],
-        )
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PolicyPrivacyPage()),
+            );
+          },
+        ),
       ],
     );
   }
