@@ -115,11 +115,40 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 children: <Widget>[
                   Text('나의 약 보관함',
-                      style: Theme.of(context).textTheme.headline4),
+                      style: Theme.of(context).textTheme.headline4.copyWith(color: gray800)),
                   SizedBox(width: 8),
                   // theme 추가
                   Spacer(),
+                  InkWell(
+                    onTap: () async {
+                      // await Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) => AddButton()));
+                        showModalBottomSheet(
+                            backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return _popUpAddDrug(context);
+                            });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      width: 86,
+                      height: 26,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: primary300_main),
+                        color: primary300_main,
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      child: Text(' + 추가하기',
+                      style:  Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: Colors.white),)
+                    ),
+                  ),
+                  /*
                   ElevatedButton(
+
                     style: ElevatedButton.styleFrom(
                       primary: primary300_main, // background
                     ),
@@ -134,6 +163,7 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(builder: (context) => AddButton()));
                     },
                   )
+                  */
                 ],
               ),
             ),
@@ -237,8 +267,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               Container(
                 padding: EdgeInsets.only(left: 16.0),
-                width: double.infinity,
-                height: 90,
+                //width: double.infinity,
+                height: 85,
                 child: Material(
                   color: Colors.white,
                   child: Row(
@@ -246,28 +276,26 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                         padding: const EdgeInsets.only(right: 10.0),
                         child: SizedBox(
-                          width: 20,
+                          width: 15,
                           child: Center(
                             child: Text(
-                              num.toString(),
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.black45),
+                                num.toString(),
+                                style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
                             ),
                           ),
                         ),
                       ),
                       Container(
-                          //이미지는 고정값
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                        //이미지는 고정값
+                          //padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Container(
-                              width: 80,
+                              width: 90,
                               child: AspectRatio(
                                   aspectRatio: 2.5 / 2,
                                   child:
-                                      DrugImage(drugItemSeq: data.itemSeq)))),
+                                  DrugImage(drugItemSeq: data.itemSeq)))),
                       Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                          padding: EdgeInsets.only(left: 12, top: 10),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,13 +306,13 @@ class _HomePageState extends State<HomePage> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .subtitle1
-                                          .copyWith(color: Color(0xFF2C2C2C)))),
+                                          .copyWith(color: gray750_activated))),
                               //SizedBox(height: 2,),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 3),
+                                const EdgeInsets.symmetric(vertical: 3),
                                 child: Container(
-                                    height: 20,
+                                    height: 23,
                                     child: CategoryButton(
                                         str: data.category, fromHome: 'home')),
                               ),
@@ -292,9 +320,9 @@ class _HomePageState extends State<HomePage> {
                                 height: 3,
                               ),
                               Text(
-                                data.expiration,
-                                style: TextStyle(
-                                    color: Colors.grey[600], fontSize: 11),
+                                  data.expiration,
+                                  style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
+
                               )
                             ],
                           )),
@@ -309,65 +337,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                           onPressed: () {
                             showModalBottomSheet(
+                                backgroundColor: Colors.transparent,
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return SizedBox(
-                                      child: Container(
-                                          child: Wrap(
-                                    children: <Widget>[
-                                      MaterialButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    fullscreenDialog: true,
-                                                    builder: (context) {
-                                                      if (data.etcOtcCode ==
-                                                          '일반의약품') {
-                                                        return ExpirationG(
-                                                          drugItemSeq:
-                                                              data.itemSeq,
-                                                        );
-                                                      } else {
-                                                        return ExpirationS(
-                                                          drugItemSeq:
-                                                              data.itemSeq,
-                                                        );
-                                                      }
-                                                    }));
-                                          },
-                                          child: Center(
-                                              child: Text("사용기한 수정하기",
-                                                  style: TextStyle(
-                                                      color: Colors.blue[700],
-                                                      fontSize: 16)))),
-                                      MaterialButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            _showDeleteDialog(
-                                              context,
-                                              data.itemSeq,
-                                              user.uid,
-                                            );
-//
-                                          },
-                                          child: Center(
-                                              child: Text("삭제하기",
-                                                  style: TextStyle(
-                                                      color: Colors.red[600],
-                                                      fontSize: 16)))),
-                                      MaterialButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Center(
-                                              child: Text("취소",
-                                                  style: TextStyle(
-                                                      color: Colors.grey[600],
-                                                      fontSize: 16))))
-                                    ],
-                                  )));
+                                  return _popUpMenu(context, data, user);
                                 });
                           },
                         ),
@@ -377,7 +350,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20,0,20,10),
+                padding: const EdgeInsets.fromLTRB(33,3,16,12),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: yellow),
@@ -410,8 +383,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               Container(
                 padding: EdgeInsets.only(left: 16.0),
-                width: double.infinity,
-                height: 90,
+                //width: double.infinity,
+                height: 85,
                 child: Material(
                   color: Colors.white,
                   child: Row(
@@ -419,28 +392,26 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                         padding: const EdgeInsets.only(right: 10.0),
                         child: SizedBox(
-                          width: 20,
+                          width: 15,
                           child: Center(
                             child: Text(
                               num.toString(),
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.black45),
+                                style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
                             ),
                           ),
                         ),
                       ),
                       Container(
                           //이미지는 고정값
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          //padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Container(
-                              width: 80,
+                              width: 90,
                               child: AspectRatio(
                                   aspectRatio: 2.5 / 2,
                                   child:
                                       DrugImage(drugItemSeq: data.itemSeq)))),
                       Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                        padding: EdgeInsets.only(left: 12, top: 10),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -451,13 +422,13 @@ class _HomePageState extends State<HomePage> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .subtitle1
-                                          .copyWith(color: Color(0xFF2C2C2C)))),
+                                          .copyWith(color: gray750_activated))),
                               //SizedBox(height: 2,),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 3),
                                 child: Container(
-                                    height: 20,
+                                    height: 23,
                                     child: CategoryButton(
                                         str: data.category, fromHome: 'home')),
                               ),
@@ -466,8 +437,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Text(
                                 data.expiration,
-                                style: TextStyle(
-                                    color: Colors.grey[600], fontSize: 11),
+                                  style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
+
                               )
                             ],
                           )),
@@ -482,65 +453,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                           onPressed: () {
                             showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return SizedBox(
-                                      child: Container(
-                                          child: Wrap(
-                                    children: <Widget>[
-                                      MaterialButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    fullscreenDialog: true,
-                                                    builder: (context) {
-                                                      if (data.etcOtcCode ==
-                                                          '일반의약품') {
-                                                        return ExpirationG(
-                                                          drugItemSeq:
-                                                              data.itemSeq,
-                                                        );
-                                                      } else {
-                                                        return ExpirationS(
-                                                          drugItemSeq:
-                                                              data.itemSeq,
-                                                        );
-                                                      }
-                                                    }));
-                                          },
-                                          child: Center(
-                                              child: Text("사용기한 수정하기",
-                                                  style: TextStyle(
-                                                      color: Colors.blue[700],
-                                                      fontSize: 16)))),
-                                      MaterialButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            _showDeleteDialog(
-                                              context,
-                                              data.itemSeq,
-                                              user.uid,
-                                            );
-//
-                                          },
-                                          child: Center(
-                                              child: Text("삭제하기",
-                                                  style: TextStyle(
-                                                      color: Colors.red[600],
-                                                      fontSize: 16)))),
-                                      MaterialButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Center(
-                                              child: Text("취소",
-                                                  style: TextStyle(
-                                                      color: Colors.grey[600],
-                                                      fontSize: 16))))
-                                    ],
-                                  )));
+                                  return _popUpMenu(context, data, user);
                                 });
                           },
                         ),
@@ -550,7 +466,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20,0,20,10),
+                padding: const EdgeInsets.fromLTRB(33,3,16,12),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: warning),
@@ -576,6 +492,7 @@ class _HomePageState extends State<HomePage> {
           ),
         },
         child: Container(
+          padding: EdgeInsets.only(bottom: 10.0),
           decoration: BoxDecoration(
               border: Border(
                   bottom: BorderSide(width: 0.6, color: Colors.grey[300]))),
@@ -583,8 +500,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               Container(
                 padding: EdgeInsets.only(left: 16.0),
-                width: double.infinity,
-                height: 90,
+                //width: double.infinity,
+                height: 85,
                 child: Material(
                   color: Colors.white,
                   child: Row(
@@ -592,28 +509,26 @@ class _HomePageState extends State<HomePage> {
                       Padding(
                         padding: const EdgeInsets.only(right: 10.0),
                         child: SizedBox(
-                          width: 20,
+                          width: 15,
                           child: Center(
                             child: Text(
-                              num.toString(),
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.black45),
+                                num.toString(),
+                                style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
                             ),
                           ),
                         ),
                       ),
                       Container(
-                          //이미지는 고정값
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                        //이미지는 고정값
+                          //padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Container(
-                              width: 80,
+                              width: 90,
                               child: AspectRatio(
-                                  aspectRatio: 3.5 / 2,
+                                  aspectRatio: 2.5 / 2,
                                   child:
-                                      DrugImage(drugItemSeq: data.itemSeq)))),
+                                  DrugImage(drugItemSeq: data.itemSeq)))),
                       Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                          padding: EdgeInsets.only(left: 12, top: 10),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -624,13 +539,13 @@ class _HomePageState extends State<HomePage> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .subtitle1
-                                          .copyWith(color: Color(0xFF2C2C2C)))),
+                                          .copyWith(color: gray750_activated))),
                               //SizedBox(height: 2,),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 3),
+                                const EdgeInsets.symmetric(vertical: 3),
                                 child: Container(
-                                    height: 20,
+                                    height: 23,
                                     child: CategoryButton(
                                         str: data.category, fromHome: 'home')),
                               ),
@@ -638,9 +553,9 @@ class _HomePageState extends State<HomePage> {
                                 height: 3,
                               ),
                               Text(
-                                data.expiration,
-                                style: TextStyle(
-                                    color: Colors.grey[600], fontSize: 11),
+                                  data.expiration,
+                                  style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
+
                               )
                             ],
                           )),
@@ -651,69 +566,14 @@ class _HomePageState extends State<HomePage> {
                           icon: Icon(
                             Icons.more_vert,
                             size: 20,
-                            color: Color(0xFF898989),
+                            color: gray500,
                           ),
                           onPressed: () {
                             showModalBottomSheet(
+                                backgroundColor: Colors.transparent,
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return SizedBox(
-                                      child: Container(
-                                          child: Wrap(
-                                    children: <Widget>[
-                                      MaterialButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    fullscreenDialog: true,
-                                                    builder: (context) {
-                                                      if (data.etcOtcCode ==
-                                                          '일반의약품') {
-                                                        return ExpirationG(
-                                                          drugItemSeq:
-                                                              data.itemSeq,
-                                                        );
-                                                      } else {
-                                                        return ExpirationS(
-                                                          drugItemSeq:
-                                                              data.itemSeq,
-                                                        );
-                                                      }
-                                                    }));
-                                          },
-                                          child: Center(
-                                              child: Text("사용기한 수정하기",
-                                                  style: TextStyle(
-                                                      color: Colors.blue[700],
-                                                      fontSize: 16)))),
-                                      MaterialButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            _showDeleteDialog(
-                                              context,
-                                              data.itemSeq,
-                                              user.uid,
-                                            );
-//
-                                          },
-                                          child: Center(
-                                              child: Text("삭제하기",
-                                                  style: TextStyle(
-                                                      color: Colors.red[600],
-                                                      fontSize: 16)))),
-                                      MaterialButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Center(
-                                              child: Text("취소",
-                                                  style: TextStyle(
-                                                      color: Colors.grey[600],
-                                                      fontSize: 16))))
-                                    ],
-                                  )));
+                                  return _popUpMenu(context, data, user);
                                 });
                           },
                         ),
@@ -726,6 +586,187 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       );
+  }
+
+  Widget _popUpAddDrug( context ){
+    return Container(
+      //color: yellow,
+      decoration: new BoxDecoration(
+          color: Colors.white,
+          borderRadius: new BorderRadius.only(
+            topLeft: const Radius.circular(12.0),
+            topRight: const Radius.circular(12.0),
+          )
+      ),
+      child: Wrap(
+        children: <Widget>[
+          Container(
+            height: 45,
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left:16),
+                  child: Container(
+                    child: Text(
+                      '약 추가하기',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: primary500_light_text),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top:5.0),
+            child: MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              child: Row(
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Image.asset('assets/icons/barcode_icon_grey.png'),
+                  ),
+                  SizedBox(width: 15),
+                  Container(
+                    child: Center(
+                      child: Text(
+                        "바코드 인식",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: gray900),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top:5.0),
+            child: MaterialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/search');
+                },
+              child: Row(
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Image.asset('assets/icons/search_grey.png'),
+                  ),
+                  SizedBox(width: 15),
+                  Container(
+                    child: Center(
+                      child: Text(
+                        "약 이름 검색",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: gray900),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Divider(thickness: 1, color: gray300_inactivated),
+          MaterialButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Center(
+                  child: Text("닫기",
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray300_inactivated)
+                  )))
+        ],
+      ),
+    );
+  }
+
+  Widget _popUpMenu( context, data, user){
+    return Container(
+      //color: yellow,
+      decoration: new BoxDecoration(
+          color: Colors.white,
+          borderRadius: new BorderRadius.only(
+            topLeft: const Radius.circular(12.0),
+            topRight: const Radius.circular(12.0),
+          )
+      ),
+      child: Wrap(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) {
+                            if (data.etcOtcCode ==
+                                '일반의약품') {
+                              return ExpirationG(
+                                drugItemSeq:
+                                data.itemSeq,
+                              );
+                            } else {
+                              return ExpirationS(
+                                drugItemSeq:
+                                data.itemSeq,
+                              );
+                            }
+                          }));
+                },
+                child: Center(
+                    child: Text("사용기한 수정하기",
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray900),
+                    ))),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: MaterialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _showDeleteDialog(
+                    context,
+                    data.itemSeq,
+                    user.uid,
+                  );
+//
+                },
+                child: Center(
+                    child: Text("삭제하기",
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray900)),
+                )),
+          ),
+          Divider(thickness: 1, color: gray300_inactivated),
+          MaterialButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Center(
+                  child: Text("닫기",
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray300_inactivated)
+              )))
+        ],
+      ),
+    );
   }
 
   void _showDeleteDialog(context, record, uid) async {
@@ -812,8 +853,11 @@ class _HomePageState extends State<HomePage> {
                     children: <TextSpan>[
                       TextSpan(
                           text: '약 보관함에서 ',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: '삭제 되었습니다.'),
+                          style:Theme.of(context).textTheme.bodyText1.copyWith(color: gray700, fontWeight: FontWeight.bold)),
+                      TextSpan(text: '삭제 되었습니다.',
+                          style:Theme.of(context).textTheme.bodyText1.copyWith(color: gray700),
+
+                ),
                     ],
                   ),
                 ),
@@ -831,7 +875,8 @@ class _HomePageState extends State<HomePage> {
   Widget _warningRemainMessage(context, dayRemain) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
-      height: 36,
+      width: MediaQuery.of(context).size.width - 70,
+      height: 30,
       decoration: BoxDecoration(
         color: gray50,
         borderRadius: BorderRadius.circular(5.0),
@@ -871,7 +916,8 @@ class _HomePageState extends State<HomePage> {
     List<String> dayOver = difference.toString().split('-');
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
-      height: 36,
+      width: MediaQuery.of(context).size.width - 70,
+      height: 30,
       decoration: BoxDecoration(
         color: gray50,
         borderRadius: BorderRadius.circular(5.0),
@@ -922,29 +968,37 @@ class _HomePageState extends State<HomePage> {
                     style: Theme.of(context)
                         .textTheme
                         .headline4
-                        .copyWith(color: Color(0xFF1F1F1F))),
+                        .copyWith(color: gray800)),
                 SizedBox(width: 8),
                 // theme 추가
                 Spacer(),
-                Container(
-                  // width: 63,
-                  // height: 20,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: primary300_main, // background
-                    ),
-                    //padding: EdgeInsets.only(left: 10),
-                    child: Text('+ 추가하기',
-                        style: Theme.of(context)
+                InkWell(
+                  onTap: ()  {
+                     // Navigator.push(context,
+                     //    MaterialPageRoute(builder: (context) => AddButton()));
+                      showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return _popUpAddDrug(context);
+                          });
+                  },
+                  child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      width: 86,
+                      height: 26,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: primary300_main),
+                        color: primary300_main,
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      child: Text(' + 추가하기',
+                        style:  Theme.of(context)
                             .textTheme
                             .subtitle1
-                            .copyWith(color: Colors.white)),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AddButton()));
-                    },
+                            .copyWith(color: Colors.white),)
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -958,11 +1012,12 @@ class _HomePageState extends State<HomePage> {
         child: Center(
           child: Column(
             children: [
-              Text('상비약 목록이 비었어요',
-                  style: Theme.of(context).textTheme.headline5),
+              Text('나의 약 보관함 목록이 비었어요',
+                  style: Theme.of(context).textTheme.headline5.copyWith(color: gray500)),
+              SizedBox(height: 5,),
               Text(
                 '\'+ 추가하기\' 버튼으로 약을 추가해보세요',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                style:Theme.of(context).textTheme.headline5.copyWith(fontSize: 12, fontWeight: FontWeight.w400, color: gray400),
               )
             ],
           ),
@@ -975,43 +1030,46 @@ class _HomePageState extends State<HomePage> {
 class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
-    //이 search bar에서 바로 검색을 하게 할 것인가?
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.fromLTRB(16, 11, 16, 0),
       child: SizedBox(
-          //width: searchWidth,
           height: 35,
           child: FlatButton(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Center(child: Icon(Icons.search, size: 20)),
-                SizedBox(
-                  width: 10,
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Image.asset('assets/icons/search_grey.png'),
+                  ),
+                ),                Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                    "어떤 약을 찾고 계세요?",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
                 ),
-                Text("어떤 약을 찾고 계세요? ",
-                    style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray300_inactivated),
-      ),
               ],
             ),
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => SearchScreen(),
-                  //builder: (BuildContext context) => SearchScreenByProvider()
-                ),
-              );
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => SearchScreen(),
+              ));
             },
-            textColor: Colors.grey[500],
-            color: Colors.grey[200],
+            textColor: gray300_inactivated,
+            color: gray50,
             shape: OutlineInputBorder(
                 borderSide: BorderSide(
-                    style: BorderStyle.solid, width: 1.0, color: Colors.white),
-                borderRadius: new BorderRadius.circular(8.0)),
+                    style: BorderStyle.solid,
+                    width: 1.0,
+                    color: gray200),
+                borderRadius: BorderRadius.circular(8.0)),
           )),
     );
   }
