@@ -80,6 +80,30 @@ class _RankingContentPageState extends State<RankingContentPage> {
               ])),
         ),
       ),
+      /*
+      floatingActionButton:
+      Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: gray50),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        width: 36,
+        height: 36,
+        child:
+        FittedBox(
+          child: FloatingActionButton(
+            onPressed: (){
+              //_onTap();
+            },
+            child: Icon(Icons.arrow_upward, color: gray300_inactivated,),
+            backgroundColor: gray50,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))
+            ),
+          ),
+        ),
+      ),
+      */
       body: Column(
         children: [
           _countDropDown(context),
