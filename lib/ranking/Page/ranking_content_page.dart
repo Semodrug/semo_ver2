@@ -5,6 +5,7 @@ import 'package:semo_ver2/ranking/Provider/ranking_totalRating_provider.dart';
 import 'package:semo_ver2/ranking/Widget/ranking_listview_widget.dart';
 
 import 'package:semo_ver2/home/search_screen.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 class RankingContentPage extends StatefulWidget {
   final String categoryName;
@@ -28,12 +29,7 @@ class _RankingContentPageState extends State<RankingContentPage> {
   @override
   Widget build(BuildContext context) {
     String onlyName = _checkCategoryName(widget.categoryName);
-    return
-//      ChangeNotifierProvider(
-//        create: (context) => DrugsProvider(),
-//        child:
-
-        Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -84,6 +80,30 @@ class _RankingContentPageState extends State<RankingContentPage> {
               ])),
         ),
       ),
+      /*
+      floatingActionButton:
+      Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: gray50),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        width: 36,
+        height: 36,
+        child:
+        FittedBox(
+          child: FloatingActionButton(
+            onPressed: (){
+              //_onTap();
+            },
+            child: Icon(Icons.arrow_upward, color: gray300_inactivated,),
+            backgroundColor: gray50,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))
+            ),
+          ),
+        ),
+      ),
+      */
       body: Column(
         children: [
           _countDropDown(context),
@@ -91,20 +111,6 @@ class _RankingContentPageState extends State<RankingContentPage> {
             fromFilterOfReview(context)
           else if (_filterOrSort == '별점순')
             fromFilterOfName(context)
-
-          /*
-          Expanded(
-            child: ChangeNotifierProvider(
-              create: (context) => DrugsProvider(_filterOrSort),
-              child: Consumer<DrugsProvider>(
-                builder: (context, drugsProvider, _) => ListViewWidget(
-                  drugsProvider: drugsProvider,
-                  category: widget.categoryName,
-                ),
-              ),
-            ),
-          ),
-          */
         ],
       ),
     );
@@ -128,8 +134,7 @@ class _RankingContentPageState extends State<RankingContentPage> {
     return Expanded(
       child: ChangeNotifierProvider(
         create: (context) => DrugsTotalRankingProvider('별점순'),
-        child:
-        Consumer<DrugsTotalRankingProvider>(
+        child: Consumer<DrugsTotalRankingProvider>(
           builder: (context, drugsProvider, _) => ListViewTotalRankingWidget(
             drugsProvider: drugsProvider,
             category: widget.categoryName,
@@ -145,29 +150,31 @@ class _RankingContentPageState extends State<RankingContentPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Container(
-            height: 35,
+            height: 30,
             child: Row(
               children: <Widget>[
                 //TODO: No sql에서는 count가 현재 지원이 안되고 있어서 일단 1차적으로는 총 개수는 제외하고 가는 거로
                 Spacer(),
-                DropdownButton<String>(
-                  value: _filterOrSort,
-                  icon: Icon(Icons.arrow_drop_down),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.black),
-                  onChanged: (String newValue) {
-                    setState(() {
-                      _filterOrSort = newValue;
-                    });
-                  },
-                  items: <String>['별점순', '리뷰 많은 순']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value.toUpperCase()),
-                    );
-                  }).toList(),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _filterOrSort,
+                    icon: Icon(Icons.arrow_drop_down),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.black),
+                    onChanged: (String newValue) {
+                      setState(() {
+                        _filterOrSort = newValue;
+                      });
+                    },
+                    items: <String>['리뷰 많은 순','별점순']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value.toUpperCase(), style: Theme.of(context).textTheme.caption.copyWith(fontSize: 12, color: gray900),),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ],
             ),
@@ -175,6 +182,7 @@ class _RankingContentPageState extends State<RankingContentPage> {
         ),
         Divider(
           thickness: 1,
+          color: Color(0xfff7f7f7),
         )
       ],
     );

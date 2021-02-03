@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-
 String search;
-TextStyle posRes =
-        TextStyle(
+TextStyle posRes = TextStyle(
         fontFamily: 'NotoSansKR',
         fontSize: 14,
         fontWeight: FontWeight.w800,
         color: Color(0xFF666666),
-        backgroundColor: warning.withOpacity(0.3)
-        ),
-
+        backgroundColor: warning.withOpacity(0.3)),
     negRes = TextStyle(
         fontFamily: 'NotoSansKR',
         fontSize: 14,
         fontWeight: FontWeight.w400,
-        color: gray600,//Color(0xFF666666),
+        color: gray600,
+        //Color(0xFF666666),
         backgroundColor: Colors.white);
 
 TextSpan searchMatch(String match) {
@@ -105,10 +102,9 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0),
-      child: RichText(textScaleFactor: 1.08,
-          text: searchMatch(textFinish),
-
-
+      child: RichText(
+        textScaleFactor: 1.08,
+        text: searchMatch(textFinish),
       ),
     );
   }
@@ -143,80 +139,122 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: <Color>[
-                    Color(0xFFE9FFFB),
-                    Color(0xFFE9FFFB),
-                    Color(0xFFFFFFFF),
-                  ])),
+                Color(0xFFE9FFFB),
+                Color(0xFFE9FFFB),
+                Color(0xFFFFFFFF),
+              ])),
         ),
       ),
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [_searchBar(context)],
-              ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+              child: _searchBar(context),
             ),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 18,
-                  ),
-                  Scrollbar(
-                      child: Container(
-                        height: height - 80, //440.0,
-                        child: SingleChildScrollView(
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 18,
+                ),
+                Scrollbar(
+                    child: Container(
+                  //padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                  height: height - 80, //440.0,
+                  child: SingleChildScrollView(
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '효능효과',
-                            style: Theme.of(context).textTheme.subtitle1,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '효능효과',
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
+                              _changeToText(context, widget.infoEE),
+                            ],
                           ),
-                         // SizedBox(height: 5,),
-                          _changeToText(context, widget.infoEE),
-                          Divider(height: 16),
-                          Text('용법용량',
-                            style: Theme.of(context).textTheme.subtitle1,
+                        ),
+                        // SizedBox(height: 5,),
+                        Divider(height: 16),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                              Text(
+                                '용법용량',
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
+                            _changeToText(context, widget.infoUD),
+                          ],
                           ),
-                          //SizedBox(height: 5,),
-                          _changeToText(context, widget.infoUD),
-                          Divider(height: 16),
-                          Text('저장방법',
-                            style: Theme.of(context).textTheme.subtitle1,
+                        ),
+                        //SizedBox(height: 5,),
+                        Divider(height: 16),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '저장방법',
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
+                              _alreadyText(context, widget.storage),
+                            ],
                           ),
-                         // SizedBox(height: 5,),
-                          _alreadyText(context, widget.storage),
-                          Divider(height: 16),
-                          Text('회사명',
-                            style: Theme.of(context).textTheme.subtitle1,
+                        ),
+                        // SizedBox(height: 5,),
+                        Divider(height: 16),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '회사명',
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
+                              _alreadyText(context, widget.entp_name),
+                            ],
                           ),
-                         // SizedBox(height: 5,),
-                          _alreadyText(context, widget.entp_name),
-                          Divider(height: 16),
-                          Text('주의사항',
-                            style: Theme.of(context).textTheme.subtitle1,
+                        ),
+                        // SizedBox(height: 5,),
+                        Divider(height: 16),
+                        Container(
+                          //height: 1000,//MediaQuery.of(context).size.height,
+                          padding: const EdgeInsets.fromLTRB(16, 5, 16, 50),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '주의사항',
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
+                              _changeToText(context, widget.infoNB),
+                            ],
                           ),
-                         // SizedBox(height: 5,),
-                          _changeToText(context, widget.infoNB),
-                        ],
+                        ),
+                      ],
                     ),
                   ),
-                      ))
-                ],
-              ),
+                ))
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _searchBar(BuildContext context) {
-
     return Row(
       children: [
         Container(
@@ -225,87 +263,68 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
           decoration: BoxDecoration(
               color: gray50,
               border: Border.all(
-                  style: BorderStyle.solid,
-                  width: 1.0,
-                  color: gray200),
-              borderRadius: BorderRadius.circular(8.0)
-          ),
-          // decoration: BoxDecoration(
-          //   borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          //   color: Colors.grey[200],
-          // ),
+                  style: BorderStyle.solid, width: 1.0, color: gray200),
+              borderRadius: BorderRadius.circular(8.0)),
           child: Row(
             children: [
               Expanded(
                   child: TextFormField(
-                    onChanged: (t) {
+                onChanged: (t) {
+                  setState(() {
+                    search = t;
+                  });
+                },
+                cursorColor: Colors.teal[400],
+                focusNode: focusNode,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(fontSize: 15),
+                autofocus: true,
+                controller: _filter,
+                decoration: InputDecoration(
+                  //여기서 언덜라인 없애주기
+                  border: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  fillColor: Colors.white12,
+                  filled: true,
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
+                  ),
+                  suffixIcon: IconButton(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    icon: Icon(
+                      Icons.cancel,
+                      size: 20,
+                      color: primary300_main,
+                    ),
+                    onPressed: () {
                       setState(() {
-                        search = t;
+                        _filter.clear();
                       });
                     },
-                    cursorColor: Colors.teal[400],
-                    focusNode: focusNode,
-                    style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 15),
-                    autofocus: true,
-                    controller: _filter,
-                    decoration: InputDecoration(
-                      //여기서 언덜라인 없애주기
-                      border: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      fillColor: Colors.white12,
-                      filled: true,
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                          size: 20,
-                        ),
-                      ),
-                      suffixIcon: IconButton(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        icon: Icon(
-                          Icons.cancel,
-                          size: 20,
-                          color: Colors.teal,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _filter.clear();
-                          });
-                        },
-                      ),
-                      hintText: '어떤 약정보를 찾고 계세요?',
-                      hintStyle: Theme.of(context).textTheme.bodyText2,
-                      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      labelStyle: TextStyle(color: Colors.grey),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.transparent)),
-                    ),
-                  )
-
-              ),
+                  ),
+                  hintText: '어떤 약정보를 찾고 계세요?',
+                  hintStyle: Theme.of(context).textTheme.bodyText2,
+                  contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  labelStyle: TextStyle(color: Colors.grey),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(color: Colors.transparent)),
+                ),
+              )),
             ],
           ),
         ),
-        //TODO:수미가 원하는 디자인
-        //Spacer(),
-        // SizedBox(
-        //   width: 50,
-        //   child: FlatButton(
-        //       padding: EdgeInsets.only(right: 10),
-        //       onPressed: () {
-        //         Navigator.pop(context);
-        //         //Navigator.pushNamed(context, '/bottom_bar');
-        //       },
-        //       child: Text('취소')),
-        // )
       ],
     );
   }
-
 }

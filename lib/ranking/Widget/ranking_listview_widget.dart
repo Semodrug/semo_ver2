@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
 import 'package:semo_ver2/ranking/Provider/ranking_review_provider.dart';
 import 'package:semo_ver2/ranking/Provider/ranking_totalRating_provider.dart';
 import 'package:semo_ver2/ranking/Widget/ranking_listTile_widget.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 class ListViewReviewWidget extends StatefulWidget {
   final DrugsReviewProvider drugsProvider;
@@ -18,7 +20,7 @@ class ListViewReviewWidget extends StatefulWidget {
 }
 
 class _ListViewReviewWidgetState extends State<ListViewReviewWidget> {
-  final scrollController = ScrollController();
+   final scrollController = ScrollController();
 
   @override
   void initState() {
@@ -44,25 +46,60 @@ class _ListViewReviewWidgetState extends State<ListViewReviewWidget> {
     }
   }
 
+   void _onTap(){
+     scrollController.animateTo(
+       0, duration: Duration(microseconds: 500), curve: Curves.easeInOut,
+     );
+   }
+
+   Widget _FAB(){
+     return  Container(
+       decoration: BoxDecoration(
+         border: Border.all(color: gray50),
+         borderRadius: BorderRadius.circular(10.0),
+       ),
+       width: 36,
+       height: 36,
+       child:
+       FittedBox(
+         child:
+         FloatingActionButton(
+           onPressed: (){
+             _onTap();
+           },
+           child: Icon(Icons.arrow_upward, size: 35, color: gray300_inactivated,),
+           backgroundColor: gray50,
+           shape: RoundedRectangleBorder(
+               borderRadius: BorderRadius.all(Radius.circular(15.0))
+           ),
+         ),
+       ),
+     );
+   }
+
   Widget build(BuildContext context) {
     if (widget.drugsProvider.drugs.isEmpty) {
       return Center(child: CircularProgressIndicator());
     } else
-      return Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: widget.drugsProvider.drugs.length,
-              itemBuilder: (context, index) {
-                //print('${widget.drugsProvider.drugs[index].itemName}');
-                return RankingTile(
-                    drug: widget.drugsProvider.drugs[index],
-                    index: (index + 1));
-              },
+      return Scaffold(
+        floatingActionButton:
+        _FAB(),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: widget.drugsProvider.drugs.length,
+                itemBuilder: (context, index) {
+                  //print('${widget.drugsProvider.drugs[index].itemName}');
+                  return RankingTile(
+                      drug: widget.drugsProvider.drugs[index],
+                      index: (index + 1));
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
   }
 }
@@ -110,34 +147,62 @@ class _ListViewTotalRankingWidgetState
     }
   }
 
+  void _onTap(){
+    scrollController.animateTo(
+      0, duration: Duration(microseconds: 500), curve: Curves.easeInOut,
+    );
+  }
+
+  Widget _FAB(){
+   return  Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: gray50),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      width: 36,
+      height: 36,
+      child:
+      FittedBox(
+        child:
+        FloatingActionButton(
+          onPressed: (){
+            _onTap();
+          },
+          child: Icon(Icons.arrow_upward, size: 35, color: gray300_inactivated,),
+          backgroundColor: gray50,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15.0))
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     if (widget.drugsProvider.drugs.isEmpty) {
       return Center(child: CircularProgressIndicator());
     } else
-      return Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: widget.drugsProvider.drugs.length,
-              itemBuilder: (context, index) {
-                print('${widget.drugsProvider.drugs[index].itemName}');
-                return RankingTile(
-                    drug: widget.drugsProvider.drugs[index],
-                    index: (index + 1));
-              },
+      return Scaffold(
+        floatingActionButton:
+        _FAB(),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: widget.drugsProvider.drugs.length,
+                itemBuilder: (context, index) {
+                  //print('${widget.drugsProvider.drugs[index].itemName}');
+                  return RankingTile(
+                      drug: widget.drugsProvider.drugs[index],
+                      index: (index + 1));
+                },
+              ),
             ),
-          ),
-        ],
+
+          ],
+        ),
       );
   }
-
-//
-//  String _checkCategoryName(String data) {
-//    String newName = '';
-//    //TODO: 이부분 0 --> 7로 바꿔주기 pattern이 0-6까지가 카테고리 이름
-//    newName = data.substring(7,(data.length));
-//    return newName;
-//  }
 
 }

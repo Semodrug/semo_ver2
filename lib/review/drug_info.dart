@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/drug_info/expiration_s.dart';
+import 'package:semo_ver2/drug_info/search_highlighting.dart';
 import 'package:semo_ver2/drug_info/warning_highlighting.dart';
 
 import 'package:semo_ver2/drug_info/detail_info.dart';
@@ -23,6 +24,12 @@ import 'package:semo_ver2/review/get_rating.dart';
 import 'package:semo_ver2/review/review_list.dart';
 import 'package:semo_ver2/review/write_review.dart';
 import 'package:semo_ver2/theme/colors.dart';
+
+List infoEE;
+List infoNB;
+List infoUD;
+String storage;
+String entpName;
 
 class ReviewPage extends StatefulWidget {
   final String drugItemSeq;
@@ -813,13 +820,23 @@ class _ReviewPageState extends State<ReviewPage> {
                 Expanded(child: Container()),
                 FlatButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DetailInfo(
-                                    drugItemSeq: drug.itemSeq,
-                                  )));
+                              builder: (BuildContext context) =>
+                                  SearchHighlightingScreen(
+                                      infoEE: infoEE,
+                                      infoNB: infoNB,
+                                      infoUD: infoUD,
+                                      storage: storage,
+                                      entp_name: entpName)));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => DetailInfo(
+                      //               drugItemSeq: drug.itemSeq,
+                      //             )));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -844,6 +861,11 @@ class _ReviewPageState extends State<ReviewPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Drug drug = snapshot.data;
+            storage = drug.storageMethod;
+            entpName = drug.entpName;
+            infoEE = drug.eeDocData;
+            infoNB = drug.nbDocData;
+            infoUD = drug.udDocData;
             if (type == 'EE') {
               return ListView.builder(
                   shrinkWrap: true,

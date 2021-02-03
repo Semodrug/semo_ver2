@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 import 'Page/ranking_content_page.dart';
 
@@ -11,23 +12,33 @@ class RankingPage extends StatelessWidget {
       backgroundColor: Colors.white,
         body: ListView.separated(
             itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(categories[index], style: Theme.of(context).textTheme.headline5,),
-                onTap: () {
-                  getCategory = numCategory[index] + categories[index]; //카테고리 설정해주기
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                           // TestRanking(categoryName: numCategory[index] + categories[index])
-                        RankingContentPage(categoryName: numCategory[index] + categories[index])
-                    ),
-                    );
-                },
+              return Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(width: 0.6, color: gray50))),
+                child: ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+                  title: SizedBox(
+                      height: 20,
+                      child: Text(categories[index], style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray900),)),
+                  onTap: () {
+                    getCategory = numCategory[index] + categories[index]; //카테고리 설정해주기
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                             // TestRanking(categoryName: numCategory[index] + categories[index])
+                          RankingContentPage(categoryName: numCategory[index] + categories[index])
+                      ),
+                      );
+                  },
+                ),
               );
             },
             separatorBuilder: (context, index) {
-              return Divider();
+              //return Divider(color: gray50, thickness: 0.5,);
+              return Container();
             },
             itemCount: categories.length));
   }
