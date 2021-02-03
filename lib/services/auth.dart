@@ -31,9 +31,8 @@ class AuthService {
     try {
       var result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      User user = result.user;
 
-      return _userFromFirebaseUser(user);
+      return _userFromFirebaseUser(result.user);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         return '이미 사용 중인 이메일 입니다';
