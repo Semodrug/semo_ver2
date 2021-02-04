@@ -78,7 +78,12 @@ class SearchResultTile extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Drug drugStreamData = snapshot.data;
-              String drugRating = drugStreamData.totalRating.toStringAsFixed(2);
+              String newName = drugStreamData.category;
+              //카테고리 길이 체크
+              if (newName.length > 30) {
+                newName = newName.substring(0, 27);
+                newName = newName + '...';
+              }
               return Container(
                 decoration: BoxDecoration(
                     border: Border(
@@ -120,7 +125,7 @@ class SearchResultTile extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(vertical:3.0),
                                   child: SizedBox(
                                     height: 25,
-                                      child: CategoryButton(str: drugStreamData.category)),
+                                      child: CategoryButton(str: newName)),
                                 ),
                               ],
                             )),
