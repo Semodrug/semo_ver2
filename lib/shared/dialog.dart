@@ -107,7 +107,7 @@ class IYMYDialog extends StatelessWidget {
             children: [
               SizedBox(height: 16),
               /* BODY */
-              Text("정말 삭제하시겠습니까?",
+              Text(bodyString,
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
@@ -119,7 +119,7 @@ class IYMYDialog extends StatelessWidget {
                   /* LEFT ACTION BUTTON */
                   ElevatedButton(
                     child: Text(
-                      "취",
+                      leftButtonName,
                       style: Theme.of(context)
                           .textTheme
                           .headline5
@@ -141,7 +141,7 @@ class IYMYDialog extends StatelessWidget {
                   /* RIGHT ACTION BUTTON */
                   ElevatedButton(
                       child: Text(
-                        "삭제",
+                        rightButtonName,
                         style: Theme.of(context)
                             .textTheme
                             .headline5
