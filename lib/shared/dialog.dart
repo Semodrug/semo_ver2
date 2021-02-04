@@ -19,7 +19,7 @@ class IYMYDialog extends StatelessWidget {
       })
       : super(key: key);
 
-  Future<void> showWarning() async {
+  void showWarning() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
