@@ -665,14 +665,17 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Divider(thickness: 1, color: gray300_inactivated),
-          MaterialButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Center(
-                  child: Text("닫기",
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray300_inactivated)
-                  )))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Center(
+                    child: Text("닫기",
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray300_inactivated)
+                    ))),
+          )
         ],
       ),
     );
@@ -731,15 +734,20 @@ class _HomePageState extends State<HomePage> {
                         style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray900)),
                 )),
           ),
-          Divider(thickness: 1, color: gray100),
-          MaterialButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Center(
-                  child: Text("닫기",
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray300_inactivated)
-              )))
+
+          Divider(thickness: 1, color: gray300_inactivated),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Center(
+                    child: Text("닫기",
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray300_inactivated)
+                ))),
+          )
+
         ],
       ),
     );
