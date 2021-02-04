@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         Divider(
-            height: 0,
+            height: 3,
           thickness: 0.5,
             indent: 1,
             endIndent:  0
@@ -1013,7 +1013,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       Divider(
-          height: 0,
+          height: 3,
           thickness: 0.5,
           indent: 1,
           endIndent:  0
