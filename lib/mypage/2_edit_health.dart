@@ -5,9 +5,14 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/shared/ok_dialog.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 bool _isFind = false;
+bool _isFirstFilled = false;
+bool _isSecondFilled = false;
+bool _isThirdFilled = false;
 
 class EditHealthPage extends StatefulWidget {
   final UserData userData;
@@ -18,30 +23,63 @@ class EditHealthPage extends StatefulWidget {
 }
 
 class _EditHealthPageState extends State<EditHealthPage> {
-  final AuthService _auth = AuthService();
+  // final AuthService _auth = AuthService();
 
   TextEditingController _selfWritingController = TextEditingController();
-  List<bool> _isKeyword = List.generate(10, (_) => false);
+  TextEditingController _secondWritingController = TextEditingController();
+  TextEditingController _thirdWritingController = TextEditingController();
+
+  List _isKeywordList = List.generate(10, (_) => false);
   List _keywordList = [];
+  List _selfKeywordList = [];
 
   void initState() {
     super.initState();
-    if (widget.userData.keywordList.contains('임산부')) _isKeyword[1] = true;
-    if (widget.userData.keywordList.contains('고령자')) _isKeyword[2] = true;
-    if (widget.userData.keywordList.contains('소아')) _isKeyword[3] = true;
-    if (widget.userData.keywordList.contains('간')) _isKeyword[4] = true;
-    if (widget.userData.keywordList.contains('신장')) _isKeyword[5] = true;
-    if (widget.userData.keywordList.contains('심장')) _isKeyword[6] = true;
-    if (widget.userData.keywordList.contains('고혈압')) _isKeyword[7] = true;
-    if (widget.userData.keywordList.contains('당뇨')) _isKeyword[8] = true;
-    if (widget.userData.keywordList.contains('유당불내증')) _isKeyword[9] = true;
 
-    if (widget.userData.keywordList.isNotEmpty &&
-        !['임산부', '고령자', '소아', '간', '신장', '심장', '고혈압', '당뇨', '유당불내증']
-            .contains(widget.userData.keywordList.last)) {
+    if (widget.userData.keywordList.contains('임산부')) _isKeywordList[1] = true;
+    if (widget.userData.keywordList.contains('고령자')) _isKeywordList[2] = true;
+    if (widget.userData.keywordList.contains('소아')) _isKeywordList[3] = true;
+    if (widget.userData.keywordList.contains('간')) _isKeywordList[4] = true;
+    if (widget.userData.keywordList.contains('신장')) _isKeywordList[5] = true;
+    if (widget.userData.keywordList.contains('심장')) _isKeywordList[6] = true;
+    if (widget.userData.keywordList.contains('고혈압')) _isKeywordList[7] = true;
+    if (widget.userData.keywordList.contains('당뇨')) _isKeywordList[8] = true;
+    if (widget.userData.keywordList.contains('유당불내증')) _isKeywordList[9] = true;
+
+    _selfKeywordList = widget.userData.selfKeywordList;
+
+    if (_selfKeywordList.isNotEmpty) {
       _isFind = true;
-      _selfWritingController.text = widget.userData.keywordList.last;
+      print(_selfKeywordList);
+
+      if (_selfKeywordList.length == 1) {
+        _selfWritingController.text = _selfKeywordList[0];
+        _isFirstFilled = true;
+      } else if (_selfKeywordList.length == 2) {
+        _selfWritingController.text = _selfKeywordList[0];
+        _isFirstFilled = true;
+
+        _secondWritingController.text = _selfKeywordList[1];
+        _isSecondFilled = true;
+      } else if (_selfKeywordList.length == 3) {
+        _selfWritingController.text = _selfKeywordList[0];
+        _isFirstFilled = true;
+
+        _secondWritingController.text = _selfKeywordList[1];
+        _isSecondFilled = true;
+
+        _thirdWritingController.text = _selfKeywordList[2];
+      }
     }
+
+    // _isKeywordList = widget.userData.isKeywordList;
+
+    // if (widget.userData.keywordList.isNotEmpty &&
+    //     !['임산부', '고령자', '소아', '간', '신장', '심장', '고혈압', '당뇨', '유당불내증']
+    //         .contains(widget.userData.keywordList.last)) {
+    //   _isFind = true;
+    //   _selfWritingController.text = widget.userData.keywordList.last;
+    // }
   }
 
   @override
@@ -77,7 +115,7 @@ class _EditHealthPageState extends State<EditHealthPage> {
           ),
         ),
         backgroundColor: Colors.white,
-        body: Builder(builder: (context) {
+        body: Builder(builder: (ctx) {
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 16.0, 16.0, 0.0),
@@ -91,10 +129,10 @@ class _EditHealthPageState extends State<EditHealthPage> {
                   Form(
                       child: Theme(
                           data: ThemeData(
-                            primaryColor: Colors.teal[400],
+                            primaryColor: primary300_main,
                             inputDecorationTheme: InputDecorationTheme(
                                 labelStyle: TextStyle(
-                              color: Colors.teal[400],
+                              color: primary300_main,
                               fontSize: 18.0,
                             )),
                           ),
@@ -105,23 +143,38 @@ class _EditHealthPageState extends State<EditHealthPage> {
                               SizedBox(
                                 height: 10,
                               ),
-                              TextButton(
-                                child: Text(
-                                  '원하는 키워드가 없으신가요?',
-                                  style: TextStyle(
-                                    fontFamily: 'Noto Sans KR',
-                                    color: Colors.grey,
-                                    fontSize: 12.0,
-                                    decoration: TextDecoration.underline,
+                              InkWell(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '원하는 키워드가 없으신가요?',
+                                    style: TextStyle(
+                                      fontFamily: 'Noto Sans KR',
+                                      color: Colors.grey,
+                                      fontSize: 12.0,
+                                      decoration: TextDecoration.underline,
+                                    ),
                                   ),
                                 ),
-                                onPressed: () {
+                                onTap: () {
                                   setState(() {
                                     _isFind = !_isFind;
                                   });
                                 },
                               ),
                               _isFind ? selfWrite() : Container(),
+                              _isFind && _isFirstFilled
+                                  ? SizedBox(height: 10)
+                                  : Container(),
+                              _isFind && _isFirstFilled
+                                  ? secondWrite()
+                                  : Container(),
+                              _isFind && _isFirstFilled && _isSecondFilled
+                                  ? SizedBox(height: 10)
+                                  : Container(),
+                              _isFind && _isFirstFilled && _isSecondFilled
+                                  ? thirdWrite()
+                                  : Container(),
                               SizedBox(
                                 height: 40.0,
                               ),
@@ -184,33 +237,33 @@ class _EditHealthPageState extends State<EditHealthPage> {
           SizedBox(height: 12.0),
           Row(
             children: [
-              _exclusiveMultiButton(0, _isKeyword, '없음'),
+              _exclusiveMultiButton(0, _isKeywordList, '없음'),
               SizedBox(width: 6),
-              _exclusiveMultiButton(1, _isKeyword, '임산부'),
+              _exclusiveMultiButton(1, _isKeywordList, '임산부'),
               SizedBox(width: 6),
-              _exclusiveMultiButton(2, _isKeyword, '고령자'),
+              _exclusiveMultiButton(2, _isKeywordList, '고령자'),
               SizedBox(width: 6),
-              _exclusiveMultiButton(3, _isKeyword, '소아'),
+              _exclusiveMultiButton(3, _isKeywordList, '소아'),
             ],
           ),
           SizedBox(height: 4.0),
           Row(
             children: [
-              _exclusiveMultiButton(4, _isKeyword, '간'),
+              _exclusiveMultiButton(4, _isKeywordList, '간'),
               SizedBox(width: 6),
-              _exclusiveMultiButton(5, _isKeyword, '신장(콩팥)'),
+              _exclusiveMultiButton(5, _isKeywordList, '신장(콩팥)'),
               SizedBox(width: 6),
-              _exclusiveMultiButton(6, _isKeyword, '심장'),
+              _exclusiveMultiButton(6, _isKeywordList, '심장'),
             ],
           ),
           SizedBox(height: 4.0),
           Row(
             children: [
-              _exclusiveMultiButton(7, _isKeyword, '고혈압'),
+              _exclusiveMultiButton(7, _isKeywordList, '고혈압'),
               SizedBox(width: 6),
-              _exclusiveMultiButton(8, _isKeyword, '당뇨'),
+              _exclusiveMultiButton(8, _isKeywordList, '당뇨'),
               SizedBox(width: 6),
-              _exclusiveMultiButton(9, _isKeyword, '유당분해요소 결핍증'),
+              _exclusiveMultiButton(9, _isKeywordList, '유당분해요소 결핍증'),
             ],
           ),
         ],
@@ -221,11 +274,151 @@ class _EditHealthPageState extends State<EditHealthPage> {
   Widget selfWrite() {
     return Container(
       padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-      height: 30,
       child: TextField(
         controller: _selfWritingController,
         cursorColor: primary400_line,
-        decoration: textInputDecoration.copyWith(hintText: '키워드 직접 입력하기'),
+        decoration: textInputDecoration.copyWith(
+            hintText: '키워드 입력하기',
+            suffixIcon: IconButton(
+              icon: _isFirstFilled
+                  ? Icon(
+                      Icons.cancel,
+                      color: gray300_inactivated,
+                    )
+                  : Container(),
+              onPressed: () {
+                setState(() {
+                  if (_secondWritingController.text.isNotEmpty) {
+                    // 2번째 칸과 3번째 칸이 모두 비어있지 않을 때: 1번째칸에는 2번째칸 내용이, 2번째칸에는 3번째칸 내용이
+                    if (_thirdWritingController.text.isNotEmpty) {
+                      _selfWritingController.text =
+                          _secondWritingController.text;
+
+                      _secondWritingController.text =
+                          _thirdWritingController.text;
+
+                      _thirdWritingController.text = '';
+                    } else {
+                      // 2번째 칸만 비어있지 않을 때: 1번째칸에는 2번째칸 내용이
+                      _selfWritingController.text =
+                          _secondWritingController.text;
+                      _secondWritingController.text = '';
+                      _isSecondFilled = false;
+                    }
+                  }
+                  // 1번째 칸 2번째칸 모두 비어있을 때: 1번째칸 내용만 지우면 된다
+                  else {
+                    _selfWritingController.text = '';
+                    _isFirstFilled = false;
+                  }
+                });
+              },
+            )),
+        keyboardType: TextInputType.text,
+        onChanged: (value) {
+          setState(() {
+            if (_selfWritingController.text.isEmpty) {
+              // 2번째와 3번째가 모두 채워져있을 때: 2-->1, 3-->2, 3-->''
+              if (_secondWritingController.text.isNotEmpty &&
+                  _thirdWritingController.text.isNotEmpty) {
+                _selfWritingController.text = _secondWritingController.text;
+                _secondWritingController.text = _thirdWritingController.text;
+                _thirdWritingController.text = '';
+              }
+              // 2번째만 채워져있을 때: 2-->1, 2-->''
+              else if (_secondWritingController.text.isNotEmpty) {
+                _selfWritingController.text = _secondWritingController.text;
+                _secondWritingController.text = '';
+                _isSecondFilled = false;
+              }
+              // 아무것도 채워져있지 않을 때
+              else {
+                _isFirstFilled = false;
+              }
+            } else {
+              setState(() {
+                _isFirstFilled = true;
+              });
+            }
+          });
+        },
+      ),
+    );
+  }
+
+  Widget secondWrite() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: TextField(
+        controller: _secondWritingController,
+        cursorColor: primary400_line,
+        decoration: textInputDecoration.copyWith(
+            hintText: '키워드 추가 입력하기',
+            suffixIcon: IconButton(
+              icon: _isSecondFilled
+                  ? Icon(
+                      Icons.cancel,
+                      color: gray300_inactivated,
+                    )
+                  : Container(),
+              onPressed: () {
+                setState(() {
+                  if (_thirdWritingController.text.isNotEmpty) {
+                    _secondWritingController.text =
+                        _thirdWritingController.text;
+                    _thirdWritingController.text = '';
+                  } else {
+                    _secondWritingController.text = '';
+                    _isSecondFilled = false;
+                  }
+                });
+              },
+            )),
+        keyboardType: TextInputType.text,
+        onChanged: (value) {
+          setState(() {
+            if (_secondWritingController.text.isEmpty) {
+              // 3번째만 채워져있을 때: 3-->2 3-->''
+              if (_thirdWritingController.text.isNotEmpty) {
+                _secondWritingController.text = _thirdWritingController.text;
+                _thirdWritingController.text = '';
+              }
+              // 아무것도 채워져있지 않을 때
+              else {
+                _isSecondFilled = false;
+              }
+            } else {
+              setState(() {
+                _isSecondFilled = true;
+              });
+            }
+          });
+        },
+      ),
+    );
+  }
+
+  Widget thirdWrite() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: TextField(
+        controller: _thirdWritingController,
+        cursorColor: primary400_line,
+        decoration: textInputDecoration.copyWith(
+            hintText: '키워드 추가 입력하기',
+            suffixIcon: IconButton(
+              icon: _isThirdFilled
+                  ? Icon(
+                      Icons.cancel,
+                      color: gray300_inactivated,
+                    )
+                  : Container(),
+              onPressed: () {
+                setState(() {
+                  _thirdWritingController.text = '';
+                });
+              },
+            )),
         keyboardType: TextInputType.text,
       ),
     );
@@ -234,100 +427,47 @@ class _EditHealthPageState extends State<EditHealthPage> {
   Widget submit() {
     TheUser user = Provider.of<TheUser>(context);
 
-    return Container(
-      alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-        child: SizedBox(
-          width: 400.0,
-          height: 45.0,
-          //padding: const EdgeInsets.symmetric(vertical: 16.0),
-          //alignment: Alignment.center,
-          child: RaisedButton(
-            shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(10.0)),
-            child: Text(
-              '저장하기',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: gray0_white, fontSize: 15),
-            ),
-            color: primary400_line,
-            onPressed: () async {
-              if (_isKeyword[1] == true) _keywordList.add('임산부');
-              if (_isKeyword[2] == true) _keywordList.add('고령자');
-              if (_isKeyword[3] == true) _keywordList.add('소아');
-              if (_isKeyword[4] == true) _keywordList.add('간');
-              if (_isKeyword[5] == true) _keywordList.add('신장');
-              if (_isKeyword[6] == true) _keywordList.add('심장');
-              if (_isKeyword[7] == true) _keywordList.add('고혈압');
-              if (_isKeyword[8] == true) _keywordList.add('당뇨');
-              if (_isKeyword[9] == true) _keywordList.add('유당불내증');
-
-              if (_selfWritingController.text.isNotEmpty)
-                _keywordList.add(_selfWritingController.text);
-
-              await DatabaseService(uid: user.uid)
-                  .updateUserHealth(_keywordList);
-
-              _showEditedWell(context);
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showEditedWell(context) {
-    showDialog(
+    return IYMYSubmitButton(
       context: context,
-      builder: (BuildContext context) {
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.of(context).pop(true);
-          Navigator.of(context).pop(true);
-          // Navigator.pushReplacementNamed(context, '/bottom_bar');
-        }); // return object of type Dialog
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Icon(
-            Icons.check_circle,
-            color: Colors.green,
-            size: 17,
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: '건강 정보',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: '가 수정되었습니다.'),
-                    ],
-                  ),
-                ),
-                // SizedBox(height: 10),
-                // Text(
-                //   '홈에서 확인하실 수 있습니다',
-                //   style: TextStyle(fontSize: 14, color: Colors.grey),
-                // ),
-                SizedBox(
-                  height: 10,
-                )
-              ],
-            ),
-          ),
-        );
+      isDone: true,
+      textString: '저장하기',
+      onPressed: () async {
+        if (_isKeywordList[1] == true) _keywordList.add('임산부');
+        if (_isKeywordList[2] == true) _keywordList.add('고령자');
+        if (_isKeywordList[3] == true) _keywordList.add('소아');
+        if (_isKeywordList[4] == true) _keywordList.add('간');
+        if (_isKeywordList[5] == true) _keywordList.add('신장');
+        if (_isKeywordList[6] == true) _keywordList.add('심장');
+        if (_isKeywordList[7] == true) _keywordList.add('고혈압');
+        if (_isKeywordList[8] == true) _keywordList.add('당뇨');
+        if (_isKeywordList[9] == true) _keywordList.add('유당불내증');
+
+        List _newSelfKeywordList = [];
+
+        if (_selfWritingController.text.isNotEmpty)
+          _newSelfKeywordList.add(_selfWritingController.text);
+
+        if (_secondWritingController.text.isNotEmpty)
+          _newSelfKeywordList.add(_secondWritingController.text);
+
+        if (_thirdWritingController.text.isNotEmpty)
+          _newSelfKeywordList.add(_thirdWritingController.text);
+
+        await DatabaseService(uid: user.uid)
+            .updateUserKeywordList(_keywordList);
+        await DatabaseService(uid: user.uid)
+            .updateUserSelfKeywordList(_newSelfKeywordList);
+
+        IYMYOkDialog(
+          context: context,
+          dialogIcon: Icon(Icons.check, color: primary300_main),
+          bodyString: '건강정보가 수정되었습니다',
+          buttonName: '확인',
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ).showWarning();
       },
     );
   }

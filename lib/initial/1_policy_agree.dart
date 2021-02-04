@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/initial/2_get_privacy.dart';
 import 'package:semo_ver2/models/user.dart';
@@ -251,10 +250,6 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
         textString: '다음',
         onPressed: () async {
           if (_isTermsAgreed && _isPrivacyAgreed) {
-            // 이용약관 동의 날짜 저장
-            String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
-            await DatabaseService(uid: user.uid).addUser(nowDT);
-
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => GetPrivacyPage()),

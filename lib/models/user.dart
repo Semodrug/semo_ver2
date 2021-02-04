@@ -14,6 +14,8 @@ class UserData {
 
   final bool isPregnant;
   final List keywordList;
+  final List selfKeywordList;
+
   final List favoriteList;
   final List searchList;
 
@@ -25,6 +27,7 @@ class UserData {
       this.birthYear,
       this.isPregnant,
       this.keywordList,
+      this.selfKeywordList,
       this.favoriteList,
       this.searchList});
 }
