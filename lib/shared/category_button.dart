@@ -13,7 +13,10 @@ class CategoryButton extends StatelessWidget {
     String _shortenCategory(String data) {
       String newName = '';
 
-      newName = data.substring(7, (data.length));
+      if(data == '')
+        newName = '카테고리 없음';
+      else
+        newName = data.substring(7, (data.length));
 
       if (fromHome == 'home') {
         if (newName.length > 12) {
