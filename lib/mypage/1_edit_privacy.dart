@@ -5,6 +5,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -251,7 +252,17 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                 //   user.uid,
                 //   _nicknameController.text,
                 // );
-                _showEditedWell(context);
+
+                IYMYOkDialog(
+                  context: context,
+                  dialogIcon: Icon(Icons.check, color: primary300_main),
+                  bodyString: '개인정보가 수정되었습니다',
+                  buttonName: '확인',
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                ).showWarning();
               }
             }
           }
@@ -288,53 +299,6 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                   color: isPressed[index] ? primary500_light_text : gray400,
                 )),
       ),
-    );
-  }
-
-  void _showEditedWell(context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.of(context).pop(true);
-          Navigator.of(context).pop(true);
-        }); // return object of type Dialog
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Icon(
-            Icons.check_circle,
-            color: Colors.green,
-            size: 17,
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: '개인 정보',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: '가 수정되었습니다.'),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                )
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
