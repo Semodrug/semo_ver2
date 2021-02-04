@@ -7,6 +7,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/6_policy_privacy.dart';
 import 'package:semo_ver2/mypage/5_policy_terms.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 bool _isTermsAgreed = false;
@@ -24,13 +25,6 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[200],
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
         centerTitle: true,
         title: Text(
           '이용약관',
@@ -52,9 +46,14 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
       ),
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.fromLTRB(8, 20, 16, 0),
+        padding: EdgeInsets.fromLTRB(8, 16, 16, 0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            topTitle(),
+            SizedBox(
+              height: 24,
+            ),
             allCheckbox(),
             Divider(
               color: Colors.grey,
@@ -77,35 +76,58 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
     );
   }
 
+  Widget topTitle() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: Text(
+        '서비스 이용을 위해\n이용약관에 동의해주세요 :)',
+        style: Theme.of(context).textTheme.headline3,
+      ),
+    );
+  }
+
   Widget allCheckbox() {
-    return Row(
-      children: [
-        Theme(
-          data: ThemeData(unselectedWidgetColor: gray300_inactivated),
-          child: Checkbox(
-            value: _isTermsAgreed && _isPrivacyAgreed,
-            activeColor: primary300_main,
-            onChanged: (value) {
-              setState(() {
-                if (_isTermsAgreed != _isPrivacyAgreed) {
-                  _isTermsAgreed = true;
-                  _isPrivacyAgreed = true;
-                } else {
-                  _isTermsAgreed = !_isTermsAgreed;
-                  _isPrivacyAgreed = !_isPrivacyAgreed;
-                }
-              });
-            },
+    return InkWell(
+      child: Row(
+        children: [
+          Theme(
+            data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+            child: Checkbox(
+              value: _isTermsAgreed && _isPrivacyAgreed,
+              activeColor: primary300_main,
+              onChanged: (value) {
+                setState(() {
+                  if (_isTermsAgreed != _isPrivacyAgreed) {
+                    _isTermsAgreed = true;
+                    _isPrivacyAgreed = true;
+                  } else {
+                    _isTermsAgreed = !_isTermsAgreed;
+                    _isPrivacyAgreed = !_isPrivacyAgreed;
+                  }
+                });
+              },
+            ),
           ),
-        ),
-        SizedBox(
-          width: 2,
-        ),
-        Text(
-          '전체동의',
-          style: Theme.of(context).textTheme.subtitle1,
-        ),
-      ],
+          SizedBox(
+            width: 2,
+          ),
+          Text(
+            '전체동의',
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+        ],
+      ),
+      onTap: () {
+        setState(() {
+          if (_isTermsAgreed != _isPrivacyAgreed) {
+            _isTermsAgreed = true;
+            _isPrivacyAgreed = true;
+          } else {
+            _isTermsAgreed = !_isTermsAgreed;
+            _isPrivacyAgreed = !_isPrivacyAgreed;
+          }
+        });
+      },
     );
   }
 
@@ -113,50 +135,54 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Theme(
-              data: ThemeData(unselectedWidgetColor: gray300_inactivated),
-              child: Checkbox(
-                onChanged: (bool value) {
-                  setState(() {
-                    _isTermsAgreed = !_isTermsAgreed;
-                  });
-                },
-                value: _isTermsAgreed,
-                activeColor: primary300_main,
-              ),
+        Expanded(
+          child: InkWell(
+            child: Row(
+              children: [
+                Theme(
+                  data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+                  child: Checkbox(
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isTermsAgreed = !_isTermsAgreed;
+                      });
+                    },
+                    value: _isTermsAgreed,
+                    activeColor: primary300_main,
+                  ),
+                ),
+                SizedBox(
+                  width: 2,
+                ),
+                Text('(필수) 이용약관',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray900)),
+              ],
             ),
-            SizedBox(
-              width: 2,
-            ),
-            Text('(필수) 이용약관',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2
-                    .copyWith(color: gray900))
-          ],
+            onTap: () {
+              setState(() {
+                _isTermsAgreed = !_isTermsAgreed;
+              });
+            },
+          ),
         ),
-        Row(
-          children: [
-            InkWell(
-              child: Center(
-                  child: Text(
-                '보기',
-                style: Theme.of(context).textTheme.caption,
-              )),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PolicyTermPage()),
-                );
-              },
+        InkWell(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              '보기',
+              style: Theme.of(context).textTheme.caption,
             ),
-            SizedBox(
-              width: 10,
-            )
-          ],
-        )
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PolicyTermPage()),
+            );
+          },
+        ),
       ],
     );
   }
@@ -165,91 +191,76 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Theme(
-              data: ThemeData(unselectedWidgetColor: gray300_inactivated),
-              child: Checkbox(
-                onChanged: (bool value) {
-                  setState(() {
-                    _isPrivacyAgreed = !_isPrivacyAgreed;
-                  });
-                },
-                value: _isPrivacyAgreed,
-                activeColor: primary300_main,
-              ),
+        Expanded(
+          child: InkWell(
+            child: Row(
+              children: [
+                Theme(
+                  data: ThemeData(unselectedWidgetColor: gray300_inactivated),
+                  child: Checkbox(
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isPrivacyAgreed = !_isPrivacyAgreed;
+                      });
+                    },
+                    value: _isPrivacyAgreed,
+                    activeColor: primary300_main,
+                  ),
+                ),
+                SizedBox(
+                  width: 2,
+                ),
+                Text('(필수) 개인정보 처리방침',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray900)),
+              ],
             ),
-            SizedBox(
-              width: 2,
-            ),
-            Text('(필수) 개인정보 처리방침',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2
-                    .copyWith(color: gray900)),
-          ],
+            onTap: () {
+              setState(() {
+                _isPrivacyAgreed = !_isPrivacyAgreed;
+              });
+            },
+          ),
         ),
-        Row(
-          children: [
-            InkWell(
-              child: Center(
-                  child: Text(
+        InkWell(
+          child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
                 '보기',
                 style: Theme.of(context).textTheme.caption,
               )),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PolicyPrivacyPage()),
-                );
-              },
-            ),
-            SizedBox(
-              width: 10,
-            )
-          ],
-        )
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PolicyPrivacyPage()),
+            );
+          },
+        ),
       ],
     );
   }
 
   Widget submitField(user) {
-    return Container(
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: 44.0,
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-        //alignment: Alignment.center,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-          child: RaisedButton(
-            child: Text(
-              '다음',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: gray0_white, fontSize: 15),
-            ),
-            color: _isTermsAgreed && _isPrivacyAgreed
-                ? gradient_button_long_end
-                : gray200,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            onPressed: () async {
-              if (_isTermsAgreed && _isPrivacyAgreed) {
-                // 이용약관 동의 날짜 저장
-                String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
-                await DatabaseService(uid: user.uid).addUser(nowDT);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: IYMYSubmitButton(
+        context: context,
+        isDone: _isTermsAgreed && _isPrivacyAgreed,
+        textString: '다음',
+        onPressed: () async {
+          if (_isTermsAgreed && _isPrivacyAgreed) {
+            // 이용약관 동의 날짜 저장
+            String nowDT = DateFormat('yyyy.MM.dd').format(DateTime.now());
+            await DatabaseService(uid: user.uid).addUser(nowDT);
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => GetPrivacyPage()),
-                );
-              }
-            },
-          ),
-        ),
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => GetPrivacyPage()),
+            );
+          }
+        },
       ),
     );
   }

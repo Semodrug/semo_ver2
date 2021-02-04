@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/models/review.dart';
 
 import 'package:semo_ver2/mypage/1_edit_privacy.dart';
 import 'package:semo_ver2/mypage/2_edit_health.dart';
@@ -9,10 +10,12 @@ import 'package:semo_ver2/mypage/5_policy_terms.dart';
 import 'package:semo_ver2/mypage/6_policy_privacy.dart';
 import 'package:semo_ver2/mypage/7_others.dart';
 import 'package:semo_ver2/mypage/my_reviews.dart';
+import 'package:semo_ver2/mypage/my_favorites.dart';
 
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -124,6 +127,8 @@ class _MyPageState extends State<MyPage> {
   }
 
   Widget _topMyInfo(userData) {
+    TheUser user = Provider.of<TheUser>(context);
+
     return Container(
       color: Colors.white,
       child: Padding(
@@ -182,10 +187,19 @@ class _MyPageState extends State<MyPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // TODO: 리뷰 갯수
-                  Container(
-                      width: 136,
-                      child: _myMenu('리뷰', '0', context, MyReviews())),
+                  // TODO: 리뷰 갯수뷰
+                  StreamBuilder<List<Review>>(
+                    stream: ReviewService().getUserReviews(user.uid.toString()),
+                    builder: (context, snapshot) {
+                      if(snapshot.hasData) {
+                        List<Review> reviews = snapshot.data;
+                        return Container(
+                            width: 136,
+                            child: _myMenu('리뷰', reviews.length.toString(), context, MyReviews()));
+                      }
+                      else return Container();
+                    },
+                  ),
                   Container(
                     height: 44,
                     child: VerticalDivider(
@@ -194,7 +208,7 @@ class _MyPageState extends State<MyPage> {
                   ),
                   Container(
                       width: 136,
-                      child: _myMenu('찜', '0', context, MyReviews())),
+                      child: _myMenu('찜', '0', context, MyFavorites())),
                   //_myMenu('1:1 문의', '0', context, MyReviews())
                 ],
               ),

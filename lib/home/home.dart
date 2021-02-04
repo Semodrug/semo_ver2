@@ -734,6 +734,7 @@ class _HomePageState extends State<HomePage> {
                         style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray900)),
                 )),
           ),
+
           Divider(thickness: 1, color: gray300_inactivated),
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
@@ -746,6 +747,7 @@ class _HomePageState extends State<HomePage> {
                         style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray300_inactivated)
                 ))),
           )
+
         ],
       ),
     );
