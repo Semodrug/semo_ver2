@@ -376,12 +376,12 @@ class _ReviewPageState extends State<ReviewPage> {
                         RatingBarIndicator(
                           rating: drug.totalRating * 1.0,
                           itemBuilder: (context, index) =>
-                          //     Icon(
-                          //   // _selectedIcon ??
-                          //       Icons.star,
-                          //   color: yellow,
-                          // ),
-                          ImageIcon(
+                              //     Icon(
+                              //   // _selectedIcon ??
+                              //       Icons.star,
+                              //   color: yellow,
+                              // ),
+                              ImageIcon(
                             AssetImage('assets/icons/star.png'),
                             color: yellow,
                           ),
@@ -715,8 +715,9 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /* Under Information */
   Widget _underInfo(BuildContext context, Drug drug, UserData userData) {
-    bool _isCareful =
-        _carefulDiseaseList(userData.keywordList, drug.nbDocData).isNotEmpty;
+    bool _isCareful = _carefulDiseaseList(
+            userData.keywordList + userData.selfKeywordList, drug.nbDocData)
+        .isNotEmpty;
 
     return Padding(
       key: _key3,
@@ -727,7 +728,9 @@ class _ReviewPageState extends State<ReviewPage> {
             _isCareful
                 ? _warningMessage(
                     context,
-                    _carefulDiseaseList(userData.keywordList, drug.nbDocData),
+                    _carefulDiseaseList(
+                        userData.keywordList + userData.selfKeywordList,
+                        drug.nbDocData),
                     drug.itemSeq)
                 : Container(),
             _isCareful ? SizedBox(height: 20) : Container(),
