@@ -31,6 +31,7 @@ class _MyReviewsState extends State<MyReviews> {
     return newName;
   }
 
+
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
@@ -200,35 +201,20 @@ class _MyReviewsState extends State<MyReviews> {
                                               ),
                                               MaterialButton(
                                                   onPressed: () {
-                                                    Navigator.of(context).pop(); //material button 상위의 context
-
-
-                                                    // IYMYDialog(
-                                                    //     context: context,
-                                                    //     bodyString: '찜 목록에서 삭제하시겠어요?',
-                                                    //     leftButtonName: '취소',
-                                                    //     rightButtonName: '확인',
-                                                    //     onPressed: () async {
-                                                    //       Navigator.of(context).pop();
-                                                    //       await ReviewService(documentId: review.documentId).deleteReviewData();
-                                                    //     }).showWarning();
-                                                  // Navigator.pop(context);
+                                                    Navigator.of(context).pop();
+                                                    // _showDeleteDialog(review);
+                                                    IYMYDialog(
+                                                              context: context,
+                                                              bodyString: '정말 삭제하시겠습니까?',
+                                                              leftButtonName: '취소',
+                                                              rightButtonName: '삭제',
+                                                              onPressed: () async {
+                                                                await ReviewService(documentId: review.documentId).deleteReviewData();
+                                                                Navigator.pop(context);
+                                                              }).showDeleteDialog(review);
                                                   },
 
-                                                  // onPressed: () {
-                                                  //   Navigator.pop(context);
-                                                  //   //_showDeleteDialog(review);
-                                                  //   IYMYDialog(
-                                                  //       context: context,
-                                                  //       bodyString: '정말 삭제하시겠습니까?',
-                                                  //       leftButtonName: '취소',
-                                                  //       rightButtonName: '삭제',
-                                                  //       onPressed: () async {
-                                                  //         // Navigator.of(context).pop();
-                                                  //         await ReviewService(documentId: review.documentId).deleteReviewData();
-                                                  //         Navigator.pop(context);
-                                                  //       }).showWarning();
-                                                  // },
+
                                                   child: Center(child: Text("삭제하기",
                                                       style: TextStyle(color: Colors.red[600],
                                                           fontSize: 16)))
@@ -279,41 +265,116 @@ class _MyReviewsState extends State<MyReviews> {
   }
 
   Future<void> _showDeleteDialog(record) async {
-    return showDialog<void>(
+    showDialog(
       context: context,
-      barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-//          title: Center(child: Text('AlertDialog Title')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 16),
+              /* BODY */
+              Text("정말 삭제하시겠습니까?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 28),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  /* LEFT ACTION BUTTON */
+                  ElevatedButton(
+                    child: Text(
+                      "취",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: primary400_line),
                     ),
-                    TextButton(
-                      child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(120, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(width: 16),
+                  /* RIGHT ACTION BUTTON */
+                  ElevatedButton(
+                      child: Text(
+                        "삭제",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: gray0_white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(120, 40),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          elevation: 0,
+                          primary: primary300_main,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(color: primary400_line))),
                       onPressed: () async {
                         Navigator.of(context).pop();
                         await ReviewService(documentId: record.documentId).deleteReviewData();
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
+                      }
+                  )
+                ],
+              )
+            ],
           ),
         );
       },
     );
+
+//     return showDialog<void>(
+//       context: context,
+//       barrierDismissible: false, // user must tap button!
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+// //          title: Center(child: Text('AlertDialog Title')),
+//           content: SingleChildScrollView(
+//             child: ListBody(
+//               children: <Widget>[
+//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+//                 SizedBox(height: 20),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                   children: [
+//                     TextButton(
+//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () {
+//                         Navigator.of(context).pop();
+//                       },
+//                     ),
+//                     TextButton(
+//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () async {
+//                         Navigator.of(context).pop();
+//                         await ReviewService(documentId: record.documentId).deleteReviewData();
+//                       },
+//                     ),
+//                   ],
+//                 )
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
   }
 
 }
