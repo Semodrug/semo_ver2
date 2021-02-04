@@ -230,7 +230,7 @@ class _HomePageState extends State<HomePage> {
     //시간 계산하기 위한 코드 끝
 
     //사용기한 7일 남음
-    if (difference < 8 && difference > 0) {
+    if (difference < 8 && difference > -1) {
       return GestureDetector(
         onTap: () => {
           Navigator.push(
