@@ -6,6 +6,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/review/edit_review.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/review_box.dart';
@@ -139,10 +140,15 @@ class _MyReviewsState extends State<MyReviews> {
                           Text(review.entpName,
                               style: Theme.of(context).textTheme.overline.copyWith(
                                   color: gray300_inactivated, fontSize: 11)),
-                          Text(_shortenName(review.itemName),
-                              style: Theme.of(context).textTheme.subtitle2.copyWith(
-                                  color: gray900, fontSize: 14)),
                           Container(height: 1,),
+                          Container(
+                            width: MediaQuery.of(context).size.width-143,
+                            child: Text(_shortenName(review.itemName),
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                    color: gray900, fontSize: 14)),
+                          ),
+                          Container(height: 2,),
                           Row(
                             children: [
                               RatingBarIndicator(
@@ -194,9 +200,35 @@ class _MyReviewsState extends State<MyReviews> {
                                               ),
                                               MaterialButton(
                                                   onPressed: () {
-                                                    Navigator.pop(context);
-                                                    _showDeleteDialog(review);
+                                                    Navigator.of(context).pop(); //material button 상위의 context
+
+
+                                                    // IYMYDialog(
+                                                    //     context: context,
+                                                    //     bodyString: '찜 목록에서 삭제하시겠어요?',
+                                                    //     leftButtonName: '취소',
+                                                    //     rightButtonName: '확인',
+                                                    //     onPressed: () async {
+                                                    //       Navigator.of(context).pop();
+                                                    //       await ReviewService(documentId: review.documentId).deleteReviewData();
+                                                    //     }).showWarning();
+                                                  // Navigator.pop(context);
                                                   },
+
+                                                  // onPressed: () {
+                                                  //   Navigator.pop(context);
+                                                  //   //_showDeleteDialog(review);
+                                                  //   IYMYDialog(
+                                                  //       context: context,
+                                                  //       bodyString: '정말 삭제하시겠습니까?',
+                                                  //       leftButtonName: '취소',
+                                                  //       rightButtonName: '삭제',
+                                                  //       onPressed: () async {
+                                                  //         // Navigator.of(context).pop();
+                                                  //         await ReviewService(documentId: review.documentId).deleteReviewData();
+                                                  //         Navigator.pop(context);
+                                                  //       }).showWarning();
+                                                  // },
                                                   child: Center(child: Text("삭제하기",
                                                       style: TextStyle(color: Colors.red[600],
                                                           fontSize: 16)))

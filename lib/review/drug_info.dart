@@ -374,9 +374,14 @@ class _ReviewPageState extends State<ReviewPage> {
                       Row(children: <Widget>[
                         RatingBarIndicator(
                           rating: drug.totalRating * 1.0,
-                          itemBuilder: (context, index) => Icon(
-                            // _selectedIcon ??
-                                Icons.star,
+                          itemBuilder: (context, index) =>
+                          //     Icon(
+                          //   // _selectedIcon ??
+                          //       Icons.star,
+                          //   color: yellow,
+                          // ),
+                          ImageIcon(
+                            AssetImage('assets/icons/star.png'),
                             color: yellow,
                           ),
                           itemCount: 5,
@@ -384,7 +389,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           unratedColor: gray75,
                           //unratedColor: Colors.amber.withAlpha(50),
                           direction: Axis.horizontal,
-                          itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                          itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
                         ),
                         Container(width: 5),
                         Text(drug.totalRating.toStringAsFixed(1),

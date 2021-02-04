@@ -206,9 +206,18 @@ class _MyPageState extends State<MyPage> {
                       color: gray75,
                     ),
                   ),
-                  Container(
-                      width: 136,
-                      child: _myMenu('찜', '0', context, MyFavorites())),
+                  StreamBuilder<UserData>(
+                    stream: DatabaseService(uid: user.uid).userData,
+                    builder: (context, snapshot) {
+                      if(snapshot.hasData) {
+                        List favoriteList = snapshot.data.favoriteList;
+                        return Container(
+                            width: 136,
+                            child: _myMenu('찜', favoriteList.length.toString(), context, MyFavorites()));
+                      }
+                      else return Container();
+                    },
+                  ),
                   //_myMenu('1:1 문의', '0', context, MyReviews())
                 ],
               ),
