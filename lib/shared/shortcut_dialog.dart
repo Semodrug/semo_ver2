@@ -73,7 +73,7 @@ class IYMYShortCutDialog extends StatelessWidget {
                         Icon(
                           Icons.navigate_next,
                           color: gray300_inactivated,
-                          size: 24,
+                          size: 22,
                         )
                       ],
                     ),
