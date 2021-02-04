@@ -6,11 +6,6 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-List infoEE;
-List infoNB;
-List infoUD;
-String storage;
-String entp_name;
 
 class WarningInfo extends StatefulWidget {
   final String drugItemSeq;
@@ -76,62 +71,12 @@ Widget _specificInfo(
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           Drug drug = snapshot.data;
-          storage = drug.storageMethod;
-          entp_name = drug.entpName;
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      '효능효과',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    Center(
-                      child: DynamicTextHighlighting(
-                        highlights: warnings,
-                        text: _changeToText(context, drug.eeDocData),
-                        color: warning.withOpacity(0.3),
-                        style: Theme.of(context).textTheme.bodyText2,
-                        caseSensitive: false,
-                      ),
-                    ),
-                    Divider(
-                      height: 30,
-                    ),
-                    Text(
-                      '용법용량',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    Center(
-                      child: DynamicTextHighlighting(
-                        highlights: warnings,
-                        text: _changeToText(context, drug.udDocData),
-                        color: warning.withOpacity(0.3),
-                        style: Theme.of(context).textTheme.bodyText2,
-                        caseSensitive: false,
-                      ),
-                    ),
-                    Divider(
-                      height: 30,
-                    ),
-                    Text(
-                      '저장방법',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    Text(drug.storageMethod),
-                    Divider(
-                      height: 30,
-                    ),
-                    Text(
-                      '회사명',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    Text(drug.entpName),
-                    Divider(
-                      height: 30,
-                    ),
                     Text(
                       '주의사항',
                       style: Theme.of(context).textTheme.subtitle1,
@@ -144,9 +89,6 @@ Widget _specificInfo(
                         color: warning.withOpacity(0.3),
                         caseSensitive: false,
                       ),
-                    ),
-                    Divider(
-                      height: 30,
                     ),
                   ]),
             ),
