@@ -2,7 +2,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/drug.dart';
 
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
@@ -54,7 +53,6 @@ class RankingTile extends StatelessWidget {
         padding: const EdgeInsets.only(top: 8.0),
         child: GestureDetector(
           onTap: () => {
-            Navigator.pop(context),
             Navigator.push(
               context,
               MaterialPageRoute(
