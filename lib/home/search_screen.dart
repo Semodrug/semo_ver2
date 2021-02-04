@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/home/search_result_list_tile.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -217,7 +217,7 @@ class _SearchScreenState extends State<SearchScreen> {
       try {
         assert(userDrug.itemName != null);
 
-        searchList = userDrug.itemName;
+        searchList = _checkLongName(userDrug.itemName);
         assert(searchList != null);
         //drug 이름 누르면 저장 기능
         userSearchList.add({
@@ -234,7 +234,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
         onTap: () async => {
           _query = await userSearchList
-              .where('searchList', isEqualTo: userDrug.itemName)
+              .where('searchList', isEqualTo: _checkLongName(userDrug.itemName))
               .get(),
           if (_query.docs.length == 0)
             {
@@ -380,8 +380,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   return Container();
                 }
               }
-              return ListDrugOfAll(_checkLongName(drugs[index].itemName),
-                  drugs[index].category, drugs[index].itemSeq);
+              return SearchResultTile(
+                drug: drugs[index],);
+              // return ListDrugOfAll(_checkLongName(drugs[index].itemName),
+              //     drugs[index].category, drugs[index].itemSeq);
             },
           );
         }
@@ -396,8 +398,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 return Container();
               }
             }
-            return ListDrugOfAll(_checkLongName(drugs[index].itemName),
-                drugs[index].category, drugs[index].itemSeq);
+            return SearchResultTile(
+                drug: drugs[index],);
+            // return ListDrugOfAll(_checkLongName(drugs[index].itemName),
+            //     drugs[index].category, drugs[index].itemSeq, );
           },
         );
       } else
@@ -704,21 +708,35 @@ class _SearchScreenState extends State<SearchScreen> {
         .doc(user.uid)
         .collection('searchList');
 
+    Future<void> updateRecentSearchList() async {
+      try {
+        assert(_searchText != null);
+
+        //검색어 저장 기능 array로 저장해주기
+        userSearchList.doc(docID).update({'time': DateTime.now()});
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
+
     return Column(
       children: [
         GestureDetector(
           onTap: () async => {
-            if (searchSnapshot.itemSeq != null)
-              {
-                await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ReviewPage(searchSnapshot.itemSeq),
-                    )),
-              }
-            //print('search ==> ${searchSnapshot.recent}'),
-            else
-              {_searchText = searchSnapshot.recent, _filter.text = _searchText}
+            // if (searchSnapshot.itemSeq != null)
+            //   {
+            //     await Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => ReviewPage(searchSnapshot.itemSeq),
+            //         )),
+            //     updateRecentSearchList()
+            //   }
+            // else
+            //   {
+                _searchText = searchSnapshot.recent, _filter.text = _searchText,
+                updateRecentSearchList()
+            //  }
           },
           child: Container(
             decoration: BoxDecoration(
@@ -754,82 +772,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class ListDrugOfAll extends StatelessWidget {
-  final String item_name;
-  final String category;
-  final String item_seq;
-
-  const ListDrugOfAll(
-    this.item_name,
-    this.category,
-    this.item_seq, {
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    String searchList;
-    TheUser user = Provider.of<TheUser>(context);
-
-    CollectionReference userSearchList = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .collection('searchList');
-
-    Future<void> addRecentSearchList() async {
-      try {
-        assert(item_name != null);
-
-        searchList = item_name;
-        assert(searchList != null);
-        //drug 이름 누르면 저장 기능
-        userSearchList.add({
-          'searchList': searchList,
-          'time': DateTime.now(),
-          'itemSeq': item_seq
-        });
-      } catch (e) {
-        print('Error: $e');
-      }
-    }
-
-    QuerySnapshot _query;
-    return GestureDetector(
-      onTap: () async => {
-        _query = await userSearchList
-            .where('searchList', isEqualTo: item_name)
-            .get(),
-        if (_query.docs.length == 0)
-          {
-            addRecentSearchList(),
-          },
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReviewPage(item_seq),
-            )),
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(width: 0.4, color: Colors.grey[400]))),
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        width: double.infinity,
-        height: 40.0,
-        child: Row(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child:
-                  Text(item_name, style: Theme.of(context).textTheme.bodyText2),
-            )
-          ],
-        ),
-      ),
     );
   }
 }
