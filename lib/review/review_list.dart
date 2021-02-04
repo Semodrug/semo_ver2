@@ -96,13 +96,18 @@ class _ReviewListState extends State<ReviewList> {
             direction: Axis.horizontal,
             allowHalfRating: false,
             itemCount: 5,
-            itemSize: 14,
+            itemSize: 16,
             glow: false,
-            itemPadding: EdgeInsets.symmetric(horizontal: 0),
+            itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
             unratedColor: gray75,
-            itemBuilder: (context, _) => Icon(
-              Icons.star,
-              color: Colors.amberAccent,
+            itemBuilder: (context, _) =>
+            //     Icon(
+            //   Icons.star,
+            //   color: yellow,
+            // ),
+            ImageIcon(
+              AssetImage('assets/icons/star.png'),
+              color: yellow,
             ),
           ),
           SizedBox(width: 10),

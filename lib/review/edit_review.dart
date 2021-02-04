@@ -181,8 +181,9 @@ class _EditReviewState extends State<EditReview> {
                                   itemCount: 5,
                                   unratedColor: gray75,
                                   itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star, color: yellow,
+                                  itemBuilder: (context, _) => ImageIcon(
+                                    AssetImage('assets/icons/star.png'),
+                                    color: yellow,
                                   ),
                                 ),
                                 Container(width:5),

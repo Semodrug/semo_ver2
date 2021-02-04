@@ -208,9 +208,10 @@ class _WriteReviewState extends State<WriteReview> {
                                   allowHalfRating: true,
                                   itemCount: 5,
                                   unratedColor: gray75,
-                                  itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star, color: yellow,
+                                  itemPadding: EdgeInsets.symmetric(horizontal: 0.4),
+                                  itemBuilder: (context, _) => ImageIcon(
+                                    AssetImage('assets/icons/star.png'),
+                                    color: yellow,
                                   ),
                                 ),
                                 Container(width:5),
@@ -271,10 +272,16 @@ class _WriteReviewState extends State<WriteReview> {
 //              unratedColor: Colors.grey[500],
               unratedColor: gray75,
               itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
-              itemBuilder: (context, _) => Icon(
+              itemBuilder: (context, _) =>
+                  Icon(
                   Icons.star,
                   color: primary300_main
               ),
+              // ImageIcon(
+              //   AssetImage('assets/icons/rating_star.png'),
+              //   color: primary300_main,
+              // ),
+
               onRatingUpdate: (rating) {
                 starRating = rating;
                 setState(() {

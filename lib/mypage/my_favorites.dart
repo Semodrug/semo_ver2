@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/category_button.dart';
+import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
@@ -75,6 +78,8 @@ class _MyFavoritesState extends State<MyFavorites> {
   // builder: (context, snapshot) {
   // if (snapshot.hasData) {
   Widget _favorite(context, favorite) {
+    TheUser user = Provider.of<TheUser>(context);
+
     return StreamBuilder<Drug>(
       stream: DatabaseService(itemSeq: favorite).drugData,
       builder: (context, snapshot) {
@@ -82,13 +87,12 @@ class _MyFavoritesState extends State<MyFavorites> {
           Drug drug = snapshot.data;
           return GestureDetector(
             onTap: () => {
-              //TODO
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => ReviewPage(review.seqNum),
-              //   ),
-              // ),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReviewPage(drug.itemSeq),
+                ),
+              ),
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(16, 16, 0, 16),
@@ -100,17 +104,20 @@ class _MyFavoritesState extends State<MyFavorites> {
               child: Column(
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 64, width: 88,
-                            //TODO
-                            child: DrugImage(drugItemSeq: favorite),
-                          ),
-                          Container(height: 10,),
-                        ],
+                    //   Column(
+                    //     children: [
+                    //       SizedBox(
+                    //         height: 64, width: 88,
+                    //         child: DrugImage(drugItemSeq: favorite),
+                    //       ),
+                    //       Container(height: 10,),
+                    //     ],
+                    //   ),
+                      SizedBox(
+                        height: 64, width: 88,
+                        child: DrugImage(drugItemSeq: favorite),
                       ),
                       Container(width: 18,),
                       Container(
@@ -125,10 +132,15 @@ class _MyFavoritesState extends State<MyFavorites> {
                                 Text(drug.entpName,
                                     style: Theme.of(context).textTheme.overline.copyWith(
                                         color: gray300_inactivated, fontSize: 11)),
-                                Text(_shortenName(drug.itemName),
-                                    style: Theme.of(context).textTheme.subtitle2.copyWith(
-                                        color: gray900, fontSize: 14)),
                                 Container(height: 1,),
+                                Container(
+                                  width: MediaQuery.of(context).size.width-180,
+                                  child: Text(_shortenName(drug.itemName),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                          color: gray900, fontSize: 14)),
+                                ),
+                                Container(height: 2,),
                                 Row(
                                   children: [
                                     RatingBarIndicator(
@@ -155,60 +167,41 @@ class _MyFavoritesState extends State<MyFavorites> {
                                             color: gray300_inactivated, fontSize: 11)),
                                   ],
                                 ),
+                                Container(height: 4,),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 3),
+                                  child: Container(
+                                      height: 23,
+                                      child: CategoryButton(
+                                          str: drug.category, fromHome: 'home')),
+                                ),
                               ],
                             ),
                             Expanded(child: Container()),
                             IconButton(
                               padding: EdgeInsets.only(right:0),
-                              // constraints: BoxConstraints(),
-                              icon: Icon(Icons.cancel_outlined, color: gray500, size: 19),
+                              icon: ImageIcon(
+                                AssetImage('assets/icons/small_x.png'),
+                                // color: primary400_line,
+                              ),
+
+                              //icon: Icon(Icons.cancel_outlined, color: gray500, size: 19),
                               onPressed: () {
-                                showModalBottomSheet(
+                                IYMYDialog(
                                     context: context,
-                                    builder: (BuildContext context) {
-                                      return SizedBox(
-                                          child: Container(
-                                              child: Wrap(
-                                                children: <Widget>[
-                                                  MaterialButton(
-                                                      onPressed: () {
-                                                        Navigator.push(context, MaterialPageRoute(
-                                                          //TODO
-                                                          //   builder: (context) => EditReview(review, "edit")
-                                                        ));
-                                                      },
-                                                      child: Center(child: Text("수정하기",
-                                                          style: TextStyle(color: Colors.blue[700],
-                                                              fontSize: 16)))
-                                                  ),
-                                                  MaterialButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                        //TODO
-                                                        // _showDeleteDialog(review);
-                                                      },
-                                                      child: Center(child: Text("삭제하기",
-                                                          style: TextStyle(color: Colors.red[600],
-                                                              fontSize: 16)))
-                                                  ),
-                                                  MaterialButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      child: Center(child: Text("취소",
-                                                          style: TextStyle(color: Colors.grey[600],
-                                                              fontSize: 16)))
-                                                  )
-                                                ],
-                                              )
-                                          )
-                                      );
-                                    });
+                                    bodyString: '찜 목록에서 삭제하시겠어요?',
+                                    leftButtonName: '취소',
+                                    rightButtonName: '확인',
+                                    onPressed: () async {
+                                      await DatabaseService(uid: user.uid).deleteFromFavoriteList(drug.itemSeq);
+                                      Navigator.pop(context);
+                                    }).showWarning();
                               },
                             )
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Container(height: 10,),

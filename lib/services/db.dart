@@ -420,4 +420,12 @@ class DatabaseService {
     DocumentSnapshot snap = await userCollection.doc(uid).get();
     return snap.data()["nickname"];
   }
+
+
+  Future<void> deleteFromFavoriteList(String itemSeq) async {
+    return await userCollection.doc(uid).update({
+      'favoriteList': FieldValue.arrayRemove([itemSeq]),
+    });
+  }
+
 }
