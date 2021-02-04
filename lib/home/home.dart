@@ -267,14 +267,11 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Container(
-                        //이미지는 고정값
-                          //padding: EdgeInsets.symmetric(horizontal: 5),
-                          child: Container(
-                              width: 90,
-                              child: AspectRatio(
-                                  aspectRatio: 2.5 / 2,
-                                  child:
-                                  DrugImage(drugItemSeq: data.itemSeq)))),
+                          width: 85,
+                          child: AspectRatio(
+                              aspectRatio: 2.5 / 2,
+                              child:
+                              DrugImage(drugItemSeq: data.itemSeq))),
                       Container(
                           padding: EdgeInsets.only(left: 12, top: 10),
                           child: Column(
@@ -473,93 +470,96 @@ class _HomePageState extends State<HomePage> {
           ),
         },
         child: Container(
-          padding: EdgeInsets.only(bottom: 10.0),
+          //padding: EdgeInsets.only(bottom: 10.0),
           decoration: BoxDecoration(
               border: Border(
                   bottom: BorderSide(width: 0.6, color: Colors.grey[300]))),
           child: Column(
             children: [
-              Container(
-                padding: EdgeInsets.only(left: 16.0),
-                //width: double.infinity,
-                height: 85,
-                child: Material(
-                  color: Colors.white,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: SizedBox(
-                          width: 15,
-                          child: Center(
-                            child: Text(
-                                num.toString(),
-                                style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical:5.0),
+                child: Container(
+                  padding: EdgeInsets.only(left: 16.0,),
+                  //width: double.infinity,
+                  height: 90,
+                  child: Material(
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: SizedBox(
+                            width: 15,
+                            child: Center(
+                              child: Text(
+                                  num.toString(),
+                                  style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Container(
-                        //이미지는 고정값
-                          //padding: EdgeInsets.symmetric(horizontal: 5),
-                          child: Container(
-                              width: 90,
-                              child: AspectRatio(
-                                  aspectRatio: 2.5 / 2,
-                                  child:
-                                  DrugImage(drugItemSeq: data.itemSeq)))),
-                      Container(
-                          padding: EdgeInsets.only(left: 12, top: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                  child: Text(_checkLongName(data),
-                                      maxLines: 2,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle1
-                                          .copyWith(color: gray750_activated))),
-                              //SizedBox(height: 2,),
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 3),
-                                child: Container(
-                                    height: 23,
-                                    child: CategoryButton(
-                                        str: data.category, fromHome: 'home')),
-                              ),
-                              SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                  data.expiration,
-                                  style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
+                        Container(
+                          //이미지는 고정값
+                            //padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: Container(
+                                width: 90,
+                                child: AspectRatio(
+                                    aspectRatio: 2.5 / 2,
+                                    child:
+                                    DrugImage(drugItemSeq: data.itemSeq)))),
+                        Container(
+                            padding: EdgeInsets.only(left: 12, top: 0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    child: Text(_checkLongName(data),
+                                        maxLines: 2,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray750_activated))),
+                                //SizedBox(height: 2,),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 3),
+                                  child: Container(
+                                      height: 23,
+                                      child: CategoryButton(
+                                          str: data.category, fromHome: 'home')),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                    data.expiration,
+                                    style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
 
-                              )
-                            ],
-                          )),
-                      Spacer(),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.more_vert,
-                            size: 20,
-                            color: gray500,
+                                )
+                              ],
+                            )),
+                        Spacer(),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.more_vert,
+                              size: 20,
+                              color: gray500,
+                            ),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return _popUpMenu(context, data, user);
+                                  });
+                            },
                           ),
-                          onPressed: () {
-                            showModalBottomSheet(
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return _popUpMenu(context, data, user);
-                                });
-                          },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
