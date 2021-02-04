@@ -4,6 +4,7 @@ import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/report_review.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/review_box.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'edit_review.dart';
 import 'package:flutter/material.dart';
@@ -95,13 +96,18 @@ class _ReviewListState extends State<ReviewList> {
             direction: Axis.horizontal,
             allowHalfRating: false,
             itemCount: 5,
-            itemSize: 14,
+            itemSize: 16,
             glow: false,
-            itemPadding: EdgeInsets.symmetric(horizontal: 0),
+            itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
             unratedColor: gray75,
-            itemBuilder: (context, _) => Icon(
-              Icons.star,
-              color: Colors.amberAccent,
+            itemBuilder: (context, _) =>
+            //     Icon(
+            //   Icons.star,
+            //   color: yellow,
+            // ),
+            ImageIcon(
+              AssetImage('assets/icons/star.png'),
+              color: yellow,
             ),
           ),
           SizedBox(width: 10),
@@ -190,7 +196,7 @@ class _ReviewListState extends State<ReviewList> {
               Text(
                 type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
                 style: Theme.of(context).textTheme.subtitle2.copyWith(
-                  color: gray900
+                  color: gray900, fontSize: 12
                 ),),
               Container(width:3),
               _face(type == "effect" ? review.effect : type == "sideEffect" ? review.sideEffect : "overall",),
@@ -238,18 +244,21 @@ class _ReviewListState extends State<ReviewList> {
         children: <Widget>[
           //effect
           widget.filter == "sideEffectOnly" ? Container()
-           : _reviewBox(review, "effect"),
+           // : _reviewBox(review, "effect"),
+          : ReviewBox(context: context, review: review, type: "effect"),
           Container(height:4),
 
 
           //side effect
           widget.filter == "effectOnly" ? Container()
-           : _reviewBox(review, "sideEffect"),
+           // : _reviewBox(review, "sideEffect"),
+          : ReviewBox(context: context, review: review, type: "sideEffect"),
           Container(height:4),
 
           //overall
           widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ? Container()
-            : _reviewBox(review, "overall"),
+            // : _reviewBox(review, "overall"),
+          : ReviewBox(context: context, review: review, type: "overall"),
           Container(height:4),
         ],
       ),
@@ -336,7 +345,6 @@ class _ReviewListState extends State<ReviewList> {
               ],
             ),
           ),
-
         );
       },
     );

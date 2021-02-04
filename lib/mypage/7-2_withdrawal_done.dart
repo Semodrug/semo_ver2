@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class WithdrawalDonePage extends StatefulWidget {
@@ -44,7 +45,7 @@ class _WithdrawalDonePageState extends State<WithdrawalDonePage> {
         ),
         backgroundColor: Colors.white,
         body: Padding(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           child: Column(
             children: [
               _information(),
@@ -78,27 +79,13 @@ class _WithdrawalDonePageState extends State<WithdrawalDonePage> {
   }
 
   Widget _submitButton(context) {
-    return Container(
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 400.0,
-        height: 45.0,
-        child: RaisedButton(
-            shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(10.0)),
-            child: Text(
-              '첫 화면으로',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: gray0_white, fontSize: 15),
-            ),
-            color: primary400_line,
-            onPressed: () async {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/start', (Route<dynamic> route) => false);
-            }),
-      ),
-    );
+    return IYMYSubmitButton(
+        context: context,
+        isDone: true,
+        textString: '첫 화면으로',
+        onPressed: () async {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              '/start', (Route<dynamic> route) => false);
+        });
   }
 }

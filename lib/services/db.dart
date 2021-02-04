@@ -127,7 +127,7 @@ class DatabaseService {
         validTerm: doc.data()['VALID_TERM'] ?? '',
 
         // TODO:
-        category: doc.data()['PRDUCT_TYPE'] ?? '',
+        category: doc.data()['PRDUCT_TYPE'] ?? '카테고리 없음',
         // image: doc.data()['image'] ?? '',
         // review: doc.data()['review'],
 
@@ -175,7 +175,7 @@ class DatabaseService {
       validTerm: snapshot.data()['VALID_TERM'] ?? '',
 
       // TODO:
-      category: snapshot.data()['PRDUCT_TYPE'] ?? '',
+      category: snapshot.data()['PRDUCT_TYPE'] ?? '카테고리 없음',
       // image: snapshot.data()['image'] ?? '',
       // review: snapshot.data()['review'],
 
@@ -205,6 +205,7 @@ class DatabaseService {
       birthYear: snapshot.data()['birthYear'] ?? '',
       isPregnant: snapshot.data()['isPregnant'] ?? false,
       keywordList: snapshot.data()['keywordList'] ?? [],
+      selfKeywordList: snapshot.data()['selfKeywordList'] ?? [],
       favoriteList: snapshot.data()['favoriteList'] ?? [],
       searchList: snapshot.data()['searchList'] ?? [],
     );
@@ -241,9 +242,15 @@ class DatabaseService {
     });
   }
 
-  Future<void> updateUserHealth(keywordList) async {
+  Future<void> updateUserKeywordList(keywordList) async {
     return await userCollection.doc(uid).update({
       'keywordList': keywordList ?? [],
+    });
+  }
+
+  Future<void> updateUserSelfKeywordList(selfKeywordList) async {
+    return await userCollection.doc(uid).update({
+      'selfKeywordList': selfKeywordList ?? [],
     });
   }
 
@@ -259,7 +266,7 @@ class DatabaseService {
       return SavedDrug(
         itemName: doc.data()['ITEM_NAME'] ?? '',
         itemSeq: doc.data()['ITEM_SEQ'] ?? '',
-        category: doc.data()['PRDUCT_TYPE'] ?? '',
+        category: doc.data()['PRDUCT_TYPE'] ?? '카테고리 없음',
         expiration: doc.data()['expiration'] ?? '',
         etcOtcCode: doc.data()['etcOtcCode'] ?? '',
       );
@@ -311,7 +318,7 @@ class DatabaseService {
         .set({
       'ITEM_NAME': itemName ?? '',
       'ITEM_SEQ': itemSeq ?? '',
-      'PRDUCT_TYPE': category ?? '',
+      'PRDUCT_TYPE': category ?? '카테고리 없음',
       'etcOtcCode': etcOtcCode ?? '',
       'expiration': expiration ?? '',
       'searchNameList': searchNameList ?? [],
@@ -354,7 +361,8 @@ class DatabaseService {
 
   Future<String> getCategoryOfDrug() async {
     DocumentSnapshot snap = await drugCollection.doc(itemSeq).get();
-    return snap.data()["PRDUCT_TYPE"];
+    String categoryName = snap.data()["PRDUCT_TYPE"] ?? '카테고리 없음';
+    return categoryName;
   }
 
   Future<void> updateTotalRating(num rating, num length) async {
@@ -431,5 +439,11 @@ class DatabaseService {
   Future<String> getNickName() async {
     DocumentSnapshot snap = await userCollection.doc(uid).get();
     return snap.data()["nickname"];
+  }
+
+  Future<void> deleteFromFavoriteList(String itemSeq) async {
+    return await userCollection.doc(uid).update({
+      'favoriteList': FieldValue.arrayRemove([itemSeq]),
+    });
   }
 }

@@ -82,6 +82,9 @@ class _WriteReviewState extends State<WriteReview> {
           "effectText" : effectText,
           "sideEffectText": sideEffectText,
           "overallText": overallText,
+          // "effectText" : myControllerEffect.text,
+          // "sideEffectText": myControllerSideEffect.text,
+          // "overallText": myControllerOverall.text,
           "favoriteSelected": favoriteSelected,
           "noFavorite": noFavorite,
           "registrationDate": DateTime.now(),
@@ -205,9 +208,10 @@ class _WriteReviewState extends State<WriteReview> {
                                   allowHalfRating: true,
                                   itemCount: 5,
                                   unratedColor: gray75,
-                                  itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star, color: yellow,
+                                  itemPadding: EdgeInsets.symmetric(horizontal: 0.4),
+                                  itemBuilder: (context, _) => ImageIcon(
+                                    AssetImage('assets/icons/star.png'),
+                                    color: yellow,
                                   ),
                                 ),
                                 Container(width:5),
@@ -268,10 +272,16 @@ class _WriteReviewState extends State<WriteReview> {
 //              unratedColor: Colors.grey[500],
               unratedColor: gray75,
               itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
-              itemBuilder: (context, _) => Icon(
+              itemBuilder: (context, _) =>
+                  Icon(
                   Icons.star,
                   color: primary300_main
               ),
+              // ImageIcon(
+              //   AssetImage('assets/icons/rating_star.png'),
+              //   color: primary300_main,
+              // ),
+
               onRatingUpdate: (rating) {
                 starRating = rating;
                 setState(() {
@@ -602,16 +612,27 @@ class _WriteReviewState extends State<WriteReview> {
         sideEffectText = myControllerSideEffect.text;
         overallText = myControllerOverall.text;
 
+
         if(overallText.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
         if(sideEffectText.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
         if(sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
-        if(effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
+        if(effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 \n작성해주세요";
         if(effect.isEmpty) _warning = "효과 별점을 등록해주세요";
-        // if(starRating == 0) _warning = "별점을 등록해주세요";
         if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
+        // if(myControllerOverall.text.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
+        // if(myControllerSideEffect.text.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+        // if(sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
+        // if(myControllerEffect.text.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 \n작성해주세요";
+        // if(effect.isEmpty) _warning = "효과 별점을 등록해주세요";
+        // if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
+        // else _warning = "else";
 
-        if(overallText.length < 10 || sideEffectText.length < 10 || sideEffect.length < 10 ||
-            effectText.isEmpty|| effect.isEmpty || starRatingText.isEmpty)
+        if(overallText.length < 10 || sideEffectText.length < 10 ||
+            effectText.length < 10 ||
+            sideEffect.isEmpty || effect.isEmpty || starRatingText.isEmpty)
+        // if(myControllerOverall.text.length < 10 || myControllerSideEffect.text.length < 10 ||
+        //     myControllerEffect.text.length < 10 ||
+        //     sideEffect.isEmpty || effect.isEmpty || starRatingText.isEmpty)
           Fluttertoast.showToast(
               msg: _warning,
               toastLength: Toast.LENGTH_SHORT,

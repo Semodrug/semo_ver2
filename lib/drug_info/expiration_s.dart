@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:provider/provider.dart';
-
+import 'package:semo_ver2/bottom_bar.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/shared/shortcut_dialog.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class ExpirationS extends StatefulWidget {
@@ -86,7 +88,7 @@ class _ExpirationSState extends State<ExpirationS> {
                     _isSelf ? _expirationPick() : Container(),
                     _expectedDuration(),
                     SizedBox(height: 20),
-                    _okButton(context, user, drug, _expectedDateString)
+                    _submitButton(context, user, drug, _expectedDateString)
                   ],
                 ),
               ),
@@ -416,7 +418,7 @@ class _ExpirationSState extends State<ExpirationS> {
     );
   }
 
-  Widget _okButton(context, user, drug, expirationTime) {
+  Widget _submitButton(context, user, drug, expirationTime) {
     String newName = drug.itemName;
     List splitName = [];
 
@@ -439,88 +441,35 @@ class _ExpirationSState extends State<ExpirationS> {
       }
     }
 
-    return Container(
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 400.0,
-        height: 45.0,
-        //padding: const EdgeInsets.symmetric(vertical: 16.0),
-        //alignment: Alignment.center,
-        child: RaisedButton(
-            onPressed: () async {
-              _showSaveWell(context);
-              // Navigator.pop(context);
-              await DatabaseService(uid: user.uid).addSavedList(
-                  drug.itemName,
-                  drug.itemSeq,
-                  drug.category,
-                  drug.etcOtcCode,
-                  expirationTime,
-                  searchListOutput);
-            },
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            child: Text(
-              '추가하기',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: gray0_white, fontSize: 15),
-            ),
-            color: primary400_line),
-      ),
-    );
-  }
-
-  void _showSaveWell(context) {
-    showDialog(
+    return IYMYSubmitButton(
       context: context,
-      builder: (BuildContext context) {
-        Future.delayed(Duration(seconds: 2), () {
-          // Navigator.of(context).pop(true);
-          // Navigator.of(context).pop(true);
-          Navigator.pushReplacementNamed(context, '/bottom_bar');
-        }); // return object of type Dialog
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Icon(
-            Icons.check_circle,
-            color: Colors.green,
-            size: 17,
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: '약 보관함',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: '에 추가되었습니다.'),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  '홈에서 확인하실 수 있습니다',
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                SizedBox(
-                  height: 10,
-                )
-              ],
-            ),
-          ),
-        );
+      isDone: true,
+      textString: '추가하기',
+      onPressed: () async {
+        IYMYShortCutDialog(
+          context: context,
+          dialogIcon: Icon(Icons.check, color: primary300_main),
+          boldBodyString: '나의 약 보관함',
+          normalBodyString: '에 추가되었습니다',
+          topButtonName: '바로가기',
+          bottomButtonName: '확인',
+          onPressedTop: () {
+            Navigator.pop(context);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => BottomBar()));
+          },
+          onPressedBottom: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        ).showWarning();
+        await DatabaseService(uid: user.uid).addSavedList(
+            drug.itemName,
+            drug.itemSeq,
+            drug.category,
+            drug.etcOtcCode,
+            expirationTime,
+            searchListOutput);
       },
     );
   }

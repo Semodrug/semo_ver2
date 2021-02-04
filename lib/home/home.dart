@@ -11,7 +11,9 @@ import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/shared/category_button.dart';
+import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'package:intl/intl.dart';
 
@@ -111,7 +113,10 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 children: <Widget>[
                   Text('나의 약 보관함',
-                      style: Theme.of(context).textTheme.headline4.copyWith(color: gray800)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4
+                          .copyWith(color: gray800)),
                   SizedBox(width: 8),
                   // theme 추가
                   Spacer(),
@@ -119,28 +124,30 @@ class _HomePageState extends State<HomePage> {
                     onTap: () async {
                       // await Navigator.push(context,
                       //     MaterialPageRoute(builder: (context) => AddButton()));
-                        showModalBottomSheet(
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return _popUpAddDrug(context);
-                            });
+                      showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return _popUpAddDrug(context);
+                          });
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      width: 86,
-                      height: 26,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: primary300_main),
-                        color: primary300_main,
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      child: Text(' + 추가하기',
-                      style:  Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(color: Colors.white),)
-                    ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        width: 86,
+                        height: 26,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: primary300_main),
+                          color: primary300_main,
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        child: Text(
+                          ' + 추가하기',
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: Colors.white),
+                        )),
                   ),
                 ],
               ),
@@ -578,7 +585,7 @@ class _HomePageState extends State<HomePage> {
       );
   }
 
-  Widget _popUpAddDrug( context ){
+  Widget _popUpAddDrug(context) {
     return Container(
       //color: yellow,
       decoration: new BoxDecoration(
@@ -586,8 +593,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: new BorderRadius.only(
             topLeft: const Radius.circular(12.0),
             topRight: const Radius.circular(12.0),
-          )
-      ),
+          )),
       child: Wrap(
         children: <Widget>[
           Container(
@@ -595,7 +601,7 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(left:16),
+                  padding: const EdgeInsets.only(left: 16),
                   child: Container(
                     child: Text(
                       '약 추가하기',
@@ -611,11 +617,11 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top:5.0),
+            padding: const EdgeInsets.only(top: 5.0),
             child: MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               child: Row(
                 children: <Widget>[
                   SizedBox(height: 10),
@@ -642,12 +648,12 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top:5.0),
+            padding: const EdgeInsets.only(top: 5.0),
             child: MaterialButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/search');
-                },
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/search');
+              },
               child: Row(
                 children: <Widget>[
                   SizedBox(height: 10),
@@ -674,6 +680,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Divider(thickness: 1, color: gray300_inactivated),
+
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: MaterialButton(
@@ -690,15 +697,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _popUpMenu( context, data, user){
+  Widget _popUpMenu(context, data, user) {
     return Container(
       decoration: new BoxDecoration(
           color: Colors.white,
           borderRadius: new BorderRadius.only(
             topLeft: const Radius.circular(12.0),
             topRight: const Radius.circular(12.0),
-          )
-      ),
+          )),
       child: Wrap(
         children: <Widget>[
           Padding(
@@ -711,36 +717,41 @@ class _HomePageState extends State<HomePage> {
                       MaterialPageRoute(
                           fullscreenDialog: true,
                           builder: (context) {
-                            if (data.etcOtcCode ==
-                                '일반의약품') {
+                            if (data.etcOtcCode == '일반의약품') {
                               return ExpirationG(
-                                drugItemSeq:
-                                data.itemSeq,
+                                drugItemSeq: data.itemSeq,
                               );
                             } else {
                               return ExpirationS(
-                                drugItemSeq:
-                                data.itemSeq,
+                                drugItemSeq: data.itemSeq,
                               );
                             }
                           }));
                 },
                 child: Center(
-                    child: Text("사용기한 수정하기",
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray900),
-                    ))),
+                    child: Text(
+                  "사용기한 수정하기",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray900),
+                ))),
           ),
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: MaterialButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  showWarning(context, '정말 삭제 하시겠습니까?',
-                      '취소', '삭제', 'deleteUserDrug',  user.uid, data.itemSeq );
+
+                  showWarning(context, '정말 삭제하시겠어요?', '취소', '삭제',
+                      'deleteUserDrug', user.uid, data.itemSeq);
                 },
                 child: Center(
-                    child: Text("삭제하기",
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray900)),
+                  child: Text("삭제하기",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: gray900)),
                 )),
           ),
           Divider(thickness: 1, color: gray300_inactivated),
@@ -767,7 +778,7 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           // title:
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -806,30 +817,34 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(width: 16),
                   ElevatedButton(
-                    child: Text(
-                      actionName2,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(color: gray0_white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(100, 40),
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        elevation: 0,
-                        primary: primary300_main,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                            side: BorderSide(color: gray75))),
-                    onPressed: () async {
-                      if (actionCode == 'deleteUserDrug') {
-                          Navigator.of(context).pop();
-                          _showDeletedWell(context);
-                          await DatabaseService(uid: uid)
-                              .deleteSavedDrugData(record);
-                      }
-                    },
-                  )
+                      child: Text(
+                        actionName2,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: gray0_white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(100, 40),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          elevation: 0,
+                          primary: primary300_main,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                              side: BorderSide(color: gray75))),
+                      onPressed: () async {
+                        Navigator.pop(context);
+
+                        showOkWarning(
+                          context,
+                          Icon(Icons.check, color: primary300_main),
+                          '약 보관함에서 삭제되었습니다',
+                          '확인',
+                        );
+
+                        await DatabaseService(uid: uid)
+                            .deleteSavedDrugData(record);
+                      })
                 ],
               )
             ],
@@ -839,50 +854,54 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showDeletedWell(context) {
+  void showOkWarning(BuildContext context, Widget dialogIcon, String bodyString,
+      String buttonName) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.of(context).pop();
-          // Navigator.pushReplacementNamed(context, '/bottom_bar');
-        }); // return object of type Dialog
         return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Icon(
-            Icons.check_circle,
-            color: Colors.green,
-            size: 17,
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: '약 보관함에서 ',
-                          style:Theme.of(context).textTheme.bodyText1.copyWith(color: gray700, fontWeight: FontWeight.bold)),
-                      TextSpan(text: '삭제 되었습니다.',
-                          style:Theme.of(context).textTheme.bodyText1.copyWith(color: gray700),
-
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10),
+              dialogIcon,
+              SizedBox(height: 16),
+              /* BODY */
+              Text(
+                bodyString,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: gray700),
+              ),
+              SizedBox(height: 16),
+              /* BUTTON */
+              ElevatedButton(
+                child: Text(
+                  buttonName,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: primary400_line),
                 ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                )
-              ],
-            ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(260, 40),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    elevation: 0,
+                    primary: gray50,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(color: gray75))),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
           ),
         );
       },
@@ -911,12 +930,18 @@ class _HomePageState extends State<HomePage> {
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 12),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      .copyWith(fontSize: 12),
                   children: <TextSpan>[
-                  TextSpan(text: '사용기한이 '),
+                    TextSpan(text: '사용기한이 '),
                     TextSpan(
-                        text: '$dayRemain일',
-                      style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+                      text: '$dayRemain일',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     TextSpan(text: ' 남았습니다'),
                   ],
@@ -952,12 +977,18 @@ class _HomePageState extends State<HomePage> {
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 12),
-                children: <TextSpan>[
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      .copyWith(fontSize: 12),
+                  children: <TextSpan>[
                     TextSpan(text: '사용기한이 '),
                     TextSpan(
-                        text: '${dayOver[1]}일',
-                      style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+                      text: '${dayOver[1]}일',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     TextSpan(text: ' 지났습니다'),
                   ],
@@ -990,15 +1021,15 @@ class _HomePageState extends State<HomePage> {
                 // theme 추가
                 Spacer(),
                 InkWell(
-                  onTap: ()  {
-                     // Navigator.push(context,
-                     //    MaterialPageRoute(builder: (context) => AddButton()));
-                      showModalBottomSheet(
-                          backgroundColor: Colors.transparent,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return _popUpAddDrug(context);
-                          });
+                  onTap: () {
+                    // Navigator.push(context,
+                    //    MaterialPageRoute(builder: (context) => AddButton()));
+                    showModalBottomSheet(
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return _popUpAddDrug(context);
+                        });
                   },
                   child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -1009,12 +1040,13 @@ class _HomePageState extends State<HomePage> {
                         color: primary300_main,
                         borderRadius: BorderRadius.circular(4.0),
                       ),
-                      child: Text(' + 추가하기',
-                        style:  Theme.of(context)
+                      child: Text(
+                        ' + 추가하기',
+                        style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            .copyWith(color: Colors.white),)
-                  ),
+                            .copyWith(color: Colors.white),
+                      )),
                 ),
               ],
             ),
@@ -1027,18 +1059,23 @@ class _HomePageState extends State<HomePage> {
           indent: 1,
           endIndent:  0
       ),
-
       Container(
         padding: EdgeInsets.symmetric(vertical: 46),
         child: Center(
           child: Column(
             children: [
               Text('나의 약 보관함 목록이 비었어요',
-                  style: Theme.of(context).textTheme.headline5.copyWith(color: gray500)),
-              SizedBox(height: 5,),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: gray500)),
+              SizedBox(
+                height: 5,
+              ),
               Text(
                 '\'+ 추가하기\' 버튼으로 약을 추가해보세요',
-                style:Theme.of(context).textTheme.headline5.copyWith(fontSize: 12, fontWeight: FontWeight.w400, color: gray400),
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                    fontSize: 12, fontWeight: FontWeight.w400, color: gray400),
               )
             ],
           ),
@@ -1066,9 +1103,9 @@ class SearchBar extends StatelessWidget {
                     width: 24,
                     child: Image.asset('assets/icons/search_grey.png'),
                   ),
-                ),                Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Text(
                     "어떤 약을 찾고 계세요?",
                     style: Theme.of(context).textTheme.bodyText2,
@@ -1080,16 +1117,14 @@ class SearchBar extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => SearchScreen(),
-              ));
+                    builder: (BuildContext context) => SearchScreen(),
+                  ));
             },
             textColor: gray300_inactivated,
             color: gray50,
             shape: OutlineInputBorder(
                 borderSide: BorderSide(
-                    style: BorderStyle.solid,
-                    width: 1.0,
-                    color: gray200),
+                    style: BorderStyle.solid, width: 1.0, color: gray200),
                 borderRadius: BorderRadius.circular(8.0)),
           )),
     );
