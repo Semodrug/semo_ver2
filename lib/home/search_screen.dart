@@ -3,13 +3,77 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/home/search_result_list_tile.dart';
-import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/theme/colors.dart';
+
+//(1) 하이라이팅을 위함
+String _searchText = "";
+TextStyle posRes = TextStyle(
+    fontFamily: 'NotoSansKR',
+    fontSize: 12,
+    fontWeight: FontWeight.w800,
+    color: primary500_light_text
+),
+    negRes = TextStyle(
+        fontFamily: 'NotoSansKR',
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: gray900,
+        backgroundColor: Colors.white);
+
+TextSpan searchMatch(String match) {
+  if (_searchText == null || _searchText == "")
+    return TextSpan(text: match, style: negRes);
+  var refinedMatch = match; // .toLowerCase();
+  var refinedSearch = _searchText; // .toLowerCase();
+  if (refinedMatch.contains(refinedSearch)) {
+
+    if (refinedMatch.substring(0, refinedSearch.length) == refinedSearch) {
+      return TextSpan(
+        style: posRes,
+        text: match.substring(0, refinedSearch.length),
+        children: [
+          searchMatch(
+            match.substring(
+              refinedSearch.length,
+            ),
+          ),
+        ],
+      );
+    } else if (refinedMatch.length == refinedSearch.length) {
+      return TextSpan(text: match, style: posRes);
+    } else {
+      return TextSpan(
+        style: negRes,
+        text: match.substring(
+          0,
+          refinedMatch.indexOf(refinedSearch),
+        ),
+        children: [
+          searchMatch(
+            match.substring(
+              refinedMatch.indexOf(refinedSearch),
+            ),
+          ),
+        ],
+      );
+    }
+  } else if (!refinedMatch.contains(refinedSearch)) {
+    return TextSpan(text: match, style: negRes);
+  }
+  return TextSpan(
+    text: match.substring(0, refinedMatch.indexOf(refinedSearch)),
+    style: negRes,
+    children: [
+      searchMatch(match.substring(refinedMatch.indexOf(refinedSearch)))
+    ],
+  );
+}
+//(1) 여기까지
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -19,7 +83,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _filter = TextEditingController();
   FocusNode focusNode = FocusNode();
-  String _searchText = "";
+  //String _searchText = "";
 
   _SearchScreenState() {
     _filter.addListener(() {
@@ -124,7 +188,6 @@ class _SearchScreenState extends State<SearchScreen> {
       newName = data.replaceAll('(', '(');
       if (newName.contains('')) {
         splitName = newName.split('(');
-        // print(splitName);
         newName = splitName[0];
       }
     }
@@ -297,27 +360,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   .setForSearchFromAllStartAtSearch(searchVal, 30),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator()); //Container(child: Text(' SA 약 결과가 없는 거임')));
+                  return Center(child: CircularProgressIndicator());
                 }
-                else  return CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          //유저가 가지고 있는 부분
-                          // _buildListOfAll(
-                          //     context, streamFromAll, streamFromMatchStart, snapshot.data, 'USER'),
-                          _buildListOfAll(
-                              context, streamFromAll,  snapshot.data, 'START'),
-                          _buildListOfAll(context, streamFromAll,
-                              snapshot.data, 'withoutUser'),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-                //유저를 위해 만들어준 스트림
-                /*
                 else {
                   var streamFromMatchStart = snapshot.data;
                   return StreamBuilder<List<SavedDrug>>(
@@ -326,7 +370,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           .setForSearchFromUser(searchVal, 30),
                       builder: (context, snapshot){
                         if (!snapshot.hasData) {
-                          return Center(child: Container(child: Text(' USER 약 결과가 없는 거임')));// CircularProgressIndicator());
+                          return Center(child: CircularProgressIndicator());
                         }
                         else  return CustomScrollView(
                           slivers: [
@@ -334,8 +378,8 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: Column(
                                 children: [
                                   //유저가 가지고 있는 부분
-                                  // _buildListOfAll(
-                                  //     context, streamFromAll, streamFromMatchStart, snapshot.data, 'USER'),
+                                  _buildListOfAll(
+                                      context, streamFromAll, streamFromMatchStart, snapshot.data, 'USER'),
                                   _buildListOfAll(
                                       context, streamFromAll, streamFromMatchStart, snapshot.data, 'START'),
                                   _buildListOfAll(context, streamFromAll, streamFromMatchStart,
@@ -348,7 +392,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       }
                   );
                 }
-                */
+
               });
         }
       },
@@ -356,12 +400,12 @@ class _SearchScreenState extends State<SearchScreen> {
     //}
   }
 
-  Widget _buildListOfAll(BuildContext context, List<Drug> drugs,  List<Drug> SADrugs, // List<SavedDrug> userDrugs,
+  Widget _buildListOfAll(BuildContext context, List<Drug> drugs,  List<Drug> SADrugs, List<SavedDrug> userDrugs,
       String type) {
     if (_searchText.length < 2) {
       return _noResultContainer();
     } else if (_searchText.length != 0) {
-/*
+
       //유저가 가지고 있는 약이 있을 때,
       if (!userDrugs.isEmpty) {
         if (type == 'USER') {
@@ -453,67 +497,40 @@ class _SearchScreenState extends State<SearchScreen> {
           );
         }
       }
-*/
 
       //유저가 가지고 있는 약이 없을 때
-      if (!SADrugs.isEmpty) {
-        if (type == 'START') {
-          return Column(
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
-                itemCount: SADrugs.length,
-                itemBuilder: (context, index) {
-                  // for (int j = 0; j < SADrugs.length; j++) {
-                  //   //유저가 가지고 있는 약과 겹치는 부분은 제외해준다
-                  //   if (drugs[index].itemName == SADrugs[j].itemName) {
-                  //     return Container();
-                  //   }
-                  // }
-                  return SearchResultTile(
-                    drug: SADrugs[index],);
-                },
-              ),
-            ],
-          );
-        }
-        else if (type == 'withoutUser') {
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            itemCount: drugs.length,
-            itemBuilder: (context, index) {
-              //앞에 나온 애들 제외
-              for (int j = 0; j < SADrugs.length; j++) {
-                if (drugs[index].itemName == SADrugs[j].itemName) {
-                  return Container();
-                }
-              }
-              return SearchResultTile(
-                drug: drugs[index],);
-            },
-          );
-        }
+      if (type == 'START') {
+        return Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              itemCount: SADrugs.length,
+              itemBuilder: (context, index) {
+                return SearchResultTile(
+                  drug: SADrugs[index],);
+              },
+            ),
+          ],
+        );
       }
-
-      // else if (type == 'withoutUser') {
-      //   return ListView.builder(
-      //     shrinkWrap: true,
-      //     physics: const ClampingScrollPhysics(),
-      //     itemCount: drugs.length,
-      //     itemBuilder: (context, index) {
-      //       for (int j = 0; j < SADrugs.length; j++) {
-      //         if (drugs[index].itemName == SADrugs[j].itemName) {
-      //           return Container();
-      //         }
-      //       }
-      //       return SearchResultTile(
-      //           drug: drugs[index],);
-      //     },
-      //   );
-      // }
-
+      else if (type == 'withoutUser') {
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: const ClampingScrollPhysics(),
+          itemCount: drugs.length,
+          itemBuilder: (context, index) {
+            //앞에 나온 애들 제외
+            for (int j = 0; j < SADrugs.length; j++) {
+              if (drugs[index].itemName == SADrugs[j].itemName) {
+                return Container();
+              }
+            }
+            return SearchResultTile(
+              drug: drugs[index],);
+          },
+        );
+      }
       else
         return Container();
     }
@@ -833,20 +850,8 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         GestureDetector(
           onTap: () async => {
-            // if (searchSnapshot.itemSeq != null)
-            //   {
-            //     await Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => ReviewPage(searchSnapshot.itemSeq),
-            //         )),
-            //     updateRecentSearchList()
-            //   }
-            // else
-            //   {
             _searchText = searchSnapshot.recent, _filter.text = _searchText,
             updateRecentSearchList()
-            //  }
           },
           child: Container(
             decoration: BoxDecoration(
