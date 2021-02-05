@@ -162,8 +162,8 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.create),
-            backgroundColor: Colors.teal[200],
-            elevation: 0.0,
+            backgroundColor: Color(0xff00C2AE),
+            elevation: 6.0,
             onPressed: () async {
               if (await ReviewService()
                       .findUserWroteReview(widget.drugItemSeq, user.uid) ==

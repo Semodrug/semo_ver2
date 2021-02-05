@@ -181,56 +181,10 @@ class _MyReviewsState extends State<MyReviews> {
                         icon: Icon(Icons.more_horiz, color: gray500, size: 19),
                         onPressed: () {
                             showModalBottomSheet(
+                                backgroundColor: Colors.transparent,
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return SizedBox(
-                                      child: Container(
-                                          child: Wrap(
-                                            children: <Widget>[
-                                              MaterialButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    Navigator.push(context, MaterialPageRoute(
-                                                      //TODO
-                                                        builder: (context) => EditReview(review, "edit")
-                                                    ));
-                                                  },
-                                                  child: Center(child: Text("수정하기",
-                                                      style: TextStyle(color: Colors.blue[700],
-                                                          fontSize: 16)))
-                                              ),
-                                              MaterialButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                    // _showDeleteDialog(review);
-                                                    IYMYDialog(
-                                                              context: context,
-                                                              bodyString: '정말 삭제하시겠습니까?',
-                                                              leftButtonName: '취소',
-                                                              rightButtonName: '삭제',
-                                                              onPressed: () async {
-                                                                await ReviewService(documentId: review.documentId).deleteReviewData();
-                                                                Navigator.pop(context);
-                                                              }).showDeleteDialog(review);
-                                                  },
-
-
-                                                  child: Center(child: Text("삭제하기",
-                                                      style: TextStyle(color: Colors.red[600],
-                                                          fontSize: 16)))
-                                              ),
-                                              MaterialButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Center(child: Text("취소",
-                                                      style: TextStyle(color: Colors.grey[600],
-                                                          fontSize: 16)))
-                                              )
-                                            ],
-                                          )
-                                      )
-                                  );
+                                 return  _popUpMenu(review);
                                 });
                         },
                       )
@@ -264,6 +218,88 @@ class _MyReviewsState extends State<MyReviews> {
     // );
   }
 
+
+  Widget _popUpMenu(review, ) {
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: new BorderRadius.only(
+              topLeft: const Radius.circular(12.0),
+              topRight: const Radius.circular(12.0),
+            )),
+        child: Wrap(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(
+                      //TODO
+                        builder: (context) => EditReview(review, "edit")
+                    ));
+                  },
+                  child: Center(child: Text("수정하기",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: gray900),
+                  ))
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: MaterialButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _showDeleteDialog(review);
+                    // IYMYDialog(
+                    //           context: context,
+                    //           bodyString: '선택한 리뷰를 삭제하시겠어?',
+                    //           leftButtonName: '취소',
+                    //           rightButtonName: '삭제',
+                    //           onPressed: () async {
+                    //             await ReviewService(documentId: review.documentId).deleteReviewData();
+                    //             Navigator.pop(context);
+                    //           }).showDeleteDialog(review);
+                  },
+
+
+                  child: Center(child: Text("삭제하기",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: gray900),
+                  ))
+              ),
+            ),
+            // Divider(thickness: 1, color: gray100),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                      // bottom: BorderSide(color: Theme.of(context).hintColor),
+                      top: BorderSide(color: gray100)),
+                ),
+                child: MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Center(child: Text("닫기",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: gray300_inactivated),
+                    ))
+                ),
+              ),
+            )
+          ],
+        )
+    );
+  }
+
   Future<void> _showDeleteDialog(record) async {
     showDialog(
       context: context,
@@ -279,7 +315,7 @@ class _MyReviewsState extends State<MyReviews> {
             children: [
               SizedBox(height: 16),
               /* BODY */
-              Text("정말 삭제하시겠습니까?",
+              Text("선택한 리뷰를 삭제하시겠어요?",
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
@@ -291,7 +327,7 @@ class _MyReviewsState extends State<MyReviews> {
                   /* LEFT ACTION BUTTON */
                   ElevatedButton(
                     child: Text(
-                      "취",
+                      "취소",
                       style: Theme.of(context)
                           .textTheme
                           .headline5
@@ -313,7 +349,7 @@ class _MyReviewsState extends State<MyReviews> {
                   /* RIGHT ACTION BUTTON */
                   ElevatedButton(
                       child: Text(
-                        "삭제",
+                        "확인",
                         style: Theme.of(context)
                             .textTheme
                             .headline5
@@ -328,9 +364,77 @@ class _MyReviewsState extends State<MyReviews> {
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
-                        Navigator.of(context).pop();
+
                         await ReviewService(documentId: record.documentId).deleteReviewData();
+                        Navigator.of(context).pop();
+
+                        //OK Dialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              contentPadding: EdgeInsets.all(16),
+                              shape:
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 10),
+                                  Icon(Icons.check, color: primary300_main),
+                                  SizedBox(height: 16),
+                                  /* BODY */
+                                  Text(
+                                    "리뷰가 삭제되었습니다",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(color: gray700),
+                                  ),
+                                  SizedBox(height: 16),
+                                  /* BUTTON */
+                                  ElevatedButton(
+                                      child: Text(
+                                        "확인",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(color: primary400_line),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          minimumSize: Size(260, 40),
+                                          padding: EdgeInsets.symmetric(horizontal: 10),
+                                          elevation: 0,
+                                          primary: gray50,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              side: BorderSide(color: gray75))),
+                                      onPressed:(){
+                                        Navigator.pop(context);
+                                      } )
+                                ],
+                              ),
+                            );
+                          },
+                        );
+
+
+
+
+
+                        // IYMYOkDialog(
+                        //   context: context,
+                        //   dialogIcon: Icon(Icons.check, color: primary300_main),
+                        //   bodyString: '리뷰가 삭제되었습니다',
+                        //   buttonName: '확인',
+                        //   onPressed: () {
+                        //     Navigator.pop(context);
+                        //     Navigator.pop(context);
+                        //   },
+                        // ).showWarning();
                       }
+
                   )
                 ],
               )
@@ -339,6 +443,8 @@ class _MyReviewsState extends State<MyReviews> {
         );
       },
     );
+
+
 
 //     return showDialog<void>(
 //       context: context,
