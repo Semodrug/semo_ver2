@@ -598,119 +598,109 @@ class _ReviewPageState extends State<ReviewPage> {
     return _resultList;
   }
 
+  //              child: Image.asset('assets/icons/warning_icon.png')
+
+  //ElevatedButton(
+  //             child: Text('자세히보기',
+  //                 style: Theme.of(context)
+  //                     .textTheme
+  //                     .subtitle1
+  //                     .copyWith(color: primary600_bold_text, fontSize: 12)),
+  //             style: ElevatedButton.styleFrom(
+  //                 minimumSize: Size(68, 24),
+  //                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+  //                 elevation: 0,
+  //                 primary: gray0_white,
+  //                 shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(4.0),
+  //                     side: BorderSide(color: Colors.grey[300]))),
+  //             onPressed: () async {
+  //               Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                       builder: (context) => WarningInfo(
+  //                             drugItemSeq: drugItemSeq,
+  //                             warningList: carefulDiseaseList,
+  //                           )));
+  //             },
+  //           )
+
   /* Top Information - Dialogs */
   Widget _warningMessage(context, carefulDiseaseList, drugItemSeq) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      height: carefulDiseaseList.join(", ").length < 7
-          ? 36
-          : carefulDiseaseList.join(", ").length < 32
-              ? 58
-              : 120,
-      decoration: BoxDecoration(
-        color: primary50,
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      width: 15,
-                      height: 15,
-                      child: Image.asset('assets/icons/warning_icon.png')),
-                  carefulDiseaseList.join(", ").length < 7
-                      ? Container()
-                      : SizedBox(height: 13),
-                ],
-              ),
-              SizedBox(width: 6),
-              Container(
-                width: MediaQuery.of(context).size.width - 165,
-                child: RichText(
-                  text: TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2
-                        .copyWith(color: gray600, fontSize: 12),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: '${carefulDiseaseList.join(", ")}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(color: gray900, fontSize: 12)),
-                      TextSpan(text: '에 관한 주의사항이 있습니다.'),
-                    ],
-                  ),
+    return Stack(children: [
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+        decoration: BoxDecoration(
+          color: primary50,
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(width: 21), // 15 + 6
+            Container(
+              width: MediaQuery.of(context).size.width - 165,
+              child: RichText(
+                text: TextSpan(
+                  // Note: Styles for TextSpans must be explicitly defined.
+                  // Child text spans will inherit styles from parent
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      .copyWith(color: gray600, fontSize: 12),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: '${carefulDiseaseList.join(", ")}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(color: gray900, fontSize: 12)),
+                    TextSpan(text: '에 관한 주의사항이 있습니다.'),
+                  ],
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 10),
-          carefulDiseaseList.join(", ").length < 7
-              ? ElevatedButton(
-                  child: Text('자세히보기',
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(color: primary600_bold_text, fontSize: 12)),
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: Size(68, 24),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                      elevation: 0,
-                      primary: gray0_white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                          side: BorderSide(color: Colors.grey[300]))),
-                  onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WarningInfo(
-                                  drugItemSeq: drugItemSeq,
-                                  warningList: carefulDiseaseList,
-                                )));
-                  },
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      child: Text('자세히보기',
-                          style: Theme.of(context).textTheme.subtitle1.copyWith(
-                              color: primary600_bold_text, fontSize: 12)),
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size(68, 24),
-                          padding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                          elevation: 0,
-                          primary: gray0_white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                              side: BorderSide(color: Colors.grey[300]))),
-                      onPressed: () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => WarningInfo(
-                                      drugItemSeq: drugItemSeq,
-                                      warningList: carefulDiseaseList,
-                                    )));
-                      },
-                    ),
-                  ],
-                )
-        ],
+            ),
+            SizedBox(width: 78), // 68 + 10 + 10
+          ],
+        ),
       ),
-    );
+      Positioned(
+          left: 10,
+          top: 13,
+          width: 17,
+          height: 17,
+          child: Image.asset('assets/icons/warning_icon.png')),
+      Positioned(
+          right: 10,
+          bottom: 9,
+          child: SizedBox(
+            width: 68,
+            height: 24,
+            child: ElevatedButton(
+              child: Text('자세히보기',
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      .copyWith(color: primary600_bold_text, fontSize: 12)),
+              style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  elevation: 0,
+                  primary: gray0_white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.0),
+                      side: BorderSide(color: Colors.grey[300]))),
+              onPressed: () async {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => WarningInfo(
+                              drugItemSeq: drugItemSeq,
+                              warningList: carefulDiseaseList,
+                            )));
+              },
+            ),
+          ))
+    ]);
   }
 
   /* Under Information */
@@ -739,17 +729,13 @@ class _ReviewPageState extends State<ReviewPage> {
                       color: gray750_activated,
                     )),
             _drugDocInfo(context, drug.itemSeq, 'EE'),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 20),
             Text('용법용량',
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
                       color: gray750_activated,
                     )),
             _drugDocInfo(context, drug.itemSeq, 'UD'),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 20),
             Text('저장방법',
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
                       color: gray750_activated,
@@ -758,9 +744,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       color: gray600,
                     )),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 20),
             Row(
               children: [
                 Expanded(child: Container()),
@@ -818,8 +802,9 @@ class _ReviewPageState extends State<ReviewPage> {
             infoUD = drug.udDocData;
             if (type == 'EE') {
               return ListView.builder(
-                  shrinkWrap: true,
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
                   itemCount: drug.eeDocData.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Text(drug.eeDocData[index].toString(),
@@ -829,6 +814,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   });
             } else if (type == 'NB') {
               return ListView.builder(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 16),
                   physics: const ClampingScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: drug.nbDocData.length,
@@ -839,6 +825,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   });
             } else if (type == 'UD') {
               return ListView.builder(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   physics: const ClampingScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: drug.udDocData.length,
@@ -885,8 +872,7 @@ class _ReviewPageState extends State<ReviewPage> {
             SizedBox(
               width: 15,
               height: 15,
-              child: Image.asset(
-                  'assets/icons/warning_icon_primary.png'),
+              child: Image.asset('assets/icons/warning_icon_green.png'),
             ),
             SizedBox(width: 6),
             RichText(
@@ -926,7 +912,7 @@ class _ReviewPageState extends State<ReviewPage> {
             return Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(20,10,20,0),
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -977,8 +963,6 @@ class _ReviewPageState extends State<ReviewPage> {
 
                 checkReviewIsZero() == true ? Container() : _searchBar(),
                 checkReviewIsZero() == true ? Container() : _reviewWarning(),
-
-
 
                 checkReviewIsZero() == true
                     ? Container(
