@@ -122,7 +122,7 @@ class _BottomBarState extends State<BottomBar> {
             BottomNavigationBarItem(
               icon: ImageIcon(
                 AssetImage('assets/icons/bottom_home.png'),
-                color: gray100,
+                // color: gray100,
               ),
               label: '홈',
             ),

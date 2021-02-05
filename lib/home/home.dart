@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/drug_info/expiration_g.dart';
-import 'package:semo_ver2/drug_info/expiration_s.dart';
+import 'package:semo_ver2/drug_info/expiration_g_edit.dart';
+import 'package:semo_ver2/drug_info/expiration_s_edit.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 
 import 'package:semo_ver2/services/db.dart';
@@ -154,12 +154,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        Divider(
-            height: 3,
-          thickness: 0.5,
-            indent: 1,
-            endIndent:  0
-        ),
+        Divider(height: 3, thickness: 0.5, indent: 1, endIndent: 0),
         Expanded(
           child: ListView(
             children:
@@ -254,7 +249,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top:5.0),
+                padding: const EdgeInsets.only(top: 5.0),
                 child: Container(
                   padding: EdgeInsets.only(left: 16.0),
                   //width: double.infinity,
@@ -268,22 +263,23 @@ class _HomePageState extends State<HomePage> {
                           child: SizedBox(
                             width: 15,
                             child: Center(
-                              child: Text(
-                                  num.toString(),
-                                  style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
-                              ),
+                              child: Text(num.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(color: gray600, fontSize: 11)),
                             ),
                           ),
                         ),
                         Container(
-                          //이미지는 고정값
-                          //padding: EdgeInsets.symmetric(horizontal: 5),
+                            //이미지는 고정값
+                            //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Container(
                                 width: 90,
                                 child: AspectRatio(
                                     aspectRatio: 2.5 / 2,
                                     child:
-                                    DrugImage(drugItemSeq: data.itemSeq)))),
+                                        DrugImage(drugItemSeq: data.itemSeq)))),
                         Container(
                             padding: EdgeInsets.only(left: 12, top: 0),
                             child: Column(
@@ -296,24 +292,26 @@ class _HomePageState extends State<HomePage> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
-                                            .copyWith(color: gray750_activated))),
+                                            .copyWith(
+                                                color: gray750_activated))),
                                 //SizedBox(height: 2,),
                                 Padding(
                                   padding:
-                                  const EdgeInsets.symmetric(vertical: 3),
+                                      const EdgeInsets.symmetric(vertical: 3),
                                   child: Container(
                                       height: 23,
                                       child: CategoryButton(
-                                          str: data.category, fromHome: 'home')),
+                                          str: data.category,
+                                          fromHome: 'home')),
                                 ),
                                 SizedBox(
                                   height: 3,
                                 ),
-                                Text(
-                                    data.expiration,
-                                    style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
-
-                                )
+                                Text(data.expiration,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        .copyWith(color: gray600, fontSize: 11))
                               ],
                             )),
                         Spacer(),
@@ -341,7 +339,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(33,0,16,12),
+                padding: const EdgeInsets.fromLTRB(33, 0, 16, 12),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: yellow),
@@ -373,7 +371,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top:5.0),
+                padding: const EdgeInsets.only(top: 5.0),
                 child: Container(
                   padding: EdgeInsets.only(left: 16.0),
                   //width: double.infinity,
@@ -387,10 +385,11 @@ class _HomePageState extends State<HomePage> {
                           child: SizedBox(
                             width: 15,
                             child: Center(
-                              child: Text(
-                                num.toString(),
-                                  style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
-                              ),
+                              child: Text(num.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(color: gray600, fontSize: 11)),
                             ),
                           ),
                         ),
@@ -404,7 +403,7 @@ class _HomePageState extends State<HomePage> {
                                     child:
                                         DrugImage(drugItemSeq: data.itemSeq)))),
                         Container(
-                          padding: EdgeInsets.only(left: 12, top: 0),
+                            padding: EdgeInsets.only(left: 12, top: 0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -415,7 +414,8 @@ class _HomePageState extends State<HomePage> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
-                                            .copyWith(color: gray750_activated))),
+                                            .copyWith(
+                                                color: gray750_activated))),
                                 //SizedBox(height: 2,),
                                 Padding(
                                   padding:
@@ -423,16 +423,17 @@ class _HomePageState extends State<HomePage> {
                                   child: Container(
                                       height: 23,
                                       child: CategoryButton(
-                                          str: data.category, fromHome: 'home')),
+                                          str: data.category,
+                                          fromHome: 'home')),
                                 ),
                                 SizedBox(
                                   height: 3,
                                 ),
-                                Text(
-                                  data.expiration,
-                                    style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
-
-                                )
+                                Text(data.expiration,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        .copyWith(color: gray600, fontSize: 11))
                               ],
                             )),
                         Spacer(),
@@ -446,7 +447,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             onPressed: () {
                               showModalBottomSheet(
-                                backgroundColor: Colors.transparent,
+                                  backgroundColor: Colors.transparent,
                                   context: context,
                                   builder: (BuildContext context) {
                                     return _popUpMenu(context, data, user);
@@ -460,7 +461,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(33,0,16,12),
+                padding: const EdgeInsets.fromLTRB(33, 0, 16, 12),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: warning),
@@ -493,9 +494,11 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical:5.0),
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(
-                  padding: EdgeInsets.only(left: 16.0,),
+                  padding: EdgeInsets.only(
+                    left: 16.0,
+                  ),
                   //width: double.infinity,
                   height: 90,
                   child: Material(
@@ -507,22 +510,23 @@ class _HomePageState extends State<HomePage> {
                           child: SizedBox(
                             width: 15,
                             child: Center(
-                              child: Text(
-                                  num.toString(),
-                                  style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
-                              ),
+                              child: Text(num.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(color: gray600, fontSize: 11)),
                             ),
                           ),
                         ),
                         Container(
-                          //이미지는 고정값
+                            //이미지는 고정값
                             //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Container(
                                 width: 90,
                                 child: AspectRatio(
                                     aspectRatio: 2.5 / 2,
                                     child:
-                                    DrugImage(drugItemSeq: data.itemSeq)))),
+                                        DrugImage(drugItemSeq: data.itemSeq)))),
                         Container(
                             padding: EdgeInsets.only(left: 12, top: 0),
                             child: Column(
@@ -535,24 +539,26 @@ class _HomePageState extends State<HomePage> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
-                                            .copyWith(color: gray750_activated))),
+                                            .copyWith(
+                                                color: gray750_activated))),
                                 //SizedBox(height: 2,),
                                 Padding(
                                   padding:
-                                  const EdgeInsets.symmetric(vertical: 3),
+                                      const EdgeInsets.symmetric(vertical: 3),
                                   child: Container(
                                       height: 23,
                                       child: CategoryButton(
-                                          str: data.category, fromHome: 'home')),
+                                          str: data.category,
+                                          fromHome: 'home')),
                                 ),
                                 SizedBox(
                                   height: 3,
                                 ),
-                                Text(
-                                    data.expiration,
-                                    style:Theme.of(context).textTheme.subtitle1.copyWith(color: gray600, fontSize: 11)
-
-                                )
+                                Text(data.expiration,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        .copyWith(color: gray600, fontSize: 11))
                               ],
                             )),
                         Spacer(),
@@ -679,8 +685,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Divider(thickness: 1, color: gray100),
-
+          Divider(thickness: 1, color: gray300_inactivated),
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: MaterialButton(
@@ -689,8 +694,10 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Center(
                     child: Text("닫기",
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray300_inactivated)
-                    ))),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: gray300_inactivated)))),
           )
         ],
       ),
@@ -718,13 +725,13 @@ class _HomePageState extends State<HomePage> {
                           fullscreenDialog: true,
                           builder: (context) {
                             if (data.etcOtcCode == '일반의약품') {
-                              return ExpirationG(
-                                drugItemSeq: data.itemSeq,
-                              );
+                              return ExpirationGEdit(
+                                  drugItemSeq: data.itemSeq,
+                                  expirationString: data.expiration);
                             } else {
-                              return ExpirationS(
-                                drugItemSeq: data.itemSeq,
-                              );
+                              return ExpirationSEdit(
+                                  drugItemSeq: data.itemSeq,
+                                  expirationString: data.expiration);
                             }
                           }));
                 },
@@ -1064,12 +1071,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      Divider(
-          height: 3,
-          thickness: 0.5,
-          indent: 1,
-          endIndent:  0
-      ),
+      Divider(height: 3, thickness: 0.5, indent: 1, endIndent: 0),
       Container(
         padding: EdgeInsets.symmetric(vertical: 46),
         child: Center(
