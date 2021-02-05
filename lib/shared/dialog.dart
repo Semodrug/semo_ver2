@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class IYMYDialog extends StatelessWidget {
@@ -158,7 +159,18 @@ class IYMYDialog extends StatelessWidget {
                       onPressed: () async {
                         Navigator.of(context).pop();
                         await ReviewService(documentId: record.documentId).deleteReviewData();
+                        IYMYOkDialog(
+                          context: context,
+                          dialogIcon: Icon(Icons.check, color: primary300_main),
+                          bodyString: '리뷰가 삭제되었습니다',
+                          buttonName: '확인',
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        ).showWarning();
                       }
+
                   )
                 ],
               )

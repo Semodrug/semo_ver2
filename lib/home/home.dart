@@ -708,7 +708,7 @@ class _HomePageState extends State<HomePage> {
       child: Wrap(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.only(top: 4.0),
             child: MaterialButton(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -738,7 +738,7 @@ class _HomePageState extends State<HomePage> {
                 ))),
           ),
           Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: EdgeInsets.only(bottom: 4.0),
             child: MaterialButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -754,17 +754,28 @@ class _HomePageState extends State<HomePage> {
                           .copyWith(color: gray900)),
                 )),
           ),
-          Divider(thickness: 1, color: gray300_inactivated),
+          // Divider(thickness: 1, color: gray100),
+
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
-            child: MaterialButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Center(
-                    child: Text("닫기",
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(color: gray300_inactivated)
-                ))),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  // bottom: BorderSide(color: Theme.of(context).hintColor),
+                    top: BorderSide(color: gray100)),
+              ),
+              child: MaterialButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Center(
+                      child: Text("닫기",
+                          style: Theme.of(context).textTheme.bodyText1.copyWith(
+                              color: gray300_inactivated,
+                            fontSize: 16
+                          )
+                  ))),
+            ),
           )
         ],
       ),

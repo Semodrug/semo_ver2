@@ -4,6 +4,8 @@ import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/report_review.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/dialog.dart';
+import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/shared/review_box.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'edit_review.dart';
@@ -148,6 +150,15 @@ class _ReviewListState extends State<ReviewList> {
                                       onPressed: () {
                                         Navigator.pop(context);
                                         _showDeleteDialog(review);
+                                        // IYMYDialog(
+                                        //     context: context,
+                                        //     bodyString: '선택한 리뷰를 삭제하시겠어요?',
+                                        //     leftButtonName: '취소',
+                                        //     rightButtonName: '삭제',
+                                        //     onPressed: () async {
+                                        //       await ReviewService(documentId: review.documentId).deleteReviewData();
+                                        //       Navigator.pop(context);
+                                        //     }).showDeleteDialog(review);
                                       },
                                       child: Center(child: Text("삭제하기",
                                           style: TextStyle(color: Colors.red[600],
@@ -177,6 +188,189 @@ class _ReviewListState extends State<ReviewList> {
         ],
       ),
     );
+  }
+
+  Future<void> _showDeleteDialog(record) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 16),
+              /* BODY */
+              Text("선택한 리뷰를 삭제하시겠어요?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 28),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  /* LEFT ACTION BUTTON */
+                  ElevatedButton(
+                    child: Text(
+                      "취소",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: primary400_line),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(120, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(width: 16),
+                  /* RIGHT ACTION BUTTON */
+                  ElevatedButton(
+                      child: Text(
+                        "확인",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: gray0_white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(120, 40),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          elevation: 0,
+                          primary: primary300_main,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(color: primary400_line))),
+                      onPressed: () async {
+
+                        await ReviewService(documentId: record.documentId).deleteReviewData();
+                        Navigator.of(context).pop();
+
+                        //OK Dialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              contentPadding: EdgeInsets.all(16),
+                              shape:
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(height: 10),
+                                  Icon(Icons.check, color: primary300_main),
+                                  SizedBox(height: 16),
+                                  /* BODY */
+                                  Text(
+                                    "리뷰가 삭제되었습니다",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(color: gray700),
+                                  ),
+                                  SizedBox(height: 16),
+                                  /* BUTTON */
+                                  ElevatedButton(
+                                      child: Text(
+                                        "확인",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(color: primary400_line),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          minimumSize: Size(260, 40),
+                                          padding: EdgeInsets.symmetric(horizontal: 10),
+                                          elevation: 0,
+                                          primary: gray50,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              side: BorderSide(color: gray75))),
+                                      onPressed:(){
+                                        Navigator.pop(context);
+                                      } )
+                                ],
+                              ),
+                            );
+                          },
+                        );
+
+
+
+
+
+                        // IYMYOkDialog(
+                        //   context: context,
+                        //   dialogIcon: Icon(Icons.check, color: primary300_main),
+                        //   bodyString: '리뷰가 삭제되었습니다',
+                        //   buttonName: '확인',
+                        //   onPressed: () {
+                        //     Navigator.pop(context);
+                        //     Navigator.pop(context);
+                        //   },
+                        // ).showWarning();
+                      }
+
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+
+
+
+//     return showDialog<void>(
+//       context: context,
+//       barrierDismissible: false, // user must tap button!
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+// //          title: Center(child: Text('AlertDialog Title')),
+//           content: SingleChildScrollView(
+//             child: ListBody(
+//               children: <Widget>[
+//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+//                 SizedBox(height: 20),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                   children: [
+//                     TextButton(
+//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () {
+//                         Navigator.of(context).pop();
+//                       },
+//                     ),
+//                     TextButton(
+//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () async {
+//                         Navigator.of(context).pop();
+//                         await ReviewService(documentId: record.documentId).deleteReviewData();
+//                       },
+//                     ),
+//                   ],
+//                 )
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
   }
 
   Widget _reviewBox(review, type) {
@@ -312,43 +506,45 @@ class _ReviewListState extends State<ReviewList> {
     );
   }
 
-  Future<void> _showDeleteDialog(record) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-//          title: Center(child: Text('AlertDialog Title')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    TextButton(
-                      child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        await ReviewService(documentId: record.documentId).deleteReviewData();
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+
+
+//   Future<void> _showDeleteDialog(record) async {
+//     return showDialog<void>(
+//       context: context,
+//       barrierDismissible: false, // user must tap button!
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+// //          title: Center(child: Text('AlertDialog Title')),
+//           content: SingleChildScrollView(
+//             child: ListBody(
+//               children: <Widget>[
+//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+//                 SizedBox(height: 20),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                   children: [
+//                     TextButton(
+//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () {
+//                         Navigator.of(context).pop();
+//                       },
+//                     ),
+//                     TextButton(
+//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () async {
+//                         Navigator.of(context).pop();
+//                         await ReviewService(documentId: record.documentId).deleteReviewData();
+//                       },
+//                     ),
+//                   ],
+//                 )
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
 
   Widget buildBottomSheetAnonymous(BuildContext context) {
     return SizedBox(
