@@ -369,7 +369,7 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           decoration: BoxDecoration(
               border: Border(
-                  bottom: BorderSide(width: 0.6, color: Colors.grey[300]))),
+                  bottom: BorderSide(width: 0.6, color: gray300_inactivated))),
           child: Column(
             children: [
               Padding(
@@ -1036,7 +1036,7 @@ class _HomePageState extends State<HomePage> {
                       width: 86,
                       height: 26,
                       decoration: BoxDecoration(
-                        border: Border.all(color: primary300_main),
+                        border: Border.all(color: primary400_line),
                         color: primary300_main,
                         borderRadius: BorderRadius.circular(4.0),
                       ),

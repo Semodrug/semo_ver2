@@ -475,6 +475,7 @@ class _SearchScreenState extends State<SearchScreen> {
         }
         else if (type == 'withoutUser') {
           return ListView.builder(
+            padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
             itemCount: drugs.length,
@@ -681,7 +682,7 @@ class _SearchScreenState extends State<SearchScreen> {
             height: 35,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              color: Colors.grey[200],
+              color: gray75,
             ),
             child: Row(
               children: [
