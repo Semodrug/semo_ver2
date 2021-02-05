@@ -673,13 +673,14 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     }
 
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Container(
-            width: 300,
-            height: 35,
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, top: 4),
+      child: Row(
+        children: [
+          Container(
+            //
+            width: MediaQuery.of(context).size.width - 75,
+            height: 33,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
               color: gray75,
@@ -711,7 +712,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             icon: Icon(
                               Icons.cancel,
                               size: 20,
-                              color: primary300_main,
+                              color: gray300_inactivated,
                             ),
                             onPressed: () {
                               setState(() {
@@ -722,13 +723,12 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                           fillColor: gray50,
                           filled: true,
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.all(5.0),
+                          prefixIcon:  Padding(
+                            padding: const EdgeInsets.only(left:8.0, top: 5, bottom: 4),
                             child: SizedBox(
                               height: 24,
                               width: 24,
-                              child:
-                              Image.asset('assets/icons/search_grey.png'),
+                              child: Image.asset('assets/icons/search_icon.png'),
                             ),
                           ),
                           hintText: '두 글자 이상 입력해주세요',
@@ -754,29 +754,32 @@ class _SearchScreenState extends State<SearchScreen> {
                                   style: BorderStyle.solid,
                                   width: 1.0,
                                   color: gray75),
-                              borderRadius: BorderRadius.circular(8.0))),
+                              borderRadius: BorderRadius.circular(8.0))
+                      ),
                     )),
               ],
             ),
           ),
-        ),
-        Spacer(),
-        SizedBox(
-          width: 50,
-          child: FlatButton(
-              padding: EdgeInsets.only(right: 10),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(
-                '취소',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    .copyWith(color: gray700),
-              )),
-        )
-      ],
+          Padding(
+            padding: const EdgeInsets.only(left:8.0,top: 0, right:10),
+            child: SizedBox(
+              width: 40,
+              child: FlatButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    '취소',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(color: gray700),
+                  )),
+            ),
+          )
+        ],
+      ),
     );
   }
 
