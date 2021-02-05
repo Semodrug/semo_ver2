@@ -10,6 +10,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'review.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -128,7 +129,8 @@ class _WriteReviewState extends State<WriteReview> {
           leading: IconButton(
               icon: Icon(Icons.close, color: primary300_main),
               onPressed: () {
-                Navigator.pop(context);
+                _IYMYCheckDialog();
+                // Navigator.pop(context);
               }),
         ),
 
@@ -155,6 +157,122 @@ class _WriteReviewState extends State<WriteReview> {
     );
   }
 
+
+  Future<void> _IYMYCheckDialog() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 16),
+              /* BODY */
+              Text("저장하지 않고 나가시겠어요?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 28),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  /* LEFT ACTION BUTTON */
+                  ElevatedButton(
+                    child: Text(
+                      "취소",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: primary400_line),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(120, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(width: 16),
+                  /* RIGHT ACTION BUTTON */
+                  ElevatedButton(
+                      child: Text(
+                        "확인",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: gray0_white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(120, 40),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          elevation: 0,
+                          primary: primary300_main,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(color: primary400_line))),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      }
+
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+
+
+
+//     return showDialog<void>(
+//       context: context,
+//       barrierDismissible: false, // user must tap button!
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+// //          title: Center(child: Text('AlertDialog Title')),
+//           content: SingleChildScrollView(
+//             child: ListBody(
+//               children: <Widget>[
+//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+//                 SizedBox(height: 20),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                   children: [
+//                     TextButton(
+//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () {
+//                         Navigator.of(context).pop();
+//                       },
+//                     ),
+//                     TextButton(
+//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () async {
+//                         Navigator.of(context).pop();
+//                         await ReviewService(documentId: record.documentId).deleteReviewData();
+//                       },
+//                     ),
+//                   ],
+//                 )
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
+  }
 
   Widget _pillInfo() {
     //TODO: Bring pill information
@@ -586,68 +704,48 @@ class _WriteReviewState extends State<WriteReview> {
     );
   }
 
-
   Widget _write() {
     TheUser user = Provider.of<TheUser>(context);
     String _warning = '';
     return GestureDetector(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20,20,20,40),
-        child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                color: primary300_main
-            ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
-//            width: 350,
-            height: 50,
-            child: Center(
-                child: Text("등록하기",
-                    style: Theme.of(context).textTheme.headline6.copyWith(
-                        color: gray0_white, fontSize: 16))
-            )
+        child: IYMYSubmitButton(
+          context: context,
+          isDone: true,
+          textString: '다음',
+          onPressed: () async {
+            effectText = myControllerEffect.text;
+            sideEffectText = myControllerSideEffect.text;
+            overallText = myControllerOverall.text;
+
+            if(overallText.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
+            if(sideEffectText.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if(sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
+            if(effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if(effect.isEmpty) _warning = "효과 별점을 등록해주세요";
+            if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
+
+            if(overallText.length < 10 || sideEffectText.length < 10 ||
+                effectText.length < 10 ||
+                sideEffect.isEmpty || effect.isEmpty || starRatingText.isEmpty)
+              Fluttertoast.showToast(
+                  msg: _warning,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+            else {
+              String nickName = await DatabaseService(uid: user.uid).getNickName();
+              _registerReview(nickName);
+              Navigator.pop(context);
+            }
+          },
         ),
       ),
-      onTap: () async {
-        effectText = myControllerEffect.text;
-        sideEffectText = myControllerSideEffect.text;
-        overallText = myControllerOverall.text;
-
-
-        if(overallText.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
-        if(sideEffectText.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
-        if(sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
-        if(effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 \n작성해주세요";
-        if(effect.isEmpty) _warning = "효과 별점을 등록해주세요";
-        if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
-        // if(myControllerOverall.text.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
-        // if(myControllerSideEffect.text.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
-        // if(sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
-        // if(myControllerEffect.text.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 \n작성해주세요";
-        // if(effect.isEmpty) _warning = "효과 별점을 등록해주세요";
-        // if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
-        // else _warning = "else";
-
-        if(overallText.length < 10 || sideEffectText.length < 10 ||
-            effectText.length < 10 ||
-            sideEffect.isEmpty || effect.isEmpty || starRatingText.isEmpty)
-        // if(myControllerOverall.text.length < 10 || myControllerSideEffect.text.length < 10 ||
-        //     myControllerEffect.text.length < 10 ||
-        //     sideEffect.isEmpty || effect.isEmpty || starRatingText.isEmpty)
-          Fluttertoast.showToast(
-              msg: _warning,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.black,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );
-        else {
-          String nickName = await DatabaseService(uid: user.uid).getNickName();
-          _registerReview(nickName);
-          Navigator.pop(context);
-        }
-      },
     );
   }
 }
