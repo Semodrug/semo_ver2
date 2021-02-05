@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/home/search_screen.dart';
 import 'package:semo_ver2/initial/1_policy_agree.dart';
@@ -16,6 +17,8 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/wrapper.dart';
 
 Future<void> main() async {
+  KakaoContext.clientId = "e2a9797b451f30a5ebf450ae7d47b349";
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -69,14 +72,10 @@ ThemeData _buildIYMYTheme() {
 TextTheme _buildTextTheme(TextTheme base) {
   return base
       .copyWith(
-        caption: TextStyle(
-            fontSize: 12,
-            color: Color(0xFFC4C4C4),
-            letterSpacing: 0),
-        overline: TextStyle(
-            fontSize: 10,
-            color: Color(0xFFC4C4C4),
-            letterSpacing: 0),
+        caption:
+            TextStyle(fontSize: 12, color: Color(0xFFC4C4C4), letterSpacing: 0),
+        overline:
+            TextStyle(fontSize: 10, color: Color(0xFFC4C4C4), letterSpacing: 0),
         headline1: TextStyle(
             fontSize: 34,
             fontWeight: FontWeight.bold,

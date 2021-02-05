@@ -6,6 +6,10 @@ import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/shared/constants.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
+import 'package:kakao_flutter_sdk/all.dart';
+import 'package:kakao_flutter_sdk/auth.dart';
+import 'package:kakao_flutter_sdk/user.dart';
+import 'package:kakao_flutter_sdk/common.dart';
 
 bool _isSecret = true;
 bool _isIdFilled = false;
@@ -27,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
           scrollDirection: Axis.vertical,
           children: <Widget>[
             _EmailPasswordForm(),
-            _GoogleSignInSection(),
+            _SocialLoginInSection(),
           ],
         );
       }),
@@ -231,16 +235,33 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   }
 }
 
-class _GoogleSignInSection extends StatefulWidget {
+class _SocialLoginInSection extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _GoogleSignInSectionState();
+  State<StatefulWidget> createState() => _SocialLoginInSectionState();
 }
 
-class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
+class _SocialLoginInSectionState extends State<_SocialLoginInSection> {
   String error = '';
+  bool _isKakaoTalkInstalled;
+
+  void initState() {
+    super.initState();
+    _initKakaoInstalled();
+  }
+
+  _initKakaoInstalled() async {
+    final installed = await isKakaoTalkInstalled();
+    print('kakao Install : ' + installed.toString());
+
+    setState(() {
+      _isKakaoTalkInstalled = installed;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    isKakaoTalkInstalled();
+
     return Column(
       children: <Widget>[
         Container(
@@ -260,7 +281,6 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: EdgeInsets.zero,
       onPressed: () async {
-        // setState(() => loading = true);
         dynamic result = await _auth.signInWithGoogle();
         if (result == null) {
           // setState(() {
@@ -284,22 +304,73 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
       minWidth: 60,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: EdgeInsets.zero,
-      onPressed: () async {
-        // setState(() => loading = true);
-        dynamic result = await _auth.signInWithGoogle();
-        if (result == null) {
-          setState(() {
-            // loading = false;
-            error = 'Could not sign in with those credentials';
-          });
-        }
-      },
       child: SizedBox(
         child: Image.asset('assets/login/kakao.png'),
         width: 42,
         height: 42,
       ),
+      onPressed: () {
+        print('test');
+        _isKakaoTalkInstalled ? _loginWithTalk() : _loginWithKaKao();
+      },
     );
+  }
+
+  _issueAccessToken(String authCode) async {
+    try {
+      var token = await AuthApi.instance.issueAccessToken(authCode);
+      AccessTokenStore.instance.toStore(token);
+      print(token);
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            '로그인이 완료되었습니다.',
+            textAlign: TextAlign.center,
+          ),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.black.withOpacity(0.87)));
+
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/start', (Route<dynamic> route) => false);
+    } catch (e) {
+      print("error on $e");
+    }
+  }
+
+  _loginWithKaKao() async {
+    try {
+      var code = await AuthCodeClient.instance.request();
+      await _issueAccessToken(code);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _loginWithTalk() async {
+    try {
+      var code = await AuthCodeClient.instance.requestWithTalk();
+      await _issueAccessToken(code);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _logoutTalk() async {
+    try {
+      var code = await UserApi.instance.logout();
+      print(code.toString());
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _unlinkTalk() async {
+    try {
+      var code = await UserApi.instance.unlink();
+      print(code.toString());
+    } catch (e) {
+      print(e);
+    }
   }
 
   Widget _appleLoginButton() {
@@ -325,12 +396,3 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     );
   }
 }
-
-/* 로그인 뛰어넘기 */
-// IconButton(
-// icon: Icon(Icons.skip_next),
-// color: Colors.redAccent,
-// onPressed: () {
-// Navigator.pushNamed(context, '/bottom_bar');
-// },
-// ),
