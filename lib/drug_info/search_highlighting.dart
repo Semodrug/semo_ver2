@@ -6,7 +6,7 @@ TextStyle posRes = TextStyle(
         fontFamily: 'NotoSansKR',
         fontSize: 14,
         fontWeight: FontWeight.w800,
-        color: Color(0xFF666666),
+        color: gray600,
         backgroundColor: warning.withOpacity(0.3)),
     negRes = TextStyle(
         fontFamily: 'NotoSansKR',
