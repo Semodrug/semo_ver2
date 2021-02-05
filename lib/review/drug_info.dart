@@ -719,7 +719,6 @@ class _ReviewPageState extends State<ReviewPage> {
     bool _isCareful = _carefulDiseaseList(
             userData.keywordList + userData.selfKeywordList, drug.nbDocData)
         .isNotEmpty;
-
     return Padding(
       key: _key3,
       padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
