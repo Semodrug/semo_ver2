@@ -440,6 +440,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                   ListView.builder(
+                    padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     itemCount: userDrugs.length,
@@ -456,6 +457,7 @@ class _SearchScreenState extends State<SearchScreen> {
           return Column(
             children: [
               ListView.builder(
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 itemCount: SADrugs.length,
@@ -504,6 +506,7 @@ class _SearchScreenState extends State<SearchScreen> {
         return Column(
           children: [
             ListView.builder(
+              padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
               itemCount: SADrugs.length,
@@ -517,6 +520,7 @@ class _SearchScreenState extends State<SearchScreen> {
       }
       else if (type == 'withoutUser') {
         return ListView.builder(
+          padding: EdgeInsets.zero,
           shrinkWrap: true,
           physics: const ClampingScrollPhysics(),
           itemCount: drugs.length,
@@ -602,6 +606,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
               ListView.builder(
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 itemCount: userDrugs.length,

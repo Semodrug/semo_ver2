@@ -307,11 +307,20 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: 3,
                                 ),
-                                Text(data.expiration,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        .copyWith(color: gray600, fontSize: 11))
+                                Row(
+                                  children: [
+                                    Text('${data.expiration}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                    Text(' 까지 ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                  ],
+                                )
                               ],
                             )),
                         Spacer(),
@@ -429,11 +438,20 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: 3,
                                 ),
-                                Text(data.expiration,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        .copyWith(color: gray600, fontSize: 11))
+                                Row(
+                                  children: [
+                                    Text('${data.expiration}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                    Text(' 까지 ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                  ],
+                                )
                               ],
                             )),
                         Spacer(),
@@ -554,11 +572,20 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: 3,
                                 ),
-                                Text(data.expiration,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        .copyWith(color: gray600, fontSize: 11))
+                                Row(
+                                  children: [
+                                    Text('${data.expiration}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                    Text(' 까지 ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                  ],
+                                )
                               ],
                             )),
                         Spacer(),
@@ -1104,24 +1131,25 @@ class SearchBar extends StatelessWidget {
     return Container(
       margin: EdgeInsets.fromLTRB(16, 11, 16, 0),
       child: SizedBox(
-          height: 35,
+          height: 33,
           child: FlatButton(
+            padding: EdgeInsets.zero,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.only(left:8.0, top: 5, bottom: 4),
                   child: SizedBox(
                     height: 24,
                     width: 24,
-                    child: Image.asset('assets/icons/search_grey.png'),
+                    child: Image.asset('assets/icons/search_icon.png'),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 7.0),
                   child: Text(
                     "어떤 약을 찾고 계세요?",
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray300_inactivated),
                   ),
                 ),
               ],
@@ -1137,7 +1165,7 @@ class SearchBar extends StatelessWidget {
             color: gray50,
             shape: OutlineInputBorder(
                 borderSide: BorderSide(
-                    style: BorderStyle.solid, width: 1.0, color: gray200),
+                    style: BorderStyle.solid, width: 1.0, color: gray75),
                 borderRadius: BorderRadius.circular(8.0)),
           )),
     );
