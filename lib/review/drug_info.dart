@@ -624,6 +624,7 @@ class _ReviewPageState extends State<ReviewPage> {
   //                           )));
   //             },
   //           )
+
   /* Top Information - Dialogs */
   Widget _warningMessage(context, carefulDiseaseList, drugItemSeq) {
     return Stack(children: [
