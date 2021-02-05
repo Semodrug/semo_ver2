@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/home/search_screen.dart';
+//import 'package:semo_ver2/home/search_screen_UserDrugTest.dart'; //원상태로 복구
 import 'package:semo_ver2/models/drug.dart';
 
 import 'package:flutter/material.dart';
@@ -17,18 +19,30 @@ class SearchResultTile extends StatelessWidget {
 
   //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
   String _checkLongName(String data) {
-    String newName = data;
+    String newItemName = data;
     List splitName = [];
     if (data.contains('(')) {
-      newName = data.replaceAll('(', '(');
-      if (newName.contains('')) {
-        splitName = newName.split('(');
+      newItemName = data.replaceAll('(', '(');
+      if (newItemName.contains('')) {
+        splitName = newItemName.split('(');
         // print(splitName);
-        newName = splitName[0];
+        newItemName = splitName[0];
       }
     }
-    return newName;
+
+    if (newItemName.length > 22) {
+      newItemName = newItemName.substring(0, 22);
+      newItemName = newItemName + '...';
+    }
+
+    return newItemName;
   }
+
+  //(2) 하이라이팅을 위한
+  Widget _highlightText(BuildContext context, String text) {
+    return RichText(textScaleFactor: 1.08, text: searchMatch(text));
+  }
+  //(2) 여기까지
 
   @override
   Widget build(BuildContext context) {
@@ -112,20 +126,22 @@ class SearchResultTile extends StatelessWidget {
                               children: [
 
                                 Container(
-                                  width: MediaQuery.of(context).size.width - 170,
-                                  child: Text(
-                                      _checkLongName(drugStreamData.itemName),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context).textTheme.headline6.copyWith(color: gray900)
-
-                                  ),
+                                  width: MediaQuery.of(context).size.width - 120,
+                                  child:
+                                  // Text(
+                                  //     _checkLongName(drugStreamData.itemName),
+                                  //     maxLines: 1,
+                                  //     overflow: TextOverflow.ellipsis,
+                                  //     style: Theme.of(context).textTheme.headline6.copyWith(color: gray900)
+                                  //
+                                  // ),
+                                  _highlightText(context, _checkLongName(drugStreamData.itemName))
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(vertical:3.0),
                                   child: SizedBox(
                                     height: 25,
-                                      child: CategoryButton(str: newName)),
+                                      child: CategoryButton(str: newName, forsearch: true,)),
                                 ),
                               ],
                             )),
