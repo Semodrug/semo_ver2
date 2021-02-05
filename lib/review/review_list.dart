@@ -125,57 +125,12 @@ class _ReviewListState extends State<ReviewList> {
            // constraints: BoxConstraints(),
             icon: Icon(Icons.more_horiz, color: gray500, size: 19),
             onPressed: () {
-//            if(auth.currentUser.uid == review.uid) {
               if(user.uid == review.uid) {
                 showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
                     context: context,
                     builder: (BuildContext context) {
-                      return SizedBox(
-                          child: Container(
-                              child: Wrap(
-                                children: <Widget>[
-                                  MaterialButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(context, MaterialPageRoute(
-                                          //TODO
-                                            builder: (context) => EditReview(review, "edit")
-                                        ));
-                                      },
-                                      child: Center(child: Text("수정하기",
-                                          style: TextStyle(color: Colors.blue[700],
-                                              fontSize: 16)))
-                                  ),
-                                  MaterialButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        _showDeleteDialog(review);
-                                        // IYMYDialog(
-                                        //     context: context,
-                                        //     bodyString: '선택한 리뷰를 삭제하시겠어요?',
-                                        //     leftButtonName: '취소',
-                                        //     rightButtonName: '삭제',
-                                        //     onPressed: () async {
-                                        //       await ReviewService(documentId: review.documentId).deleteReviewData();
-                                        //       Navigator.pop(context);
-                                        //     }).showDeleteDialog(review);
-                                      },
-                                      child: Center(child: Text("삭제하기",
-                                          style: TextStyle(color: Colors.red[600],
-                                              fontSize: 16)))
-                                  ),
-                                  MaterialButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Center(child: Text("취소",
-                                          style: TextStyle(color: Colors.grey[600],
-                                              fontSize: 16)))
-                                  )
-                                ],
-                              )
-                          )
-                      );
+                      return _popUpMenu(review);
                     });
               }
               else if(auth.currentUser.uid != review.uid) {
@@ -187,6 +142,87 @@ class _ReviewListState extends State<ReviewList> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _popUpMenu(review, ) {
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: new BorderRadius.only(
+              topLeft: const Radius.circular(12.0),
+              topRight: const Radius.circular(12.0),
+            )),
+        child: Wrap(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(
+                      //TODO
+                        builder: (context) => EditReview(review, "edit")
+                    ));
+                  },
+                  child: Center(child: Text("수정하기",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: gray900),
+                  ))
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: MaterialButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _showDeleteDialog(review);
+                    // IYMYDialog(
+                    //           context: context,
+                    //           bodyString: '선택한 리뷰를 삭제하시겠어?',
+                    //           leftButtonName: '취소',
+                    //           rightButtonName: '삭제',
+                    //           onPressed: () async {
+                    //             await ReviewService(documentId: review.documentId).deleteReviewData();
+                    //             Navigator.pop(context);
+                    //           }).showDeleteDialog(review);
+                  },
+
+
+                  child: Center(child: Text("삭제하기",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: gray900),
+                  ))
+              ),
+            ),
+            // Divider(thickness: 1, color: gray100),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    // bottom: BorderSide(color: Theme.of(context).hintColor),
+                      top: BorderSide(color: gray100)),
+                ),
+                child: MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Center(child: Text("닫기",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: gray300_inactivated),
+                    ))
+                ),
+              ),
+            )
+          ],
+        )
     );
   }
 
