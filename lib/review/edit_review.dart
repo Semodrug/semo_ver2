@@ -10,6 +10,7 @@ import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class EditReview extends StatefulWidget {
@@ -91,6 +92,7 @@ class _EditReviewState extends State<EditReview> {
                   leading: IconButton(
                       icon: Icon(Icons.close, color: primary300_main),
                       onPressed: () {
+
                         Navigator.pop(context);
                       }),
                 ),
@@ -599,59 +601,45 @@ class _EditReviewState extends State<EditReview> {
 
 
 
-
-
     return GestureDetector(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20,20,20,40),
-        child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                color: Colors.teal[300]
-            ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
-//          width: 50,
-            height: 50,
-            child: Center(
-                child: Text("수정하기", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16))
-            )
+        child: IYMYSubmitButton(
+          context: context,
+          isDone: true,
+          textString: '다음',
+          onPressed: () async {
+            if(myControllerOverall.text.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
+            if(myControllerSideEffect.text.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if(myControllerEffect.text.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
+
+            if(myControllerOverall.text.length < 10 || myControllerSideEffect.text.length < 10 ||
+                myControllerEffect.text.length < 10 )
+              Fluttertoast.showToast(
+                  msg: _warning,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+            else {
+              await ReviewService(documentId: widget.review.documentId).updateReviewData(
+                  effect /*?? review.effect*/,
+                  sideEffect /*?? review.sideEffect*/,
+                  myControllerEffect.text /*?? review.effectText*/,
+                  myControllerSideEffect.text /*?? review.sideEffectText*/,
+                  myControllerOverall.text /*?? review.overallText*/,
+                  starRating == 0 ? review.starRating : starRating/*?? value.starRating*/
+              );
+              Navigator.pop(context);
+              editSwitch = true;
+            }
+          },
         ),
       ),
-      onTap: () async {
-        // editSwitch = true;
-        // effectText = myControllerEffect.text;
-        // sideEffectText = myControllerSideEffect.text;
-        // overallText = myControllerOverall.text;
-        //
-        if(myControllerOverall.text.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
-        if(myControllerSideEffect.text.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
-        if(myControllerEffect.text.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
 
-        if(myControllerOverall.text.length < 10 || myControllerSideEffect.text.length < 10 ||
-            myControllerEffect.text.length < 10 )
-          Fluttertoast.showToast(
-              msg: _warning,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.black,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );
-        else {
-          await ReviewService(documentId: widget.review.documentId).updateReviewData(
-              effect /*?? review.effect*/,
-              sideEffect /*?? review.sideEffect*/,
-              myControllerEffect.text /*?? review.effectText*/,
-              myControllerSideEffect.text /*?? review.sideEffectText*/,
-              myControllerOverall.text /*?? review.overallText*/,
-              starRating == 0 ? review.starRating : starRating/*?? value.starRating*/
-          );
-          Navigator.pop(context);
-          editSwitch = true;
-        }
-
-
-      },
     );
   }
 

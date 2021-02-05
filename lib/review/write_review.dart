@@ -10,6 +10,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'review.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -586,68 +587,48 @@ class _WriteReviewState extends State<WriteReview> {
     );
   }
 
-
   Widget _write() {
     TheUser user = Provider.of<TheUser>(context);
     String _warning = '';
     return GestureDetector(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20,20,20,40),
-        child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                color: primary300_main
-            ), //padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
-//            width: 350,
-            height: 50,
-            child: Center(
-                child: Text("등록하기",
-                    style: Theme.of(context).textTheme.headline6.copyWith(
-                        color: gray0_white, fontSize: 16))
-            )
+        child: IYMYSubmitButton(
+          context: context,
+          isDone: true,
+          textString: '다음',
+          onPressed: () async {
+            effectText = myControllerEffect.text;
+            sideEffectText = myControllerSideEffect.text;
+            overallText = myControllerOverall.text;
+
+            if(overallText.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
+            if(sideEffectText.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if(sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
+            if(effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if(effect.isEmpty) _warning = "효과 별점을 등록해주세요";
+            if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
+
+            if(overallText.length < 10 || sideEffectText.length < 10 ||
+                effectText.length < 10 ||
+                sideEffect.isEmpty || effect.isEmpty || starRatingText.isEmpty)
+              Fluttertoast.showToast(
+                  msg: _warning,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+            else {
+              String nickName = await DatabaseService(uid: user.uid).getNickName();
+              _registerReview(nickName);
+              Navigator.pop(context);
+            }
+          },
         ),
       ),
-      onTap: () async {
-        effectText = myControllerEffect.text;
-        sideEffectText = myControllerSideEffect.text;
-        overallText = myControllerOverall.text;
-
-
-        if(overallText.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
-        if(sideEffectText.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
-        if(sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
-        if(effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 \n작성해주세요";
-        if(effect.isEmpty) _warning = "효과 별점을 등록해주세요";
-        if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
-        // if(myControllerOverall.text.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
-        // if(myControllerSideEffect.text.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
-        // if(sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
-        // if(myControllerEffect.text.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 \n작성해주세요";
-        // if(effect.isEmpty) _warning = "효과 별점을 등록해주세요";
-        // if(starRatingText.isEmpty) _warning = "별점을 등록해주세요";
-        // else _warning = "else";
-
-        if(overallText.length < 10 || sideEffectText.length < 10 ||
-            effectText.length < 10 ||
-            sideEffect.isEmpty || effect.isEmpty || starRatingText.isEmpty)
-        // if(myControllerOverall.text.length < 10 || myControllerSideEffect.text.length < 10 ||
-        //     myControllerEffect.text.length < 10 ||
-        //     sideEffect.isEmpty || effect.isEmpty || starRatingText.isEmpty)
-          Fluttertoast.showToast(
-              msg: _warning,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.black,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );
-        else {
-          String nickName = await DatabaseService(uid: user.uid).getNickName();
-          _registerReview(nickName);
-          Navigator.pop(context);
-        }
-      },
     );
   }
 }

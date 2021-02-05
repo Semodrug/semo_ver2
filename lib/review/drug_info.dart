@@ -886,7 +886,7 @@ class _ReviewPageState extends State<ReviewPage> {
               width: 15,
               height: 15,
               child: Image.asset(
-                  'assets/icons/warning_icon_green.png'),
+                  'assets/icons/warning_icon_primary.png'),
             ),
             SizedBox(width: 6),
             RichText(
