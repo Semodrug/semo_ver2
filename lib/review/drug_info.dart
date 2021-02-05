@@ -34,7 +34,6 @@ String entpName;
 
 class ReviewPage extends StatefulWidget {
   final String drugItemSeq;
-
   String fromRankingTile = '';
 
   ReviewPage(this.drugItemSeq, {this.fromRankingTile});
