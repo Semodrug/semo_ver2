@@ -870,6 +870,51 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
+  Widget _reviewWarning() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 4, 20, 5),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        height: 36,
+        decoration: BoxDecoration(
+          // color: gray50,
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 15,
+              height: 15,
+              child: Image.asset(
+                  'assets/icons/warning_icon_green.png'),
+            ),
+            SizedBox(width: 6),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                // Note: Styles for TextSpans must be explicitly defined.
+                // Child text spans will inherit styles from parent
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    .copyWith(color: gray600, fontSize: 12),
+                children: <TextSpan>[
+                  TextSpan(
+                      text: "효과 및 부작용은 개인에 따라 다를 수 있습니다.",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(color: gray600, fontSize: 12)),
+                  // TextSpan(text: '은 개인에 따라 다를 수 있습니다.'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   /* Review */
   Widget _drugReviews() {
     return StreamBuilder<Drug>(
@@ -881,7 +926,7 @@ class _ReviewPageState extends State<ReviewPage> {
             return Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  padding: EdgeInsets.fromLTRB(20,10,20,0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -929,50 +974,11 @@ class _ReviewPageState extends State<ReviewPage> {
                 ),
                 // _searchBar(),
                 // ReviewList(_searchText, "all"),
-                checkReviewIsZero() == true ? Container() : _searchBar(),
 
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: gray50,
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 15,
-                          height: 15,
-                          child: Image.asset(
-                              'assets/icons/warning_icon_green.png'),
-                        ),
-                        SizedBox(width: 6),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            // Note: Styles for TextSpans must be explicitly defined.
-                            // Child text spans will inherit styles from parent
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle2
-                                .copyWith(color: gray600, fontSize: 12),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: "효과 및 부작용은 개인에 따라 다를 수 있습니다.",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle2
-                                      .copyWith(color: gray600, fontSize: 12)),
-                              // TextSpan(text: '은 개인에 따라 다를 수 있습니다.'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                checkReviewIsZero() == true ? Container() : _searchBar(),
+                checkReviewIsZero() == true ? Container() : _reviewWarning(),
+
+
 
                 checkReviewIsZero() == true
                     ? Container(
