@@ -77,19 +77,18 @@ class _ExpirationGState extends State<ExpirationG> {
             if (_isGeneral) {
               return Column(
                 children: [
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   _topInfo(context, drug),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: _datePickG(),
                   ),
+                  SizedBox(height: 13),
+                  _tip(),
+                  SizedBox(height: 58),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -97,7 +96,7 @@ class _ExpirationGState extends State<ExpirationG> {
                           child: Text(
                             '처방받은 약인가요?',
                             style: TextStyle(
-                              color: gray500,
+                              color: primary500_light_text,
                               fontSize: 12.0,
                               fontWeight: FontWeight.w400,
                               decoration: TextDecoration.underline,
@@ -112,11 +111,9 @@ class _ExpirationGState extends State<ExpirationG> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 10),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
                     child: _submitButton(
                         context, user, drug, _expirationDateString),
                   )
@@ -545,6 +542,81 @@ class _ExpirationGState extends State<ExpirationG> {
               )),
           SizedBox(height: 20),
         ],
+      ),
+    );
+  }
+
+  Widget _tip() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Tip",
+              style: Theme.of(context).textTheme.caption.copyWith(
+                  fontWeight: FontWeight.bold, color: primary500_light_text),
+            ),
+            Text("약에 표시된 사용기한은 보통 1~2년 이상이지만,",
+                style: Theme.of(context).textTheme.caption),
+            RichText(
+              text: TextSpan(
+                style: Theme.of(context).textTheme.caption,
+                children: <TextSpan>[
+                  TextSpan(
+                    text: '개봉 후',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: '에는 기간이 단축됩니다.',
+                  ),
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                style: Theme.of(context).textTheme.caption,
+                children: <TextSpan>[
+                  TextSpan(
+                    text: '- 알약, 연고류: 6',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: '개월 / ',
+                  ),
+                  TextSpan(
+                    text: '크림류: 3',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: '개월 / ',
+                  ),
+                  TextSpan(
+                    text: '물약, 시럽약: 1',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: '개월',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
