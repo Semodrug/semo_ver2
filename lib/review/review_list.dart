@@ -135,8 +135,9 @@ class _ReviewListState extends State<ReviewList> {
               }
               else if(auth.currentUser.uid != review.uid) {
                 showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
                     context: context,
-                    builder: buildBottomSheetAnonymous);
+                    builder: _popUpMenuAnonymous);
               }
             },
           )
@@ -581,6 +582,62 @@ class _ReviewListState extends State<ReviewList> {
 //       },
 //     );
 //   }
+
+
+
+  Widget _popUpMenuAnonymous(review, ) {
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: new BorderRadius.only(
+              topLeft: const Radius.circular(12.0),
+              topRight: const Radius.circular(12.0),
+            )),
+        child: Wrap(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(
+                      //TODO
+                        builder: (context) => ReportReview()
+                    ));
+                  },
+                  child: Center(child: Text("신고하기",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: gray900),
+                  ))
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    // bottom: BorderSide(color: Theme.of(context).hintColor),
+                      top: BorderSide(color: gray100)),
+                ),
+                child: MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Center(child: Text("취소",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: gray300_inactivated),
+                    ))
+                ),
+              ),
+            )
+          ],
+        )
+    );
+  }
 
   Widget buildBottomSheetAnonymous(BuildContext context) {
     return SizedBox(

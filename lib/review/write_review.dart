@@ -10,6 +10,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/shared/shortcut_dialog.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'review.dart';
@@ -742,10 +743,115 @@ class _WriteReviewState extends State<WriteReview> {
               String nickName = await DatabaseService(uid: user.uid).getNickName();
               _registerReview(nickName);
               Navigator.pop(context);
+              IYMYShortCutDialog();
+              // IYMYShortCutDialog(
+              //   context: context,
+              //   dialogIcon: Icon(Icons.check, color: primary300_main),
+              //   boldBodyString: '',
+              //   normalBodyString: '리뷰 작성이 완료되었습니다',
+              //   topButtonName: '내가 작성한 리뷰 보러가기',
+              //   bottomButtonName: '확인',
+              //   onPressedTop: () {
+              //     Navigator.pop(context);
+              //     // Navigator.push(
+              //     //     context, MaterialPageRoute(builder: (context) => BottomBar() ));
+              //   },
+              //   onPressedBottom: () {
+              //     Navigator.pop(context);
+              //   },
+              // ).showWarning();
             }
           },
         ),
       ),
     );
   }
+
+  Widget IYMYShortCutDialog(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10),
+              Icon(Icons.star, color: yellow),
+              SizedBox(height: 13),
+              /* BODY */
+              RichText(
+                text: TextSpan(
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700),
+                  children: <TextSpan>[
+                    // TextSpan(
+                    //     text: boldBodyString,
+                    //     style: Theme.of(context).textTheme.headline4.copyWith(
+                    //         color: gray700, fontWeight: FontWeight.w700)),
+                    TextSpan(text: "리뷰 작성이 완료되었습니다"),
+                  ],
+                ),
+              ),
+              SizedBox(height: 3),
+              InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "내가 작성한 리뷰 보러가기",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: gray300_inactivated),
+                        ),
+                        Icon(
+                          Icons.navigate_next,
+                          color: gray300_inactivated,
+                          size: 22,
+                        )
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+
+                  }),
+              SizedBox(width: 16),
+              /* RIGHT ACTION BUTTON */
+              ElevatedButton(
+                child: Text(
+                  "확인",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: primary400_line),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(260, 40),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    elevation: 0,
+                    primary: gray50,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(color: gray75))),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
 }
