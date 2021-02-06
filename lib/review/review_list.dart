@@ -252,11 +252,6 @@ class _ReviewListState extends State<ReviewList> {
               child: MaterialButton(
                   onPressed: () {
                     _IYMYCancleConfirmReportDialog();
-                    // Navigator.pop(context);
-                    // Navigator.push(context, MaterialPageRoute(
-                    //   //TODO
-                    //     builder: (context) => EditReview(review, "edit")
-                    // ));
                   },
                   child: Row(
                     children: [
@@ -274,11 +269,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(top: 4.0),
               child: MaterialButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    // Navigator.push(context, MaterialPageRoute(
-                    //   //TODO
-                    //     builder: (context) => EditReview(review, "edit")
-                    // ));
+                    _IYMYCancleConfirmReportDialog();
                   },
                   child: Row(
                     children: [
@@ -296,11 +287,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(top: 4.0),
               child: MaterialButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    // Navigator.push(context, MaterialPageRoute(
-                    //   //TODO
-                    //     builder: (context) => EditReview(review, "edit")
-                    // ));
+                    _IYMYCancleConfirmReportDialog();
                   },
                   child: Row(
                     children: [
@@ -319,10 +306,7 @@ class _ReviewListState extends State<ReviewList> {
               child: MaterialButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    // Navigator.push(context, MaterialPageRoute(
-                    //   //TODO
-                    //     builder: (context) => EditReview(review, "edit")
-                    // ));
+                    _IYMYCancleConfirmReportDialog();
                   },
                   child: Row(
                     children: [
@@ -340,11 +324,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.fromLTRB(0,4,0,8),
               child: MaterialButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    // Navigator.push(context, MaterialPageRoute(
-                    //   //TODO
-                    //     builder: (context) => EditReview(review, "edit")
-                    // ));
+                    _IYMYCancleConfirmReportDialog();
                   },
                   child: Row(
                     children: [
@@ -637,57 +617,10 @@ class _ReviewListState extends State<ReviewList> {
 
                         //await ReviewService(documentId: record.documentId).deleteReviewData();
                         Navigator.of(context).pop();
+                        Navigator.of(context).pop();
 
-                        //OK Dialog
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              contentPadding: EdgeInsets.all(16),
-                              shape:
-                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(height: 10),
-                                  Icon(Icons.check, color: primary300_main),
-                                  SizedBox(height: 16),
-                                  /* BODY */
-                                  Text(
-                                    "리뷰가 삭제되었습니다",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(color: gray700),
-                                  ),
-                                  SizedBox(height: 16),
-                                  /* BUTTON */
-                                  ElevatedButton(
-                                      child: Text(
-                                        "확인",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5
-                                            .copyWith(color: primary400_line),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                          minimumSize: Size(260, 40),
-                                          padding: EdgeInsets.symmetric(horizontal: 10),
-                                          elevation: 0,
-                                          primary: gray50,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8.0),
-                                              side: BorderSide(color: gray75))),
-                                      onPressed:(){
-                                        Navigator.pop(context);
-                                      } )
-                                ],
-                              ),
-                            );
-                          },
-                        );
+                        //review has reported
+                        IYMYGotoSeeOrCheckDialog();
 
 
 
@@ -751,6 +684,85 @@ class _ReviewListState extends State<ReviewList> {
 //         );
 //       },
 //     );
+  }
+
+  Widget IYMYGotoSeeOrCheckDialog(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10),
+              Icon(Icons.check, color: primary300_main),
+              SizedBox(height: 13),
+              /* BODY */
+              RichText(
+                text: TextSpan(
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: gray700),
+                  children: <TextSpan>[
+                    // TextSpan(
+                    //     text: boldBodyString,
+                    //     style: Theme.of(context).textTheme.headline4.copyWith(
+                    //         color: gray700, fontWeight: FontWeight.w700)),
+                    TextSpan(text: "이약모약 운영진에게\n신고가 접수되었어요"),
+                  ],
+                ),
+              ),
+              SizedBox(height: 3),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 10, 10, 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "주말, 공휴일에는 확인이 지연될 수 있습니다",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: gray300_inactivated),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 16),
+              /* RIGHT ACTION BUTTON */
+              ElevatedButton(
+                child: Text(
+                  "확인",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: primary400_line),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(260, 40),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    elevation: 0,
+                    primary: gray50,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(color: gray75))),
+                onPressed: () {
+                  Navigator.pop(context);
+                  //#########신고 접수!!!!!!!!!!!!!!!!!!!!###############
+
+                },
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _reviewBox(review, type) {
