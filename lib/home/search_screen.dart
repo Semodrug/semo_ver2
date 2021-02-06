@@ -11,6 +11,8 @@ import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
+import 'indicator.dart';
+
 //(1) 하이라이팅을 위함
 String _searchText = "";
 TextStyle posRes = TextStyle(
@@ -799,28 +801,38 @@ class _SearchScreenState extends State<SearchScreen> {
         length: 2,
         child: Column(
           children: [
-            TabBar(
-              labelStyle: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
-              unselectedLabelStyle: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .copyWith(fontWeight: FontWeight.w100),
-              tabs: [
-                Tab(
-                    child: Text(
-                      '전체 검색',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    )),
-                Tab(
-                    child: Text(
-                      '나의 약 검색',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    )),
-              ],
-              indicatorColor: primary300_main,
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0,top: 10.0,right: 16.0, bottom: 10),
+              child: Container(
+                height: 29,
+                decoration: BoxDecoration(
+                    color: gray75,
+                    borderRadius: BorderRadius.all(Radius.circular(4))
+                ),
+                //color: gray75,
+                child: TabBar(
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      .copyWith(color: gray750_activated, fontWeight: FontWeight.bold),
+                  unselectedLabelStyle: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(fontWeight: FontWeight.w100, color: gray500),
+                  tabs: [
+                    Tab(
+                        child: Text(
+                          '전체 검색',
+                            style:  TextStyle(color: Colors.black, fontFamily: 'NotoSansKR')                        )),
+                    Tab(
+                        child: Text(
+                          '나의 약 검색',
+                            style:  TextStyle(color: Colors.black, fontFamily: 'NotoSansKR')                        )),
+                  ],
+
+                  indicator: CustomTabIndicator()
+                ),
+              ),
             ),
             Container(
               padding: EdgeInsets.all(0.0),
