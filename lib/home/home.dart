@@ -745,7 +745,8 @@ class _HomePageState extends State<HomePage> {
                 ))),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 4.0),
+            // padding: EdgeInsets.only(bottom: 4.0),
+            padding: const EdgeInsets.fromLTRB(0,4,0,8),
             child: MaterialButton(
                 onPressed: () {
                   Navigator.pop(context);

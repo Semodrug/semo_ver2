@@ -743,7 +743,7 @@ class _WriteReviewState extends State<WriteReview> {
               String nickName = await DatabaseService(uid: user.uid).getNickName();
               _registerReview(nickName);
               Navigator.pop(context);
-              IYMYShortCutDialog();
+              IYMYGotoSeeOrCheckDialog();
               // IYMYShortCutDialog(
               //   context: context,
               //   dialogIcon: Icon(Icons.check, color: primary300_main),
@@ -767,7 +767,7 @@ class _WriteReviewState extends State<WriteReview> {
     );
   }
 
-  Widget IYMYShortCutDialog(){
+  Widget IYMYGotoSeeOrCheckDialog(){
     showDialog(
       context: context,
       builder: (BuildContext context) {
