@@ -8,6 +8,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 
 import 'package:semo_ver2/review/drug_info.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 //(1) 하이라이팅을 위함
@@ -641,22 +642,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Color(0xFFE9FFFB),
-                    Color(0xFFE9FFFB),
-                    Color(0xFFFFFFFF),
-                  ])),
-        ),
-      ),
+      appBar: CustomAppBarWithGoToBack('약 검색', Icon(Icons.arrow_back), 3),
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
@@ -696,7 +682,7 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0, top: 4),
+      padding: const EdgeInsets.only(left: 16.0, top: 9),
       child: Row(
         children: [
           Container(
@@ -746,12 +732,12 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                           fillColor: gray50,
                           filled: true,
-                          prefixIcon:  Padding(
-                            padding: const EdgeInsets.only(left:8.0, top: 5, bottom: 4),
-                            child: SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: Image.asset('assets/icons/search_icon.png'),
+                          prefixIcon:  SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top:4.0, bottom: 4),
+                              child: Image.asset('assets/icons/search_grey.png'),
                             ),
                           ),
                           hintText: '두 글자 이상 입력해주세요',

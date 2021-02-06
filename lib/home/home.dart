@@ -1130,7 +1130,7 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(16, 11, 16, 0),
+      margin: EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: SizedBox(
           height: 33,
           child: FlatButton(
@@ -1139,7 +1139,7 @@ class SearchBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left:8.0, top: 5, bottom: 4),
+                  padding: const EdgeInsets.only(left:12.0, top: 5, bottom: 4, right:5),
                   child: SizedBox(
                     height: 24,
                     width: 24,
