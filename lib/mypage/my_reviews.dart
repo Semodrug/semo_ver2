@@ -28,7 +28,7 @@ class _MyReviewsState extends State<MyReviews> {
       newName = splitName[0];
     }
 
-    return newName;
+    return drugName;
   }
 
 
