@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 String search;
@@ -118,39 +119,13 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[200],
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        centerTitle: true,
-        title: Text(
-          '약 정보 전체보기',
-          style: TextStyle(
-              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
-        ),
-      ),
+      appBar: CustomAppBarWithGoToBack('약 정보 전체보기', Icon(Icons.arrow_back), 3),
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: _searchBar(context),
             ),
           ),
@@ -185,15 +160,15 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                         Divider(height: 16),
                         Container(
                           padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                               Text(
                                 '용법용량',
                                 style: Theme.of(context).textTheme.subtitle1,
                               ),
-                            _changeToText(context, widget.infoUD),
-                          ],
+                              _changeToText(context, widget.infoUD),
+                            ],
                           ),
                         ),
                         //SizedBox(height: 5,),
@@ -275,59 +250,54 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                 },
                 cursorColor: primary400_line,
                 focusNode: focusNode,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2
-                    ,
+                style: Theme.of(context).textTheme.bodyText2,
                 autofocus: true,
                 controller: _filter,
                 decoration: InputDecoration(
-                  //여기서 언덜라인 없애주기
-                  fillColor: gray50,
-                  filled: true,
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.only(left:8.0, top: 5, bottom: 4),
-                    child: SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: Image.asset('assets/icons/search_icon.png'),
+                    fillColor: gray50,
+                    filled: true,
+                    prefixIcon: SizedBox(
+                      height: 10,
+                      width: 10,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 4.0, bottom: 4),
+                        child: Image.asset('assets/icons/search_grey.png'),
+                      ),
                     ),
-                  ),
-                  suffixIcon: IconButton(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    icon: Icon(
-                      Icons.cancel,
-                      size: 20,
-                      color: gray300_inactivated,
+                    suffixIcon: IconButton(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      icon: Icon(
+                        Icons.cancel,
+                        size: 20,
+                        color: gray300_inactivated,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _filter.clear();
+                        });
+                      },
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _filter.clear();
-                      });
-                    },
-                  ),
-                  hintText: '어떤 약정보를 찾고 계세요?',
-                  hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(color: gray300_inactivated),
-                  contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  labelStyle: Theme.of(context).textTheme.bodyText2.copyWith(
-                    color: gray300_inactivated,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(8)),
-                      borderSide: BorderSide(color: gray75)),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(8)),
-                      borderSide: BorderSide(color: gray75)),
+                    hintText: '어떤 약정보를 찾고 계세요?',
+                    hintStyle: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray300_inactivated),
+                    contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    labelStyle: Theme.of(context).textTheme.bodyText2.copyWith(
+                          color: gray300_inactivated,
+                        ),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(color: gray75)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(color: gray75)),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(
                             style: BorderStyle.solid,
                             width: 1.0,
                             color: gray75),
-                        borderRadius: BorderRadius.circular(8.0))
-
-                ),
+                        borderRadius: BorderRadius.circular(8.0))),
               )),
             ],
           ),

@@ -3,6 +3,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:app_settings/app_settings.dart';
 
 import 'package:semo_ver2/home/home_add_button_stack.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
+import 'package:semo_ver2/shared/appBar.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 import 'camera/camera.dart';
@@ -17,6 +19,7 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   int _selectedIndex = 0;
+  bool isHome = true;
 
   final List<Widget> _widgetOptions = [
     HomePage(),
@@ -25,6 +28,13 @@ class _BottomBarState extends State<BottomBar> {
   ];
 
   Future<void> _onItemTapped(int index) async {
+    //app bar 다르게 하기 위함//
+    if(index != 0){
+      isHome =false;
+    }
+    else isHome = true;
+    ///////////////////////
+
     if (index != 1) {
       setState(() {
         _selectedIndex = index;
@@ -58,45 +68,7 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: Text(
-          '이약모약',
-          style: TextStyle(
-              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: IconButton(
-              icon: Icon(
-                Icons.person,
-                color: Colors.teal[200],
-              ),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyPage()),
-              ),
-            ),
-          ),
-          //for test home
-        ],
-
-        backgroundColor: Colors.white,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
-        ),
-      ),
+      appBar: isHome ? IYMYAppBar('home') : IYMYAppBar('카테고리') , //CustomAppBarWithArrowBack('customTitle'),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

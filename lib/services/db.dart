@@ -305,6 +305,7 @@ class DatabaseService {
     return userCollection
         .doc(uid)
         .collection('savedList')
+        .orderBy('savedTime', descending: true)
         .snapshots()
         .map(_savedDrugListFromSnapshot);
   }
@@ -322,6 +323,7 @@ class DatabaseService {
       'etcOtcCode': etcOtcCode ?? '',
       'expiration': expiration ?? '',
       'searchNameList': searchNameList ?? [],
+      'savedTime' : DateTime.now()
     });
   }
 
