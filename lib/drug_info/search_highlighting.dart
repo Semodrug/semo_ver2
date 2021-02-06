@@ -6,7 +6,7 @@ TextStyle posRes = TextStyle(
         fontFamily: 'NotoSansKR',
         fontSize: 14,
         fontWeight: FontWeight.w800,
-        color: Color(0xFF666666),
+        color: gray600,
         backgroundColor: warning.withOpacity(0.3)),
     negRes = TextStyle(
         fontFamily: 'NotoSansKR',
@@ -259,12 +259,11 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width - 35,
-          height: 35,
+          height: 33,
           decoration: BoxDecoration(
-              color: gray50,
-              border: Border.all(
-                  style: BorderStyle.solid, width: 1.0, color: gray200),
-              borderRadius: BorderRadius.circular(8.0)),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            color: gray75,
+          ),
           child: Row(
             children: [
               Expanded(
@@ -274,27 +273,24 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                     search = t;
                   });
                 },
-                cursorColor: Colors.teal[400],
+                cursorColor: primary400_line,
                 focusNode: focusNode,
                 style: Theme.of(context)
                     .textTheme
-                    .subtitle1
-                    .copyWith(fontSize: 15),
+                    .bodyText2
+                    ,
                 autofocus: true,
                 controller: _filter,
                 decoration: InputDecoration(
                   //여기서 언덜라인 없애주기
-                  border: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  fillColor: Colors.white12,
+                  fillColor: gray50,
                   filled: true,
                   prefixIcon: Padding(
-                    padding: const EdgeInsets.all(0),
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                      size: 20,
+                    padding: const EdgeInsets.only(left:8.0, top: 5, bottom: 4),
+                    child: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: Image.asset('assets/icons/search_icon.png'),
                     ),
                   ),
                   suffixIcon: IconButton(
@@ -302,7 +298,7 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                     icon: Icon(
                       Icons.cancel,
                       size: 20,
-                      color: primary300_main,
+                      color: gray300_inactivated,
                     ),
                     onPressed: () {
                       setState(() {
@@ -311,14 +307,26 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
                     },
                   ),
                   hintText: '어떤 약정보를 찾고 계세요?',
-                  hintStyle: Theme.of(context).textTheme.bodyText2,
+                  hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(color: gray300_inactivated),
                   contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  labelStyle: TextStyle(color: Colors.grey),
+                  labelStyle: Theme.of(context).textTheme.bodyText2.copyWith(
+                    color: gray300_inactivated,
+                  ),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent)),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(8)),
+                      borderSide: BorderSide(color: gray75)),
                   enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      borderSide: BorderSide(color: Colors.transparent)),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(8)),
+                      borderSide: BorderSide(color: gray75)),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            style: BorderStyle.solid,
+                            width: 1.0,
+                            color: gray75),
+                        borderRadius: BorderRadius.circular(8.0))
+
                 ),
               )),
             ],
