@@ -11,6 +11,7 @@ import 'package:semo_ver2/theme/colors.dart';
 import 'edit_review.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class ReviewList extends StatefulWidget {
   String searchText;
@@ -59,17 +60,9 @@ class _ReviewListState extends State<ReviewList> {
   Widget _buildListItem(BuildContext context, Review review) {
     FirebaseAuth auth = FirebaseAuth.instance;
     List<String> names = List.from(review.favoriteSelected);
-    String year = review.registrationDate.toDate().year.toString();
-    String month = review.registrationDate.toDate().month.toString();
-
-    if(month.length == 1) month = '0'+ month;
-    String day = review.registrationDate.toDate().day.toString();
-    if(day.length == 1) day = '0'+ day;
-    String regDate =  year + "." + month + "." + day;
 
     return Container(
       padding: EdgeInsets.fromLTRB(0,10,0,21.5),
-        //padding: EdgeInsets.fromLTRB(20,10,20,21.5),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -80,10 +73,15 @@ class _ReviewListState extends State<ReviewList> {
               _starAndIdAndMore(review, context, auth),
               _review(review),
               Container(height: 11.5),
-              _dateAndFavorite(regDate, names, auth, review)
+              _dateAndFavorite(
+                  DateFormat('yyyy.MM.dd').format(review.registrationDate.toDate()),
+                  names, auth, review)
 
             ]));
   }
+  // Text(DateFormat('yy.MM.dd').format(review.registrationDate.toDate()),
+  // style: Theme.of(context).textTheme.subtitle2.copyWith(
+  // color: gray300_inactivated, fontSize: 12)),
 
   Widget _starAndIdAndMore(review, context, auth) {
     TheUser user = Provider.of<TheUser>(context);
@@ -229,7 +227,7 @@ class _ReviewListState extends State<ReviewList> {
     );
   }
 
-  Widget _reportReviewPopup(context ) {
+  Widget _reportReviewPopup(review ) {
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -251,7 +249,7 @@ class _ReviewListState extends State<ReviewList> {
               // padding: const EdgeInsets.only(top: 4.0),
               child: MaterialButton(
                   onPressed: () {
-                    _IYMYCancleConfirmReportDialog();
+                    _IYMYCancleConfirmReportDialog(review, 1);
                   },
                   child: Row(
                     children: [
@@ -269,7 +267,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(top: 4.0),
               child: MaterialButton(
                   onPressed: () {
-                    _IYMYCancleConfirmReportDialog();
+                    _IYMYCancleConfirmReportDialog(review, 2);
                   },
                   child: Row(
                     children: [
@@ -287,7 +285,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(top: 4.0),
               child: MaterialButton(
                   onPressed: () {
-                    _IYMYCancleConfirmReportDialog();
+                    _IYMYCancleConfirmReportDialog(review, 3);
                   },
                   child: Row(
                     children: [
@@ -306,7 +304,7 @@ class _ReviewListState extends State<ReviewList> {
               child: MaterialButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    _IYMYCancleConfirmReportDialog();
+                    _IYMYCancleConfirmReportDialog(review, 4);
                   },
                   child: Row(
                     children: [
@@ -324,7 +322,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.fromLTRB(0,4,0,8),
               child: MaterialButton(
                   onPressed: () {
-                    _IYMYCancleConfirmReportDialog();
+                    _IYMYCancleConfirmReportDialog(review, 5);
                   },
                   child: Row(
                     children: [
@@ -549,7 +547,7 @@ class _ReviewListState extends State<ReviewList> {
 //     );
   }
 
-  Future<void> _IYMYCancleConfirmReportDialog() async {
+  Future<void> _IYMYCancleConfirmReportDialog(review, report) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -615,27 +613,16 @@ class _ReviewListState extends State<ReviewList> {
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
 
-                        //await ReviewService(documentId: record.documentId).deleteReviewData();
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
+                        //TODO :: ###########신고하기!!!!!!!!!!!!!!!!!!
+                        // await ReviewService(documentId: review.documentId).reportReview(review, report);
+                        await ReviewService(documentId: review.documentId).reportReview(review, report,);
 
-                        //review has reported
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
                         IYMYGotoSeeOrCheckDialog();
 
 
 
-
-
-                        // IYMYOkDialog(
-                        //   context: context,
-                        //   dialogIcon: Icon(Icons.check, color: primary300_main),
-                        //   bodyString: '리뷰가 삭제되었습니다',
-                        //   buttonName: '확인',
-                        //   onPressed: () {
-                        //     Navigator.pop(context);
-                        //     Navigator.pop(context);
-                        //   },
-                        // ).showWarning();
                       }
 
                   )
@@ -960,7 +947,7 @@ class _ReviewListState extends State<ReviewList> {
                         backgroundColor: Colors.transparent,
                         context: context,
                         builder: (context) {
-                          return _reportReviewPopup(context);
+                          return _reportReviewPopup(review);
                         } );
                   },
                   child: Center(child: Text("신고하기",
