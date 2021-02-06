@@ -159,7 +159,7 @@ class _RankingContentPageState extends State<RankingContentPage> {
         Divider(
           height: 5,
           thickness: 1,
-          color: Color(0xfff7f7f7),
+          color: gray50,
         )
       ],
     );

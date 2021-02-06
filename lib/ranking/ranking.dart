@@ -9,7 +9,7 @@ class RankingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         body: ListView.separated(
             itemBuilder: (context, index) {
               return Container(
@@ -18,20 +18,30 @@ class RankingPage extends StatelessWidget {
                         bottom: BorderSide(width: 0.6, color: gray50))),
                 child: ListTile(
                   dense: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+                  contentPadding: EdgeInsets.symmetric(
+                      vertical: 0.0, horizontal: 16.0),
                   title: SizedBox(
                       height: 20,
-                      child: Text(categories[index], style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray900),)),
+                      child: Text(
+                        categories[index],
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2
+                            .copyWith(color: gray900),
+                      )),
                   onTap: () {
-                    getCategory = numCategory[index] + categories[index]; //카테고리 설정해주기
+                    getCategory = numCategory[index] +
+                        categories[index];
+                    print('        ==>    $getCategory');//카테고리 설정해주기
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                             // TestRanking(categoryName: numCategory[index] + categories[index])
-                          RankingContentPage(categoryName: numCategory[index] + categories[index])
-                      ),
-                      );
+                              // TestRanking(categoryName: numCategory[index] + categories[index])
+                              RankingContentPage(
+                                  categoryName: numCategory[index] +
+                                      categories[index])),
+                    );
                   },
                 ),
               );
@@ -47,33 +57,35 @@ class RankingPage extends StatelessWidget {
 //분류번호 나오면 다시 설정해야함
 //약사님에게도 맡겨보기
 final categories = [
+  '전체',
   '해열.진통.소염제', '안과용제', '이비과용제',
   '호흡기관용약',
   //'호흡촉진제',
   '진해거담제',
 
-  '소화기관용약','소화성궤양용제','건위소화제',
+  '소화기관용약', '소화성궤양용제', '건위소화제',
 
   //'피부연화제',
 
-  '비타민제','비타민 A 및 D제',
+  '비타민제', '비타민 A 및 D제',
   //'비타민 B1 제','비타민 B제(비타민 B1 제외)',
   '비타민 C 및 P제',
   //'비타민 E 및 K 제','혼합비타민제',
   '기타의 비타민제',
 
-  '자양강장변질제','칼슘제','무기질제제',
+  '자양강장변질제', '칼슘제', '무기질제제',
   //'당류제',
   //'유기산제제','단백질아미노산제제',
   '장기제제',
   //'유아용',
 
-  '당뇨병용제','종합대사성제제',
+  '당뇨병용제', '종합대사성제제',
 
   '구충제',
 ];
 
 final numCategory = [
+  '[00000]',
   '[01140]', '[01310]', '[01320]',
 
   '[02200]',

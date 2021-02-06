@@ -31,7 +31,7 @@ class SearchResultTile extends StatelessWidget {
     }
 
     if (newItemName.length > 22) {
-      newItemName = newItemName.substring(0, 22);
+      newItemName = newItemName.substring(0, 20);
       newItemName = newItemName + '...';
     }
 
