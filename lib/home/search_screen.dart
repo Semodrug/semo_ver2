@@ -93,69 +93,9 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  //전체삭제했을 때 dialog
-  void showWarning(BuildContext context, String bodyString, String actionName1,
-      String actionName2, String actionCode, String uid) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          // title:
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 18),
-              Text(bodyString,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      .copyWith(color: gray700)),
-              SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    child: Text(
-                      actionName1,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(color: primary400_line),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(100, 40),
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        elevation: 0,
-                        primary: gray50,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                            side: BorderSide(color: gray75))),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  SizedBox(width: 16),
-                  ElevatedButton(
-                    child: Text(
-                      actionName2,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(color: gray0_white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(100, 40),
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        elevation: 0,
-                        primary: primary300_main,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                            side: BorderSide(color: gray75))),
-                    onPressed: () async {
+
+  /*
+  *  onPressed: () async {
                       if (actionCode == 'deleteSearchedList') {
                         await Navigator.of(context).pop();
                         FirebaseFirestore.instance
@@ -169,8 +109,85 @@ class _SearchScreenState extends State<SearchScreen> {
                           }
                         });
                       }
+                    },*/
+
+  //전체삭제했을 때 dialog
+  void showWarning(BuildContext context, String bodyString, String leftButtonName,
+      String rightButtonName,  String uid) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          // title:
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 16),
+              Text(bodyString,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 28),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    child: Text(
+                      leftButtonName,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: primary400_line),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(120, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: BorderSide(color: gray50))),
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
-                  )
+                  ),
+                  SizedBox(width: 16),
+                  ElevatedButton(
+                      child: Text(
+                        rightButtonName,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: gray0_white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(120, 40),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          elevation: 0,
+                          primary: primary300_main,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(color: primary400_line))),
+                      onPressed:  () async {
+                           Navigator.of(context).pop();
+                          await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(uid)
+                              .collection('searchList')
+                              .get()
+                              .then((snapshot) {
+                            for (DocumentSnapshot ds in snapshot.docs) {
+                              ds.reference.delete();
+                            }
+                          });
+                      }
+                      )
                 ],
               )
             ],
@@ -248,7 +265,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   onPressed: () {
                     //print('삭제되었음');
                     showWarning(context, '전체 삭제 하시겠습니까?', '취소', '삭제',
-                        'deleteSearchedList', user.uid);
+                         user.uid);
                   },
                 )
               ],
@@ -668,7 +685,7 @@ class _SearchScreenState extends State<SearchScreen> {
     Future<void> addRecentSearchList() async {
       try {
         assert(_searchText != null);
-
+        print('검색 결과 =====> $_searchText ');
         searchList = _searchText;
         assert(searchList != null);
         //검색어 저장 기능 array로 저장해주기
@@ -702,6 +719,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               .where('searchList', isEqualTo: val)
                               .get();
                           if (_query.docs.length == 0) {
+                            if(searchList != '')
                             addRecentSearchList();
                           }
                           focusNode.unfocus();
