@@ -31,7 +31,8 @@ class RankingPage extends StatelessWidget {
                       )),
                   onTap: () {
                     getCategory = numCategory[index] +
-                        categories[index]; //카테고리 설정해주기
+                        categories[index];
+                    print('        ==>    $getCategory');//카테고리 설정해주기
                     Navigator.push(
                       context,
                       MaterialPageRoute(
