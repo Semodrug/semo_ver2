@@ -814,20 +814,20 @@ class _SearchScreenState extends State<SearchScreen> {
                   labelStyle: Theme.of(context)
                       .textTheme
                       .subtitle2
-                      .copyWith(color: gray750_activated, fontWeight: FontWeight.bold),
+                      .copyWith(color: gray750_activated,),
                   unselectedLabelStyle: Theme.of(context)
                       .textTheme
                       .caption
-                      .copyWith(fontWeight: FontWeight.w100, color: gray500),
+                      .copyWith( color: gray500),
                   tabs: [
                     Tab(
                         child: Text(
                           '전체 검색',
-                            style:  TextStyle(color: Colors.black, fontFamily: 'NotoSansKR')                        )),
+                            style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
                     Tab(
                         child: Text(
                           '나의 약 검색',
-                            style:  TextStyle(color: Colors.black, fontFamily: 'NotoSansKR')                        )),
+                            style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
                   ],
 
                   indicator: CustomTabIndicator()
