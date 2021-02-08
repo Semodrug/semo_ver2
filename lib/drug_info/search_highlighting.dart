@@ -104,14 +104,14 @@ class _SearchHighlightingScreenState extends State<SearchHighlightingScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0),
       child: RichText(
-        textScaleFactor: 1.08,
+        textScaleFactor: 1.00,
         text: searchMatch(textFinish),
       ),
     );
   }
 
   Widget _alreadyText(BuildContext context, String text) {
-    return RichText(textScaleFactor: 1.08, text: searchMatch(text));
+    return RichText(textScaleFactor: 1.00, text: searchMatch(text));
   }
 
   @override

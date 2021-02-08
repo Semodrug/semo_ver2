@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:semo_ver2/mypage/7-2_withdrawal_done.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -22,35 +23,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.teal[200],
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-          centerTitle: true,
-          title: Text(
-            '회원 탈퇴',
-            style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[
-                  Color(0xFFE9FFFB),
-                  Color(0xFFE9FFFB),
-                  Color(0xFFFFFFFF),
-                ])),
-          ),
-        ),
+        appBar: CustomAppBarWithGoToBack('회원 탈퇴', Icon(Icons.arrow_back), 3),
         backgroundColor: Colors.white,
         body: Column(
           children: [
@@ -159,44 +132,6 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
               }
             }
           }),
-    );
-
-    Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 400.0,
-        height: 45.0,
-        child: RaisedButton(
-            child: Text(
-              '탈퇴하기',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: gray0_white, fontSize: 15),
-            ),
-            color: _isAgree ? primary400_line : gray200,
-            shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(10.0)),
-            onPressed: () async {
-              if (_isAgree) {
-                await DatabaseService().deleteUser(widget.userId);
-
-                dynamic result = await _auth.withdrawalAccount();
-
-                if (result is String) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(result)));
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => WithdrawalDonePage()),
-                  );
-                }
-              }
-            }),
-      ),
     );
   }
 }

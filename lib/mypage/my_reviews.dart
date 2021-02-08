@@ -6,6 +6,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/review/edit_review.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/loading.dart';
@@ -31,62 +32,50 @@ class _MyReviewsState extends State<MyReviews> {
     return drugName;
   }
 
-
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
 
     return Scaffold(
-      appBar:AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[200],
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text("리뷰",  style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        // elevation: 0,
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: StreamBuilder<List<Review>>(
-              stream: ReviewService().getUserReviews(user.uid.toString()),
-              builder: (context, snapshot) {
-                if(snapshot.hasData) {
-                  List<Review> reviews = snapshot.data;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-                        child: Text("리뷰" + reviews.length.toString() + "개"),
-                      ),
-                      Divider(color: gray75, height: 1,),
-                      ListView.builder(
-                          shrinkWrap: true,
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: reviews.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return _review(context, reviews[index]);
-                          }),
-                    ],
-                  );
-
-                }
-                else return Loading();
-              },
-            ),
-          )
-        ],
-      )
-    );
+        appBar: CustomAppBarWithGoToBack('리뷰', Icon(Icons.arrow_back), 3),
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: StreamBuilder<List<Review>>(
+                stream: ReviewService().getUserReviews(user.uid.toString()),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<Review> reviews = snapshot.data;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+                          child: Text("리뷰" + reviews.length.toString() + "개"),
+                        ),
+                        Divider(
+                          color: gray75,
+                          height: 1,
+                        ),
+                        ListView.builder(
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: reviews.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return _review(context, reviews[index]);
+                            }),
+                      ],
+                    );
+                  } else
+                    return Loading();
+                },
+              ),
+            )
+          ],
+        ));
   }
 
-
-  Widget _review(BuildContext context,  review) {
+  Widget _review(BuildContext context, review) {
     return GestureDetector(
       onTap: () => {
         Navigator.push(
@@ -111,45 +100,66 @@ class _MyReviewsState extends State<MyReviews> {
                 Column(
                   children: [
                     SizedBox(
-                      height: 30, width: 60,
+                      height: 30,
+                      width: 60,
                       child: DrugImage(drugItemSeq: review.seqNum),
                     ),
-                    Container(height: 10,),
+                    Container(
+                      height: 10,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.thumb_up, color: gray300_inactivated,
-                          size: 16,),
-                        Container(width: 5,),
+                        Icon(
+                          Icons.thumb_up,
+                          color: gray300_inactivated,
+                          size: 16,
+                        ),
+                        Container(
+                          width: 5,
+                        ),
                         //TODO: 좋아요 개수
                         Text(review.noFavorite.toString(),
-                            style: Theme.of(context).textTheme.overline.copyWith(
-                                color: gray400, fontSize: 12)
-                        )
+                            style: Theme.of(context)
+                                .textTheme
+                                .overline
+                                .copyWith(color: gray400, fontSize: 12))
                       ],
                     )
                   ],
                 ),
-                Container(width: 10,),
                 Container(
-                  width: MediaQuery.of(context).size.width-95,
+                  width: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width - 95,
                   child: Row(
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(review.entpName,
-                              style: Theme.of(context).textTheme.overline.copyWith(
-                                  color: gray300_inactivated, fontSize: 11)),
-                          Container(height: 1,),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .overline
+                                  .copyWith(
+                                      color: gray300_inactivated,
+                                      fontSize: 11)),
                           Container(
-                            width: MediaQuery.of(context).size.width-143,
+                            height: 1,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 143,
                             child: Text(_shortenName(review.itemName),
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.subtitle2.copyWith(
-                                    color: gray900, fontSize: 14)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2
+                                    .copyWith(color: gray900, fontSize: 14)),
                           ),
-                          Container(height: 2,),
+                          Container(
+                            height: 2,
+                          ),
                           Row(
                             children: [
                               RatingBarIndicator(
@@ -164,28 +174,37 @@ class _MyReviewsState extends State<MyReviews> {
                                 unratedColor: gray75,
                                 //unratedColor: Colors.amber.withAlpha(50),
                                 direction: Axis.horizontal,
-                                itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 0),
                               ),
-                              Container(width: 4.5,),
-                              Text(DateFormat('yy.MM.dd').format(review.registrationDate.toDate()),
-                                  style: Theme.of(context).textTheme.subtitle2.copyWith(
-                                      color: gray300_inactivated, fontSize: 12)),
+                              Container(
+                                width: 4.5,
+                              ),
+                              Text(
+                                  DateFormat('yy.MM.dd')
+                                      .format(review.registrationDate.toDate()),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2
+                                      .copyWith(
+                                          color: gray300_inactivated,
+                                          fontSize: 12)),
                             ],
                           ),
                         ],
                       ),
                       Expanded(child: Container()),
                       IconButton(
-                        padding: EdgeInsets.only(right:0),
+                        padding: EdgeInsets.only(right: 0),
                         // constraints: BoxConstraints(),
                         icon: Icon(Icons.more_horiz, color: gray500, size: 19),
                         onPressed: () {
-                            showModalBottomSheet(
-                                backgroundColor: Colors.transparent,
-                                context: context,
-                                builder: (BuildContext context) {
-                                 return  _popUpMenu(review);
-                                });
+                          showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return _popUpMenu(review);
+                              });
                         },
                       )
                     ],
@@ -193,15 +212,18 @@ class _MyReviewsState extends State<MyReviews> {
                 )
               ],
             ),
-            Container(height: 10,),
+            Container(
+              height: 10,
+            ),
             Padding(
-              padding: EdgeInsets.fromLTRB(60,0,16,0),
+              padding: EdgeInsets.fromLTRB(60, 0, 16, 0),
               child: Column(
                 children: [
                   ReviewBox(context: context, review: review, type: "effect"),
-                  Container(height:4),
-                  ReviewBox(context: context, review: review, type: "sideEffect"),
-                  Container(height:4),
+                  Container(height: 4),
+                  ReviewBox(
+                      context: context, review: review, type: "sideEffect"),
+                  Container(height: 4),
                   ReviewBox(context: context, review: review, type: "overall"),
                 ],
               ),
@@ -211,15 +233,14 @@ class _MyReviewsState extends State<MyReviews> {
       ),
     );
 
-
-
     //   Text(
     //   review.effectText.toString(),
     // );
   }
 
-
-  Widget _popUpMenu(review, ) {
+  Widget _popUpMenu(
+    review,
+  ) {
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -234,18 +255,20 @@ class _MyReviewsState extends State<MyReviews> {
               child: MaterialButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(
-                      //TODO
-                        builder: (context) => EditReview(review, "edit")
-                    ));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            //TODO
+                            builder: (context) => EditReview(review, "edit")));
                   },
-                  child: Center(child: Text("수정하기",
+                  child: Center(
+                      child: Text(
+                    "수정하기",
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1
                         .copyWith(color: gray900),
-                  ))
-              ),
+                  ))),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 4),
@@ -263,15 +286,14 @@ class _MyReviewsState extends State<MyReviews> {
                     //             Navigator.pop(context);
                     //           }).showDeleteDialog(review);
                   },
-
-
-                  child: Center(child: Text("삭제하기",
+                  child: Center(
+                      child: Text(
+                    "삭제하기",
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1
                         .copyWith(color: gray900),
-                  ))
-              ),
+                  ))),
             ),
             // Divider(thickness: 1, color: gray100),
             Padding(
@@ -286,18 +308,18 @@ class _MyReviewsState extends State<MyReviews> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Center(child: Text("닫기",
+                    child: Center(
+                        child: Text(
+                      "닫기",
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
                           .copyWith(color: gray300_inactivated),
-                    ))
-                ),
+                    ))),
               ),
             )
           ],
-        )
-    );
+        ));
   }
 
   Future<void> _showDeleteDialog(record) async {
@@ -307,7 +329,7 @@ class _MyReviewsState extends State<MyReviews> {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -364,8 +386,8 @@ class _MyReviewsState extends State<MyReviews> {
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
-
-                        await ReviewService(documentId: record.documentId).deleteReviewData();
+                        await ReviewService(documentId: record.documentId)
+                            .deleteReviewData();
                         Navigator.of(context).pop();
 
                         //OK Dialog
@@ -374,11 +396,12 @@ class _MyReviewsState extends State<MyReviews> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               contentPadding: EdgeInsets.all(16),
-                              shape:
-                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0)),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(height: 10),
@@ -404,24 +427,22 @@ class _MyReviewsState extends State<MyReviews> {
                                       ),
                                       style: ElevatedButton.styleFrom(
                                           minimumSize: Size(260, 40),
-                                          padding: EdgeInsets.symmetric(horizontal: 10),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10),
                                           elevation: 0,
                                           primary: gray50,
                                           shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
                                               side: BorderSide(color: gray75))),
-                                      onPressed:(){
+                                      onPressed: () {
                                         Navigator.pop(context);
-                                      } )
+                                      })
                                 ],
                               ),
                             );
                           },
                         );
-
-
-
-
 
                         // IYMYOkDialog(
                         //   context: context,
@@ -433,9 +454,7 @@ class _MyReviewsState extends State<MyReviews> {
                         //     Navigator.pop(context);
                         //   },
                         // ).showWarning();
-                      }
-
-                  )
+                      })
                 ],
               )
             ],
@@ -443,8 +462,6 @@ class _MyReviewsState extends State<MyReviews> {
         );
       },
     );
-
-
 
 //     return showDialog<void>(
 //       context: context,
@@ -482,5 +499,4 @@ class _MyReviewsState extends State<MyReviews> {
 //       },
 //     );
   }
-
 }

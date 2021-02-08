@@ -6,6 +6,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/6_policy_privacy.dart';
 import 'package:semo_ver2/mypage/5_policy_terms.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -24,24 +25,14 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
 
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         title: Text(
           '이용약관',
-          style: TextStyle(
-              fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
+          style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
         ),
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
-        ),
+        elevation: 0.5,
+        titleSpacing: 0,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.white,
       body: Padding(

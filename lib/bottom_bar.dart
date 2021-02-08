@@ -4,7 +4,7 @@ import 'package:app_settings/app_settings.dart';
 
 import 'package:semo_ver2/home/home_add_button_stack.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
-import 'package:semo_ver2/shared/appBar.dart';
+import 'package:semo_ver2/shared/appbar.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 import 'camera/camera.dart';
@@ -29,10 +29,10 @@ class _BottomBarState extends State<BottomBar> {
 
   Future<void> _onItemTapped(int index) async {
     //app bar 다르게 하기 위함//
-    if(index != 0){
-      isHome =false;
-    }
-    else isHome = true;
+    if (index != 0) {
+      isHome = false;
+    } else
+      isHome = true;
     ///////////////////////
 
     if (index != 1) {
@@ -68,7 +68,9 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: isHome ? IYMYAppBar('home') : IYMYAppBar('카테고리') , //CustomAppBarWithArrowBack('customTitle'),
+      appBar: isHome
+          ? IYMYAppBar('home')
+          : IYMYAppBar('카테고리'), //CustomAppBarWithArrowBack('customTitle'),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
