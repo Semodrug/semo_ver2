@@ -655,13 +655,7 @@ class _ExpirationGEditState extends State<ExpirationGEdit> {
             Navigator.pop(context);
           },
         ).showWarning();
-        await DatabaseService(uid: user.uid).addSavedList(
-            drug.itemName,
-            drug.itemSeq,
-            drug.category,
-            drug.etcOtcCode,
-            expirationTime,
-            searchListOutput);
+        await DatabaseService(uid: user.uid).updateSavedList(expirationTime);
       },
     );
   }
