@@ -3,18 +3,22 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/home/indicator.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/review/review_list.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
+import 'package:semo_ver2/theme/colors.dart';
 import 'drug_info.dart';
 import 'write_review.dart';
 
 class AllReview extends StatefulWidget {
   String drugItemSeq;
-  AllReview(this.drugItemSeq);
+  String itemName;
+  AllReview(this.drugItemSeq, this.itemName);
 
   @override
   _AllReveiewState createState() => _AllReveiewState();
@@ -34,6 +38,28 @@ class _AllReveiewState extends State<AllReview> {
     });
   }
 
+  TabController _tabController;
+
+  GlobalKey _key1 = GlobalKey();
+  GlobalKey _key2 = GlobalKey();
+  GlobalKey _key3 = GlobalKey();
+
+  String _shortenName(String data) {
+    String newName = data;
+    List splitName = [];
+
+    if (data.contains('(수출')) {
+      splitName = newName.split('(수출');
+      newName = splitName[0];
+    }
+
+    if (data.contains('(군납')) {
+      splitName = newName.split('(군납');
+      newName = splitName[0];
+    }
+    return newName;
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -41,37 +67,27 @@ class _AllReveiewState extends State<AllReview> {
     return StreamProvider<List<Review>>.value(
       value: ReviewService().getReviews(widget.drugItemSeq),
       child: Scaffold(
-        appBar: _appbar(context),
+        appBar:
+        //_appbar(context),
+        CustomAppBarWithGoToBack(_shortenName(widget.itemName), Icon(Icons.arrow_back), 3),
 //      body: topOfReview(context),
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: SizedBox(
-                width: double.infinity,
-                height: 10.0,
-                child: Container(
-                  color: Colors.grey[200],
-                ),
-              ),
+               // child: _myTab(context),
+              child: _myTabbe(context),
             ),
-//             FROM HERE: TAB
-            SliverToBoxAdapter(
-              child: _myTab(context),
-            ),
-//            SliverToBoxAdapter(
-//              child: _underTab(),
-//            ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.create),
-          backgroundColor: Colors.teal[300],
-          elevation: 0.0,
+        // floatingActionButton: FloatingActionButton(
+        //   child: Icon(Icons.create),
+        //   backgroundColor: Colors.teal[300],
+        //   elevation: 0.0,
 //          onPressed: () {
 //            Navigator.push(context,
 //                MaterialPageRoute(builder: (context) => WriteReview()));
 //          }
-        ),
+ //       ),
       ),
     );
   }
@@ -98,41 +114,160 @@ class _AllReveiewState extends State<AllReview> {
   }
 
   Widget _myTab(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+
     return DefaultTabController(
         length: 3,
         child: Column(
           children: [
-            TabBar(
-              labelStyle:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              unselectedLabelStyle:
-                  TextStyle(color: Colors.grey, fontWeight: FontWeight.w100),
-              tabs: [
-                Tab(child: Text('전체리뷰', style: TextStyle(color: Colors.black))),
-                Tab(
-                    child:
-                        Text('효과리뷰만', style: TextStyle(color: Colors.black))),
-                Tab(
-                    child:
-                        Text('부작용리뷰만', style: TextStyle(color: Colors.black))),
-              ],
-              indicatorColor: Colors.teal[400],
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0,top: 10.0,right: 16.0, bottom: 10),
+              child: Container(
+                height: 29,
+                decoration: BoxDecoration(
+                    color: gray75,
+                    borderRadius: BorderRadius.all(Radius.circular(4))
+                ),
+                //color: gray75,
+                child: Column(
+                  children: [
+                    TabBar(
+                        labelStyle: Theme.of(context)
+                            .textTheme
+                            .subtitle2
+                            .copyWith(color: gray750_activated,),
+                        unselectedLabelStyle: Theme.of(context)
+                            .textTheme
+                            .caption
+                            .copyWith( color: gray500),
+                        tabs: [
+                          Tab(
+                              child: Text(
+                                  '전체 검색',
+                                  style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
+                          Tab(
+                              child: Text(
+                                  '나의 약 검색',
+                                  style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
+                          Tab(
+                              child: Text(
+                                  '나의 약 검색',
+                                  style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
+                        ],
+
+                        //indicator: CustomTabIndicator()
+                    ),
+                    // Container(
+                    //   padding: EdgeInsets.all(0.0),
+                    //   width: double.infinity,
+                    //   height: 6000,
+                    //   //height: height - 300, //440.0,
+                    //
+                    //
+                    //   child: TabBarView(
+                    //     children: [
+                    //       _underTab("none"),
+                    //       _underTab("effectOnly"),
+                    //       _underTab("sideEffectOnly"),
+                    //     ],
+                    //   ),
+                    // )
+                    CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: TabBarView(
+                                children: [
+                                  _underTab("none"),
+                                  _underTab("effectOnly"),
+                                  _underTab("sideEffectOnly"),
+                                ],
+                              ),
+                        )
+                      ],
+                    ),
+
+                  ],
+                ),
+              ),
+            ),
+
+          ],
+        ));
+  }
+
+  Widget _myTabbe(BuildContext context) {
+    // double height = MediaQuery.of(context).size.height;
+    // double height = 3000;
+    return DefaultTabController(
+        length: 3,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 16),
+              child: Container(
+                height: 35,
+                decoration: BoxDecoration(
+                  color: gray75,
+                  borderRadius: BorderRadius.all(Radius.circular(4))
+                ),
+                child: TabBar(
+                  unselectedLabelColor: Colors.redAccent,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [gradient_button_long_end, Color(0xffA7E5DC)]),
+                      // colors: [gradient_button_long_start, gradient_button_long_end]),
+                      borderRadius: BorderRadius.circular(4),
+                      color: Colors.redAccent),
+                    controller: _tabController,
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      .copyWith(color: gray750_activated,),
+                  unselectedLabelStyle: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith( color: gray500),
+                  tabs: [
+                    Tab(child: Text('전체리뷰',
+                      style: Theme.of(context).textTheme.subtitle2
+                          .copyWith(color: gray750_activated, fontSize: 12))),
+                    Tab(child: Text('효과리뷰만',
+                        style: Theme.of(context).textTheme.subtitle2
+                        .copyWith(color: gray750_activated, fontSize: 12))),
+                    Tab(child: Text('부작용리뷰만',
+                        style: Theme.of(context).textTheme.subtitle2
+                            .copyWith(color: gray750_activated, fontSize: 12))),
+                  ],
+                    // indicator: CustomTabIndicator()
+                ),
+              ),
             ),
             //TODO: height 없이 괜찮게
+
+            // CustomScrollView(
+            //   slivers: [
+            //     SliverToBoxAdapter(
+            //       child: TabBarView(
+            //         children: [
+            //           _underTab("none"),
+            //           _underTab("effectOnly"),
+            //           _underTab("sideEffectOnly"),
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            // ),
+
             Container(
               padding: EdgeInsets.all(0.0),
               width: double.infinity,
-              height: 6000.0,
+              height: 5000,
               child: TabBarView(
-//               여기에 은영학우님 page 넣기!
                 children: [
                   _underTab("none"),
                   _underTab("effectOnly"),
                   _underTab("sideEffectOnly"),
-
-//
-//                  _underInfo(context, drugItemSeq),
-//                  ReviewPage(drugItemSeq)
                 ],
               ),
             )
@@ -142,17 +277,22 @@ class _AllReveiewState extends State<AllReview> {
 
   Widget _underTab(String filter) {
     return Container(
-//                        key: _key1,
-        height: 3000,
+        //key: _key1,
+        height: 5000,
+        //height: MediaQuery.of(context).size.height-500,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
-              height: 4,
-              color: Colors.grey[200],
-            ),
-            Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              // decoration: BoxDecoration(
+              //   border: Border(
+              //     top: BorderSide( //                    <--- top side
+              //       color: Colors.black,
+              //       width: 3.0,
+              //     ),
+              //   )
+              // ),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -164,7 +304,7 @@ class _AllReveiewState extends State<AllReview> {
                           if (snapshot.hasData) {
                             Drug drug = snapshot.data;
                             return Text(
-                                drug.numOfReviews.toStringAsFixed(0) + "개",
+                                "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
                                 style: TextStyle(
                                   fontSize: 16.5,
                                   fontWeight: FontWeight.bold,

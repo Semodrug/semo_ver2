@@ -164,6 +164,8 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                   result,
                   textAlign: TextAlign.center,
                 ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.black.withOpacity(0.87)));
           } else if (result == null) {
