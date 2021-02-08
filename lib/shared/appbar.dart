@@ -70,4 +70,3 @@ class IYMYAppBar extends StatelessWidget with PreferredSizeWidget {
       );
   }
 }
-

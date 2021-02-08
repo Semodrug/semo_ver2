@@ -3,9 +3,9 @@ import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
-
 
 class WarningInfo extends StatefulWidget {
   final String drugItemSeq;
@@ -22,32 +22,7 @@ class _WarningInfoState extends State<WarningInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[200],
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        centerTitle: true,
-        title: Text(
-          '자세히보기',
-          style: Theme.of(context).textTheme.headline5,
-        ),
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
-        ),
-      ),
+      appBar: CustomAppBarWithGoToBack('자세히보기', Icon(Icons.arrow_back), 3),
       backgroundColor: Colors.white,
       body: Column(
         children: [

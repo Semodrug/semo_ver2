@@ -7,6 +7,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/shortcut_dialog.dart';
@@ -37,33 +38,7 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[200],
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        centerTitle: true,
-        title: Text(
-          '약 추가하기',
-          style: TextStyle(
-              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
-        ),
-      ),
+      appBar: CustomAppBarWithGoToBack('사용기한 수정하기', Icon(Icons.close), 0.5),
       backgroundColor: Colors.white,
       body: StreamBuilder<Drug>(
         stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
@@ -491,13 +466,7 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
             Navigator.pop(context);
           },
         ).showWarning();
-        await DatabaseService(uid: user.uid).addSavedList(
-            drug.itemName,
-            drug.itemSeq,
-            drug.category,
-            drug.etcOtcCode,
-            expirationTime,
-            searchListOutput);
+        await DatabaseService(uid: user.uid).updateSavedList(expirationTime);
       },
     );
   }
