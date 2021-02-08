@@ -12,6 +12,7 @@ import 'edit_review.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ReviewList extends StatefulWidget {
   String searchText;
@@ -135,7 +136,7 @@ class _ReviewListState extends State<ReviewList> {
                   backgroundColor: Colors.transparent,
                     context: context,
                     builder: (context) {
-                      return _popUpMenuAnonymous(review, context);
+                      return _popUpMenuAnonymous(review, user);
                     } );
               }
             },
@@ -227,7 +228,7 @@ class _ReviewListState extends State<ReviewList> {
     );
   }
 
-  Widget _reportReviewPopup(review ) {
+  Widget _reportReviewPopup(review, /*user*/ ) {
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -249,7 +250,7 @@ class _ReviewListState extends State<ReviewList> {
               // padding: const EdgeInsets.only(top: 4.0),
               child: MaterialButton(
                   onPressed: () {
-                    _IYMYCancleConfirmReportDialog(review, 1);
+                    _IYMYCancleConfirmReportDialog(review, 1, /*user*/);
                   },
                   child: Row(
                     children: [
@@ -267,7 +268,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(top: 4.0),
               child: MaterialButton(
                   onPressed: () {
-                    _IYMYCancleConfirmReportDialog(review, 2);
+                    _IYMYCancleConfirmReportDialog(review, 2, /*user*/);
                   },
                   child: Row(
                     children: [
@@ -285,7 +286,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(top: 4.0),
               child: MaterialButton(
                   onPressed: () {
-                    _IYMYCancleConfirmReportDialog(review, 3);
+                    _IYMYCancleConfirmReportDialog(review, 3, /*user*/);
                   },
                   child: Row(
                     children: [
@@ -303,8 +304,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(top: 4.0),
               child: MaterialButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    _IYMYCancleConfirmReportDialog(review, 4);
+                    _IYMYCancleConfirmReportDialog(review, 4, /*user*/);
                   },
                   child: Row(
                     children: [
@@ -322,7 +322,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.fromLTRB(0,4,0,8),
               child: MaterialButton(
                   onPressed: () {
-                    _IYMYCancleConfirmReportDialog(review, 5);
+                    _IYMYCancleConfirmReportDialog(review, 5, /*user*/);
                   },
                   child: Row(
                     children: [
@@ -547,7 +547,9 @@ class _ReviewListState extends State<ReviewList> {
 //     );
   }
 
-  Future<void> _IYMYCancleConfirmReportDialog(review, report) async {
+  Future<void> _IYMYCancleConfirmReportDialog(review, report, /*user*/) async {
+    User user = FirebaseAuth.instance.currentUser;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -614,17 +616,24 @@ class _ReviewListState extends State<ReviewList> {
                       onPressed: () async {
 
                         //TODO :: ###########신고하기!!!!!!!!!!!!!!!!!!
-                        // await ReviewService(documentId: review.documentId).reportReview(review, report);
-                        await ReviewService(documentId: review.documentId).reportReview(review, report,);
+                        await ReviewService(documentId: review.documentId).reportReview(review, report, user.uid);
+                        Navigator.pop(context);
+                        IYMYGotoSeeOrCheckDialog("이약모약 운영진에게\n신고가 접수되었어요");
 
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                        IYMYGotoSeeOrCheckDialog();
-
-
-
+                        // var reviewReported = await ReviewService(documentId: review.documentId).checkReviewIsReported();
+                        //
+                        // if(reviewReported == false) {
+                        //   await ReviewService(documentId: review.documentId).reportReview(review, report, user.uid);
+                        //   Navigator.of(context).pop();
+                        //   IYMYGotoSeeOrCheckDialog("이약모약 운영진에게\n신고가 접수되었어요");
+                        // }
+                        //
+                        // else if(reviewReported == true) {
+                        //   await ReviewService(documentId: review.documentId).reportAlreadyReportedReview(review, user.uid, report);
+                        //   Navigator.of(context).pop();
+                        //   IYMYGotoSeeOrCheckDialog("이미 해당 리뷰를 신고하셨습니다");
+                        // }
                       }
-
                   )
                 ],
               )
@@ -673,7 +682,7 @@ class _ReviewListState extends State<ReviewList> {
 //     );
   }
 
-  Widget IYMYGotoSeeOrCheckDialog(){
+  Widget IYMYGotoSeeOrCheckDialog(alertContent){
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -701,7 +710,7 @@ class _ReviewListState extends State<ReviewList> {
                     //     text: boldBodyString,
                     //     style: Theme.of(context).textTheme.headline4.copyWith(
                     //         color: gray700, fontWeight: FontWeight.w700)),
-                    TextSpan(text: "이약모약 운영진에게\n신고가 접수되었어요"),
+                    TextSpan(text: alertContent),
                   ],
                 ),
               ),
@@ -927,7 +936,7 @@ class _ReviewListState extends State<ReviewList> {
 
 
 
-  Widget _popUpMenuAnonymous(review, context) {
+  Widget _popUpMenuAnonymous(review, user) {
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -947,7 +956,7 @@ class _ReviewListState extends State<ReviewList> {
                         backgroundColor: Colors.transparent,
                         context: context,
                         builder: (context) {
-                          return _reportReviewPopup(review);
+                          return _reportReviewPopup(review/*, user*/);
                         } );
                   },
                   child: Center(child: Text("신고하기",
