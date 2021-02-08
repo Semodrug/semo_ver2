@@ -340,7 +340,7 @@ class _AllReveiewState extends State<AllReview> {
                   ],
                 )),
             _searchBar(),
-            ReviewList(_searchText, filter),
+            ReviewList(_searchText, filter, widget.drugItemSeq),
           ],
         ));
   }
