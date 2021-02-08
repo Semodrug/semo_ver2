@@ -6,6 +6,7 @@ import 'package:semo_ver2/review/report_review.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/dialog.dart';
+import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/shared/review_box.dart';
 import 'package:semo_ver2/theme/colors.dart';
@@ -18,7 +19,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 class ReviewList extends StatefulWidget {
   String searchText;
   String filter;
-  ReviewList(this.searchText, this.filter);
+  String drugItemSeq;
+  ReviewList(this.searchText, this.filter, this.drugItemSeq);
 
   @override
   _ReviewListState createState() => _ReviewListState();
@@ -34,10 +36,36 @@ class _ReviewListState extends State<ReviewList> {
     // stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
     // builder: (context, snapshot) {
     // if (snapshot.hasData) {
+    return StreamBuilder<List<Review>>(
+      stream: ReviewService().getReviews(widget.drugItemSeq),
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
+          List<Review> reviews = snapshot.data;
+          List<Review> searchResults = [];
+          for (Review review in reviews) {
+            if (review.effectText.contains(widget.searchText)
+                || review.sideEffectText.contains(widget.searchText)
+                || review.overallText.contains(widget.searchText))
+            {
+              searchResults.add(review);
+            } else
+              print('    RESULT Nothing     ');
+          }
+          return ListView.builder(
+            physics: const ClampingScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: searchResults.length,
+            itemBuilder: (context, index) {
+              return _buildListItem(context, searchResults[index]);
+            },
+//      children: searchResults.map((data) => _buildListItem(context, data)).toList(),
+          );
+        }
+        else return Loading();
+      },
+    );
 
-
-
-    final reviews = Provider.of<List<Review>>(context) ?? [];
+/*    final reviews = Provider.of<List<Review>>(context) ?? [];
     List<Review> searchResults = [];
     for (Review review in reviews) {
       if (review.effectText.contains(widget.searchText) ||
@@ -56,8 +84,7 @@ class _ReviewListState extends State<ReviewList> {
         return _buildListItem(context, searchResults[index]);
     },
 //      children: searchResults.map((data) => _buildListItem(context, data)).toList(),
-    );
-
+    );*/
 
 
 //    return ListView.builder(

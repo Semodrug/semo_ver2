@@ -999,7 +999,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             Text("아직 작성된 리뷰가 없어요")
                           ],
                         ))
-                    : ReviewList(_searchText, "all"),
+                    : ReviewList(_searchText, "all", widget.drugItemSeq),
               ],
             );
           } else
