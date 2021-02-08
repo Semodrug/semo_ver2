@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:semo_ver2/drug_info/search_highlighting.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -24,33 +25,7 @@ class _DetailInfoState extends State<DetailInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[200],
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        centerTitle: true,
-        title: Text(
-          '약 정보 전체보기',
-          style: TextStyle(
-              fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
-        ),
-      ),
+      appBar: CustomAppBarWithGoToBack('약 정보 전체보기', Icon(Icons.arrow_back), 3),
       backgroundColor: Colors.white,
       body: Column(
         children: [

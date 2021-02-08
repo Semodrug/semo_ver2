@@ -16,6 +16,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -34,35 +35,7 @@ class _MyPageState extends State<MyPage> {
     return (user == null)
         ? Loading()
         : Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.teal[200],
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-              centerTitle: true,
-              title: Text(
-                '마이페이지',
-                style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-              elevation: 0,
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: <Color>[
-                      Color(0xFFE9FFFB),
-                      Color(0xFFE9FFFB),
-                      Color(0xFFFFFFFF),
-                    ])),
-              ),
-            ),
+            appBar: CustomAppBarWithGoToBack('마이페이지', Icon(Icons.close), 3),
             backgroundColor: Colors.white,
             body: StreamBuilder<UserData>(
               stream: DatabaseService(uid: user.uid).userData,
@@ -83,7 +56,7 @@ class _MyPageState extends State<MyPage> {
                           color: gray50,
                           height: 2,
                         ),
-                        _myPageMenu('나의 건강정보 관리', context,
+                        _myPageMenu('키워드 알림 설정', context,
                             EditHealthPage(userData: userData)),
                         Container(
                           color: gray50,
@@ -191,13 +164,14 @@ class _MyPageState extends State<MyPage> {
                   StreamBuilder<List<Review>>(
                     stream: ReviewService().getUserReviews(user.uid.toString()),
                     builder: (context, snapshot) {
-                      if(snapshot.hasData) {
+                      if (snapshot.hasData) {
                         List<Review> reviews = snapshot.data;
                         return Container(
                             width: 136,
-                            child: _myMenu('리뷰', reviews.length.toString(), context, MyReviews()));
-                      }
-                      else return Container();
+                            child: _myMenu('리뷰', reviews.length.toString(),
+                                context, MyReviews()));
+                      } else
+                        return Container();
                     },
                   ),
                   Container(
@@ -209,13 +183,14 @@ class _MyPageState extends State<MyPage> {
                   StreamBuilder<UserData>(
                     stream: DatabaseService(uid: user.uid).userData,
                     builder: (context, snapshot) {
-                      if(snapshot.hasData) {
+                      if (snapshot.hasData) {
                         List favoriteList = snapshot.data.favoriteList;
                         return Container(
                             width: 136,
-                            child: _myMenu('찜', favoriteList.length.toString(), context, MyFavorites()));
-                      }
-                      else return Container();
+                            child: _myMenu('찜', favoriteList.length.toString(),
+                                context, MyFavorites()));
+                      } else
+                        return Container();
                     },
                   ),
                   //_myMenu('1:1 문의', '0', context, MyReviews())

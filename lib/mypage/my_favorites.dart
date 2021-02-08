@@ -8,6 +8,7 @@ import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/loading.dart';
@@ -19,41 +20,32 @@ class MyFavorites extends StatefulWidget {
 }
 
 class _MyFavoritesState extends State<MyFavorites> {
-
-
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[200],
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text("찜",  style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        // elevation: 0,
-      ),
-      body: CustomScrollView(
+        appBar: CustomAppBarWithGoToBack('찜', Icon(Icons.arrow_back), 3),
+        body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
               child: StreamBuilder<UserData>(
                 stream: DatabaseService(uid: user.uid).userData,
                 builder: (context, snapshot) {
-                  if(snapshot.hasData) {
+                  if (snapshot.hasData) {
                     List favoriteList = snapshot.data.favoriteList;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-                          child: Text("찜 " + favoriteList.length.toString() + "개"),
+                          child:
+                              Text("찜 " + favoriteList.length.toString() + "개"),
                         ),
-                        Divider(color: gray75, height: 1,),
+                        Divider(
+                          color: gray75,
+                          height: 1,
+                        ),
                         ListView.builder(
                             shrinkWrap: true,
                             physics: const ClampingScrollPhysics(),
@@ -63,16 +55,15 @@ class _MyFavoritesState extends State<MyFavorites> {
                             }),
                       ],
                     );
-
-                  }
-                  else return Loading();
+                  } else
+                    return Loading();
                 },
               ),
             )
           ],
-        )
-    );
+        ));
   }
+
   // StreamBuilder<Drug>(
   // stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
   // builder: (context, snapshot) {
@@ -83,7 +74,7 @@ class _MyFavoritesState extends State<MyFavorites> {
     return StreamBuilder<Drug>(
       stream: DatabaseService(itemSeq: favorite).drugData,
       builder: (context, snapshot) {
-        if(snapshot.hasData) {
+        if (snapshot.hasData) {
           Drug drug = snapshot.data;
           return GestureDetector(
             onTap: () => {
@@ -106,23 +97,26 @@ class _MyFavoritesState extends State<MyFavorites> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                    //   Column(
-                    //     children: [
-                    //       SizedBox(
-                    //         height: 64, width: 88,
-                    //         child: DrugImage(drugItemSeq: favorite),
-                    //       ),
-                    //       Container(height: 10,),
-                    //     ],
-                    //   ),
+                      //   Column(
+                      //     children: [
+                      //       SizedBox(
+                      //         height: 64, width: 88,
+                      //         child: DrugImage(drugItemSeq: favorite),
+                      //       ),
+                      //       Container(height: 10,),
+                      //     ],
+                      //   ),
                       SizedBox(
-                        height: 64, width: 88,
+                        height: 64,
+                        width: 88,
                         child: DrugImage(drugItemSeq: favorite),
                       ),
-                      Container(width: 18,),
+                      Container(
+                        width: 18,
+                      ),
                       Container(
                         //TODO
-                        width: MediaQuery.of(context).size.width-130,
+                        width: MediaQuery.of(context).size.width - 130,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -130,17 +124,29 @@ class _MyFavoritesState extends State<MyFavorites> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(drug.entpName,
-                                    style: Theme.of(context).textTheme.overline.copyWith(
-                                        color: gray300_inactivated, fontSize: 11)),
-                                Container(height: 1,),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .overline
+                                        .copyWith(
+                                            color: gray300_inactivated,
+                                            fontSize: 11)),
                                 Container(
-                                  width: MediaQuery.of(context).size.width-180,
+                                  height: 1,
+                                ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width - 180,
                                   child: Text(_shortenName(drug.itemName),
                                       overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context).textTheme.subtitle2.copyWith(
-                                          color: gray900, fontSize: 14)),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2
+                                          .copyWith(
+                                              color: gray900, fontSize: 14)),
                                 ),
-                                Container(height: 2,),
+                                Container(
+                                  height: 2,
+                                ),
                                 Row(
                                   children: [
                                     RatingBarIndicator(
@@ -156,31 +162,47 @@ class _MyFavoritesState extends State<MyFavorites> {
                                       unratedColor: gray75,
                                       //unratedColor: Colors.amber.withAlpha(50),
                                       direction: Axis.horizontal,
-                                      itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                                      itemPadding:
+                                          EdgeInsets.symmetric(horizontal: 0),
                                     ),
-                                    Container(width: 4.5,),
+                                    Container(
+                                      width: 4.5,
+                                    ),
                                     Text(drug.totalRating.toStringAsFixed(1),
-                                      style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2
+                                            .copyWith(
                                                 color: gray900, fontSize: 12)),
-                                    Text(" (" + drug.numOfReviews.toString() +"개)",
-                                        style: Theme.of(context).textTheme.overline.copyWith(
-                                            color: gray300_inactivated, fontSize: 11)),
+                                    Text(
+                                        " (" +
+                                            drug.numOfReviews.toString() +
+                                            "개)",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .overline
+                                            .copyWith(
+                                                color: gray300_inactivated,
+                                                fontSize: 11)),
                                   ],
                                 ),
-                                Container(height: 4,),
+                                Container(
+                                  height: 4,
+                                ),
                                 Padding(
                                   padding:
-                                  const EdgeInsets.symmetric(vertical: 3),
+                                      const EdgeInsets.symmetric(vertical: 3),
                                   child: Container(
                                       height: 23,
                                       child: CategoryButton(
-                                          str: drug.category, fromHome: 'home')),
+                                          str: drug.category,
+                                          fromHome: 'home')),
                                 ),
                               ],
                             ),
                             Expanded(child: Container()),
                             IconButton(
-                              padding: EdgeInsets.only(right:0),
+                              padding: EdgeInsets.only(right: 0),
                               icon: ImageIcon(
                                 AssetImage('assets/icons/small_x.png'),
                                 // color: primary400_line,
@@ -194,17 +216,18 @@ class _MyFavoritesState extends State<MyFavorites> {
                       ),
                     ],
                   ),
-                  Container(height: 10,),
+                  Container(
+                    height: 10,
+                  ),
                 ],
               ),
             ),
           );
-        }
-        else return Container();
+        } else
+          return Container();
       },
     );
   }
-
 
   Future<void> _showDeleteDialog(drug, user) async {
     showDialog(
@@ -213,7 +236,7 @@ class _MyFavoritesState extends State<MyFavorites> {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,8 +293,8 @@ class _MyFavoritesState extends State<MyFavorites> {
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
-
-                        await DatabaseService(uid: user.uid).deleteFromFavoriteList(drug.itemSeq);
+                        await DatabaseService(uid: user.uid)
+                            .deleteFromFavoriteList(drug.itemSeq);
                         Navigator.pop(context);
 
                         //OK Dialog
@@ -280,11 +303,12 @@ class _MyFavoritesState extends State<MyFavorites> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               contentPadding: EdgeInsets.all(16),
-                              shape:
-                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0)),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(height: 10),
@@ -310,23 +334,23 @@ class _MyFavoritesState extends State<MyFavorites> {
                                       ),
                                       style: ElevatedButton.styleFrom(
                                           minimumSize: Size(260, 40),
-                                          padding: EdgeInsets.symmetric(horizontal: 10),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10),
                                           elevation: 0,
                                           primary: gray50,
                                           shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
                                               side: BorderSide(color: gray75))),
-                                      onPressed:(){
+                                      onPressed: () {
                                         Navigator.pop(context);
-                                      } )
+                                      })
                                 ],
                               ),
                             );
                           },
                         );
-                      }
-
-                  )
+                      })
                 ],
               )
             ],
@@ -334,8 +358,6 @@ class _MyFavoritesState extends State<MyFavorites> {
         );
       },
     );
-
-
 
 //     return showDialog<void>(
 //       context: context,
@@ -373,7 +395,6 @@ class _MyFavoritesState extends State<MyFavorites> {
 //       },
 //     );
   }
-
 
   String _shortenName(String drugName) {
     String newName;

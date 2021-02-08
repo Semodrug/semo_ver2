@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/7-1_withdrawal.dart';
 import 'package:semo_ver2/services/auth.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -16,38 +17,11 @@ class Others extends StatelessWidget {
     return (user == null)
         ? LinearProgressIndicator()
         : Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.teal[200],
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-              centerTitle: true,
-              title: Text(
-                '기타',
-                style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-              elevation: 0,
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: <Color>[
-                      Color(0xFFE9FFFB),
-                      Color(0xFFE9FFFB),
-                      Color(0xFFFFFFFF),
-                    ])),
-              ),
-            ),
+            appBar: CustomAppBarWithGoToBack('기타', Icon(Icons.arrow_back), 3),
             backgroundColor: Colors.white,
             body: Column(
               children: [
+                SizedBox(height: 12),
                 InkWell(
                   child: Container(
                     height: 48,

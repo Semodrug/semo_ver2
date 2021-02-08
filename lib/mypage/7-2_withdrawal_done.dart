@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -11,38 +12,7 @@ class _WithdrawalDonePageState extends State<WithdrawalDonePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.close,
-              color: Colors.teal[200],
-            ),
-            onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/start', (Route<dynamic> route) => false);
-            },
-          ),
-          centerTitle: true,
-          title: Text(
-            '회원 탈퇴',
-            style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[
-                  Color(0xFFE9FFFB),
-                  Color(0xFFE9FFFB),
-                  Color(0xFFFFFFFF),
-                ])),
-          ),
-        ),
+        appBar: CustomAppBarWithGoToBack('회원 탈퇴', Icon(Icons.close), 3),
         backgroundColor: Colors.white,
         body: Padding(
           padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),

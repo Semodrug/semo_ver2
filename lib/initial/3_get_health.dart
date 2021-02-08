@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -37,35 +38,8 @@ class _GetHealthPageState extends State<GetHealthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.teal[200],
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-          centerTitle: true,
-          title: Text(
-            '키워드 입력',
-            style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[
-                  Color(0xFFE9FFFB),
-                  Color(0xFFE9FFFB),
-                  Color(0xFFFFFFFF),
-                ])),
-          ),
-        ),
+        appBar:
+            CustomAppBarWithGoToBack('키워드 알림 설정', Icon(Icons.arrow_back), 0.5),
         backgroundColor: Colors.white,
         body: Builder(builder: (context) {
           return SingleChildScrollView(
