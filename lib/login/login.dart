@@ -309,69 +309,77 @@ class _SocialLoginInSectionState extends State<_SocialLoginInSection> {
         width: 42,
         height: 42,
       ),
-      onPressed: () {
+      onPressed: () async {
         print('test');
-        _isKakaoTalkInstalled ? _loginWithTalk() : _loginWithKaKao();
+        dynamic result = await _auth.signInWithKaKao();
+        if (result == null) {
+          // setState(() {
+          //   // loading = false;
+          //   // error = 'Could not sign in with those credentials';
+          print('Could not sign in with those credentials');
+          //   }
+          // );
+        }
+        // _isKakaoTalkInstalled ? _loginWithTalk() : _loginWithKaKao();
       },
     );
   }
 
-  _issueAccessToken(String authCode) async {
-    try {
-      var token = await AuthApi.instance.issueAccessToken(authCode);
-      AccessTokenStore.instance.toStore(token);
-      print(token);
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-            '로그인이 완료되었습니다.',
-            textAlign: TextAlign.center,
-          ),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.black.withOpacity(0.87)));
-
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/start', (Route<dynamic> route) => false);
-    } catch (e) {
-      print("error on $e");
-    }
-  }
-
-  _loginWithKaKao() async {
-    try {
-      var code = await AuthCodeClient.instance.request();
-      await _issueAccessToken(code);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _loginWithTalk() async {
-    try {
-      var code = await AuthCodeClient.instance.requestWithTalk();
-      await _issueAccessToken(code);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _logoutTalk() async {
-    try {
-      var code = await UserApi.instance.logout();
-      print(code.toString());
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _unlinkTalk() async {
-    try {
-      var code = await UserApi.instance.unlink();
-      print(code.toString());
-    } catch (e) {
-      print(e);
-    }
-  }
+  // _issueAccessToken(String authCode) async {
+  //   try {
+  //     var token = await AuthApi.instance.issueAccessToken(authCode);
+  //     AccessTokenStore.instance.toStore(token);
+  //     print(token);
+  //
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //         content: Text(
+  //           '로그인이 완료되었습니다.',
+  //           textAlign: TextAlign.center,
+  //         ),
+  //         behavior: SnackBarBehavior.floating,
+  //         backgroundColor: Colors.black.withOpacity(0.87)));
+  //
+  //     Navigator.of(context)
+  //         .pushNamedAndRemoveUntil('/start', (Route<dynamic> route) => false);
+  //   } catch (e) {
+  //     print("error on $e");
+  //   }
+  // }
+  //
+  // _loginWithKaKao() async {
+  //   try {
+  //     var code = await AuthCodeClient.instance.request();
+  //     await _issueAccessToken(code);
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+  //
+  // _loginWithTalk() async {
+  //   try {
+  //     var code = await AuthCodeClient.instance.requestWithTalk();
+  //     await _issueAccessToken(code);
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+  //
+  // _logoutTalk() async {
+  //   try {
+  //     var code = await UserApi.instance.logout();
+  //     print(code.toString());
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+  //
+  // _unlinkTalk() async {
+  //   try {
+  //     var code = await UserApi.instance.unlink();
+  //     print(code.toString());
+  //   } catch (e) {
+  //     print(e);
+  //   }
 
   Widget _appleLoginButton() {
     return FlatButton(

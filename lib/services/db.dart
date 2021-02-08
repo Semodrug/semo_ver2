@@ -67,7 +67,8 @@ class DatabaseService {
   }
 
   //for search from User drugs
-  Stream<List<Drug>> setForSearchFromAllAfterRemainStartAt(String searchVal, int limit) {
+  Stream<List<Drug>> setForSearchFromAllAfterRemainStartAt(
+      String searchVal, int limit) {
     drugQuery = drugQuery
         .where('searchNameList', arrayContains: searchVal)
         .orderBy('ITEM_NAME', descending: false)
@@ -78,12 +79,12 @@ class DatabaseService {
     return drugsSnapshots;
   }
 
-  Stream<List<Drug>> setForSearchFromAllStartAtSearch(String searchVal, int limit) {
+  Stream<List<Drug>> setForSearchFromAllStartAtSearch(
+      String searchVal, int limit) {
     drugQuery = drugQuery
         .where('searchNameList', arrayContains: searchVal)
         .orderBy('ITEM_NAME', descending: false)
-        .startAt([searchVal])
-        .limit(limit);
+        .startAt([searchVal]).limit(limit);
 
     drugsSnapshots = drugQuery.snapshots().map(_drugListFromSnapshot);
 

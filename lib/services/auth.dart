@@ -4,6 +4,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 // import 'package:flutter_kakao_login/flutter_kakao_login.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:kakao_flutter_sdk/all.dart' as Kakao;
+import 'package:flutter/services.dart';
+import 'dart:async';
+import 'dart:io' show HttpServer;
+import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'dart:convert';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -113,6 +121,40 @@ class AuthService {
   //     print("${e.code} ${e.message}");
   //   }
   // }
+
+  Future<UserCredential> signInWithKaKao() async {
+    final clientState = Uuid().v4();
+    final url = Uri.https('kauth.kakao.com', '/oauth/authorize', {
+      'response_type': 'code',
+      'client_id': "c194ada7fb0c1a132da3692df7ec9311",
+      'response_mode': 'form_post',
+      'redirect_uri':
+          'https://obsidian-healthy-hydrogen.glitch.me/callbacks/kakao/sign_in',
+      'state': clientState,
+    });
+
+    final result = await FlutterWebAuth.authenticate(
+        url: url.toString(),
+        callbackUrlScheme: "webauthcallback"); //"applink"//"signinwithapple"
+    final body = Uri.parse(result).queryParameters;
+
+    final tokenUrl = Uri.https('kauth.kakao.com', '/oauth/token', {
+      'grant_type': 'authorization_code',
+      'client_id': "c194ada7fb0c1a132da3692df7ec9311",
+      'redirect_uri':
+          'https://obsidian-healthy-hydrogen.glitch.me/callbacks/kakao/sign_in',
+      'code': body["code"],
+    });
+
+    var responseTokens = await http.post(tokenUrl.toString());
+    Map<String, dynamic> resultToken = json.decode(responseTokens.body);
+
+    print(resultToken['access_token']);
+    var response = await http.post(
+        "https://obsidian-healthy-hydrogen.glitch.me/callbacks/kakao/token",
+        body: {"accessToken": resultToken['access_token']});
+    return FirebaseAuth.instance.signInWithCustomToken(response.body);
+  }
 
   // sign out
   Future signOut() async {
