@@ -156,8 +156,21 @@ class ReviewService {
     }
   }
 
+  Future<bool> checkReviewIsReported() async {
+    final snapshot = await reportReviewCollection.doc(documentId).get();
+    return (snapshot.exists);
+  }
 
-  Future<void> reportReview(review, report) async {
+
+  // Future<void> increaseFavorite(String docId, String currentUserUid) async {
+  //   return await reviewCollection.doc(docId).update({
+  //     'favoriteSelected': FieldValue.arrayUnion([currentUserUid]),
+  //     'noFavorite': FieldValue.increment(1),
+  //   });
+  // }
+
+
+  Future<void> reportReview(review, report, reporterUid) async {
     String reportContent;
     if(report == 1) reportContent = "광고, 홍보 / 거래시도";
     if(report == 2) reportContent = "욕설, 음란어 사용";
@@ -165,23 +178,32 @@ class ReviewService {
     if(report == 4) reportContent = "개인 정보 노출";
     if(report == 5) reportContent = "기타 (명예훼손)";
 
-
-    return await reportReviewCollection.doc().set({
+    return await reportReviewCollection.doc(review.documentId).set({
       'reviewDocumentId': review.documentId,
-      'reportContent': reportContent,
+      'reportContent': FieldValue.arrayUnion([reportContent]),
       'effectText': review.effectText,
       'sideEffectText': review.sideEffectText,
       'overallText': review.overallText,
       'itemName': review.itemName,
-
-      // 'effect': effect,
-      // 'sideEffect': sideEffect,
-      // 'effectText': effectText,
-      // 'sideEffectText': sideEffectText,
-      // 'overallText': overallText,
-      // 'starRating': starRating
+      'reporterUid': FieldValue.arrayUnion([reporterUid]),
     });
   }
+
+
+  Future<void> reportAlreadyReportedReview(review, reporterUid, report) async {
+    String reportContent;
+    if(report == 1) reportContent = "광고, 홍보 / 거래시도";
+    if(report == 2) reportContent = "욕설, 음란어 사용";
+    if(report == 3) reportContent = "약과 무관한 리뷰 작성";
+    if(report == 4) reportContent = "개인 정보 노출";
+    if(report == 5) reportContent = "기타 (명예훼손)";
+
+    return await reportReviewCollection.doc(review.documentId).update({
+      'reportContent': FieldValue.arrayUnion([reportContent]),
+      'reporterUid': FieldValue.arrayUnion([reporterUid]),
+    });
+  }
+
 
 }
 

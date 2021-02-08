@@ -7,8 +7,7 @@ class ReportReview {
   final String sideEffectText;
   final String overallText;
   final String itemName;
-
-
+  final String reporterUid;
 
   ReportReview({
     this.reviewDocumentId,
@@ -16,6 +15,7 @@ class ReportReview {
     this.effectText,
     this.sideEffectText,
     this.overallText,
-    this.itemName
+    this.itemName,
+    this.reporterUid
   });
 }
