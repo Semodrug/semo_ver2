@@ -918,6 +918,11 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /* Review */
   Widget _drugReviews() {
+
+    // body: StreamProvider<List<Review>>.value(
+    //     value: ReviewService().getReviews(widget.drugItemSeq),
+    //     child: StreamBuilder<Drug>(
+
     return StreamBuilder<Drug>(
         stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
         builder: (context, snapshot) {
@@ -937,12 +942,10 @@ class _ReviewPageState extends State<ReviewPage> {
                           style: Theme.of(context).textTheme.subtitle1.copyWith(
                                 color: gray750_activated,
                               )),
-                      //Text("EEEEE"+checkReviewIsZero().toString()),
                       checkReviewIsZero() == true
                           ? Container()
                           : Row(
                               children: [
-                                // Expanded(child: Container()),
                                 FlatButton(
                                     padding: EdgeInsets.zero,
                                     onPressed: () {
@@ -974,8 +977,6 @@ class _ReviewPageState extends State<ReviewPage> {
                     ],
                   ),
                 ),
-                // _searchBar(),
-                // ReviewList(_searchText, "all"),
 
                 checkReviewIsZero() == true ? Container() : _searchBar(),
                 checkReviewIsZero() == true ? Container() : _reviewWarning(),
@@ -1003,24 +1004,6 @@ class _ReviewPageState extends State<ReviewPage> {
             );
           } else
             return Container();
-              // Container(
-              //     height: 310,
-              //     width: MediaQuery.of(context).size.width,
-              //     child: Column(
-              //       children: [
-              //         Container(
-              //           height: 30,
-              //         ),
-              //         Image.asset(
-              //           'assets/images/Group 257.png',
-              //         ),
-              //         Container(
-              //           height: 10,
-              //         ),
-              //         Text("아직 작성된 리뷰가 없어요")
-              //       ],
-              //     ));
-              // Loading();
         });
   }
 
@@ -1086,7 +1069,6 @@ class _ReviewPageState extends State<ReviewPage> {
                 child: TextField(
                   focusNode: focusNode,
                   style: TextStyle(fontSize: 15),
-//                  autofocus: true,
                   controller: _filter,
                   decoration: InputDecoration(
                       fillColor: gray50,
@@ -1099,11 +1081,6 @@ class _ReviewPageState extends State<ReviewPage> {
                           child: Image.asset('assets/icons/search_grey.png'),
                         ),
                       ),
-
-                  //     ImageIcon(
-                  //     AssetImage('assets/icons/search_grey.png'),
-                  // // color: primary400_line,
-                  //     ),
                       hintText: '어떤 리뷰를 찾고계세요?',
                       hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
                             color: gray300_inactivated,
