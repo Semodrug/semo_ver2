@@ -160,43 +160,5 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
             }
           }),
     );
-
-    Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 400.0,
-        height: 45.0,
-        child: RaisedButton(
-            child: Text(
-              '탈퇴하기',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: gray0_white, fontSize: 15),
-            ),
-            color: _isAgree ? primary400_line : gray200,
-            shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(10.0)),
-            onPressed: () async {
-              if (_isAgree) {
-                await DatabaseService().deleteUser(widget.userId);
-
-                dynamic result = await _auth.withdrawalAccount();
-
-                if (result is String) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(result)));
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => WithdrawalDonePage()),
-                  );
-                }
-              }
-            }),
-      ),
-    );
   }
 }
