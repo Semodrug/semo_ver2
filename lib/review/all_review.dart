@@ -67,9 +67,8 @@ class _AllReveiewState extends State<AllReview> {
     return StreamProvider<List<Review>>.value(
       value: ReviewService().getReviews(widget.drugItemSeq),
       child: Scaffold(
-        appBar:
-        //_appbar(context),
-        CustomAppBarWithGoToBack(_shortenName(widget.itemName), Icon(Icons.arrow_back), 3),
+        appBar: CustomAppBarWithGoToBack(_shortenName(widget.itemName), Icon(Icons.arrow_back), 3),
+          backgroundColor: gray0_white,
 //      body: topOfReview(context),
         body: CustomScrollView(
           slivers: [
@@ -203,15 +202,20 @@ class _AllReveiewState extends State<AllReview> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 16),
+              padding: const EdgeInsets.fromLTRB(16,15,16,5),
               child: Container(
                 height: 35,
                 decoration: BoxDecoration(
-                  color: gray75,
+                  border: Border.all(
+                    color: primary300_main
+                  ),
+                  // color: gray75,
+                    color: gray0_white,
                   borderRadius: BorderRadius.all(Radius.circular(4))
                 ),
                 child: TabBar(
-                  unselectedLabelColor: Colors.redAccent,
+                  unselectedLabelColor: gray500,
+                  labelColor: gray0_white,
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicator: BoxDecoration(
                       gradient: LinearGradient(
@@ -229,15 +233,24 @@ class _AllReveiewState extends State<AllReview> {
                       .caption
                       .copyWith( color: gray500),
                   tabs: [
+                    // Tab(
+                    //   child: Align(
+                    //     alignment: Alignment.center,
+                    //     child: Text("APPS"),
+                    //   ),
+                    // ),
                     Tab(child: Text('전체리뷰',
-                      style: Theme.of(context).textTheme.subtitle2
-                          .copyWith(color: gray750_activated, fontSize: 12))),
+                      // style: Theme.of(context).textTheme.subtitle2
+                      //     .copyWith(color: gray750_activated, fontSize: 12)
+                    )),
                     Tab(child: Text('효과리뷰만',
-                        style: Theme.of(context).textTheme.subtitle2
-                        .copyWith(color: gray750_activated, fontSize: 12))),
+                        // style: Theme.of(context).textTheme.subtitle2
+                        // .copyWith(color: gray750_activated, fontSize: 12)
+                    )),
                     Tab(child: Text('부작용리뷰만',
-                        style: Theme.of(context).textTheme.subtitle2
-                            .copyWith(color: gray750_activated, fontSize: 12))),
+                        // style: Theme.of(context).textTheme.subtitle2
+                        //     .copyWith(color: gray750_activated, fontSize: 12)
+                    )),
                   ],
                     // indicator: CustomTabIndicator()
                 ),
@@ -278,6 +291,7 @@ class _AllReveiewState extends State<AllReview> {
   Widget _underTab(String filter) {
     return Container(
         //key: _key1,
+      //TODO!!!!!!!!!!!!!
         height: 5000,
         //height: MediaQuery.of(context).size.height-500,
         child: Column(
@@ -305,10 +319,8 @@ class _AllReveiewState extends State<AllReview> {
                             Drug drug = snapshot.data;
                             return Text(
                                 "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
-                                style: TextStyle(
-                                  fontSize: 16.5,
-                                  fontWeight: FontWeight.bold,
-                                ));
+                                style: Theme.of(context).textTheme.headline5.copyWith(color: gray750_activated,fontSize: 14)
+                            );
                           } else
                             return Container();
                         }),
@@ -333,18 +345,144 @@ class _AllReveiewState extends State<AllReview> {
         ));
   }
 
+//   Widget _searchBar() {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(horizontal: 20),
+//       child: Container(
+// //        width: 370,
+// //        width: MediaQuery.of(context).size.width*0.9,
+//         height: 45,
+//         margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.all(Radius.circular(8.0)),
+//           color: Colors.grey[200],
+//         ),
+//         child: Row(
+//           children: [
+//             Expanded(
+//                 flex: 5,
+//                 child: TextField(
+//                   focusNode: focusNode,
+//                   style: TextStyle(fontSize: 15),
+// //                  autofocus: true,
+//                   controller: _filter,
+//                   decoration: InputDecoration(
+//                       fillColor: Colors.white12,
+//                       filled: true,
+//                       prefixIcon:  SizedBox(
+//                         height: 10,
+//                         width: 10,
+//                         child: Padding(
+//                           padding: const EdgeInsets.only(top:4.0, bottom: 4),
+//                           child: Image.asset('assets/icons/search_grey.png'),
+//                         ),
+//                       ),
+// //                      suffixIcon: focusNode.hasFocus
+// //                          ? IconButton(
+// //                        icon: Icon(Icons.cancel, size: 20),
+// //                        onPressed: () {
+// //                          setState(() {
+// //                            _filter.clear();
+// //                            _searchText = "";
+// //                          });
+// //                        },
+// //                      )
+// //                          : Container(),
+//                       hintText: '검색',
+//                       contentPadding: EdgeInsets.zero,
+//                       labelStyle: TextStyle(color: Colors.grey),
+//                       focusedBorder: OutlineInputBorder(
+//                           borderRadius: BorderRadius.all(Radius.circular(10)),
+//                           borderSide: BorderSide(color: Colors.transparent)),
+//                       enabledBorder: OutlineInputBorder(
+//                           borderRadius: BorderRadius.all(Radius.circular(10)),
+//                           borderSide: BorderSide(color: Colors.transparent)),
+//                       border: OutlineInputBorder(
+//                           borderRadius: BorderRadius.all(Radius.circular(10)),
+//                           borderSide: BorderSide(color: Colors.transparent))),
+//                 )),
+// //            focusNode.hasFocus
+// //                ? Expanded(
+// //              child: FlatButton(
+// //                child: Text(
+// //                  'clear',
+// //                  style: TextStyle(fontSize: 13),
+// //                ),
+// //                onPressed: () {
+// //                  setState(() {
+// //                    _filter.clear();
+// //                    _searchText = "";
+// //                    focusNode.unfocus();
+// //                  });
+// //                },
+// //              ),
+// //            )
+// //                : Expanded(
+// //              flex: 0,
+// //              child: Container(),
+// //            )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+
   Widget _searchBar() {
+    // return Center(
+    //   child: Column(
+    //     children: [
+    //       Container(
+    //         margin: EdgeInsets.fromLTRB(20, 12, 20, 0),
+    //         child: SizedBox(
+    //             height: 35,
+    //             child: FlatButton(
+    //               child: Row(
+    //                 mainAxisAlignment: MainAxisAlignment.start,
+    //                 children: [
+    //                   Icon(Icons.search, size: 20),
+    //                   Padding(
+    //                     padding:
+    //                     const EdgeInsets.symmetric(horizontal: 10.0),
+    //                     child: Text(
+    //                       "어떤 약정보를 찾고 계세요?",
+    //                       style: Theme.of(context).textTheme.bodyText2,
+    //                     ),
+    //                   ),
+    //                 ],
+    //               ),
+    //               // onPressed: () {
+    //               //   Navigator.push(
+    //               //       context,
+    //               //       MaterialPageRoute(
+    //               //           builder: (BuildContext context) =>
+    //               //               SearchHighlightingScreen(
+    //               //                   infoEE: infoEE,
+    //               //                   infoNB: infoNB,
+    //               //                   infoUD: infoUD,
+    //               //                   storage: storage,
+    //               //                   entp_name: entpName)));
+    //               // },
+    //               textColor: gray300_inactivated,
+    //               color: gray50,
+    //               shape: OutlineInputBorder(
+    //                   borderSide: BorderSide(
+    //                       style: BorderStyle.solid,
+    //                       width: 1.0,
+    //                       color: gray200),
+    //                   borderRadius: BorderRadius.circular(8.0)),
+    //             )),
+    //       ),
+    //       SizedBox(height: 10)
+    //     ],
+    //   ),
+    // );
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
-//        width: 370,
-//        width: MediaQuery.of(context).size.width*0.9,
-        height: 45,
+        height: 35,
         margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          color: Colors.grey[200],
-        ),
         child: Row(
           children: [
             Expanded(
@@ -355,62 +493,46 @@ class _AllReveiewState extends State<AllReview> {
 //                  autofocus: true,
                   controller: _filter,
                   decoration: InputDecoration(
-                      fillColor: Colors.white12,
+                      fillColor: gray50,
                       filled: true,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                        size: 20,
+                      prefixIcon:  SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top:4.0, bottom: 4),
+                          child: Image.asset('assets/icons/search_grey.png'),
+                        ),
                       ),
-//                      suffixIcon: focusNode.hasFocus
-//                          ? IconButton(
-//                        icon: Icon(Icons.cancel, size: 20),
-//                        onPressed: () {
-//                          setState(() {
-//                            _filter.clear();
-//                            _searchText = "";
-//                          });
-//                        },
-//                      )
-//                          : Container(),
-                      hintText: '검색',
+
+                      //     ImageIcon(
+                      //     AssetImage('assets/icons/search_grey.png'),
+                      // // color: primary400_line,
+                      //     ),
+                      hintText: '어떤 리뷰를 찾고계세요?',
+                      hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
+                        color: gray300_inactivated,
+                      ),
                       contentPadding: EdgeInsets.zero,
                       labelStyle: TextStyle(color: Colors.grey),
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.transparent)),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(color: gray75)),
                       enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.transparent)),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(color: gray75)),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(color: Colors.transparent))),
+                          borderSide: BorderSide(
+                              style: BorderStyle.solid,
+                              width: 1.0,
+                              color: gray75),
+                          borderRadius: BorderRadius.circular(8.0))),
                 )),
-//            focusNode.hasFocus
-//                ? Expanded(
-//              child: FlatButton(
-//                child: Text(
-//                  'clear',
-//                  style: TextStyle(fontSize: 13),
-//                ),
-//                onPressed: () {
-//                  setState(() {
-//                    _filter.clear();
-//                    _searchText = "";
-//                    focusNode.unfocus();
-//                  });
-//                },
-//              ),
-//            )
-//                : Expanded(
-//              flex: 0,
-//              child: Container(),
-//            )
           ],
         ),
       ),
     );
   }
+
 
 /*Widget _buildBody(BuildContext context) {
     // TODO: get actual snapshot from Cloud Firestore
