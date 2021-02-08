@@ -46,7 +46,8 @@ class CustomAppBarWithArrowBackAndSearch extends StatelessWidget with PreferredS
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return
+      AppBar(
       title: Text(title, style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),),
       elevation: elevation,
       titleSpacing: 0,

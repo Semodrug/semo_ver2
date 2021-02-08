@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/models/single_review.dart';
 import 'package:semo_ver2/models/user.dart';
 
 
@@ -7,7 +8,6 @@ class ReviewService {
 
   final String documentId;
   ReviewService({ this.documentId });
-
 
   final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
   final CollectionReference reportReviewCollection = FirebaseFirestore.instance.collection('ReportReview');
@@ -82,6 +82,8 @@ class ReviewService {
   Query reviewQuery = FirebaseFirestore.instance.collection('Reviews');
   Stream<List<Review>> reviewsSnapshots;
 
+
+
   Stream<List<Review>> get reviews {
 //    reviewQuery = reviewQuery.orderBy('registrationDate', descending: false);
 //
@@ -108,6 +110,12 @@ class ReviewService {
     final QuerySnapshot result =
       await reviewCollection.where("seqNum", isEqualTo: seqNum).where("uid", isEqualTo: user).get();
     return result.docs.isEmpty;
+  }
+
+  Stream<List<Review>> findUserReview(String seqNum, String user) {
+    reviewQuery = reviewQuery.where("seqNum", isEqualTo: seqNum).where("uid", isEqualTo: user);
+    reviewsSnapshots = reviewQuery.snapshots().map(_reviewListFromSnapshot);
+    return reviewsSnapshots;
   }
 
 
@@ -160,6 +168,7 @@ class ReviewService {
     final snapshot = await reportReviewCollection.doc(documentId).get();
     return (snapshot.exists);
   }
+
 
 
   // Future<void> increaseFavorite(String docId, String currentUserUid) async {

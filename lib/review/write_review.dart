@@ -7,8 +7,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/review/see_my_review.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/shortcut_dialog.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
@@ -119,22 +121,7 @@ class _WriteReviewState extends State<WriteReview> {
     TheUser user = Provider.of<TheUser>(context);
     return Scaffold(
       backgroundColor: gray0_white,
-        appBar: AppBar(
-          title: Text('리뷰 쓰기',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline4
-                  .copyWith(
-                  color: gray800, fontSize: 16)) ,
-          backgroundColor: gray0_white,
-          leading: IconButton(
-              icon: Icon(Icons.close, color: primary300_main),
-              onPressed: () {
-                _IYMYCheckDialog();
-                // Navigator.pop(context);
-              }),
-        ),
-
+        appBar: CustomAppBarWithGoToBack('리뷰 쓰기', Icon(Icons.close), 3),
         body: ChangeNotifierProvider(
             create: (context) => Review(),
             child: GestureDetector(
@@ -714,7 +701,7 @@ class _WriteReviewState extends State<WriteReview> {
         child: IYMYSubmitButton(
           context: context,
           isDone: true,
-          textString: '다음',
+          textString: '완료',
           onPressed: () async {
             effectText = myControllerEffect.text;
             sideEffectText = myControllerSideEffect.text;
@@ -767,6 +754,8 @@ class _WriteReviewState extends State<WriteReview> {
     );
   }
 
+
+  //##TODO:    - [ ] 작성한 리뷰 보러가기 - edit review
   Widget IYMYGotoSeeOrCheckDialog(){
     showDialog(
       context: context,
@@ -822,7 +811,9 @@ class _WriteReviewState extends State<WriteReview> {
                     ),
                   ),
                   onTap: () {
-
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => SeeMyReview(widget.drugItemSeq)));
                   }),
               SizedBox(width: 16),
               /* RIGHT ACTION BUTTON */
