@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/report_review.dart';
+import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/ok_dialog.dart';
@@ -27,12 +28,22 @@ class _ReviewListState extends State<ReviewList> {
   @override
   Widget build(BuildContext context) {
 
+    // body: StreamProvider<List<Review>>.value(
+    // value: ReviewService().getReviews(widget.drugItemSeq),
+    // child: StreamBuilder<Drug>(
+    // stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+    // builder: (context, snapshot) {
+    // if (snapshot.hasData) {
+
+
+
+
     final reviews = Provider.of<List<Review>>(context) ?? [];
     List<Review> searchResults = [];
     for (Review review in reviews) {
-      if (review.effectText.toString().contains(widget.searchText) ||
-          review.sideEffectText.toString().contains(widget.searchText) ||
-          review.overallText.toString().contains(widget.searchText)
+      if (review.effectText.contains(widget.searchText) ||
+          review.sideEffectText.contains(widget.searchText) ||
+          review.overallText.contains(widget.searchText)
       ) {
         searchResults.add(review);
       } else
