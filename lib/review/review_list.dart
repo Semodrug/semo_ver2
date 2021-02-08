@@ -37,7 +37,6 @@ class _ReviewListState extends State<ReviewList> {
 
 
 
-
     final reviews = Provider.of<List<Review>>(context) ?? [];
     List<Review> searchResults = [];
     for (Review review in reviews) {
