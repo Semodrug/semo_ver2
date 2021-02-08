@@ -246,8 +246,8 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
         Container(
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             _googleLoginButton(),
-            _kakaoLoginButton(),
-            _appleLoginButton(),
+            _facebookLoginButton(),
+            // _appleLoginButton(),
           ]),
         ),
       ],
@@ -279,14 +279,14 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     );
   }
 
-  Widget _kakaoLoginButton() {
+  Widget _facebookLoginButton() {
     return FlatButton(
       minWidth: 60,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: EdgeInsets.zero,
       onPressed: () async {
         // setState(() => loading = true);
-        dynamic result = await _auth.signInWithGoogle();
+        dynamic result = await _auth.signInWithFacebook();
         if (result == null) {
           setState(() {
             // loading = false;
@@ -325,12 +325,3 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     );
   }
 }
-
-/* 로그인 뛰어넘기 */
-// IconButton(
-// icon: Icon(Icons.skip_next),
-// color: Colors.redAccent,
-// onPressed: () {
-// Navigator.pushNamed(context, '/bottom_bar');
-// },
-// ),
