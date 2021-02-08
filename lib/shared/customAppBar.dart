@@ -18,7 +18,8 @@ class CustomAppBarWithGoToBack extends StatelessWidget with PreferredSizeWidget 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title, style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),),
+      title: Text(title,
+        style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),),
       elevation: elevation,
       titleSpacing: 0,
       backgroundColor: Colors.white,

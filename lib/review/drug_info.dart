@@ -1091,11 +1091,19 @@ class _ReviewPageState extends State<ReviewPage> {
                   decoration: InputDecoration(
                       fillColor: gray50,
                       filled: true,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                        size: 20,
+                      prefixIcon:  SizedBox(
+                        height: 10,
+                        width: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top:4.0, bottom: 4),
+                          child: Image.asset('assets/icons/search_grey.png'),
+                        ),
                       ),
+
+                  //     ImageIcon(
+                  //     AssetImage('assets/icons/search_grey.png'),
+                  // // color: primary400_line,
+                  //     ),
                       hintText: '어떤 리뷰를 찾고계세요?',
                       hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
                             color: gray300_inactivated,
