@@ -6,12 +6,10 @@ class Review {
   final String effectText;
   final String sideEffectText;
   final String overallText;
-//  List<String> favoriteSelected = List<String>();
   List favoriteSelected;
   final num starRating;
   var noFavorite;
   final String uid;
-  final String id;
   final String documentId;
   final Timestamp registrationDate;
   final String seqNum;
@@ -19,9 +17,6 @@ class Review {
   final String itemName;
   final String nickName;
 
-
-//  final String name;
-//  final String uid;
 
   Review({
     this.effect,
@@ -32,7 +27,6 @@ class Review {
     this.favoriteSelected,
     this.starRating,this.noFavorite,
     this.uid,
-    this.id,
     this.documentId,
     this.registrationDate,
     this.seqNum,

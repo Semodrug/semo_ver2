@@ -54,7 +54,7 @@ class RankingTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ReviewPage(drug.itemSeq, fromRankingTile: 'true' ),
+            builder: (context) => ReviewPage(drug.itemSeq ),
           ),
         ),
       },

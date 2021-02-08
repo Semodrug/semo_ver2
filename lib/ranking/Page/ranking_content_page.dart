@@ -5,6 +5,7 @@ import 'package:semo_ver2/ranking/Provider/ranking_totalRating_provider.dart';
 import 'package:semo_ver2/ranking/Widget/ranking_listview_widget.dart';
 
 import 'package:semo_ver2/home/search_screen.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class RankingContentPage extends StatefulWidget {
@@ -31,55 +32,7 @@ class _RankingContentPageState extends State<RankingContentPage> {
     String onlyName = _checkCategoryName(widget.categoryName);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[400],
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        titleSpacing: 0,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0),
-          child: Text(
-            onlyName,
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-        ),
-        actions: [
-          //for search
-          IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.teal[200],
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchScreen()),
-                );
-              }),
-        ],
-        backgroundColor: Colors.white,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
-        ),
-      ),
+      appBar: CustomAppBarWithArrowBackAndSearch(onlyName, 0.5),
       body: Column(
         children: [
           _countDropDown(context),
@@ -159,7 +112,7 @@ class _RankingContentPageState extends State<RankingContentPage> {
         Divider(
           height: 5,
           thickness: 1,
-          color: Color(0xfff7f7f7),
+          color: gray50,
         )
       ],
     );

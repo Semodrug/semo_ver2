@@ -8,7 +8,10 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 
 import 'package:semo_ver2/review/drug_info.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/theme/colors.dart';
+
+import 'indicator.dart';
 
 //(1) 하이라이팅을 위함
 String _searchText = "";
@@ -93,69 +96,9 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  //전체삭제했을 때 dialog
-  void showWarning(BuildContext context, String bodyString, String actionName1,
-      String actionName2, String actionCode, String uid) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          // title:
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 18),
-              Text(bodyString,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      .copyWith(color: gray700)),
-              SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    child: Text(
-                      actionName1,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(color: primary400_line),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(100, 40),
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        elevation: 0,
-                        primary: gray50,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                            side: BorderSide(color: gray75))),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  SizedBox(width: 16),
-                  ElevatedButton(
-                    child: Text(
-                      actionName2,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(color: gray0_white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(100, 40),
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        elevation: 0,
-                        primary: primary300_main,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                            side: BorderSide(color: gray75))),
-                    onPressed: () async {
+
+  /*
+  *  onPressed: () async {
                       if (actionCode == 'deleteSearchedList') {
                         await Navigator.of(context).pop();
                         FirebaseFirestore.instance
@@ -169,8 +112,85 @@ class _SearchScreenState extends State<SearchScreen> {
                           }
                         });
                       }
+                    },*/
+
+  //전체삭제했을 때 dialog
+  void showWarning(BuildContext context, String bodyString, String leftButtonName,
+      String rightButtonName,  String uid) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          // title:
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 16),
+              Text(bodyString,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 28),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    child: Text(
+                      leftButtonName,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: primary400_line),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(120, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: BorderSide(color: gray50))),
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
-                  )
+                  ),
+                  SizedBox(width: 16),
+                  ElevatedButton(
+                      child: Text(
+                        rightButtonName,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: gray0_white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(120, 40),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          elevation: 0,
+                          primary: primary300_main,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(color: primary400_line))),
+                      onPressed:  () async {
+                           Navigator.of(context).pop();
+                          await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(uid)
+                              .collection('searchList')
+                              .get()
+                              .then((snapshot) {
+                            for (DocumentSnapshot ds in snapshot.docs) {
+                              ds.reference.delete();
+                            }
+                          });
+                      }
+                      )
                 ],
               )
             ],
@@ -248,7 +268,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   onPressed: () {
                     //print('삭제되었음');
                     showWarning(context, '전체 삭제 하시겠습니까?', '취소', '삭제',
-                        'deleteSearchedList', user.uid);
+                         user.uid);
                   },
                 )
               ],
@@ -440,6 +460,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                   ListView.builder(
+                    padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     itemCount: userDrugs.length,
@@ -456,6 +477,7 @@ class _SearchScreenState extends State<SearchScreen> {
           return Column(
             children: [
               ListView.builder(
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 itemCount: SADrugs.length,
@@ -504,6 +526,7 @@ class _SearchScreenState extends State<SearchScreen> {
         return Column(
           children: [
             ListView.builder(
+              padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
               itemCount: SADrugs.length,
@@ -517,6 +540,7 @@ class _SearchScreenState extends State<SearchScreen> {
       }
       else if (type == 'withoutUser') {
         return ListView.builder(
+          padding: EdgeInsets.zero,
           shrinkWrap: true,
           physics: const ClampingScrollPhysics(),
           itemCount: drugs.length,
@@ -602,6 +626,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
               ListView.builder(
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 itemCount: userDrugs.length,
@@ -619,22 +644,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Color(0xFFE9FFFB),
-                    Color(0xFFE9FFFB),
-                    Color(0xFFFFFFFF),
-                  ])),
-        ),
-      ),
+      appBar: CustomAppBarWithGoToBack('약 검색', Icon(Icons.arrow_back), 3),
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
@@ -663,7 +673,7 @@ class _SearchScreenState extends State<SearchScreen> {
     Future<void> addRecentSearchList() async {
       try {
         assert(_searchText != null);
-
+        print('검색 결과 =====> $_searchText ');
         searchList = _searchText;
         assert(searchList != null);
         //검색어 저장 기능 array로 저장해주기
@@ -673,13 +683,14 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     }
 
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Container(
-            width: 300,
-            height: 35,
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, top: 9),
+      child: Row(
+        children: [
+          Container(
+            //
+            width: MediaQuery.of(context).size.width - 75,
+            height: 33,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
               color: gray75,
@@ -696,6 +707,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               .where('searchList', isEqualTo: val)
                               .get();
                           if (_query.docs.length == 0) {
+                            if(searchList != '')
                             addRecentSearchList();
                           }
                           focusNode.unfocus();
@@ -711,7 +723,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             icon: Icon(
                               Icons.cancel,
                               size: 20,
-                              color: primary300_main,
+                              color: gray300_inactivated,
                             ),
                             onPressed: () {
                               setState(() {
@@ -722,13 +734,12 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                           fillColor: gray50,
                           filled: true,
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: SizedBox(
-                              height: 24,
-                              width: 24,
-                              child:
-                              Image.asset('assets/icons/search_grey.png'),
+                          prefixIcon:  SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top:4.0, bottom: 4),
+                              child: Image.asset('assets/icons/search_grey.png'),
                             ),
                           ),
                           hintText: '두 글자 이상 입력해주세요',
@@ -754,29 +765,32 @@ class _SearchScreenState extends State<SearchScreen> {
                                   style: BorderStyle.solid,
                                   width: 1.0,
                                   color: gray75),
-                              borderRadius: BorderRadius.circular(8.0))),
+                              borderRadius: BorderRadius.circular(8.0))
+                      ),
                     )),
               ],
             ),
           ),
-        ),
-        Spacer(),
-        SizedBox(
-          width: 50,
-          child: FlatButton(
-              padding: EdgeInsets.only(right: 10),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(
-                '취소',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    .copyWith(color: gray700),
-              )),
-        )
-      ],
+          Padding(
+            padding: const EdgeInsets.only(left:8.0,top: 0, right:10),
+            child: SizedBox(
+              width: 40,
+              child: FlatButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    '취소',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        .copyWith(color: gray700),
+                  )),
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -787,28 +801,38 @@ class _SearchScreenState extends State<SearchScreen> {
         length: 2,
         child: Column(
           children: [
-            TabBar(
-              labelStyle: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
-              unselectedLabelStyle: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .copyWith(fontWeight: FontWeight.w100),
-              tabs: [
-                Tab(
-                    child: Text(
-                      '전체 검색',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    )),
-                Tab(
-                    child: Text(
-                      '나의 약 검색',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    )),
-              ],
-              indicatorColor: primary300_main,
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0,top: 10.0,right: 16.0, bottom: 10),
+              child: Container(
+                height: 29,
+                decoration: BoxDecoration(
+                    color: gray75,
+                    borderRadius: BorderRadius.all(Radius.circular(4))
+                ),
+                //color: gray75,
+                child: TabBar(
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      .copyWith(color: gray750_activated,),
+                  unselectedLabelStyle: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith( color: gray500),
+                  tabs: [
+                    Tab(
+                        child: Text(
+                          '전체 검색',
+                            style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
+                    Tab(
+                        child: Text(
+                          '나의 약 검색',
+                            style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
+                  ],
+
+                  indicator: CustomTabIndicator()
+                ),
+              ),
             ),
             Container(
               padding: EdgeInsets.all(0.0),

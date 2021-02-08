@@ -90,6 +90,7 @@ class SavedDrug {
   final String expiration;
   final String etcOtcCode;
   final List searchNameList;
+  final DateTime savedTime;
 
   SavedDrug({
     this.itemName,
@@ -98,5 +99,6 @@ class SavedDrug {
     this.expiration,
     this.etcOtcCode,
     this.searchNameList,
+    this.savedTime
   });
 }

@@ -11,6 +11,8 @@ import 'package:semo_ver2/theme/colors.dart';
 import 'edit_review.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ReviewList extends StatefulWidget {
   String searchText;
@@ -22,10 +24,9 @@ class ReviewList extends StatefulWidget {
 }
 
 class _ReviewListState extends State<ReviewList> {
-
   @override
   Widget build(BuildContext context) {
-    //TODO LIMIT!!
+
     final reviews = Provider.of<List<Review>>(context) ?? [];
     List<Review> searchResults = [];
     for (Review review in reviews) {
@@ -60,17 +61,9 @@ class _ReviewListState extends State<ReviewList> {
   Widget _buildListItem(BuildContext context, Review review) {
     FirebaseAuth auth = FirebaseAuth.instance;
     List<String> names = List.from(review.favoriteSelected);
-    String year = review.registrationDate.toDate().year.toString();
-    String month = review.registrationDate.toDate().month.toString();
-
-    if(month.length == 1) month = '0'+ month;
-    String day = review.registrationDate.toDate().day.toString();
-    if(day.length == 1) day = '0'+ day;
-    String regDate =  year + "." + month + "." + day;
 
     return Container(
       padding: EdgeInsets.fromLTRB(0,10,0,21.5),
-        //padding: EdgeInsets.fromLTRB(20,10,20,21.5),
         decoration: BoxDecoration(
             border: Border(
                 bottom:
@@ -81,10 +74,15 @@ class _ReviewListState extends State<ReviewList> {
               _starAndIdAndMore(review, context, auth),
               _review(review),
               Container(height: 11.5),
-              _dateAndFavorite(regDate, names, auth, review)
+              _dateAndFavorite(
+                  DateFormat('yyyy.MM.dd').format(review.registrationDate.toDate()),
+                  names, auth, review)
 
             ]));
   }
+  // Text(DateFormat('yy.MM.dd').format(review.registrationDate.toDate()),
+  // style: Theme.of(context).textTheme.subtitle2.copyWith(
+  // color: gray300_inactivated, fontSize: 12)),
 
   Widget _starAndIdAndMore(review, context, auth) {
     TheUser user = Provider.of<TheUser>(context);
@@ -135,8 +133,11 @@ class _ReviewListState extends State<ReviewList> {
               }
               else if(auth.currentUser.uid != review.uid) {
                 showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
                     context: context,
-                    builder: buildBottomSheetAnonymous);
+                    builder: (context) {
+                      return _popUpMenuAnonymous(review, user);
+                    } );
               }
             },
           )
@@ -156,7 +157,7 @@ class _ReviewListState extends State<ReviewList> {
         child: Wrap(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 4.0),
+              padding: const EdgeInsets.only(top: 8.0),
               child: MaterialButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -174,14 +175,15 @@ class _ReviewListState extends State<ReviewList> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 4),
+              // padding: const EdgeInsets.only(bottom: 4),
+              padding: const EdgeInsets.fromLTRB(0,4,0,8),
               child: MaterialButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    _showDeleteDialog(review);
+                    _IYMYCancleConfirmDeleteDialog(review, );
                     // IYMYDialog(
                     //           context: context,
-                    //           bodyString: '선택한 리뷰를 삭제하시겠어?',
+                    //           bodyString: '선택한 리뷰를 삭제하시겠어요?',
                     //           leftButtonName: '취소',
                     //           rightButtonName: '삭제',
                     //           onPressed: () async {
@@ -226,7 +228,143 @@ class _ReviewListState extends State<ReviewList> {
     );
   }
 
-  Future<void> _showDeleteDialog(record) async {
+  Widget _reportReviewPopup(review, /*user*/ ) {
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: new BorderRadius.only(
+              topLeft: const Radius.circular(12.0),
+              topRight: const Radius.circular(12.0),
+            )),
+        child: Wrap(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20,16,20,0),
+              child: Text("리뷰 신고하기",
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                      color: primary500_light_text, fontSize: 14)
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0,8,0,0),
+              // padding: const EdgeInsets.only(top: 4.0),
+              child: MaterialButton(
+                  onPressed: () {
+                    _IYMYCancleConfirmReportDialog(review, 1, /*user*/);
+                  },
+                  child: Row(
+                    children: [
+                      Center(child: Text("광고, 홍보 / 거래 시도",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: gray900),
+                      )),
+                    ],
+                  )
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: MaterialButton(
+                  onPressed: () {
+                    _IYMYCancleConfirmReportDialog(review, 2, /*user*/);
+                  },
+                  child: Row(
+                    children: [
+                      Center(child: Text("욕설, 음란어 사용",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: gray900),
+                      )),
+                    ],
+                  )
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: MaterialButton(
+                  onPressed: () {
+                    _IYMYCancleConfirmReportDialog(review, 3, /*user*/);
+                  },
+                  child: Row(
+                    children: [
+                      Center(child: Text("약과 무관한 리뷰 작성",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: gray900),
+                      )),
+                    ],
+                  )
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: MaterialButton(
+                  onPressed: () {
+                    _IYMYCancleConfirmReportDialog(review, 4, /*user*/);
+                  },
+                  child: Row(
+                    children: [
+                      Center(child: Text("개인 정보 노출",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: gray900),
+                      )),
+                    ],
+                  )
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0,4,0,8),
+              child: MaterialButton(
+                  onPressed: () {
+                    _IYMYCancleConfirmReportDialog(review, 5, /*user*/);
+                  },
+                  child: Row(
+                    children: [
+                      Center(child: Text("기타 (명예훼손)",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: gray900),
+                      )),
+                    ],
+                  )
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    // bottom: BorderSide(color: Theme.of(context).hintColor),
+                      top: BorderSide(color: gray100)),
+                ),
+                child: MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Center(child: Text("닫기",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: gray300_inactivated),
+                    ))
+                ),
+              ),
+            )
+          ],
+        )
+    );
+  }
+
+
+
+  Future<void> _IYMYCancleConfirmDeleteDialog(record) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -409,6 +547,220 @@ class _ReviewListState extends State<ReviewList> {
 //     );
   }
 
+  Future<void> _IYMYCancleConfirmReportDialog(review, report, /*user*/) async {
+    User user = FirebaseAuth.instance.currentUser;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 16),
+              /* BODY */
+              Text("신고하시겠어요?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 28),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  /* LEFT ACTION BUTTON */
+                  ElevatedButton(
+                    child: Text(
+                      "취소",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: primary400_line),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(120, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(width: 16),
+                  /* RIGHT ACTION BUTTON */
+                  ElevatedButton(
+                      child: Text(
+                        "확인",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: gray0_white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(120, 40),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          elevation: 0,
+                          primary: primary300_main,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(color: primary400_line))),
+                      onPressed: () async {
+
+                        //TODO :: ###########신고하기!!!!!!!!!!!!!!!!!!
+                        await ReviewService(documentId: review.documentId).reportReview(review, report, user.uid);
+                        Navigator.pop(context);
+                        IYMYGotoSeeOrCheckDialog("이약모약 운영진에게\n신고가 접수되었어요");
+
+                        // var reviewReported = await ReviewService(documentId: review.documentId).checkReviewIsReported();
+                        //
+                        // if(reviewReported == false) {
+                        //   await ReviewService(documentId: review.documentId).reportReview(review, report, user.uid);
+                        //   Navigator.of(context).pop();
+                        //   IYMYGotoSeeOrCheckDialog("이약모약 운영진에게\n신고가 접수되었어요");
+                        // }
+                        //
+                        // else if(reviewReported == true) {
+                        //   await ReviewService(documentId: review.documentId).reportAlreadyReportedReview(review, user.uid, report);
+                        //   Navigator.of(context).pop();
+                        //   IYMYGotoSeeOrCheckDialog("이미 해당 리뷰를 신고하셨습니다");
+                        // }
+                      }
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+
+
+
+//     return showDialog<void>(
+//       context: context,
+//       barrierDismissible: false, // user must tap button!
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+// //          title: Center(child: Text('AlertDialog Title')),
+//           content: SingleChildScrollView(
+//             child: ListBody(
+//               children: <Widget>[
+//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+//                 SizedBox(height: 20),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                   children: [
+//                     TextButton(
+//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () {
+//                         Navigator.of(context).pop();
+//                       },
+//                     ),
+//                     TextButton(
+//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () async {
+//                         Navigator.of(context).pop();
+//                         await ReviewService(documentId: record.documentId).deleteReviewData();
+//                       },
+//                     ),
+//                   ],
+//                 )
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
+  }
+
+  Widget IYMYGotoSeeOrCheckDialog(alertContent){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10),
+              Icon(Icons.check, color: primary300_main),
+              SizedBox(height: 13),
+              /* BODY */
+              RichText(
+                text: TextSpan(
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: gray700),
+                  children: <TextSpan>[
+                    // TextSpan(
+                    //     text: boldBodyString,
+                    //     style: Theme.of(context).textTheme.headline4.copyWith(
+                    //         color: gray700, fontWeight: FontWeight.w700)),
+                    TextSpan(text: alertContent),
+                  ],
+                ),
+              ),
+              SizedBox(height: 3),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 10, 10, 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "주말, 공휴일에는 확인이 지연될 수 있습니다",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: gray300_inactivated),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 16),
+              /* RIGHT ACTION BUTTON */
+              ElevatedButton(
+                child: Text(
+                  "확인",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: primary400_line),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(260, 40),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    elevation: 0,
+                    primary: gray50,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(color: gray75))),
+                onPressed: () {
+                  Navigator.pop(context);
+                  //#########신고 접수!!!!!!!!!!!!!!!!!!!!###############
+
+                },
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _reviewBox(review, type) {
     return Container(
       padding: EdgeInsets.all(9.5),
@@ -582,38 +934,65 @@ class _ReviewListState extends State<ReviewList> {
 //     );
 //   }
 
-  Widget buildBottomSheetAnonymous(BuildContext context) {
-    return SizedBox(
-        child: Container(
-//                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Wrap(
-              children: <Widget>[
-                MaterialButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(context, MaterialPageRoute(
-                        //TODO
-                          builder: (context) => ReportReview()
-//                                              builder: (context) => EditReview(review)
-                      ));
-                    },
-                    child: Center(child: Text("신고하기",
-                        style: TextStyle(color: Colors.blue[700],
-                            fontSize: 16)))
+
+
+  Widget _popUpMenuAnonymous(review, user) {
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: new BorderRadius.only(
+              topLeft: const Radius.circular(12.0),
+              topRight: const Radius.circular(12.0),
+            )),
+        child: Wrap(
+          children: <Widget>[
+            Padding(
+              // padding: const EdgeInsets.only(top: 4.0),
+              padding: const EdgeInsets.fromLTRB(0,8,0,8),
+              child: MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    showModalBottomSheet(
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (context) {
+                          return _reportReviewPopup(review/*, user*/);
+                        } );
+                  },
+                  child: Center(child: Text("신고하기",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: gray900),
+                  ))
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    // bottom: BorderSide(color: Theme.of(context).hintColor),
+                      top: BorderSide(color: gray100)),
                 ),
-                MaterialButton(
+                child: MaterialButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                     child: Center(child: Text("취소",
-                        style: TextStyle(color: Colors.blue[700],
-                            fontSize: 16)))
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: gray300_inactivated),
+                    ))
                 ),
-              ],
+              ),
             )
+          ],
         )
     );
   }
+
 
 //  Widget buildBottomSheetWriter(BuildContext context, record) {
 //    return SizedBox(

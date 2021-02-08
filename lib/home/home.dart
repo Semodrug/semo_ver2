@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           decoration: BoxDecoration(
               border: Border(
-                  bottom: BorderSide(width: 0.6, color: Colors.grey[300]))),
+                  bottom: BorderSide(width: 0.6, color: gray50))),
           child: Column(
             children: [
               Padding(
@@ -307,11 +307,20 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: 3,
                                 ),
-                                Text(data.expiration,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        .copyWith(color: gray600, fontSize: 11))
+                                Row(
+                                  children: [
+                                    Text('${data.expiration}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                    Text('까지 ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                  ],
+                                )
                               ],
                             )),
                         Spacer(),
@@ -367,7 +376,7 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           decoration: BoxDecoration(
               border: Border(
-                  bottom: BorderSide(width: 0.6, color: gray300_inactivated))),
+                  bottom: BorderSide(width: 0.6, color: gray50))),
           child: Column(
             children: [
               Padding(
@@ -429,11 +438,20 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: 3,
                                 ),
-                                Text(data.expiration,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        .copyWith(color: gray600, fontSize: 11))
+                                Row(
+                                  children: [
+                                    Text('${data.expiration}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                    Text('까지 ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                  ],
+                                )
                               ],
                             )),
                         Spacer(),
@@ -490,7 +508,7 @@ class _HomePageState extends State<HomePage> {
           //padding: EdgeInsets.only(bottom: 10.0),
           decoration: BoxDecoration(
               border: Border(
-                  bottom: BorderSide(width: 0.6, color: Colors.grey[300]))),
+                  bottom: BorderSide(width: 0.6, color: gray50))),
           child: Column(
             children: [
               Padding(
@@ -554,11 +572,20 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: 3,
                                 ),
-                                Text(data.expiration,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        .copyWith(color: gray600, fontSize: 11))
+                                Row(
+                                  children: [
+                                    Text('${data.expiration}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                    Text('까지 ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(color: gray600, fontSize: 11)),
+                                  ],
+                                )
                               ],
                             )),
                         Spacer(),
@@ -745,11 +772,11 @@ class _HomePageState extends State<HomePage> {
                 ))),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 4.0),
+            // padding: EdgeInsets.only(bottom: 4.0),
+            padding: const EdgeInsets.fromLTRB(0,4,0,8),
             child: MaterialButton(
                 onPressed: () {
                   Navigator.pop(context);
-
                   showWarning(context, '정말 삭제하시겠어요?', '취소', '삭제',
                       'deleteUserDrug', user.uid, data.itemSeq);
                 },
@@ -789,12 +816,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void showWarning(BuildContext context, String bodyString, String actionName1,
-      String actionName2, String actionCode, String uid, String record) {
+  void showWarning(BuildContext context, String bodyString, String leftButtonName,
+      String rightButtonName, String actionCode, String uid, String record) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           // title:
@@ -803,32 +831,32 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 18),
+              SizedBox(height: 16),
               Text(bodyString,
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
                       .copyWith(color: gray700)),
-              SizedBox(height: 24),
+              SizedBox(height: 28),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     child: Text(
-                      actionName1,
+                      leftButtonName,
                       style: Theme.of(context)
                           .textTheme
                           .headline5
                           .copyWith(color: primary400_line),
                     ),
                     style: ElevatedButton.styleFrom(
-                        minimumSize: Size(100, 40),
+                        minimumSize: Size(120, 40),
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         elevation: 0,
                         primary: gray50,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                            side: BorderSide(color: gray75))),
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: BorderSide(color: gray50))),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -836,20 +864,20 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(width: 16),
                   ElevatedButton(
                       child: Text(
-                        actionName2,
+                        rightButtonName,
                         style: Theme.of(context)
                             .textTheme
                             .headline5
                             .copyWith(color: gray0_white),
                       ),
                       style: ElevatedButton.styleFrom(
-                          minimumSize: Size(100, 40),
+                          minimumSize: Size(120, 40),
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           elevation: 0,
                           primary: primary300_main,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                              side: BorderSide(color: gray75))),
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(color: primary400_line))),
                       onPressed: () async {
                         Navigator.pop(context);
 
@@ -914,7 +942,7 @@ class _HomePageState extends State<HomePage> {
                     primary: gray50,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
-                        side: BorderSide(color: gray75))),
+                        side: BorderSide(color: gray50))),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -1102,26 +1130,27 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(16, 11, 16, 0),
+      margin: EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: SizedBox(
-          height: 35,
+          height: 33,
           child: FlatButton(
+            padding: EdgeInsets.zero,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.only(left:12.0, top: 5, bottom: 4, right:5),
                   child: SizedBox(
                     height: 24,
                     width: 24,
-                    child: Image.asset('assets/icons/search_grey.png'),
+                    child: Image.asset('assets/icons/search_icon.png'),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 7.0),
                   child: Text(
                     "어떤 약을 찾고 계세요?",
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray300_inactivated),
                   ),
                 ),
               ],
@@ -1137,7 +1166,7 @@ class SearchBar extends StatelessWidget {
             color: gray50,
             shape: OutlineInputBorder(
                 borderSide: BorderSide(
-                    style: BorderStyle.solid, width: 1.0, color: gray200),
+                    style: BorderStyle.solid, width: 1.0, color: gray75),
                 borderRadius: BorderRadius.circular(8.0)),
           )),
     );
