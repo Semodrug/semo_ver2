@@ -198,7 +198,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                 int.parse(_birthYearController.text) <= 1900) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
-                    '생년월일을 올바르게 입력해주세요',
+                    '출생년도를 올바르게 입력해주세요',
                     textAlign: TextAlign.center,
                   ),
                   behavior: SnackBarBehavior.floating,
