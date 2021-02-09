@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
           scrollDirection: Axis.vertical,
           children: <Widget>[
             _EmailPasswordForm(),
-            _GoogleSignInSection(),
+            _SocialSignInSection(),
           ],
         );
       }),
@@ -65,13 +65,9 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
               padding: EdgeInsets.all(16),
               alignment: Alignment.center,
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
             _emailField(),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             _passwordField(),
             SizedBox(height: 40.0),
             _submitButton(),
@@ -231,12 +227,12 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   }
 }
 
-class _GoogleSignInSection extends StatefulWidget {
+class _SocialSignInSection extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _GoogleSignInSectionState();
+  State<StatefulWidget> createState() => _SocialSignInSectionState();
 }
 
-class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
+class _SocialSignInSectionState extends State<_SocialSignInSection> {
   String error = '';
 
   @override
@@ -246,8 +242,8 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
         Container(
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             _googleLoginButton(),
-            _kakaoLoginButton(),
-            _appleLoginButton(),
+            _facebookLoginButton(),
+            // _appleLoginButton(),
           ]),
         ),
       ],
@@ -279,14 +275,14 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     );
   }
 
-  Widget _kakaoLoginButton() {
+  Widget _facebookLoginButton() {
     return FlatButton(
       minWidth: 60,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: EdgeInsets.zero,
       onPressed: () async {
         // setState(() => loading = true);
-        dynamic result = await _auth.signInWithGoogle();
+        dynamic result = await _auth.signInWithFacebook();
         if (result == null) {
           setState(() {
             // loading = false;
@@ -295,7 +291,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
         }
       },
       child: SizedBox(
-        child: Image.asset('assets/login/kakao.png'),
+        child: Image.asset('assets/login/facebook.png'),
         width: 42,
         height: 42,
       ),
