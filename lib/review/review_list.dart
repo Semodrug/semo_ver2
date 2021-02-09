@@ -29,13 +29,6 @@ class ReviewList extends StatefulWidget {
 class _ReviewListState extends State<ReviewList> {
   @override
   Widget build(BuildContext context) {
-
-    // body: StreamProvider<List<Review>>.value(
-    // value: ReviewService().getReviews(widget.drugItemSeq),
-    // child: StreamBuilder<Drug>(
-    // stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
-    // builder: (context, snapshot) {
-    // if (snapshot.hasData) {
     return StreamBuilder<List<Review>>(
       stream: ReviewService().getReviews(widget.drugItemSeq),
       builder: (context, snapshot) {
