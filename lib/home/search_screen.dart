@@ -804,7 +804,7 @@ class _SearchScreenState extends State<SearchScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 16.0,top: 10.0,right: 16.0, bottom: 10),
               child: Container(
-                height: 29,
+                height: 35,
                 decoration: BoxDecoration(
                     color: gray75,
                     borderRadius: BorderRadius.all(Radius.circular(4))

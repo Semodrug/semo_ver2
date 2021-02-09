@@ -5,9 +5,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/review/see_my_review.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
@@ -79,24 +81,8 @@ class _EditReviewState extends State<EditReview> {
 
             return Scaffold(
                 resizeToAvoidBottomInset: true,
-                appBar: AppBar(
-                  title: Text('리뷰 수정',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4
-                          .copyWith(
-                          color: gray800, fontSize: 16)) ,
-                  // centerTitle: true,
-                  //elevation: 0.0,
-                  backgroundColor: gray0_white,
-                  leading: IconButton(
-                      icon: Icon(Icons.close, color: primary300_main),
-                      onPressed: () {
-                        _IYMYCheckDialog();
-                        // Navigator.pop(context);
-                      }),
-                ),
-
+                backgroundColor: gray0_white,
+                appBar: CustomAppBarWithGoToBack('리뷰 수정하기', Icon(Icons.close), 3),
                 body: GestureDetector(
                   onTap: () {
                     FocusScope.of(context).unfocus();
@@ -236,6 +222,94 @@ class _EditReviewState extends State<EditReview> {
 //         );
 //       },
 //     );
+  }
+
+  Widget IYMYGotoSeeOrCheckDialog(drugItemSeq){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10),
+              Icon(Icons.star, color: yellow),
+              SizedBox(height: 13),
+              /* BODY */
+              RichText(
+                text: TextSpan(
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700),
+                  children: <TextSpan>[
+                    // TextSpan(
+                    //     text: boldBodyString,
+                    //     style: Theme.of(context).textTheme.headline4.copyWith(
+                    //         color: gray700, fontWeight: FontWeight.w700)),
+                    TextSpan(text: "리뷰 수정이 완료되었습니다"),
+                  ],
+                ),
+              ),
+              SizedBox(height: 3),
+              InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "내가 작성한 리뷰 보러가기",
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle1
+                              .copyWith(color: gray300_inactivated),
+                        ),
+                        Icon(
+                          Icons.navigate_next,
+                          color: gray300_inactivated,
+                          size: 22,
+                        )
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => SeeMyReview(drugItemSeq)));
+                  }),
+              SizedBox(width: 16),
+              /* RIGHT ACTION BUTTON */
+              ElevatedButton(
+                child: Text(
+                  "확인",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: primary400_line),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(260, 40),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    elevation: 0,
+                    primary: gray50,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(color: gray75))),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget _pillInfo(review) {
@@ -712,17 +786,13 @@ class _EditReviewState extends State<EditReview> {
 
   Widget _edit(Review review) {
     String _warning = '';
-
-
-
-
     return GestureDetector(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20,20,20,40),
         child: IYMYSubmitButton(
           context: context,
           isDone: true,
-          textString: '다음',
+          textString: '완료',
           onPressed: () async {
             if(myControllerOverall.text.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
             if(myControllerSideEffect.text.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
@@ -730,15 +800,15 @@ class _EditReviewState extends State<EditReview> {
 
             if(myControllerOverall.text.length < 10 || myControllerSideEffect.text.length < 10 ||
                 myControllerEffect.text.length < 10 )
-              Fluttertoast.showToast(
-                  msg: _warning,
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.black,
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    _warning,
+                    textAlign: TextAlign.center,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.black.withOpacity(0.87)));
             else {
               await ReviewService(documentId: widget.review.documentId).updateReviewData(
                   effect /*?? review.effect*/,
@@ -750,6 +820,7 @@ class _EditReviewState extends State<EditReview> {
               );
               Navigator.pop(context);
               editSwitch = true;
+              IYMYGotoSeeOrCheckDialog(review.seqNum);
             }
           },
         ),

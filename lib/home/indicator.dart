@@ -25,12 +25,15 @@ class _CustomPainter extends BoxPainter {
 
     //offset is the position from where the decoration should be drawn.
     //configuration.size tells us about the height and width of the tab.
-    final Rect rect = Offset(offset.dx +2.5, offset.dy + 2.5) & (Size (configuration.size.width -5, configuration.size.height -5));
+    final Rect rect = Offset(offset.dx +3.0, offset.dy + 3.0) & (Size (configuration.size.width -6, configuration.size.height -6));
 
     final Paint paint = Paint();
     paint.color = Colors.white;
+
+
     //paint.style = PaintingStyle.fill;
-    canvas.drawRRect(RRect.fromRectAndRadius(rect, Radius.circular(3.0)), paint);
+    canvas.drawRRect(RRect.fromRectAndRadius(rect, Radius.circular(4.0)), paint);
+
   }
 
 }
