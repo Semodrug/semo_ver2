@@ -1,16 +1,18 @@
+import 'dart:io';
+
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:app_settings/app_settings.dart';
-
-import 'package:semo_ver2/home/home_add_button_stack.dart';
-import 'package:semo_ver2/shared/customAppBar.dart';
+import 'package:semo_ver2/camera/no_result.dart';
+import 'package:semo_ver2/review/drug_info.dart';
+import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/appbar.dart';
 import 'package:semo_ver2/theme/colors.dart';
-
-import 'camera/camera.dart';
-import 'home/home.dart';
-import 'mypage/my_page.dart';
-import 'ranking/ranking.dart';
+import 'package:semo_ver2/camera/camera.dart';
+import 'package:semo_ver2/home/home.dart';
+import 'package:semo_ver2/ranking/ranking.dart';
 
 class BottomBar extends StatefulWidget {
   @override
@@ -20,6 +22,39 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
   int _selectedIndex = 0;
   bool isHome = true;
+
+  File pickedImage;
+  String barcodeNum;
+  bool imageLoaded = false;
+
+  Future<void> pickImage() async {
+    var awaitImage = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      pickedImage = awaitImage;
+      imageLoaded = true;
+    });
+
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(pickedImage);
+    VisionText readedText;
+
+    final BarcodeDetector barcodeDetector =
+        FirebaseVision.instance.barcodeDetector();
+
+    final List<Barcode> barcodes =
+        await barcodeDetector.detectInImage(visionImage);
+
+    for (Barcode barcode in barcodes) {
+      final String rawValue = barcode.rawValue;
+      final BarcodeValueType valueType = barcode.valueType;
+
+      setState(() {
+        barcodeNum = "$rawValue";
+      });
+    }
+
+    barcodeDetector.close();
+  }
 
   final List<Widget> _widgetOptions = [
     HomePage(),
@@ -74,15 +109,6 @@ class _BottomBarState extends State<BottomBar> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-//        floatingActionButton: FloatingActionButton(
-//          backgroundColor: Colors.teal[200],
-//          child: Icon(Icons.camera_alt),
-//          onPressed: (){
-//            Navigator.push(context,
-//                MaterialPageRoute(builder: (context) => CameraPage()));
-//          },
-//        ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
           backgroundColor: gray0_white,
           selectedItemColor: gray750_activated,
@@ -103,7 +129,7 @@ class _BottomBarState extends State<BottomBar> {
             BottomNavigationBarItem(
                 icon: ImageIcon(
                   AssetImage('assets/icons/bottom_camera.png'),
-                  // color: primary400_line,
+                  color: gray0_white,
                 ),
                 label: '카메라'),
             BottomNavigationBarItem(
@@ -114,6 +140,28 @@ class _BottomBarState extends State<BottomBar> {
                 label: '카테고리'),
           ],
           onTap: _onItemTapped),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        elevation: 0,
+        child: Image.asset('assets/icons/bottom_camera.png'),
+        onPressed: () async {
+          await pickImage();
+
+          var data = await DatabaseService().itemSeqFromBarcode(barcodeNum);
+
+          (barcodeNum != null && data != null)
+              ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReviewPage(data),
+                  ))
+              : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NoResult(),
+                  ));
+        },
+      ),
     );
   }
 }
