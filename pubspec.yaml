@@ -39,12 +39,13 @@ dependencies:
   mask_text_input_formatter: ^1.0.7
   shared_preferences: ^0.5.12+4
   logger: ^0.9.4  #optional
+  flutter_facebook_auth: ^2.0.1
 
   #state management
   provider: ^4.3.2+3
 
   #camera
-  image_picker: ^0.6.7+21
+  image_picker: ^0.6.7+22
   firebase_ml_vision: ^0.10.0
   permission_handler: ^5.0.1+1
   app_settings: 4.0.4

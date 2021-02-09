@@ -25,6 +25,7 @@ class _PolicyAgreePageState extends State<PolicyAgreePage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: Container(),
         title: Text(
           '이용약관',
           style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/login/register_withEmail.dart';
+import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
+
+final AuthService _auth = AuthService();
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -67,26 +70,16 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 16,
               ),
               FlatButton(
-                child: Image.asset('assets/login/with_kakao.png'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RegisterWithEmailPage()),
-                  );
-                },
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              FlatButton(
-                child: Image.asset('assets/login/with_apple.png'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RegisterWithEmailPage()),
-                  );
+                child: Image.asset('assets/login/with_facebook.png'),
+                onPressed: () async {
+                  // setState(() => loading = true);
+                  dynamic result = await _auth.signInWithFacebook();
+                  if (result == null) {
+                    setState(() {
+                      // loading = false;
+                      String error = 'Could not sign in with those credentials';
+                    });
+                  }
                 },
               ),
             ],
