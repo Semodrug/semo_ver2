@@ -34,20 +34,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  File pickedImage;
+  File file;
   String barcodeNum;
   bool imageLoaded = false;
+  final _picker = ImagePicker();
 
   Future<void> pickImage() async {
-    var awaitImage = await ImagePicker.pickImage(source: ImageSource.camera);
+    PickedFile pickedFile = await _picker.getImage(source: ImageSource.camera);
 
     setState(() {
-      pickedImage = awaitImage;
+      file = File(pickedFile.path);
       imageLoaded = true;
     });
 
-    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(pickedImage);
-    VisionText readedText;
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(file);
 
     final BarcodeDetector barcodeDetector =
         FirebaseVision.instance.barcodeDetector();
