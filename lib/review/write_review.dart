@@ -12,6 +12,7 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/shared/review_pill_info.dart';
 import 'package:semo_ver2/shared/shortcut_dialog.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
@@ -717,15 +718,24 @@ class _WriteReviewState extends State<WriteReview> {
             if(overallText.length < 10 || sideEffectText.length < 10 ||
                 effectText.length < 10 ||
                 sideEffect.isEmpty || effect.isEmpty || starRatingText.isEmpty)
-              Fluttertoast.showToast(
-                  msg: _warning,
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.black,
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
+              // Fluttertoast.showToast(
+              //     msg: _warning,
+              //     toastLength: Toast.LENGTH_SHORT,
+              //     gravity: ToastGravity.BOTTOM,
+              //     timeInSecForIosWeb: 1,
+              //     backgroundColor: Colors.black,
+              //     textColor: Colors.white,
+              //     fontSize: 16.0
+              // );
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    _warning,
+                    textAlign: TextAlign.center,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: Colors.black.withOpacity(0.87)));
             else {
               String nickName = await DatabaseService(uid: user.uid).getNickName();
               _registerReview(nickName);

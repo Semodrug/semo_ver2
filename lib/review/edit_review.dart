@@ -12,6 +12,7 @@ import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
+import 'package:semo_ver2/shared/review_pill_info.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -89,7 +90,8 @@ class _EditReviewState extends State<EditReview> {
                   },
                   child: ListView(
                     children: <Widget>[
-                      _pillInfo(review),
+                      ReviewPillInfo(review),
+                      // _pillInfo(review),
                       _rating(review),
                       _effect(review),
                       _sideEffect(review),
