@@ -23,20 +23,20 @@ class _BottomBarState extends State<BottomBar> {
   int _selectedIndex = 0;
   bool isHome = true;
 
-  File file;
+  File pickedImage;
   String barcodeNum;
   bool imageLoaded = false;
-  final _picker = ImagePicker();
 
   Future<void> pickImage() async {
-    PickedFile pickedFile = await _picker.getImage(source: ImageSource.camera);
+    var awaitImage = await ImagePicker.pickImage(source: ImageSource.camera);
 
     setState(() {
-      file = File(pickedFile.path);
+      pickedImage = awaitImage;
       imageLoaded = true;
     });
 
-    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(file);
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(pickedImage);
+    VisionText readedText;
 
     final BarcodeDetector barcodeDetector =
         FirebaseVision.instance.barcodeDetector();
