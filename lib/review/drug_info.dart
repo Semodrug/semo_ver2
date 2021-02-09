@@ -61,16 +61,16 @@ class _ReviewPageState extends State<ReviewPage> {
   GlobalKey _key1 = GlobalKey();
   GlobalKey _key2 = GlobalKey();
   GlobalKey _key3 = GlobalKey();
-  GlobalKey _key4 = GlobalKey();
+  // GlobalKey _key4 = GlobalKey();
 
   double _getReviewSizes() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
     final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
     final RenderBox renderBox3 = _key3.currentContext.findRenderObject();
-    final RenderBox renderBox4 = _key4.currentContext.findRenderObject();
+    // final RenderBox renderBox4 = _key4.currentContext.findRenderObject();
     double height = renderBox1.size.height /*+ renderBox2.size.height*/ +
         renderBox3.size.height +
-        renderBox4.size.height +
+        // renderBox4.size.height +
         30;
     return height;
   }
@@ -861,7 +861,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   Widget _totalRating() {
     return Column(
-      key: _key4,
+      // key: _key4,
       children: [
         GetRating(widget.drugItemSeq),
         Container(

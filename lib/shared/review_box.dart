@@ -68,7 +68,7 @@ class ReviewBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
@@ -90,23 +90,85 @@ class ReviewBox extends StatelessWidget {
     );
   }
   Widget _face(face) {
-    if(face == "good" || face == "no")
-      return Icon(
-        Icons.sentiment_satisfied_rounded,
-        color: primary300_main,
-        size: 16,
+    if(face == "good")
+      return Row(
+        children: [
+          Icon(
+            Icons.sentiment_satisfied_rounded,
+            color: primary300_main,
+            size: 16,
+          ),
+          SizedBox(width:1),
+          Text("좋아요",
+            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                color: primary400_line, fontSize: 12
+            ),
+          )
+        ],
+      );
+    if(face == "no")
+      return Row(
+        children: [
+          Icon(
+            Icons.sentiment_satisfied_rounded,
+            color: primary300_main,
+            size: 16,
+          ),
+          SizedBox(width:1),
+          Text("없어요",
+            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                color: primary400_line, fontSize: 12
+            ),
+          )
+        ],
       );
     if(face == "soso")
-      return Icon(
-        Icons.sentiment_neutral_rounded,
-        color: yellow_line,
-        size: 16,
+      return Row(
+        children: [
+          Icon(
+            Icons.sentiment_neutral_rounded,
+            color: yellow_line,
+            size: 16,
+          ),
+          SizedBox(width:1),
+          Text("보통이에요",
+            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                color: yellow_line, fontSize: 12
+            ),
+          )
+        ],
       );
-    if(face == "bad" || face == "yes")
-      return Icon(
-        Icons.sentiment_very_dissatisfied_rounded,
-        color:  warning,
-        size: 16,
+    if(face == "bad")
+      return Row(
+        children: [
+          Icon(
+            Icons.sentiment_very_dissatisfied_rounded,
+            color:  warning,
+            size: 16,
+          ),
+          SizedBox(width:1),
+          Text("별로에요",
+            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                color: warning, fontSize: 12
+            ),
+          )
+        ],
+      );
+    if(face == "yes")
+      return Row(
+        children: [
+          Icon(
+            Icons.sentiment_very_dissatisfied_rounded,
+            color:  warning,
+            size: 16,
+          ),
+          SizedBox(width:1),
+          Text("있어요",
+            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                color: warning, fontSize: 12
+            ),
+          )
+        ],
       );
     if(face == "overall")
       return Container();
