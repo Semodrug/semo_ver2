@@ -96,7 +96,10 @@ class ReviewService {
 
 
   Stream<List<Review>> getReviews(String seqNum) {
-    return reviewCollection.where("seqNum", isEqualTo: seqNum).snapshots()
+    return reviewCollection
+        .orderBy('registrationDate', descending: true)
+        // .where("seqNum", isEqualTo: seqNum)
+        .snapshots()
         .map(_reviewListFromSnapshot);
   }
 
