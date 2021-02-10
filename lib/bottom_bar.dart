@@ -109,6 +109,8 @@ class _BottomBarState extends State<BottomBar> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
+
+
       bottomNavigationBar: BottomNavigationBar(
           backgroundColor: gray0_white,
           selectedItemColor: gray750_activated,
