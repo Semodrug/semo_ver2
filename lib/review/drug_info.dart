@@ -5,10 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/bottom_bar.dart';
-import 'package:semo_ver2/drug_info/expiration_s.dart';
+import 'package:semo_ver2/drug_info/general_expiration.dart';
+import 'package:semo_ver2/drug_info/prepared_expiration.dart';
 import 'package:semo_ver2/drug_info/search_highlighting.dart';
 import 'package:semo_ver2/drug_info/warning_highlighting.dart';
-import 'package:semo_ver2/drug_info/expiration_g.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
@@ -88,14 +88,14 @@ class _ReviewPageState extends State<ReviewPage> {
   void initState() {
     super.initState();
     _scrollController.addListener(() {
-      if(_scrollController.offset*1.0 > _getReviewSizes())
+      if (_scrollController.offset * 1.0 > _getReviewSizes())
         pillInfoTab = false;
-      else pillInfoTab = true;
-        //print("MORE THAN 1000");
+      else
+        pillInfoTab = true;
+      //print("MORE THAN 1000");
       // print('offset = ${_scrollController.offset}');
     });
   }
-
 
   // void checkScroller() {
   //   _scrollController.addListener(() {
@@ -153,7 +153,9 @@ class _ReviewPageState extends State<ReviewPage> {
             backgroundColor: Color(0xff00C2AE),
             elevation: 6.0,
             onPressed: () async {
-              if (await ReviewService().findUserWroteReview(widget.drugItemSeq, user.uid) == false)
+              if (await ReviewService()
+                      .findUserWroteReview(widget.drugItemSeq, user.uid) ==
+                  false)
                 // return StreamBuilder<List<Review>>(
                 //   stream: ReviewService().findUserReview(widget.drugItemSeq, user.uid),
                 //   builder: (context, snapshot) {
@@ -190,8 +192,8 @@ class _ReviewPageState extends State<ReviewPage> {
                             onTap: () {
                               FocusScope.of(context).unfocus();
                             },
-                            child: NotificationListener<ScrollUpdateNotification>(
-
+                            child:
+                                NotificationListener<ScrollUpdateNotification>(
                               child: CustomScrollView(
                                 //physics: PageScrollPhysics(),
                                 controller: _scrollController,
@@ -215,15 +217,17 @@ class _ReviewPageState extends State<ReviewPage> {
                                                         .textTheme
                                                         .subtitle1
                                                         .copyWith(
-                                                          color: pillInfoTab == true
+                                                          color: pillInfoTab ==
+                                                                  true
                                                               ? primary500_light_text
                                                               : gray300_inactivated,
                                                         ))),
                                             onTap: _onTapPillInfo,
                                           ),
-                                          width:
-                                              MediaQuery.of(context).size.width /
-                                                  2,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2,
                                           decoration: BoxDecoration(
                                               border: Border(
                                                   bottom: BorderSide(
@@ -249,9 +253,10 @@ class _ReviewPageState extends State<ReviewPage> {
                                                         ))),
                                             onTap: _onTapReview,
                                           ),
-                                          width:
-                                              MediaQuery.of(context).size.width /
-                                                  2,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2,
                                           decoration: BoxDecoration(
                                               border: Border(
                                                   bottom: BorderSide(
@@ -290,21 +295,18 @@ class _ReviewPageState extends State<ReviewPage> {
                                   )
                                 ],
                               ),
-
-
                               onNotification: (notification) {
                                 //List scroll position
-                                if(_scrollController.position.pixels*1.0 < _getReviewSizes())
+                                if (_scrollController.position.pixels * 1.0 <
+                                    _getReviewSizes())
                                   pillInfoTab = true;
-                                else if(_scrollController.position.pixels*1.0 >= _getReviewSizes())
-                                  pillInfoTab = false;
+                                else if (_scrollController.position.pixels *
+                                        1.0 >=
+                                    _getReviewSizes()) pillInfoTab = false;
                                 print(pillInfoTab);
                                 print(notification.metrics.pixels);
                                 //print(_scrollController.position.pixels);
-
-
                               },
-
                             ),
                           );
                         } else {
@@ -522,11 +524,11 @@ class _ReviewPageState extends State<ReviewPage> {
                                         fullscreenDialog: true,
                                         builder: (context) {
                                           if (drug.etcOtcCode == '일반의약품') {
-                                            return ExpirationG(
+                                            return GeneralExpiration(
                                               drugItemSeq: drug.itemSeq,
                                             );
                                           } else {
-                                            return ExpirationS(
+                                            return PreparedExpiration(
                                               drugItemSeq: drug.itemSeq,
                                             );
                                           }
@@ -918,7 +920,6 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /* Review */
   Widget _drugReviews() {
-
     // body: StreamProvider<List<Review>>.value(
     //     value: ReviewService().getReviews(widget.drugItemSeq),
     //     child: StreamBuilder<Drug>(
@@ -928,8 +929,10 @@ class _ReviewPageState extends State<ReviewPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Drug drug = snapshot.data;
-            if (drug.numOfReviews > 0) _existReview();
-            else _noReview();
+            if (drug.numOfReviews > 0)
+              _existReview();
+            else
+              _noReview();
             return Column(
               children: [
                 Padding(
@@ -953,7 +956,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => AllReview(
-                                                  widget.drugItemSeq, drug.itemName)));
+                                                  widget.drugItemSeq,
+                                                  drug.itemName)));
                                     },
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
@@ -977,10 +981,8 @@ class _ReviewPageState extends State<ReviewPage> {
                     ],
                   ),
                 ),
-
                 checkReviewIsZero() == true ? Container() : _searchBar(),
                 checkReviewIsZero() == true ? Container() : _reviewWarning(),
-
                 checkReviewIsZero() == true
                     ? Container(
                         height: 310,
@@ -1073,11 +1075,11 @@ class _ReviewPageState extends State<ReviewPage> {
                   decoration: InputDecoration(
                       fillColor: gray50,
                       filled: true,
-                      prefixIcon:  SizedBox(
+                      prefixIcon: SizedBox(
                         height: 10,
                         width: 10,
                         child: Padding(
-                          padding: const EdgeInsets.only(top:4.0, bottom: 4),
+                          padding: const EdgeInsets.only(top: 4.0, bottom: 4),
                           child: Image.asset('assets/icons/search_grey.png'),
                         ),
                       ),
@@ -1106,14 +1108,14 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget IYMYGotoSeeOrCheckDialog(){
+  Widget IYMYGotoSeeOrCheckDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1162,8 +1164,11 @@ class _ReviewPageState extends State<ReviewPage> {
                   ),
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => SeeMyReview(widget.drugItemSeq)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SeeMyReview(widget.drugItemSeq)));
                   }),
               SizedBox(width: 16),
               /* RIGHT ACTION BUTTON */
