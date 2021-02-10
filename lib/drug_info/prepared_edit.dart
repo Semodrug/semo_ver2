@@ -1,45 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/bottom_bar.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
-import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
-import 'package:semo_ver2/shared/shortcut_dialog.dart';
+import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-class ExpirationSEdit extends StatefulWidget {
+class PreparedEdit extends StatefulWidget {
   final String drugItemSeq;
   final String expirationString;
 
-  const ExpirationSEdit({Key key, this.drugItemSeq, this.expirationString})
+  const PreparedEdit({Key key, this.drugItemSeq, this.expirationString})
       : super(key: key);
 
   @override
-  _ExpirationSEditState createState() => _ExpirationSEditState();
+  _PreparedEditState createState() => _PreparedEditState();
 }
 
-class _ExpirationSEditState extends State<ExpirationSEdit> {
-  DateTime _pickDateTime = DateTime.now();
-
-  int _durationInt = 0;
-  String _expectedDateString =
+class _PreparedEditState extends State<PreparedEdit> {
+  // variables for prepared case
+  DateTime _madeDateTime = DateTime.now();
+  int _addDays = 0;
+  DateTime _finalDateTime = DateTime.now().add(Duration(days: 60));
+  String _finalString =
       DateFormat('yyyy.MM.dd').format(DateTime.now().add(Duration(days: 60)));
+  bool _isSelf = false;
 
-  bool _isSelf = true;
-  DateTime _pickSelfDateTime = DateTime.now();
+  @override
+  void initState() {
+    _isSelf = true;
+
+    // change String to DateTime
+    String dateOfUserDrug = '';
+    List<String> getOnlyDate = widget.expirationString.split('.');
+
+    for (int i = 0; i < getOnlyDate.length; i++) {
+      dateOfUserDrug = dateOfUserDrug + getOnlyDate[i];
+    }
+
+    String dateWithT = dateOfUserDrug.substring(0, 8) + 'T' + '000000';
+    DateTime expirationTime = DateTime.parse(dateWithT);
+
+    _finalDateTime = expirationTime;
+    _finalString = DateFormat('yyyy.MM.dd').format(_finalDateTime);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBarWithGoToBack('사용기한 수정하기', Icon(Icons.close), 0.5),
-      backgroundColor: Colors.white,
+      backgroundColor: gray0_white,
       body: StreamBuilder<Drug>(
         stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
         builder: (context, snapshot) {
@@ -55,22 +73,22 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
                     SizedBox(height: 20),
                     _topInfo(context, drug),
                     SizedBox(height: 20),
-                    _datePick(),
+                    _pickPreparedDay(),
                     SizedBox(height: 20),
                     Container(
                         alignment: Alignment.bottomLeft,
-                        child: _durationPick()),
+                        child: _pickDuration()),
                     SizedBox(height: 20),
-                    _isSelf ? _expirationPick() : Container(),
-                    _expectedDuration(),
+                    _isSelf ? _pickSelf() : Container(),
+                    _showExpiration(),
                     SizedBox(height: 20),
-                    _submitButton(context, user, drug, _expectedDateString)
+                    _submitButton(context, user, drug, _finalString),
                   ],
                 ),
               ),
             );
           } else {
-            return Loading();
+            return LinearProgressIndicator();
           }
         },
       ),
@@ -116,19 +134,7 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
     );
   }
 
-  Widget _datePick() {
-    String dateOfUserDrug = '';
-    List<String> getOnlyDate = widget.expirationString.split('.');
-
-    for (int i = 0; i < getOnlyDate.length; i++) {
-      dateOfUserDrug = dateOfUserDrug + getOnlyDate[i];
-    }
-
-    String dateWithT = dateOfUserDrug.substring(0, 8) + 'T' + '000000';
-    DateTime expirationTime = DateTime.parse(dateWithT);
-
-    _pickDateTime = expirationTime;
-
+  Widget _pickPreparedDay() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -136,9 +142,7 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
           '언제 약을 제조받으셨나요?',
           style: Theme.of(context).textTheme.subtitle1,
         ),
-        SizedBox(
-          height: 4,
-        ),
+        SizedBox(height: 4),
         FlatButton(
             padding: EdgeInsets.zero,
             onPressed: () {
@@ -148,25 +152,29 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
                   maxTime: DateTime(2030, 12, 31),
                   onChanged: (date) {}, onConfirm: (date) async {
                 setState(() {
-                  _pickDateTime = date;
+                  _madeDateTime = date;
+                  _finalDateTime = _madeDateTime.add(Duration(days: _addDays));
+                  _finalString =
+                      DateFormat('yyyy.MM.dd').format(_finalDateTime);
                 });
               },
-                  currentTime: expirationTime,
+                  currentTime: _madeDateTime,
                   locale: LocaleType.ko); // need currentTime setting?
             },
             child: Container(
+              height: 48,
               padding: EdgeInsets.symmetric(
                 vertical: 10,
                 horizontal: 16,
               ),
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
+                  border: Border.all(color: gray75),
                   borderRadius: BorderRadius.circular(4)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${DateFormat('yyyy').format(_pickDateTime)}년 ${DateFormat('MM').format(_pickDateTime)}월 ${DateFormat('dd').format(_pickDateTime)}일',
+                    '${DateFormat('yyyy').format(_madeDateTime)}년 ${DateFormat('MM').format(_madeDateTime)}월 ${DateFormat('dd').format(_madeDateTime)}일',
                     style: Theme.of(context)
                         .textTheme
                         .bodyText2
@@ -180,7 +188,7 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
     );
   }
 
-  Widget _durationPick() {
+  Widget _pickDuration() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -199,13 +207,13 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
           height: 45,
           // width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: gray75),
               borderRadius: BorderRadius.circular(4)),
           child: DropdownButton(
             isExpanded: true,
             icon: Icon(Icons.keyboard_arrow_down),
             underline: SizedBox.shrink(),
-            value: _durationInt,
+            value: _addDays,
             items: <DropdownMenuItem>[
               DropdownMenuItem(
                 value: 60,
@@ -285,11 +293,10 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
             ],
             onChanged: (value) {
               setState(() {
-                _durationInt = value;
-                DateTime _expectedDateTime =
-                    _pickDateTime.add(Duration(days: _durationInt));
-                _expectedDateString =
-                    DateFormat('yyyy.MM.dd').format(_expectedDateTime);
+                _addDays = value;
+
+                _finalDateTime = _madeDateTime.add(Duration(days: _addDays));
+                _finalString = DateFormat('yyyy.MM.dd').format(_finalDateTime);
               });
             },
           ),
@@ -298,8 +305,64 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
     );
   }
 
-  Widget _expectedDuration() {
+  Widget _pickSelf() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '유효기한 직접 입력',
+          style: Theme.of(context).textTheme.subtitle1,
+        ),
+        SizedBox(
+          height: 4,
+        ),
+        FlatButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              DatePicker.showDatePicker(context,
+                  showTitleActions: true,
+                  minTime: DateTime.now(),
+                  maxTime: DateTime(2030, 12, 31),
+                  onChanged: (date) {}, onConfirm: (date) async {
+                setState(() {
+                  _finalDateTime = date;
+                  _finalString =
+                      DateFormat('yyyy.MM.dd').format(_finalDateTime);
+                });
+              },
+                  currentTime: _finalDateTime,
+                  locale: LocaleType.ko); // need currentTime setting?
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 16,
+              ),
+              decoration: BoxDecoration(
+                  border: Border.all(color: gray75),
+                  borderRadius: BorderRadius.circular(4)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${DateFormat('yyyy').format(_finalDateTime)}년 ${DateFormat('MM').format(_finalDateTime)}월 ${DateFormat('dd').format(_finalDateTime)}일',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray750_activated),
+                  ),
+                  Icon(Icons.keyboard_arrow_down)
+                ],
+              ),
+            )),
+        SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget _showExpiration() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         RichText(
           textAlign: TextAlign.center,
@@ -316,7 +379,7 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
                 style: Theme.of(context).textTheme.bodyText2,
               ),
               TextSpan(
-                  text: _expectedDateString,
+                  text: _finalString,
                   style: TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.teal[400])),
               TextSpan(
@@ -333,95 +396,8 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
     );
   }
 
-  // Widget selfWrite() {
-  //   return TextFormField(
-  //       controller: _selfWritingController,
-  //       cursorColor: Colors.teal[400],
-  //       decoration: InputDecoration(
-  //           focusedBorder: UnderlineInputBorder(
-  //             borderSide: BorderSide(color: Colors.teal),
-  //           ),
-  //           hintText: '예상 사용가능 기간이 몇일인가요? 예) 30',
-  //           hintStyle: TextStyle(color: Colors.grey, fontSize: 14.0)),
-  //       keyboardType: TextInputType.number,
-  //       onChanged: (value) {
-  //         setState(() {
-  //           DateTime _expectedDateTime =
-  //               _pickDateTime.add(Duration(days: int.parse(value)));
-  //           _expectedDateString =
-  //               DateFormat('yyyy.MM.dd').format(_expectedDateTime);
-  //         });
-  //       });
-  // }
-
-  Widget _expirationPick() {
-    String dateOfUserDrug = '';
-    List<String> getOnlyDate = widget.expirationString.split('.');
-
-    for (int i = 0; i < getOnlyDate.length; i++) {
-      dateOfUserDrug = dateOfUserDrug + getOnlyDate[i];
-    }
-
-    String dateWithT = dateOfUserDrug.substring(0, 8) + 'T' + '000000';
-    DateTime expirationTime = DateTime.parse(dateWithT);
-
-    _pickSelfDateTime = expirationTime;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '유효기한 직접 입력',
-          style: Theme.of(context).textTheme.subtitle1,
-        ),
-        SizedBox(
-          height: 4,
-        ),
-        FlatButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              DatePicker.showDatePicker(context,
-                  showTitleActions: true,
-                  minTime: DateTime(2000, 1, 1),
-                  maxTime: DateTime(2030, 12, 31),
-                  onChanged: (date) {}, onConfirm: (date) async {
-                setState(() {
-                  _pickSelfDateTime = date;
-                  _expectedDateString =
-                      DateFormat('yyyy.MM.dd').format(_pickSelfDateTime);
-                });
-              },
-                  currentTime: expirationTime,
-                  locale: LocaleType.ko); // need currentTime setting?
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 16,
-              ),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(4)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${DateFormat('yyyy').format(_pickSelfDateTime)}년 ${DateFormat('MM').format(_pickSelfDateTime)}월 ${DateFormat('dd').format(_pickSelfDateTime)}일',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2
-                        .copyWith(color: gray750_activated),
-                  ),
-                  Icon(Icons.keyboard_arrow_down)
-                ],
-              ),
-            )),
-        SizedBox(height: 20),
-      ],
-    );
-  }
-
-  Widget _submitButton(context, user, drug, expirationTime) {
+  Widget _submitButton(
+      context, TheUser user, Drug drug, String expirationString) {
     String newName = drug.itemName;
     List splitName = [];
 
@@ -447,26 +423,25 @@ class _ExpirationSEditState extends State<ExpirationSEdit> {
     return IYMYSubmitButton(
       context: context,
       isDone: true,
-      textString: '추가하기',
+      textString: '수정하기',
       onPressed: () async {
-        IYMYShortCutDialog(
+        IYMYOkDialog(
           context: context,
           dialogIcon: Icon(Icons.check, color: primary300_main),
-          boldBodyString: '나의 약 보관함',
-          normalBodyString: '에 추가되었습니다',
-          topButtonName: '바로가기',
-          bottomButtonName: '확인',
-          onPressedTop: () {
-            Navigator.pop(context);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => BottomBar()));
-          },
-          onPressedBottom: () {
+          bodyString: '사용기한이 수정되었습니다',
+          buttonName: '확인',
+          onPressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
           },
         ).showWarning();
-        await DatabaseService(uid: user.uid).updateSavedList(expirationTime);
+        await DatabaseService(uid: user.uid).addSavedList(
+            drug.itemName,
+            drug.itemSeq,
+            drug.category,
+            drug.etcOtcCode,
+            expirationString,
+            searchListOutput);
       },
     );
   }

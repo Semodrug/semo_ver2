@@ -1,26 +1,20 @@
 import 'dart:io';
-
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/camera/no_result.dart';
-import 'package:semo_ver2/drug_info/expiration_g_edit.dart';
-import 'package:semo_ver2/drug_info/expiration_s_edit.dart';
+import 'package:semo_ver2/drug_info/general_edit.dart';
+import 'package:semo_ver2/drug_info/prepared_edit.dart';
 import 'package:semo_ver2/review/drug_info.dart';
-
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/home/search_screen.dart';
-//import 'package:semo_ver2/home/_past_search_screen.dart';
-
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/shared/category_button.dart';
-import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/image.dart';
-import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
-import 'package:intl/intl.dart';
 
 int num = 0;
 
@@ -808,11 +802,11 @@ class _HomePageState extends State<HomePage> {
                           fullscreenDialog: true,
                           builder: (context) {
                             if (data.etcOtcCode == '일반의약품') {
-                              return ExpirationGEdit(
+                              return GeneralEdit(
                                   drugItemSeq: data.itemSeq,
                                   expirationString: data.expiration);
                             } else {
-                              return ExpirationSEdit(
+                              return PreparedEdit(
                                   drugItemSeq: data.itemSeq,
                                   expirationString: data.expiration);
                             }
