@@ -185,6 +185,8 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                   '입력하신 항목을 다시 확인해주세요',
                   textAlign: TextAlign.center,
                 ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.black.withOpacity(0.87)));
           } else if (_nicknameController.text.length >= 10) {
@@ -194,6 +196,8 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                   '닉네임을 10자 이하로 입력해주세요',
                   textAlign: TextAlign.center,
                 ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.black.withOpacity(0.87)));
           } else if (2020 < int.parse(_birthYearController.text) ||
@@ -203,6 +207,8 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                   '생년월일을 올바르게 입력해주세요',
                   textAlign: TextAlign.center,
                 ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.black.withOpacity(0.87)));
           } else {
@@ -216,6 +222,8 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                     '이미 존재하는 닉네임입니다',
                     textAlign: TextAlign.center,
                   ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.black.withOpacity(0.87)));
             } else {

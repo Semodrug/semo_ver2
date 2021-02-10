@@ -188,6 +188,8 @@ class _RegisterFormState extends State<RegisterForm> {
                     result,
                     textAlign: TextAlign.center,
                   ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.black.withOpacity(0.87)));
             }
@@ -209,6 +211,8 @@ class _RegisterFormState extends State<RegisterForm> {
                     '회원가입이 완료되었습니다.',
                     textAlign: TextAlign.center,
                   ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.black.withOpacity(0.87)));
 
