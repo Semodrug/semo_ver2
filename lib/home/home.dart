@@ -303,6 +303,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Container(
+                            width: 88,
                             //이미지는 고정값
                             //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: DrugImage(drugItemSeq: data.itemSeq)),
@@ -433,7 +434,7 @@ class _HomePageState extends State<HomePage> {
                             //이미지는 고정값
                             //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Container(
-                                width: 90,
+                                width: 88,
                                 child: DrugImage(drugItemSeq: data.itemSeq))),
                         Container(
                             padding: EdgeInsets.only(left: 12, top: 0),
@@ -565,7 +566,7 @@ class _HomePageState extends State<HomePage> {
                             //이미지는 고정값
                             //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Container(
-                                width: 90,
+                                width: 88,
                                 child: DrugImage(drugItemSeq: data.itemSeq))),
                         Container(
                             padding: EdgeInsets.only(left: 12, top: 0),
