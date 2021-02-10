@@ -419,12 +419,23 @@ class _PreparedEditState extends State<PreparedEdit> {
       }
     }
 
+    bool _isPast = false;
+
+    if (expirationDateTime.year < DateTime.now().year)
+      _isPast = true;
+    else if (expirationDateTime.year == DateTime.now().year &&
+        expirationDateTime.month < DateTime.now().month)
+      _isPast = true;
+    else if (expirationDateTime.year == DateTime.now().year &&
+        expirationDateTime.month == DateTime.now().month &&
+        expirationDateTime.day < DateTime.now().day) _isPast = true;
+
     return IYMYSubmitButton(
       context: context,
       isDone: true,
       textString: '수정하기',
       onPressed: () async {
-        if (expirationDateTime.isBefore(DateTime.now())) {
+        if (_isPast) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(
                 '사용기한이 지났습니다. 다시 확인해주세요',
