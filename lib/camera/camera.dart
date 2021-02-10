@@ -547,8 +547,6 @@ class _MenuWidgetState extends State<MenuWidget> {
                       ],
                     ),
                     onPressed: () async {
-                      // """here"""
-
                       await pickImage();
 
                       var data = await DatabaseService()

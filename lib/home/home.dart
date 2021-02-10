@@ -1,21 +1,20 @@
+import 'dart:io';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/drug_info/expiration_g_edit.dart';
-import 'package:semo_ver2/drug_info/expiration_s_edit.dart';
+import 'package:semo_ver2/camera/no_result.dart';
+import 'package:semo_ver2/drug_info/general_edit.dart';
+import 'package:semo_ver2/drug_info/prepared_edit.dart';
 import 'package:semo_ver2/review/drug_info.dart';
-
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/home/search_screen.dart';
-//import 'package:semo_ver2/home/_past_search_screen.dart';
-
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/shared/category_button.dart';
-import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/image.dart';
-import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
-import 'package:intl/intl.dart';
 
 int num = 0;
 
@@ -29,6 +28,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  File pickedImage;
+  String barcodeNum;
+  bool imageLoaded = false;
+
+  Future<void> pickImage() async {
+    var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      pickedImage = awaitImage;
+      imageLoaded = true;
+    });
+
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(pickedImage);
+    VisionText readedText;
+
+    final BarcodeDetector barcodeDetector =
+        FirebaseVision.instance.barcodeDetector();
+
+    final List<Barcode> barcodes =
+        await barcodeDetector.detectInImage(visionImage);
+
+    for (Barcode barcode in barcodes) {
+      final String rawValue = barcode.rawValue;
+      final BarcodeValueType valueType = barcode.valueType;
+
+      setState(() {
+        barcodeNum = "$rawValue";
+      });
+    }
+
+    barcodeDetector.close();
+  }
+
   @override
   Widget build(BuildContext context) {
     //widget.appBarForSearch = false;
@@ -244,8 +276,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: Container(
           decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(width: 0.6, color: gray50))),
+              border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
           child: Column(
             children: [
               Padding(
@@ -313,12 +344,14 @@ class _HomePageState extends State<HomePage> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
-                                            .copyWith(color: gray600, fontSize: 11)),
+                                            .copyWith(
+                                                color: gray600, fontSize: 11)),
                                     Text('까지 ',
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
-                                            .copyWith(color: gray600, fontSize: 11)),
+                                            .copyWith(
+                                                color: gray600, fontSize: 11)),
                                   ],
                                 )
                               ],
@@ -375,8 +408,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: Container(
           decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(width: 0.6, color: gray50))),
+              border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
           child: Column(
             children: [
               Padding(
@@ -444,12 +476,14 @@ class _HomePageState extends State<HomePage> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
-                                            .copyWith(color: gray600, fontSize: 11)),
+                                            .copyWith(
+                                                color: gray600, fontSize: 11)),
                                     Text('까지 ',
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
-                                            .copyWith(color: gray600, fontSize: 11)),
+                                            .copyWith(
+                                                color: gray600, fontSize: 11)),
                                   ],
                                 )
                               ],
@@ -507,8 +541,7 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           //padding: EdgeInsets.only(bottom: 10.0),
           decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(width: 0.6, color: gray50))),
+              border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
           child: Column(
             children: [
               Padding(
@@ -578,12 +611,14 @@ class _HomePageState extends State<HomePage> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
-                                            .copyWith(color: gray600, fontSize: 11)),
+                                            .copyWith(
+                                                color: gray600, fontSize: 11)),
                                     Text('까지 ',
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
-                                            .copyWith(color: gray600, fontSize: 11)),
+                                            .copyWith(
+                                                color: gray600, fontSize: 11)),
                                   ],
                                 )
                               ],
@@ -652,8 +687,23 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(top: 5.0),
             child: MaterialButton(
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
+                await pickImage();
+
+                var data =
+                    await DatabaseService().itemSeqFromBarcode(barcodeNum);
+
+                (barcodeNum != null && data != null)
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ReviewPage(data),
+                        ))
+                    : Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NoResult(),
+                        ));
               },
               child: Row(
                 children: <Widget>[
@@ -752,11 +802,11 @@ class _HomePageState extends State<HomePage> {
                           fullscreenDialog: true,
                           builder: (context) {
                             if (data.etcOtcCode == '일반의약품') {
-                              return ExpirationGEdit(
+                              return GeneralEdit(
                                   drugItemSeq: data.itemSeq,
                                   expirationString: data.expiration);
                             } else {
-                              return ExpirationSEdit(
+                              return PreparedEdit(
                                   drugItemSeq: data.itemSeq,
                                   expirationString: data.expiration);
                             }
@@ -773,7 +823,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(
             // padding: EdgeInsets.only(bottom: 4.0),
-            padding: const EdgeInsets.fromLTRB(0,4,0,8),
+            padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
             child: MaterialButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -795,7 +845,7 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               decoration: BoxDecoration(
                 border: Border(
-                  // bottom: BorderSide(color: Theme.of(context).hintColor),
+                    // bottom: BorderSide(color: Theme.of(context).hintColor),
                     top: BorderSide(color: gray100)),
               ),
               child: MaterialButton(
@@ -805,10 +855,7 @@ class _HomePageState extends State<HomePage> {
                   child: Center(
                       child: Text("닫기",
                           style: Theme.of(context).textTheme.bodyText1.copyWith(
-                              color: gray300_inactivated,
-                            fontSize: 16
-                          )
-                  ))),
+                              color: gray300_inactivated, fontSize: 16)))),
             ),
           )
         ],
@@ -816,8 +863,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void showWarning(BuildContext context, String bodyString, String leftButtonName,
-      String rightButtonName, String actionCode, String uid, String record) {
+  void showWarning(
+      BuildContext context,
+      String bodyString,
+      String leftButtonName,
+      String rightButtonName,
+      String actionCode,
+      String uid,
+      String record) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1139,7 +1192,8 @@ class SearchBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left:12.0, top: 5, bottom: 4, right:5),
+                  padding: const EdgeInsets.only(
+                      left: 12.0, top: 5, bottom: 4, right: 5),
                   child: SizedBox(
                     height: 24,
                     width: 24,
@@ -1150,7 +1204,10 @@ class SearchBar extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 7.0),
                   child: Text(
                     "어떤 약을 찾고 계세요?",
-                    style: Theme.of(context).textTheme.bodyText2.copyWith(color: gray300_inactivated),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray300_inactivated),
                   ),
                 ),
               ],
