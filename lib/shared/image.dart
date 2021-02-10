@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:semo_ver2/shared/loading.dart';
+import 'package:semo_ver2/theme/colors.dart';
 
 class DrugImage extends StatefulWidget {
   final String drugItemSeq;
@@ -15,19 +15,28 @@ class _DrugImageState extends State<DrugImage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: downloadURLExample(widget.drugItemSeq),
+      future: _downloadURLExample(widget.drugItemSeq),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
-          return Image.network(snapshot.data.toString());
+          if (snapshot.data == 'null') {
+            return Container(
+              decoration: BoxDecoration(border: Border.all(color: gray75)),
+              child: Image.asset('assets/images/null.png'),
+            );
+          } else {
+            return Container(
+                decoration: BoxDecoration(border: Border.all(color: gray75)),
+                child: Image.network(snapshot.data));
+          }
         } else {
-          return Loading();
+          return Container();
         }
       },
     );
   }
 }
 
-Future<String> downloadURLExample(String itemSeq) async {
+Future<String> _downloadURLExample(String itemSeq) async {
   try {
     String downloadURL = await firebase_storage.FirebaseStorage.instance
         .ref('Image/$itemSeq.png')
@@ -36,12 +45,12 @@ Future<String> downloadURLExample(String itemSeq) async {
     return downloadURL;
   } on firebase_storage.FirebaseException catch (e) {
     if (e.code == 'object-not-found') {
-      String downloadURL = await firebase_storage.FirebaseStorage.instance
-          .ref('null.png')
-          // .ref('Image/195900043.png')
-          .getDownloadURL();
+      // String downloadURL = await firebase_storage.FirebaseStorage.instance
+      //     .ref('null.png')
+      //     // .ref('Image/195900043.png')
+      //     .getDownloadURL();
 
-      return downloadURL;
+      return 'null';
     }
   }
 }

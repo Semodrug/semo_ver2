@@ -94,9 +94,7 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
       children: [
         Container(
           width: 100,
-          child: AspectRatio(
-              aspectRatio: 3.5 / 2,
-              child: DrugImage(drugItemSeq: drug.itemSeq)),
+          child: DrugImage(drugItemSeq: drug.itemSeq),
         ),
         SizedBox(
           height: 20,
@@ -328,7 +326,7 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '언제 약을 제조받으셨나요?',
+          '언제 약을 조제받으셨나요?',
           style: Theme.of(context).textTheme.subtitle1,
         ),
         SizedBox(height: 4),

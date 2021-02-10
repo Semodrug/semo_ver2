@@ -305,12 +305,7 @@ class _HomePageState extends State<HomePage> {
                         Container(
                             //이미지는 고정값
                             //padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Container(
-                                width: 90,
-                                child: AspectRatio(
-                                    aspectRatio: 2.5 / 2,
-                                    child:
-                                        DrugImage(drugItemSeq: data.itemSeq)))),
+                            child: DrugImage(drugItemSeq: data.itemSeq)),
                         Container(
                             padding: EdgeInsets.only(left: 12, top: 0),
                             child: Column(
@@ -439,10 +434,7 @@ class _HomePageState extends State<HomePage> {
                             //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Container(
                                 width: 90,
-                                child: AspectRatio(
-                                    aspectRatio: 2.5 / 2,
-                                    child:
-                                        DrugImage(drugItemSeq: data.itemSeq)))),
+                                child: DrugImage(drugItemSeq: data.itemSeq))),
                         Container(
                             padding: EdgeInsets.only(left: 12, top: 0),
                             child: Column(
@@ -574,10 +566,7 @@ class _HomePageState extends State<HomePage> {
                             //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Container(
                                 width: 90,
-                                child: AspectRatio(
-                                    aspectRatio: 2.5 / 2,
-                                    child:
-                                        DrugImage(drugItemSeq: data.itemSeq)))),
+                                child: DrugImage(drugItemSeq: data.itemSeq))),
                         Container(
                             padding: EdgeInsets.only(left: 12, top: 0),
                             child: Column(

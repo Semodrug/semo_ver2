@@ -25,7 +25,6 @@ class EditReview extends StatefulWidget {
 }
 
 class _EditReviewState extends State<EditReview> {
-
   TextEditingController myControllerEffect = TextEditingController();
   TextEditingController myControllerSideEffect = TextEditingController();
   TextEditingController myControllerOverall = TextEditingController();
@@ -38,10 +37,9 @@ class _EditReviewState extends State<EditReview> {
     super.dispose();
   }
 
-
   String effect = '';
   String sideEffect = '';
-  double starRating =  0;
+  double starRating = 0;
   String effectText = '';
   String sideEffectText = '';
   String overallText = '';
@@ -59,8 +57,8 @@ class _EditReviewState extends State<EditReview> {
       splitName = drugName.split('(');
       newName = splitName[0];
       return newName;
-    }
-    else return drugName;
+    } else
+      return drugName;
   }
 
   @override
@@ -68,12 +66,12 @@ class _EditReviewState extends State<EditReview> {
     return StreamBuilder<Review>(
         stream: ReviewService().getSingleReview(widget.review.documentId),
         builder: (context, snapshot) {
-          if(snapshot.hasData) {
+          if (snapshot.hasData) {
             Review review = snapshot.data;
 
-            if(effect == '') effect = review.effect;
-            if(sideEffect == '') sideEffect = review.sideEffect;
-            if(editSwitch == false) {
+            if (effect == '') effect = review.effect;
+            if (sideEffect == '') sideEffect = review.sideEffect;
+            if (editSwitch == false) {
               myControllerEffect.text = review.effectText;
               myControllerSideEffect.text = review.sideEffectText;
               myControllerOverall.text = review.overallText;
@@ -83,7 +81,8 @@ class _EditReviewState extends State<EditReview> {
             return Scaffold(
                 resizeToAvoidBottomInset: true,
                 backgroundColor: gray0_white,
-                appBar: CustomAppBarWithGoToBack('리뷰 수정하기', Icon(Icons.close), 3),
+                appBar:
+                    CustomAppBarWithGoToBack('리뷰 수정하기', Icon(Icons.close), 3),
                 body: GestureDetector(
                   onTap: () {
                     FocusScope.of(context).unfocus();
@@ -100,14 +99,11 @@ class _EditReviewState extends State<EditReview> {
 //                      Padding(padding: EdgeInsets.only(top: 35)),
                     ],
                   ),
-                )
-            );
-          }
-          else {
+                ));
+          } else {
             return Loading();
           }
-        }
-    );
+        });
   }
 
   Future<void> _IYMYCheckDialog() async {
@@ -117,7 +113,7 @@ class _EditReviewState extends State<EditReview> {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -176,9 +172,7 @@ class _EditReviewState extends State<EditReview> {
                       onPressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
-                      }
-
-                  )
+                      })
                 ],
               )
             ],
@@ -186,8 +180,6 @@ class _EditReviewState extends State<EditReview> {
         );
       },
     );
-
-
 
 //     return showDialog<void>(
 //       context: context,
@@ -226,14 +218,14 @@ class _EditReviewState extends State<EditReview> {
 //     );
   }
 
-  Widget IYMYGotoSeeOrCheckDialog(drugItemSeq){
+  Widget IYMYGotoSeeOrCheckDialog(drugItemSeq) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -282,8 +274,10 @@ class _EditReviewState extends State<EditReview> {
                   ),
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => SeeMyReview(drugItemSeq)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SeeMyReview(drugItemSeq)));
                   }),
               SizedBox(width: 16),
               /* RIGHT ACTION BUTTON */
@@ -317,11 +311,13 @@ class _EditReviewState extends State<EditReview> {
   Widget _pillInfo(review) {
     //TODO: Bring pill information
     return Container(
-        padding: EdgeInsets.fromLTRB(20,30,20,15),
+        padding: EdgeInsets.fromLTRB(20, 30, 20, 15),
         decoration: BoxDecoration(
             border: Border(
-                bottom:
-                BorderSide(width: 12, color: gray50, ))),
+                bottom: BorderSide(
+          width: 12,
+          color: gray50,
+        ))),
         child: Row(
           children: <Widget>[
 //            Container(
@@ -330,19 +326,18 @@ class _EditReviewState extends State<EditReview> {
 //            ),
             SizedBox(
               child: DrugImage(drugItemSeq: review.seqNum),
-              width: 100.0,
-              height: 100.0,
+              width: 88.0,
             ),
             Padding(padding: EdgeInsets.only(left: 15)),
 
             // Text(widget.review.effectText),
 
-
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 StreamBuilder<Drug>(
-                    stream: DatabaseService(itemSeq: widget.review.seqNum).drugData,
+                    stream:
+                        DatabaseService(itemSeq: widget.review.seqNum).drugData,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         Drug drug = snapshot.data;
@@ -350,43 +345,62 @@ class _EditReviewState extends State<EditReview> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(drug.entpName,
-                                style: Theme.of(context).textTheme.overline.copyWith(
-                                    color: gray300_inactivated, fontSize: 10)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .overline
+                                    .copyWith(
+                                        color: gray300_inactivated,
+                                        fontSize: 10)),
                             Container(
-                              width: MediaQuery.of(context).size.width-155,
+                              width: MediaQuery.of(context).size.width - 155,
                               padding: new EdgeInsets.only(right: 10.0),
                               child: Text(_shortenName(drug.itemName),
                                   overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.headline6.copyWith(
-                                      color: gray900)
-                              ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(color: gray900)),
                             ),
-                            Container(height: 2,),
+                            Container(
+                              height: 2,
+                            ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 RatingBar.builder(
                                   itemSize: 16,
-                                  initialRating: drug.totalRating ,
+                                  initialRating: drug.totalRating,
                                   minRating: 0,
                                   direction: Axis.horizontal,
                                   allowHalfRating: true,
                                   itemCount: 5,
                                   unratedColor: gray75,
-                                  itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 0.0),
                                   itemBuilder: (context, _) => ImageIcon(
                                     AssetImage('assets/icons/star.png'),
                                     color: yellow,
                                   ),
                                 ),
-                                Container(width:5),
-                                Text(drug.totalRating.toStringAsFixed(2),
-                                    style: Theme.of(context).textTheme.subtitle2.copyWith(
-                                        color: gray900, fontSize: 12),),
-                                Container(width:3),
-                                Text("("+drug.numOfReviews.toStringAsFixed(0)+"개)",
-                                    style: Theme.of(context).textTheme.overline.copyWith(
-                                        color: gray300_inactivated, fontSize: 10)),
+                                Container(width: 5),
+                                Text(
+                                  drug.totalRating.toStringAsFixed(2),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2
+                                      .copyWith(color: gray900, fontSize: 12),
+                                ),
+                                Container(width: 3),
+                                Text(
+                                    "(" +
+                                        drug.numOfReviews.toStringAsFixed(0) +
+                                        "개)",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .overline
+                                        .copyWith(
+                                            color: gray300_inactivated,
+                                            fontSize: 10)),
                               ],
                             ),
                             CategoryButton(str: drug.category)
@@ -403,8 +417,7 @@ class _EditReviewState extends State<EditReview> {
               ],
             )
           ],
-        )
-    );
+        ));
   }
 
   Widget _rating(Review review) {
@@ -413,21 +426,25 @@ class _EditReviewState extends State<EditReview> {
         padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
         decoration: BoxDecoration(
             border: Border(
-                bottom:
-                BorderSide(width: 0.8, color: Colors.grey[300], ))),
+                bottom: BorderSide(
+          width: 0.8,
+          color: Colors.grey[300],
+        ))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("약을 사용해보셨나요?",
-                style: Theme.of(context).textTheme.headline5.copyWith(
-                    color: gray900, fontSize: 16)
-            ),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: gray900, fontSize: 16)),
             SizedBox(height: 10),
             RatingBar.builder(
               itemSize: 48,
               glow: false,
-              initialRating: widget.editOrWrite == 'edit'? review.starRating*1.0 : 0,
+              initialRating:
+                  widget.editOrWrite == 'edit' ? review.starRating * 1.0 : 0,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: false,
@@ -435,26 +452,19 @@ class _EditReviewState extends State<EditReview> {
 //              unratedColor: Colors.grey[500],
               unratedColor: gray75,
               itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
-              itemBuilder: (context, _) => Icon(
-                  Icons.star,
+              itemBuilder: (context, _) => Icon(Icons.star,
 //                color: Colors.amber[300],
-                  color: primary300_main
-              ),
+                  color: primary300_main),
               onRatingUpdate: (rating) {
                 starRating = rating;
                 setState(() {
                   // if(starRating == 0)
                   //   starRatingText = "선택하세요.";
-                  if(starRating == 1)
-                    starRatingText =  "1점 (별로에요)";
-                  if(starRating == 2)
-                    starRatingText =  "2점 (그저그래요)";
-                  if(starRating == 3)
-                    starRatingText =  "3점 (괜찮아요)";
-                  if(starRating == 4)
-                    starRatingText =  "4점 (좋아요)";
-                  if(starRating == 5)
-                    starRatingText =  "5점 (최고예요)";
+                  if (starRating == 1) starRatingText = "1점 (별로에요)";
+                  if (starRating == 2) starRatingText = "2점 (그저그래요)";
+                  if (starRating == 3) starRatingText = "3점 (괜찮아요)";
+                  if (starRating == 4) starRatingText = "4점 (좋아요)";
+                  if (starRating == 5) starRatingText = "5점 (최고예요)";
                 });
               },
             ),
@@ -463,30 +473,45 @@ class _EditReviewState extends State<EditReview> {
               textAlign: TextAlign.center,
               text: TextSpan(
                 style: Theme.of(context).textTheme.caption.copyWith(
-                  color: primary500_light_text, fontSize: 12,),
+                      color: primary500_light_text,
+                      fontSize: 12,
+                    ),
                 children: <TextSpan>[
                   TextSpan(
-                    text: starRatingText.isNotEmpty ? '${starRatingText.split(" ")[0]}' :
-                    review.starRating == 1 ? "1점 " :
-                    review.starRating == 2 ? "2점 " :
-                    review.starRating == 3 ? "3점 " :
-                    review.starRating == 4 ? "4점 " :
-                    "5점 (최고예요)" ,
+                    text: starRatingText.isNotEmpty
+                        ? '${starRatingText.split(" ")[0]}'
+                        : review.starRating == 1
+                            ? "1점 "
+                            : review.starRating == 2
+                                ? "2점 "
+                                : review.starRating == 3
+                                    ? "3점 "
+                                    : review.starRating == 4
+                                        ? "4점 "
+                                        : "5점 (최고예요)",
                     style: Theme.of(context).textTheme.caption.copyWith(
-                        color: primary600_bold_text, fontSize: 12, fontWeight: FontWeight.bold),),
+                        color: primary600_bold_text,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold),
+                  ),
                   TextSpan(
-                      text: starRatingText.isNotEmpty ? ' '+'${starRatingText.split(" ")[1]}' :
-                      review.starRating == 1 ? "(별로에요)" :
-                      review.starRating == 2 ? "(그저그래요)" :
-                      review.starRating == 3 ? "(괜찮아요)" :
-                      review.starRating == 4 ? "(좋아요)" :
-                      "5점 (최고예요)" ,),
+                    text: starRatingText.isNotEmpty
+                        ? ' ' + '${starRatingText.split(" ")[1]}'
+                        : review.starRating == 1
+                            ? "(별로에요)"
+                            : review.starRating == 2
+                                ? "(그저그래요)"
+                                : review.starRating == 3
+                                    ? "(괜찮아요)"
+                                    : review.starRating == 4
+                                        ? "(좋아요)"
+                                        : "5점 (최고예요)",
+                  ),
                 ],
               ),
             ),
           ],
-        )
-    );
+        ));
   }
 
   Widget _effect(Review review) {
@@ -495,15 +520,19 @@ class _EditReviewState extends State<EditReview> {
         padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
         decoration: BoxDecoration(
             border: Border(
-                bottom:
-                BorderSide(width: 0.8, color: Colors.grey[300], ))),
+                bottom: BorderSide(
+          width: 0.8,
+          color: Colors.grey[300],
+        ))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("약의 효과는 어땠나요?",
-                style: Theme.of(context).textTheme.headline5.copyWith(
-                    color: gray900, fontSize: 16)),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: gray900, fontSize: 16)),
             Padding(padding: EdgeInsets.only(top: 15)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -515,24 +544,31 @@ class _EditReviewState extends State<EditReview> {
                             width: 40,
                             height: 40,
                             // child: Image.asset('assets/icons/sentiment_satisfied.png.png'),
-                            child: Icon(Icons.sentiment_dissatisfied_rounded,
+                            child: Icon(
+                              Icons.sentiment_dissatisfied_rounded,
                               size: 30,
-                              color: Color(0xffF7F7F7),),
+                              color: Color(0xffF7F7F7),
+                            ),
                             decoration: BoxDecoration(
-                                color: effect == "bad" ? primary300_main: gray75,
+                                color:
+                                    effect == "bad" ? primary300_main : gray75,
                                 shape: BoxShape.circle)),
-                        onTap: ()  {
-                          setState(()  {
+                        onTap: () {
+                          setState(() {
                             effect = "bad";
                           });
-                        }
-                    ),
+                        }),
                     Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("별로에요", style: effect == "bad"?
-                    Theme.of(context).textTheme.caption.copyWith(
-                        color: primary600_bold_text, fontSize: 12) :
-                    Theme.of(context).textTheme.caption.copyWith(
-                        color: gray0_white, fontSize: 12),)
+                    Text(
+                      "별로에요",
+                      style: effect == "bad"
+                          ? Theme.of(context).textTheme.caption.copyWith(
+                              color: primary600_bold_text, fontSize: 12)
+                          : Theme.of(context)
+                              .textTheme
+                              .caption
+                              .copyWith(color: gray0_white, fontSize: 12),
+                    )
                   ],
                 ),
                 Padding(padding: EdgeInsets.only(left: 20)),
@@ -543,24 +579,31 @@ class _EditReviewState extends State<EditReview> {
                             width: 40,
                             height: 40,
                             // child: Image.asset('assets/icons/sentiment_satisfied.png.png'),
-                            child: Icon(Icons.sentiment_neutral_rounded,
+                            child: Icon(
+                              Icons.sentiment_neutral_rounded,
                               size: 30,
-                              color: Color(0xffF7F7F7),),
+                              color: Color(0xffF7F7F7),
+                            ),
                             decoration: BoxDecoration(
-                                color: effect == "soso" ? primary300_main: gray75,
+                                color:
+                                    effect == "soso" ? primary300_main : gray75,
                                 shape: BoxShape.circle)),
-                        onTap: ()  {
-                          setState(()  {
+                        onTap: () {
+                          setState(() {
                             effect = "soso";
                           });
-                        }
-                    ),
+                        }),
                     Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("보통이에요", style: effect == "soso"?
-                    Theme.of(context).textTheme.caption.copyWith(
-                        color: primary600_bold_text, fontSize: 12) :
-                    Theme.of(context).textTheme.caption.copyWith(
-                        color: gray0_white, fontSize: 12),)
+                    Text(
+                      "보통이에요",
+                      style: effect == "soso"
+                          ? Theme.of(context).textTheme.caption.copyWith(
+                              color: primary600_bold_text, fontSize: 12)
+                          : Theme.of(context)
+                              .textTheme
+                              .caption
+                              .copyWith(color: gray0_white, fontSize: 12),
+                    )
                   ],
                 ),
                 Padding(padding: EdgeInsets.only(left: 20)),
@@ -571,61 +614,67 @@ class _EditReviewState extends State<EditReview> {
                             width: 40,
                             height: 40,
                             // child: Image.asset('assets/icons/sentiment_satisfied.png.png'),
-                            child: Icon(Icons.sentiment_satisfied_rounded,
+                            child: Icon(
+                              Icons.sentiment_satisfied_rounded,
                               size: 30,
-                              color: Color(0xffF7F7F7),),
+                              color: Color(0xffF7F7F7),
+                            ),
                             decoration: BoxDecoration(
-                                color: effect == "good" ? primary300_main: gray75,
+                                color:
+                                    effect == "good" ? primary300_main : gray75,
                                 shape: BoxShape.circle)),
-                        onTap: ()  {
-                          setState(()  {
+                        onTap: () {
+                          setState(() {
                             effect = "good";
                           });
-                        }
-                    ),
+                        }),
                     Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("좋아요", style: effect == "good"?
-                    Theme.of(context).textTheme.caption.copyWith(
-                        color: primary600_bold_text, fontSize: 12) :
-                    Theme.of(context).textTheme.caption.copyWith(
-                        color: gray0_white, fontSize: 12),)
+                    Text(
+                      "좋아요",
+                      style: effect == "good"
+                          ? Theme.of(context).textTheme.caption.copyWith(
+                              color: primary600_bold_text, fontSize: 12)
+                          : Theme.of(context)
+                              .textTheme
+                              .caption
+                              .copyWith(color: gray0_white, fontSize: 12),
+                    )
                   ],
                 ),
-
               ],
             ),
 //              SizedBox(height: 20),
 //              Padding(padding: EdgeInsets.only(top: 25)),
             _textField(myControllerEffect)
           ],
-        )
-    );
+        ));
   }
 
   Widget _textField(TextEditingController myControllerEffect) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20,),
+      padding: EdgeInsets.symmetric(
+        vertical: 20,
+      ),
       child: Container(
-        width: 400,
+          width: 400,
 //                height: 100,
-        child: TextField(
-            style: Theme.of(context).textTheme.bodyText2.copyWith(
-              color: gray750_activated, ),
-            maxLength: 500,
-            controller: myControllerEffect,
-            keyboardType: TextInputType.multiline,
-            maxLines: null,
-            decoration: new InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                borderSide:  BorderSide(color: gray75),
-                borderRadius: const BorderRadius.all(
-                    const Radius.circular(4.0)
+          child: TextField(
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    color: gray750_activated,
+                  ),
+              maxLength: 500,
+              controller: myControllerEffect,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              decoration: new InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: gray75),
+                  borderRadius:
+                      const BorderRadius.all(const Radius.circular(4.0)),
                 ),
-              ),
-              filled: true,
-              fillColor: gray50,
-            ))
-
+                filled: true,
+                fillColor: gray50,
+              ))
 
 //         TextField(
 //             controller: myControllerEffect,
@@ -643,7 +692,7 @@ class _EditReviewState extends State<EditReview> {
 // //                        fillColor: _grey,
 //               fillColor: Colors.grey[200],
 //             )),
-      ),
+          ),
     );
   }
 
@@ -653,16 +702,19 @@ class _EditReviewState extends State<EditReview> {
         padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
         decoration: BoxDecoration(
             border: Border(
-                bottom:
-                BorderSide(width: 0.6, color: Colors.grey[300], ))),
+                bottom: BorderSide(
+          width: 0.6,
+          color: Colors.grey[300],
+        ))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("약의 부작용은 없었나요?",
-                style: Theme.of(context).textTheme.headline5.copyWith(
-                    color: gray900, fontSize: 16)
-            ),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: gray900, fontSize: 16)),
             Padding(padding: EdgeInsets.only(top: 15)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -671,56 +723,74 @@ class _EditReviewState extends State<EditReview> {
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            child: Icon(Icons.sentiment_dissatisfied_rounded,
+                            child: Icon(
+                              Icons.sentiment_dissatisfied_rounded,
                               size: 30,
-                              color: Color(0xffF7F7F7),),
+                              color: Color(0xffF7F7F7),
+                            ),
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
 //                              color: widget.review.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
-                                color: sideEffect == "yes" ? primary300_main : gray75,
+                                color: sideEffect == "yes"
+                                    ? primary300_main
+                                    : gray75,
                                 shape: BoxShape.circle)),
-                        onTap: ()  {
+                        onTap: () {
                           setState(() {
                             sideEffect = "yes";
                           });
-                        }
-                    ),
+                        }),
                     Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("부작용 있어요", style: sideEffect == "yes"?
-                    Theme.of(context).textTheme.caption.copyWith(
-                        color: primary600_bold_text, fontSize: 12) :
-                    Theme.of(context).textTheme.caption.copyWith(
-                        color: gray0_white, fontSize: 12),)
+                    Text(
+                      "부작용 있어요",
+                      style: sideEffect == "yes"
+                          ? Theme.of(context).textTheme.caption.copyWith(
+                              color: primary600_bold_text, fontSize: 12)
+                          : Theme.of(context)
+                              .textTheme
+                              .caption
+                              .copyWith(color: gray0_white, fontSize: 12),
+                    )
                   ],
                 ),
-                Padding(padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
-                    child: Text("VS", style: TextStyle(color: Colors.grey[700]))),
+                Padding(
+                    padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
+                    child:
+                        Text("VS", style: TextStyle(color: Colors.grey[700]))),
                 Column(
                   children: <Widget>[
                     GestureDetector(
                         child: Container(
-                            child: Icon(Icons.sentiment_satisfied_rounded,
+                            child: Icon(
+                              Icons.sentiment_satisfied_rounded,
                               size: 30,
-                              color: Color(0xffF7F7F7),),
+                              color: Color(0xffF7F7F7),
+                            ),
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
 //                              color: widget.review.sideEffect == "yes" ? Colors.greenAccent[100]: Colors.grey[300],
-                                color: sideEffect == "no" ? primary300_main : gray75,
+                                color: sideEffect == "no"
+                                    ? primary300_main
+                                    : gray75,
                                 shape: BoxShape.circle)),
-                        onTap: ()  {
+                        onTap: () {
                           setState(() {
                             sideEffect = "no";
                           });
-                        }
-                    ),
+                        }),
                     Padding(padding: EdgeInsets.only(top: 10)),
-                    Text("부작용 없어요", style: sideEffect == "no"?
-                    Theme.of(context).textTheme.caption.copyWith(
-                        color: primary600_bold_text, fontSize: 12) :
-                    Theme.of(context).textTheme.caption.copyWith(
-                        color: gray0_white, fontSize: 12),)
+                    Text(
+                      "부작용 없어요",
+                      style: sideEffect == "no"
+                          ? Theme.of(context).textTheme.caption.copyWith(
+                              color: primary600_bold_text, fontSize: 12)
+                          : Theme.of(context)
+                              .textTheme
+                              .caption
+                              .copyWith(color: gray0_white, fontSize: 12),
+                    )
                   ],
                 ),
               ],
@@ -742,8 +812,7 @@ class _EditReviewState extends State<EditReview> {
 //              )
             _textField(myControllerSideEffect)
           ],
-        )
-    );
+        ));
   }
 
   Widget _overallReview(Review review) {
@@ -752,15 +821,19 @@ class _EditReviewState extends State<EditReview> {
 //          height: 300,
         decoration: BoxDecoration(
             border: Border(
-                bottom:
-                BorderSide(width: 0.8, color: Colors.grey[300], ))),
+                bottom: BorderSide(
+          width: 0.8,
+          color: Colors.grey[300],
+        ))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("약에 대한 총평",
-        style: Theme.of(context).textTheme.headline5.copyWith(
-            color: gray900, fontSize: 16)),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: gray900, fontSize: 16)),
 //              Padding(padding: EdgeInsets.only(top: 25)),
 //              Padding(
 //                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
@@ -782,26 +855,29 @@ class _EditReviewState extends State<EditReview> {
             _textField(myControllerOverall),
 //            Padding(padding: EdgeInsets.only(top: 25)),
           ],
-        )
-    );
+        ));
   }
 
   Widget _edit(Review review) {
     String _warning = '';
     return GestureDetector(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20,20,20,40),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
         child: IYMYSubmitButton(
           context: context,
           isDone: true,
           textString: '완료',
           onPressed: () async {
-            if(myControllerOverall.text.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
-            if(myControllerSideEffect.text.length < 10) _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
-            if(myControllerEffect.text.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
+            if (myControllerOverall.text.length < 10)
+              _warning = "총평 리뷰를 10자 이상 작성해주세요";
+            if (myControllerSideEffect.text.length < 10)
+              _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if (myControllerEffect.text.length < 10)
+              _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
 
-            if(myControllerOverall.text.length < 10 || myControllerSideEffect.text.length < 10 ||
-                myControllerEffect.text.length < 10 )
+            if (myControllerOverall.text.length < 10 ||
+                myControllerSideEffect.text.length < 10 ||
+                myControllerEffect.text.length < 10)
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
                     _warning,
@@ -812,14 +888,17 @@ class _EditReviewState extends State<EditReview> {
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.black.withOpacity(0.87)));
             else {
-              await ReviewService(documentId: widget.review.documentId).updateReviewData(
-                  effect /*?? review.effect*/,
-                  sideEffect /*?? review.sideEffect*/,
-                  myControllerEffect.text /*?? review.effectText*/,
-                  myControllerSideEffect.text /*?? review.sideEffectText*/,
-                  myControllerOverall.text /*?? review.overallText*/,
-                  starRating == 0 ? review.starRating : starRating/*?? value.starRating*/
-              );
+              await ReviewService(documentId: widget.review.documentId)
+                  .updateReviewData(
+                      effect /*?? review.effect*/,
+                      sideEffect /*?? review.sideEffect*/,
+                      myControllerEffect.text /*?? review.effectText*/,
+                      myControllerSideEffect.text /*?? review.sideEffectText*/,
+                      myControllerOverall.text /*?? review.overallText*/,
+                      starRating == 0
+                          ? review.starRating
+                          : starRating /*?? value.starRating*/
+                      );
               Navigator.pop(context);
               editSwitch = true;
               IYMYGotoSeeOrCheckDialog(review.seqNum);
@@ -827,12 +906,6 @@ class _EditReviewState extends State<EditReview> {
           },
         ),
       ),
-
     );
   }
-
 }
-
-
-
-

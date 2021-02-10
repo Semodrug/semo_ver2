@@ -99,8 +99,7 @@ class _MyReviewsState extends State<MyReviews> {
               children: [
                 Column(
                   children: [
-                    SizedBox(
-                      height: 30,
+                    Container(
                       width: 60,
                       child: DrugImage(drugItemSeq: review.seqNum),
                     ),

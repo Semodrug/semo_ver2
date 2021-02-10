@@ -344,15 +344,14 @@ class _ReviewPageState extends State<ReviewPage> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      SizedBox(height: 10),
                       Center(
                         child: Container(
-                          width: 200,
-                          child: AspectRatio(
-                              aspectRatio: 3.5 / 2,
-                              child: DrugImage(drugItemSeq: drug.itemSeq)),
+                          width: 188,
+                          child: DrugImage(drugItemSeq: drug.itemSeq),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 30),
                       Row(
                         children: [
                           Text(drug.etcOtcCode,
@@ -993,7 +992,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               height: 30,
                             ),
                             Image.asset(
-                              'assets/images/Group 257.png',
+                              'assets/images/no_review.png',
                             ),
                             Container(
                               height: 10,
