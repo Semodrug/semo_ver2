@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
             '/policy_agree': (context) => PolicyAgreePage(),
             '/get_privacy': (context) => GetPrivacyPage(),
             '/home': (context) => HomePage(),
-            '/camera': (context) => CameraPage(),
+            // '/camera': (context) => CameraPage(),
             '/ranking': (context) => RankingPage(),
             '/bottom_bar': (context) => BottomBar(),
             '/search': (context) => SearchScreen(),
@@ -69,14 +69,10 @@ ThemeData _buildIYMYTheme() {
 TextTheme _buildTextTheme(TextTheme base) {
   return base
       .copyWith(
-        caption: TextStyle(
-            fontSize: 12,
-            color: Color(0xFFC4C4C4),
-            letterSpacing: 0),
-        overline: TextStyle(
-            fontSize: 10,
-            color: Color(0xFFC4C4C4),
-            letterSpacing: 0),
+        caption:
+            TextStyle(fontSize: 12, color: Color(0xFFC4C4C4), letterSpacing: 0),
+        overline:
+            TextStyle(fontSize: 10, color: Color(0xFFC4C4C4), letterSpacing: 0),
         headline1: TextStyle(
             fontSize: 34,
             fontWeight: FontWeight.bold,

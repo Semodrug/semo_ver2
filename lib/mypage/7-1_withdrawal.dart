@@ -122,8 +122,15 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
               dynamic result = await _auth.withdrawalAccount();
 
               if (result is String) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(result)));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                      result,
+                      textAlign: TextAlign.center,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: Colors.black.withOpacity(0.87)));
               } else {
                 Navigator.push(
                   context,

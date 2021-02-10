@@ -5,6 +5,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/constants.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
@@ -50,33 +51,7 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.teal[200],
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        centerTitle: true,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-              fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                Color(0xFFE9FFFB),
-                Color(0xFFE9FFFB),
-                Color(0xFFFFFFFF),
-              ])),
-        ),
-      ),
+      appBar: CustomAppBarWithGoToBack('회원정보 수정', Icon(Icons.arrow_back), 3),
       backgroundColor: Colors.white,
       body: GestureDetector(
         onTap: () {
@@ -217,6 +192,8 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                     '닉네임을 10자 이하로 입력해주세요',
                     textAlign: TextAlign.center,
                   ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.black.withOpacity(0.87)));
             } else if (2020 < int.parse(_birthYearController.text) ||
@@ -226,6 +203,8 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                     '생년월일을 올바르게 입력해주세요',
                     textAlign: TextAlign.center,
                   ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.black.withOpacity(0.87)));
             } else {
@@ -239,6 +218,8 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                       '이미 존재하는 닉네임입니다',
                       textAlign: TextAlign.center,
                     ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
                     behavior: SnackBarBehavior.floating,
                     backgroundColor: Colors.black.withOpacity(0.87)));
               } else {

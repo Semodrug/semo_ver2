@@ -76,9 +76,10 @@ class _BottomBarState extends State<BottomBar> {
       });
     } else {
       if (await checkIfPermissionGranted()) {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => CameraPage()),
-        );
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(builder: (context) => CameraPage()),
+        // );
+        print('test');
       } else {
         print('권한을 허용해주세요');
         AppSettings.openAppSettings();

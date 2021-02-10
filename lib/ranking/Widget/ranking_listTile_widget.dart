@@ -35,17 +35,19 @@ class RankingTile extends StatelessWidget {
     Widget _upToThree(index) {
       if (index < 4) {
         return Center(
-          child: Text(
-            '${index.toString()}위',
-            style: Theme.of(context).textTheme.overline.copyWith(fontSize: 10, color: gray750_activated)
-          ),
+          child: Text('${index.toString()}위',
+              style: Theme.of(context)
+                  .textTheme
+                  .overline
+                  .copyWith(fontSize: 10, color: gray750_activated)),
         );
       } else
         return Center(
-          child: Text(
-            index.toString(),
-              style: Theme.of(context).textTheme.overline.copyWith(fontSize: 10, color: gray750_activated)
-          ),
+          child: Text(index.toString(),
+              style: Theme.of(context)
+                  .textTheme
+                  .overline
+                  .copyWith(fontSize: 10, color: gray750_activated)),
         );
     }
 
@@ -54,11 +56,11 @@ class RankingTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ReviewPage(drug.itemSeq ),
+            builder: (context) => ReviewPage(drug.itemSeq),
           ),
         ),
       },
-      child:StreamBuilder<Drug>(
+      child: StreamBuilder<Drug>(
           stream: DatabaseService(itemSeq: drug.itemSeq).drugData,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -66,8 +68,8 @@ class RankingTile extends StatelessWidget {
               String drugRating = drugStreamData.totalRating.toStringAsFixed(2);
               return Container(
                 decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(width: 0.6, color: gray50))),
+                    border:
+                        Border(bottom: BorderSide(width: 0.6, color: gray50))),
                 height: 100.0,
                 child: Material(
                     color: Colors.white,
@@ -82,15 +84,13 @@ class RankingTile extends StatelessWidget {
                           ),
                         ),
                         Container(
+                          width: 88,
                           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                          child: AspectRatio(
-                            aspectRatio: 2 / 2,
-                            // TODO: show storage image - if null, defalut image
-                            child: Container(
-                                padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
-                                child: SizedBox(
-                                    child: DrugImage(drugItemSeq: drugStreamData.itemSeq))),
-                          ),
+                          child: Container(
+                              padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
+                              child: SizedBox(
+                                  child: DrugImage(
+                                      drugItemSeq: drugStreamData.itemSeq))),
                         ),
                         Container(
                             margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
@@ -100,55 +100,64 @@ class RankingTile extends StatelessWidget {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 3.0),
-                                  child: Text(
-                                    drugStreamData.entpName,
-                                      style: Theme.of(context).textTheme.overline.copyWith(fontSize: 10, color: gray300_inactivated)
-                                  ),
+                                  child: Text(drugStreamData.entpName,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .overline
+                                          .copyWith(
+                                              fontSize: 10,
+                                              color: gray300_inactivated)),
                                 ),
                                 Container(
-                                  width: MediaQuery.of(context).size.width - 170,
+                                  width:
+                                      MediaQuery.of(context).size.width - 170,
                                   child: Text(
-                                    _checkLongName(drugStreamData.itemName),
+                                      _checkLongName(drugStreamData.itemName),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context).textTheme.headline6.copyWith(color: gray900)
-
-                                  ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(color: gray900)),
                                 ),
                                 Row(
                                   children: [
                                     _getRateStar(drugStreamData.totalRating),
-                                    SizedBox(width: 8,),
-                                    Text(
-                                      drugRating,
-                                        style: Theme.of(context).textTheme.subtitle2.copyWith( color: gray900)
-
+                                    SizedBox(
+                                      width: 8,
                                     ),
-                                    Text(
-                                      ' (${drugStreamData.numOfReviews}개)',
-                                        style: Theme.of(context).textTheme.overline.copyWith(fontSize: 10, color: gray300_inactivated)
-
-                                    ),
+                                    Text(drugRating,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2
+                                            .copyWith(color: gray900)),
+                                    Text(' (${drugStreamData.numOfReviews}개)',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .overline
+                                            .copyWith(
+                                                fontSize: 10,
+                                                color: gray300_inactivated)),
                                   ],
                                 ),
                                 Expanded(
                                     child: Row(
-                                      children: [CategoryButton(str: drugStreamData.category)],
-                                    )),
+                                  children: [
+                                    CategoryButton(str: drugStreamData.category)
+                                  ],
+                                )),
                               ],
                             )),
                       ],
                     )),
               );
-            }
-            else return Container();//LinearProgressIndicator();
-          }
-      ),
+            } else
+              return Container(); //LinearProgressIndicator();
+          }),
     );
   }
 
   Widget _getRateStar(RatingResult) {
-
     return RatingBarIndicator(
       rating: RatingResult * 1.0,
       //ignoreGestures: true,
@@ -163,5 +172,4 @@ class RankingTile extends StatelessWidget {
       ),
     );
   }
-
 }

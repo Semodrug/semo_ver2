@@ -87,7 +87,7 @@ class SearchResultTile extends StatelessWidget {
               builder: (context) => ReviewPage(drug.itemSeq),
             )),
       },
-      child:StreamBuilder<Drug>(
+      child: StreamBuilder<Drug>(
           stream: DatabaseService(itemSeq: drug.itemSeq).drugData,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -100,59 +100,58 @@ class SearchResultTile extends StatelessWidget {
               }
               return Container(
                 decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(width: 0.6, color: gray50))),
+                    border:
+                        Border(bottom: BorderSide(width: 0.6, color: gray50))),
                 height: 70.0,
                 child: Material(
                     color: Colors.white,
                     child: Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.fromLTRB(16, 5, 5, 5),
-                          child: AspectRatio(
-                            aspectRatio: 1.5 / 1.5,
-                            // TODO: show storage image - if null, defalut image
-                            child: Container(
-                                padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
-                                child: SizedBox(
-                                    child: DrugImage(drugItemSeq: drugStreamData.itemSeq))),
-                          ),
+                          padding: EdgeInsets.fromLTRB(16, 5, 15, 5),
+                          width: 90,
+                          child: Container(
+                              padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
+                              child: SizedBox(
+                                  child: DrugImage(
+                                      drugItemSeq: drugStreamData.itemSeq))),
                         ),
                         Container(
-                            margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-
-                                Container(
-                                  width: MediaQuery.of(context).size.width - 120,
-                                  child:
-                                  // Text(
-                                  //     _checkLongName(drugStreamData.itemName),
-                                  //     maxLines: 1,
-                                  //     overflow: TextOverflow.ellipsis,
-                                  //     style: Theme.of(context).textTheme.headline6.copyWith(color: gray900)
-                                  //
-                                  // ),
-                                  _highlightText(context, _checkLongName(drugStreamData.itemName))
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical:3.0),
-                                  child: SizedBox(
-                                    height: 25,
-                                      child: CategoryButton(str: newName, forsearch: true,)),
-                                ),
-                              ],
-                            )),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                width: MediaQuery.of(context).size.width - 130,
+                                child:
+                                    // Text(
+                                    //     _checkLongName(drugStreamData.itemName),
+                                    //     maxLines: 1,
+                                    //     overflow: TextOverflow.ellipsis,
+                                    //     style: Theme.of(context).textTheme.headline6.copyWith(color: gray900)
+                                    //
+                                    // ),
+                                    _highlightText(
+                                        context,
+                                        _checkLongName(
+                                            drugStreamData.itemName))),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 3.0),
+                              child: SizedBox(
+                                  height: 25,
+                                  child: CategoryButton(
+                                    str: newName,
+                                    forsearch: true,
+                                  )),
+                            ),
+                          ],
+                        )),
                       ],
                     )),
               );
-            }
-            else return Container();//LinearProgressIndicator();
-          }
-      ),
+            } else
+              return Container(); //LinearProgressIndicator();
+          }),
     );
   }
-
 }

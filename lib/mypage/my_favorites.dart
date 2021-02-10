@@ -106,8 +106,7 @@ class _MyFavoritesState extends State<MyFavorites> {
                       //       Container(height: 10,),
                       //     ],
                       //   ),
-                      SizedBox(
-                        height: 64,
+                      Container(
                         width: 88,
                         child: DrugImage(drugItemSeq: favorite),
                       ),

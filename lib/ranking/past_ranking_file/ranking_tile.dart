@@ -91,18 +91,14 @@ class DrugTile extends StatelessWidget {
                             ),
                             Container(
                               padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                              child: AspectRatio(
-                                aspectRatio: 2 / 2,
-                                // TODO: show storage image - if null, defalut image
-                                child: Container(
-                                    padding:
-                                        EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
-                                    child: SizedBox(
-                                        width: 40,
-                                        child: DrugImage(
-                                            drugItemSeq:
-                                                drugStreamData.itemSeq))),
-                              ),
+                              child: Container(
+                                  padding:
+                                      EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
+                                  child: SizedBox(
+                                      width: 40,
+                                      child: DrugImage(
+                                          drugItemSeq:
+                                              drugStreamData.itemSeq))),
                             ),
                             Container(
                                 margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
