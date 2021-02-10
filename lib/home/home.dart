@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                         width: 86,
                         height: 26,
                         decoration: BoxDecoration(
-                          border: Border.all(color: primary300_main),
+                          border: Border.all(color: primary400_line),
                           color: primary300_main,
                           borderRadius: BorderRadius.circular(4.0),
                         ),
@@ -864,6 +864,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -881,7 +882,8 @@ class _HomePageState extends State<HomePage> {
                       .copyWith(color: gray700)),
               SizedBox(height: 28),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
                     child: Text(
@@ -898,7 +900,7 @@ class _HomePageState extends State<HomePage> {
                         primary: gray50,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
-                            side: BorderSide(color: gray50))),
+                            side: BorderSide(color: gray75))),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -984,7 +986,7 @@ class _HomePageState extends State<HomePage> {
                     primary: gray50,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
-                        side: BorderSide(color: gray50))),
+                        side: BorderSide(color: gray75))),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -1133,7 +1135,7 @@ class _HomePageState extends State<HomePage> {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            .copyWith(color: Colors.white),
+                            .copyWith(color: gray0_white),
                       )),
                 ),
               ],

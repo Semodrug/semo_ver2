@@ -10,24 +10,24 @@ class IYMYDialog extends StatelessWidget {
   final String rightButtonName;
   final Function onPressed;
 
-  const IYMYDialog(
-      {Key key,
-      this.context,
-      @required this.bodyString,
-      @required this.leftButtonName,
-      @required this.rightButtonName,
-      @required this.onPressed,
-      })
-      : super(key: key);
+  const IYMYDialog({
+    Key key,
+    this.context,
+    @required this.bodyString,
+    @required this.leftButtonName,
+    @required this.rightButtonName,
+    @required this.onPressed,
+  }) : super(key: key);
 
   void showWarning() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +100,7 @@ class IYMYDialog extends StatelessWidget {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,7 +158,8 @@ class IYMYDialog extends StatelessWidget {
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
                         Navigator.of(context).pop();
-                        await ReviewService(documentId: record.documentId).deleteReviewData();
+                        await ReviewService(documentId: record.documentId)
+                            .deleteReviewData();
                         IYMYOkDialog(
                           context: context,
                           dialogIcon: Icon(Icons.check, color: primary300_main),
@@ -169,9 +170,7 @@ class IYMYDialog extends StatelessWidget {
                             Navigator.pop(context);
                           },
                         ).showWarning();
-                      }
-
-                  )
+                      })
                 ],
               )
             ],
