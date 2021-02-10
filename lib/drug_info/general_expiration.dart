@@ -146,7 +146,7 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
           ],
         ),
         SizedBox(height: 20),
-        _submitButton(context, user, drug, _pickedString)
+        _submitButton(context, user, drug, _pickedString, _pickedDateTime)
       ],
     );
   }
@@ -316,7 +316,7 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
           ],
         ),
         SizedBox(height: 10),
-        _submitButton(context, user, drug, _finalString),
+        _submitButton(context, user, drug, _finalString, _finalDateTime),
       ],
     );
   }
@@ -583,8 +583,8 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
     );
   }
 
-  Widget _submitButton(
-      context, TheUser user, Drug drug, String expirationString) {
+  Widget _submitButton(context, TheUser user, Drug drug,
+      String expirationString, DateTime expirationDateTime) {
     String newName = drug.itemName;
     List splitName = [];
 
@@ -608,35 +608,46 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
     }
 
     return IYMYSubmitButton(
-      context: context,
-      isDone: true,
-      textString: '추가하기',
-      onPressed: () async {
-        IYMYShortCutDialog(
-          context: context,
-          dialogIcon: Icon(Icons.check, color: primary300_main),
-          boldBodyString: '나의 약 보관함',
-          normalBodyString: '에 추가되었습니다',
-          topButtonName: '바로가기',
-          bottomButtonName: '확인',
-          onPressedTop: () {
-            Navigator.pop(context);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => BottomBar()));
-          },
-          onPressedBottom: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-          },
-        ).showWarning();
-        await DatabaseService(uid: user.uid).addSavedList(
-            drug.itemName,
-            drug.itemSeq,
-            drug.category,
-            drug.etcOtcCode,
-            expirationString,
-            searchListOutput);
-      },
-    );
+        context: context,
+        isDone: true,
+        textString: '추가하기',
+        onPressed: () async {
+          if (expirationDateTime.isBefore(DateTime.now())) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  '사용기한이 지났습니다. 다시 확인해주세요',
+                  textAlign: TextAlign.center,
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.black.withOpacity(0.87)));
+          } else {
+            IYMYShortCutDialog(
+              context: context,
+              dialogIcon: Icon(Icons.check, color: primary300_main),
+              boldBodyString: '나의 약 보관함',
+              normalBodyString: '에 추가되었습니다',
+              topButtonName: '바로가기',
+              bottomButtonName: '확인',
+              onPressedTop: () {
+                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BottomBar()));
+              },
+              onPressedBottom: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+            ).showWarning();
+            await DatabaseService(uid: user.uid).addSavedList(
+                drug.itemName,
+                drug.itemSeq,
+                drug.category,
+                drug.etcOtcCode,
+                expirationString,
+                searchListOutput);
+          }
+        });
   }
 }

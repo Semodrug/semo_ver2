@@ -173,7 +173,7 @@ class _GeneralEditState extends State<GeneralEdit> {
           ],
         ),
         SizedBox(height: 10),
-        _submitButton(context, user, drug, _pickedString)
+        _submitButton(context, user, drug, _pickedString, _pickedDateTime)
       ],
     );
   }
@@ -347,7 +347,7 @@ class _GeneralEditState extends State<GeneralEdit> {
           ],
         ),
         SizedBox(height: 10),
-        _submitButton(context, user, drug, _finalString),
+        _submitButton(context, user, drug, _finalString, _finalDateTime),
       ],
     );
   }
@@ -615,8 +615,8 @@ class _GeneralEditState extends State<GeneralEdit> {
     );
   }
 
-  Widget _submitButton(
-      context, TheUser user, Drug drug, String expirationString) {
+  Widget _submitButton(context, TheUser user, Drug drug,
+      String expirationString, DateTime expirationDateTime) {
     String newName = drug.itemName;
     List splitName = [];
 
@@ -644,24 +644,36 @@ class _GeneralEditState extends State<GeneralEdit> {
       isDone: true,
       textString: '수정하기',
       onPressed: () async {
-        IYMYOkDialog(
-          context: context,
-          dialogIcon: Icon(Icons.check, color: primary300_main),
-          bodyString: '사용기한이 수정되었습니다',
-          buttonName: '확인',
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-          },
-        ).showWarning();
+        if (expirationDateTime.isBefore(DateTime.now())) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                '사용기한이 지났습니다. 다시 확인해주세요',
+                textAlign: TextAlign.center,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.black.withOpacity(0.87)));
+        } else {
+          IYMYOkDialog(
+            context: context,
+            dialogIcon: Icon(Icons.check, color: primary300_main),
+            bodyString: '사용기한이 수정되었습니다',
+            buttonName: '확인',
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+          ).showWarning();
 
-        await DatabaseService(uid: user.uid).addSavedList(
-            drug.itemName,
-            drug.itemSeq,
-            drug.category,
-            drug.etcOtcCode,
-            expirationString,
-            searchListOutput);
+          await DatabaseService(uid: user.uid).addSavedList(
+              drug.itemName,
+              drug.itemSeq,
+              drug.category,
+              drug.etcOtcCode,
+              expirationString,
+              searchListOutput);
+        }
       },
     );
   }
