@@ -468,10 +468,14 @@ class _EditReviewState extends State<EditReview> {
               itemCount: 5,
 //              unratedColor: Colors.grey[500],
               unratedColor: gray75,
-              itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
-              itemBuilder: (context, _) => Icon(Icons.star,
-//                color: Colors.amber[300],
-                  color: primary300_main),
+              itemPadding: EdgeInsets.symmetric(horizontal: 4),
+              itemBuilder: (context, _) =>
+//                   Icon(Icons.star,
+// //                color: Colors.amber[300],
+//                   color: primary300_main),
+              Image.asset('assets/icons/rating_star.png',
+                width: 28, height: 28,),
+
               onRatingUpdate: (rating) {
                 starRating = rating;
                 setState(() {
