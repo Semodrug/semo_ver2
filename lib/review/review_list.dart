@@ -2,25 +2,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/review/report_review.dart';
-import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
-import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/loading.dart';
-import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/shared/review_box.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'edit_review.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ReviewList extends StatefulWidget {
   String searchText;
   String filter;
   String drugItemSeq;
-  ReviewList(this.searchText, this.filter, this.drugItemSeq);
+  String type;
+  Review review;
+  ReviewList(this.searchText, this.filter, this.drugItemSeq, {this.type, this.review});
 
   @override
   _ReviewListState createState() => _ReviewListState();
@@ -51,34 +48,11 @@ class _ReviewListState extends State<ReviewList> {
             itemBuilder: (context, index) {
               return _buildListItem(context, searchResults[index]);
             },
-//      children: searchResults.map((data) => _buildListItem(context, data)).toList(),
-          );
+           );
         }
         else return Loading();
       },
     );
-
-/*    final reviews = Provider.of<List<Review>>(context) ?? [];
-    List<Review> searchResults = [];
-    for (Review review in reviews) {
-      if (review.effectText.contains(widget.searchText) ||
-          review.sideEffectText.contains(widget.searchText) ||
-          review.overallText.contains(widget.searchText)
-      ) {
-        searchResults.add(review);
-      } else
-        print('    RESULT Nothing     ');
-    }
-    return ListView.builder(
-        physics: const ClampingScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: reviews.length,
-        itemBuilder: (context, index) {
-        return _buildListItem(context, searchResults[index]);
-    },
-//      children: searchResults.map((data) => _buildListItem(context, data)).toList(),
-    );*/
-
 
 //    return ListView.builder(
 //      itemCount: reviews.length,
@@ -110,9 +84,7 @@ class _ReviewListState extends State<ReviewList> {
 
             ]));
   }
-  // Text(DateFormat('yy.MM.dd').format(review.registrationDate.toDate()),
-  // style: Theme.of(context).textTheme.subtitle2.copyWith(
-  // color: gray300_inactivated, fontSize: 12)),
+
 
   Widget _starAndIdAndMore(review, context, auth) {
     TheUser user = Provider.of<TheUser>(context);
@@ -391,8 +363,6 @@ class _ReviewListState extends State<ReviewList> {
         )
     );
   }
-
-
 
   Future<void> _IYMYCancleConfirmDeleteDialog(record) async {
     showDialog(
@@ -924,48 +894,6 @@ class _ReviewListState extends State<ReviewList> {
     );
   }
 
-
-
-//   Future<void> _showDeleteDialog(record) async {
-//     return showDialog<void>(
-//       context: context,
-//       barrierDismissible: false, // user must tap button!
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-// //          title: Center(child: Text('AlertDialog Title')),
-//           content: SingleChildScrollView(
-//             child: ListBody(
-//               children: <Widget>[
-//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
-//                 SizedBox(height: 20),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                   children: [
-//                     TextButton(
-//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
-//                       onPressed: () {
-//                         Navigator.of(context).pop();
-//                       },
-//                     ),
-//                     TextButton(
-//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-//                       onPressed: () async {
-//                         Navigator.of(context).pop();
-//                         await ReviewService(documentId: record.documentId).deleteReviewData();
-//                       },
-//                     ),
-//                   ],
-//                 )
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-
-
-
   Widget _popUpMenuAnonymous(review, user) {
     return Container(
         decoration: BoxDecoration(
@@ -1023,69 +951,5 @@ class _ReviewListState extends State<ReviewList> {
     );
   }
 
-
-//  Widget buildBottomSheetWriter(BuildContext context, record) {
-//    return SizedBox(
-//        child: Container(
-////                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-//          child: Wrap(
-//            children: <Widget>[
-//              MaterialButton(
-//                onPressed: () {
-//                  Navigator.pop(context);
-//                },
-//                child: Center(child: Text("수정하기",
-//                    style: TextStyle(color: Colors.blue[700],
-//                    fontSize: 16)))
-//              ),
-//              MaterialButton(
-//                  onPressed: () {
-//                    _showDeleteDialog(record);
-//                  },
-//                  child: Center(child: Text("취소",
-//                      style: TextStyle(color: Colors.red[600],
-//                      fontSize: 16)))
-//              ),
-//            ],
-//          )
-//        )
-//    );
-//  }
-
-/*  final _reviewSnapshot = <DocumentSnpashot>[];
-
-
-  Future fecthNextRevies() async {
-    String _errorMessage = '';
-
-    try {
-      final snap = await ReviewService.newgetReviews();
-      _
-    }
-  }*/
-
-
-//  Future fetchNextUsers() async {
-//    if (_isFetchingUsers) return;
-//
-//    _errorMessage = '';
-//    _isFetchingUsers = true;
-//
-//    try {
-//      final snap = await FirebaseApi.getUsers(
-//        documentLimit,
-//        startAfter: _usersSnapshot.isNotEmpty ? _usersSnapshot.last : null,
-//      );
-//      _usersSnapshot.addAll(snap.docs);
-//
-//      if (snap.docs.length < documentLimit) _hasNext = false;
-//      notifyListeners();
-//    } catch (error) {
-//      _errorMessage = error.toString();
-//      notifyListeners();
-//    }
-//
-//    _isFetchingUsers = false;
-//  }
 
 }
