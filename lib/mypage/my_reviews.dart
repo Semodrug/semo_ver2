@@ -51,12 +51,32 @@ class _MyReviewsState extends State<MyReviews> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-                          child: Text("리뷰" + reviews.length.toString() + "개"),
+                          child: Text("리뷰 " + reviews.length.toString() + "개"),
                         ),
                         Divider(
                           color: gray75,
                           height: 1,
                         ),
+
+                        reviews.length == 0
+                            ? Container(
+                            height: 310,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 30,
+                                ),
+                                Image.asset(
+                                  'assets/images/no_review.png',
+                                ),
+                                Container(
+                                  height: 10,
+                                ),
+                                Text("아직 작성된 리뷰가 없어요")
+                              ],
+                            ))
+                            : // ReviewList(_searchText, "all", widget.drugItemSeq),
                         ListView.builder(
                             shrinkWrap: true,
                             physics: const ClampingScrollPhysics(),

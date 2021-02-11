@@ -8,8 +8,8 @@ import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class ReviewPillInfo extends StatefulWidget {
-  Review review;
-  ReviewPillInfo(this.review);
+  String seqNum;
+  ReviewPillInfo(this.seqNum);
 
   @override
   _ReviewPillInfoState createState() => _ReviewPillInfoState();
@@ -45,7 +45,7 @@ class _ReviewPillInfoState extends State<ReviewPillInfo> {
 //              color: Colors.teal[100],
 //            ),
             SizedBox(
-              child: DrugImage(drugItemSeq: widget.review.seqNum),
+              child: DrugImage(drugItemSeq: widget.seqNum),
               width: 88.0,
             ),
             Padding(padding: EdgeInsets.only(left: 15)),
@@ -57,7 +57,7 @@ class _ReviewPillInfoState extends State<ReviewPillInfo> {
               children: <Widget>[
                 StreamBuilder<Drug>(
                     stream:
-                        DatabaseService(itemSeq: widget.review.seqNum).drugData,
+                        DatabaseService(itemSeq: widget.seqNum).drugData,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         Drug drug = snapshot.data;

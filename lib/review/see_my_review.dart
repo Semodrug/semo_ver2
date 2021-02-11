@@ -33,9 +33,10 @@ class _SeeMyReviewState extends State<SeeMyReview> {
             // return Text(review[0].effectText);
             return Column(
               children: [
-                ReviewPillInfo(reviews[0]),
-                // ReviewList("", "none", widget.drugItemSeq),
-                Text(reviews[0].effectText)
+                ReviewPillInfo(widget.drugItemSeq),
+                reviews.length == 0 ?
+                    Container()
+                : ReviewList("", "none", widget.drugItemSeq, type: "mine", review: reviews[0]),
               ],
             );
           }

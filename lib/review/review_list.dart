@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/review.dart';
@@ -5,6 +7,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/review_box.dart';
+import 'package:semo_ver2/shared/review_pill_info.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'edit_review.dart';
 import 'package:flutter/material.dart';
@@ -26,33 +29,44 @@ class ReviewList extends StatefulWidget {
 class _ReviewListState extends State<ReviewList> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Review>>(
-      stream: ReviewService().getReviews(widget.drugItemSeq),
-      builder: (context, snapshot) {
-        if(snapshot.hasData) {
-          List<Review> reviews = snapshot.data;
-          List<Review> searchResults = [];
-          for (Review review in reviews) {
-            if (review.effectText.contains(widget.searchText)
-                || review.sideEffectText.contains(widget.searchText)
-                || review.overallText.contains(widget.searchText))
-            {
-              searchResults.add(review);
-            } else
-              print('    RESULT Nothing     ');
+  TheUser user = Provider.of<TheUser>(context);
+
+    return widget.type == "mine" ?
+      ListView.builder(
+        physics: const ClampingScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: 1,
+        itemBuilder: (context, index) {
+          return _buildListItem(context, widget.review);
+        },
+      )
+      : StreamBuilder<List<Review>>(
+        stream: ReviewService().getReviews(widget.drugItemSeq),
+        builder: (context, snapshot) {
+          if(snapshot.hasData) {
+            List<Review> reviews = snapshot.data;
+            List<Review> searchResults = [];
+            for (Review review in reviews) {
+              if (review.effectText.contains(widget.searchText)
+                  || review.sideEffectText.contains(widget.searchText)
+                  || review.overallText.contains(widget.searchText))
+              {
+                searchResults.add(review);
+              } else
+                print('    RESULT Nothing     ');
+            }
+            return ListView.builder(
+              physics: const ClampingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: searchResults.length,
+              itemBuilder: (context, index) {
+                return _buildListItem(context, searchResults[index]);
+              },
+             );
           }
-          return ListView.builder(
-            physics: const ClampingScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: searchResults.length,
-            itemBuilder: (context, index) {
-              return _buildListItem(context, searchResults[index]);
-            },
-           );
-        }
-        else return Loading();
-      },
-    );
+          else return Loading();
+        },
+      );
 
 //    return ListView.builder(
 //      itemCount: reviews.length,
@@ -183,15 +197,6 @@ class _ReviewListState extends State<ReviewList> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     _IYMYCancleConfirmDeleteDialog(review, );
-                    // IYMYDialog(
-                    //           context: context,
-                    //           bodyString: '선택한 리뷰를 삭제하시겠어요?',
-                    //           leftButtonName: '취소',
-                    //           rightButtonName: '삭제',
-                    //           onPressed: () async {
-                    //             await ReviewService(documentId: review.documentId).deleteReviewData();
-                    //             Navigator.pop(context);
-                    //           }).showDeleteDialog(review);
                   },
 
 
@@ -429,8 +434,16 @@ class _ReviewListState extends State<ReviewList> {
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
 
+
+                        // Timer(Duration(seconds: 3), () {
+                        //   print("Yeah, this line is printed after 3 seconds");
+                        // });
+
+                        //TODO!!!!!!!!!!!#################
                         await ReviewService(documentId: record.documentId).deleteReviewData();
                         Navigator.of(context).pop();
+                        if(widget.type == "mine")
+                          Navigator.of(context).pop();
 
                         //OK Dialog
                         showDialog(
@@ -828,20 +841,20 @@ class _ReviewListState extends State<ReviewList> {
           widget.filter == "sideEffectOnly" ? Container()
            // : _reviewBox(review, "effect"),
           : ReviewBox(context: context, review: review, type: "effect"),
-          Container(height:4),
+          Container(height:6),
 
 
           //side effect
           widget.filter == "effectOnly" ? Container()
            // : _reviewBox(review, "sideEffect"),
           : ReviewBox(context: context, review: review, type: "sideEffect"),
-          Container(height:4),
+          Container(height:6),
 
           //overall
           widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ? Container()
             // : _reviewBox(review, "overall"),
           : ReviewBox(context: context, review: review, type: "overall"),
-          Container(height:4),
+          Container(height:6),
         ],
       ),
     );

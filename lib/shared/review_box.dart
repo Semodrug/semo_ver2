@@ -37,7 +37,7 @@ class ReviewBox extends StatelessWidget {
               children: [
                 Text(
                   type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
-                  style: Theme.of(context).textTheme.subtitle2.copyWith(
+                  style: Theme.of(context).textTheme.bodyText2.copyWith(
                       color: gray900, fontSize: 12
                   ),),
                 Container(width:3),
@@ -46,7 +46,7 @@ class ReviewBox extends StatelessWidget {
             ),
             Container(height:4),
             Text(type == "effect" ? review.effectText : type == "sideEffect" ? review.sideEffectText : review.overallText,
-              style: Theme.of(context).textTheme.subtitle2.copyWith(
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
                   color: gray600,
                   fontSize: 14
               ),),
