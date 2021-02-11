@@ -623,7 +623,7 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
     return IYMYSubmitButton(
         context: context,
         isDone: true,
-        textString: '수정하기',
+        textString: '추가하기',
         onPressed: () async {
           if (_isPast) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
