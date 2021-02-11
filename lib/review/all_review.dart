@@ -67,7 +67,7 @@ class _AllReveiewState extends State<AllReview> {
     return StreamProvider<List<Review>>.value(
       value: ReviewService().getReviews(widget.drugItemSeq),
       child: Scaffold(
-        appBar: CustomAppBarWithGoToBack(_shortenName(widget.itemName), Icon(Icons.arrow_back), 3),
+        appBar: CustomAppBarWithGoToBack(_shortenName(widget.itemName), Icon(Icons.arrow_back), 0.5),
           backgroundColor: gray0_white,
 //      body: topOfReview(context),
         body: CustomScrollView(
@@ -91,26 +91,6 @@ class _AllReveiewState extends State<AllReview> {
     );
   }
 
-  Widget _appbar(BuildContext context) {
-    return AppBar(
-      title: Text('약이름',
-          style: Theme.of(context).textTheme.headline4),
-//      centerTitle: true,
-      elevation: 0.0,
-      backgroundColor: Colors.white,
-      leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.teal[300]),
-          onPressed: () {
-            Navigator.pop(
-              context,
-//                MaterialPageRoute(builder: (context) => MyStatefulWidget()
-//                    builder: (context) => MyApp()
-//                )
-            );
-          }),
-      actions: <Widget>[],
-    );
-  }
 
   Widget _myTab(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -130,6 +110,7 @@ class _AllReveiewState extends State<AllReview> {
                 //color: gray75,
                 child: Column(
                   children: [
+
                     TabBar(
                         labelStyle: Theme.of(context)
                             .textTheme
@@ -156,21 +137,6 @@ class _AllReveiewState extends State<AllReview> {
 
                         //indicator: CustomTabIndicator()
                     ),
-                    // Container(
-                    //   padding: EdgeInsets.all(0.0),
-                    //   width: double.infinity,
-                    //   height: 6000,
-                    //   //height: height - 300, //440.0,
-                    //
-                    //
-                    //   child: TabBarView(
-                    //     children: [
-                    //       _underTab("none"),
-                    //       _underTab("effectOnly"),
-                    //       _underTab("sideEffectOnly"),
-                    //     ],
-                    //   ),
-                    // )
                     CustomScrollView(
                       slivers: [
                         SliverToBoxAdapter(
@@ -184,7 +150,6 @@ class _AllReveiewState extends State<AllReview> {
                         )
                       ],
                     ),
-
                   ],
                 ),
               ),
@@ -233,12 +198,6 @@ class _AllReveiewState extends State<AllReview> {
                       .caption
                       .copyWith( color: gray500),
                   tabs: [
-                    // Tab(
-                    //   child: Align(
-                    //     alignment: Alignment.center,
-                    //     child: Text("APPS"),
-                    //   ),
-                    // ),
                     Tab(child: Text('전체리뷰',
                       // style: Theme.of(context).textTheme.subtitle2
                       //     .copyWith(color: gray750_activated, fontSize: 12)
@@ -257,20 +216,6 @@ class _AllReveiewState extends State<AllReview> {
               ),
             ),
             //TODO: height 없이 괜찮게
-
-            // CustomScrollView(
-            //   slivers: [
-            //     SliverToBoxAdapter(
-            //       child: TabBarView(
-            //         children: [
-            //           _underTab("none"),
-            //           _underTab("effectOnly"),
-            //           _underTab("sideEffectOnly"),
-            //         ],
-            //       ),
-            //     ),
-            //   ],
-            // ),
 
             Container(
               padding: EdgeInsets.all(0.0),
@@ -298,14 +243,6 @@ class _AllReveiewState extends State<AllReview> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
-              // decoration: BoxDecoration(
-              //   border: Border(
-              //     top: BorderSide( //                    <--- top side
-              //       color: Colors.black,
-              //       width: 3.0,
-              //     ),
-              //   )
-              // ),
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -324,19 +261,6 @@ class _AllReveiewState extends State<AllReview> {
                           } else
                             return Container();
                         }),
-
-//                    InkWell(
-//                        child: Text('전체리뷰 보기',
-//                            style: TextStyle(
-//                              fontSize: 14.5,
-//                            )),
-//                        onTap: () {
-////
-////                          Navigator.push(
-////                              context,
-////                              MaterialPageRoute(
-////                                  builder: (context) => AllReview()));
-//                        }),
                   ],
                 )),
             _searchBar(),
@@ -345,139 +269,7 @@ class _AllReveiewState extends State<AllReview> {
         ));
   }
 
-//   Widget _searchBar() {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 20),
-//       child: Container(
-// //        width: 370,
-// //        width: MediaQuery.of(context).size.width*0.9,
-//         height: 45,
-//         margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-//         decoration: BoxDecoration(
-//           borderRadius: BorderRadius.all(Radius.circular(8.0)),
-//           color: Colors.grey[200],
-//         ),
-//         child: Row(
-//           children: [
-//             Expanded(
-//                 flex: 5,
-//                 child: TextField(
-//                   focusNode: focusNode,
-//                   style: TextStyle(fontSize: 15),
-// //                  autofocus: true,
-//                   controller: _filter,
-//                   decoration: InputDecoration(
-//                       fillColor: Colors.white12,
-//                       filled: true,
-//                       prefixIcon:  SizedBox(
-//                         height: 10,
-//                         width: 10,
-//                         child: Padding(
-//                           padding: const EdgeInsets.only(top:4.0, bottom: 4),
-//                           child: Image.asset('assets/icons/search_grey.png'),
-//                         ),
-//                       ),
-// //                      suffixIcon: focusNode.hasFocus
-// //                          ? IconButton(
-// //                        icon: Icon(Icons.cancel, size: 20),
-// //                        onPressed: () {
-// //                          setState(() {
-// //                            _filter.clear();
-// //                            _searchText = "";
-// //                          });
-// //                        },
-// //                      )
-// //                          : Container(),
-//                       hintText: '검색',
-//                       contentPadding: EdgeInsets.zero,
-//                       labelStyle: TextStyle(color: Colors.grey),
-//                       focusedBorder: OutlineInputBorder(
-//                           borderRadius: BorderRadius.all(Radius.circular(10)),
-//                           borderSide: BorderSide(color: Colors.transparent)),
-//                       enabledBorder: OutlineInputBorder(
-//                           borderRadius: BorderRadius.all(Radius.circular(10)),
-//                           borderSide: BorderSide(color: Colors.transparent)),
-//                       border: OutlineInputBorder(
-//                           borderRadius: BorderRadius.all(Radius.circular(10)),
-//                           borderSide: BorderSide(color: Colors.transparent))),
-//                 )),
-// //            focusNode.hasFocus
-// //                ? Expanded(
-// //              child: FlatButton(
-// //                child: Text(
-// //                  'clear',
-// //                  style: TextStyle(fontSize: 13),
-// //                ),
-// //                onPressed: () {
-// //                  setState(() {
-// //                    _filter.clear();
-// //                    _searchText = "";
-// //                    focusNode.unfocus();
-// //                  });
-// //                },
-// //              ),
-// //            )
-// //                : Expanded(
-// //              flex: 0,
-// //              child: Container(),
-// //            )
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-
   Widget _searchBar() {
-    // return Center(
-    //   child: Column(
-    //     children: [
-    //       Container(
-    //         margin: EdgeInsets.fromLTRB(20, 12, 20, 0),
-    //         child: SizedBox(
-    //             height: 35,
-    //             child: FlatButton(
-    //               child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.start,
-    //                 children: [
-    //                   Icon(Icons.search, size: 20),
-    //                   Padding(
-    //                     padding:
-    //                     const EdgeInsets.symmetric(horizontal: 10.0),
-    //                     child: Text(
-    //                       "어떤 약정보를 찾고 계세요?",
-    //                       style: Theme.of(context).textTheme.bodyText2,
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //               // onPressed: () {
-    //               //   Navigator.push(
-    //               //       context,
-    //               //       MaterialPageRoute(
-    //               //           builder: (BuildContext context) =>
-    //               //               SearchHighlightingScreen(
-    //               //                   infoEE: infoEE,
-    //               //                   infoNB: infoNB,
-    //               //                   infoUD: infoUD,
-    //               //                   storage: storage,
-    //               //                   entp_name: entpName)));
-    //               // },
-    //               textColor: gray300_inactivated,
-    //               color: gray50,
-    //               shape: OutlineInputBorder(
-    //                   borderSide: BorderSide(
-    //                       style: BorderStyle.solid,
-    //                       width: 1.0,
-    //                       color: gray200),
-    //                   borderRadius: BorderRadius.circular(8.0)),
-    //             )),
-    //       ),
-    //       SizedBox(height: 10)
-    //     ],
-    //   ),
-    // );
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -533,458 +325,4 @@ class _AllReveiewState extends State<AllReview> {
     );
   }
 
-
-/*Widget _buildBody(BuildContext context) {
-    // TODO: get actual snapshot from Cloud Firestore
-    return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('user').snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return LinearProgressIndicator();
-          return _buildList(context, snapshot.data.documents);
-        }
-    );
-  }*/
-
-/*
-
-
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    return ListView(
-      padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final record = Record.fromSnapshot(data);
-
-    return Container(
-        key: ValueKey(record.name),
-        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(width: 0.6, color: Colors.grey[300]))),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _starAndId(record, context),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Container(
-                          height: 28,
-                          width: 70,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.grey[400], width: 1.0),
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(6.0))),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text("효과",
-                                  style: TextStyle(
-                                      fontSize: 14.5, color: Colors.grey[600])),
-                              Padding(padding: EdgeInsets.all(2.5)),
-                              //Container(width: size.width * 0.015),
-                              Container(
-                                  width: 17,
-                                  height: 17,
-                                  decoration: BoxDecoration(
-                                      color: Colors.green[200],
-                                      shape: BoxShape.circle)),
-                            ],
-                          )),
-                      //Container(width: size.width * 0.025),
-                      Padding(padding: EdgeInsets.all(5)),
-                      Text(record.effectText, style: TextStyle(fontSize: 17.0)),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 6.0)),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                          height: 28,
-                          width: 80,
-                          //width: 5, height: 5,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.grey[400], width: 1.0),
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(6.0))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text("부작용",
-                                  style: TextStyle(
-                                      fontSize: 14.5, color: Colors.grey[600])),
-                              Padding(padding: EdgeInsets.all(2.5)),
-                              Container(
-                                  width: 17,
-                                  height: 17,
-                                  decoration: BoxDecoration(
-                                      color: Colors.redAccent[100],
-                                      shape: BoxShape.circle)),
-                            ],
-                          )),
-                      Padding(padding: EdgeInsets.all(5)),
-                      Text(record.sideEffectText, style: TextStyle(fontSize: 17.0)),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 6.0)),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                          height: 25,
-                          width: 45,
-                          //width: 5, height: 5,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.grey[400], width: 1.0),
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(6.0))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text("총평",
-                                  style: TextStyle(
-                                      fontSize: 14.5, color: Colors.grey[600])),
-                            ],
-                          )),
-                      Padding(padding: EdgeInsets.all(5)),
-                      Text(record.overallText, style: TextStyle(fontSize: 17.0)),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 6.0)),
-                ],
-              ),
-              //Container(height: size.height * 0.01),
-//              _dateAndLike(record),
-              Row(
-                children: <Widget>[
-                  //Container(height: size.height * 0.05),
-                  Text("2020.08.11",
-                      style: TextStyle(color: Colors.grey[500], fontSize: 13)),
-//        Container(width: size.width * 0.63),
-                  Padding(padding: EdgeInsets.all(18)),
-                  Padding(padding: EdgeInsets.only(left: 235)),
-                  Container(
-                    //width: 500.0,
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        new GestureDetector(
-                            child: new Icon(
-                              Icons.favorite,
-                              //color: _rating >= 1 ? Colors.orange : Colors.grey,
-                              color: record.favoriteSelected == true
-                                  ? Colors.redAccent[200]
-                                  : Colors.grey[300],
-                              size: 21,
-                            ),
-                            //when 2 people click this
-                            onTap: () => record.reference.updateData({
-                              'noFavorite': FieldValue.increment(1),
-                              //TODO removed next one line
-//                              'favoriteSelected': !record.favoriteSelected,
-                            })
-                        )
-                      ],
-                    ),
-                  ),
-                  Text((record.noFavorite).toString(),
-                      style: TextStyle(fontSize: 14, color: Colors.black)),
-//            Text("309", style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold)),
-                ],
-              )
-            ]));
-  }
-
-  Widget topOfReview(BuildContext context) {
-    int _effectColor;
-    int _sideEffectColor;
-
-    return Stack(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 10),
-          child: StreamBuilder<QuerySnapshot>(
-            stream: Firestore.instance.collection("Reviews").snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) return Text("Error: ${snapshot.error}");
-              if (!snapshot.hasData) return LinearProgressIndicator();
-              return ListView(
-//                        scrollDirection: Axis.vertical,
-                children: snapshot.data.documents.map((DocumentSnapshot data) {
-                  final record = Record.fromSnapshot(data);
-//                        Timestamp tt = document["datetime"];
-//                        DateTime dt = DateTime.fromMicrosecondsSinceEpoch(
-//                            tt.microsecondsSinceEpoch);
-
-                  return Container(
-                      key: ValueKey(record.name),
-                      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  width: 0.6, color: Colors.grey[300]))),
-                      child: Column(
-                        //mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _starAndId(record, context),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Container(
-                                        height: 28,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.grey[400],
-                                                width: 1.0),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(6.0))),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text("효과",
-                                                style: TextStyle(
-                                                    fontSize: 14.5,
-                                                    color: Colors.grey[600])),
-                                            Padding(
-                                                padding: EdgeInsets.all(2.5)),
-                                            //Container(width: size.width * 0.015),
-                                            Container(
-                                                width: 17,
-                                                height: 17,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.green[200],
-                                                    shape: BoxShape.circle)),
-                                          ],
-                                        )),
-                                    //Container(width: size.width * 0.025),
-                                    Padding(padding: EdgeInsets.all(5)),
-                                    Text(record.effectText,
-                                        style: TextStyle(fontSize: 17.0)),
-                                  ],
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 6.0)),
-                                Row(
-                                  children: <Widget>[
-                                    Container(
-                                        height: 28,
-                                        width: 80,
-                                        //width: 5, height: 5,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.grey[400],
-                                                width: 1.0),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(6.0))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text("부작용",
-                                                style: TextStyle(
-                                                    fontSize: 14.5,
-                                                    color: Colors.grey[600])),
-                                            Padding(
-                                                padding: EdgeInsets.all(2.5)),
-                                            Container(
-                                                width: 17,
-                                                height: 17,
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                    Colors.redAccent[100],
-                                                    shape: BoxShape.circle)),
-                                          ],
-                                        )),
-                                    Padding(padding: EdgeInsets.all(5)),
-                                    Text(record.sideEffectText,
-                                        style: TextStyle(fontSize: 17.0)),
-                                  ],
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 6.0)),
-                                Row(
-                                  children: <Widget>[
-                                    Container(
-                                        height: 25,
-                                        width: 45,
-                                        //width: 5, height: 5,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.grey[400],
-                                                width: 1.0),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(6.0))),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text("총평",
-                                                style: TextStyle(
-                                                    fontSize: 14.5,
-                                                    color: Colors.grey[600])),
-                                          ],
-                                        )),
-                                    Padding(padding: EdgeInsets.all(5)),
-                                    Text(record.overallText,
-                                        style: TextStyle(fontSize: 17.0)),
-                                  ],
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 6.0)),
-                              ],
-                            ),
-                            //Container(height: size.height * 0.01),
-//              _dateAndLike(record),
-                            Row(
-                              children: <Widget>[
-                                //Container(height: size.height * 0.05),
-                                Text("2020.08.11",
-                                    style: TextStyle(
-                                        color: Colors.grey[500], fontSize: 13)),
-//        Container(width: size.width * 0.63),
-                                Padding(padding: EdgeInsets.all(18)),
-                                Padding(padding: EdgeInsets.only(left: 235)),
-                                Container(
-                                  //width: 500.0,
-                                  child: new Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      new GestureDetector(
-                                          child: new Icon(
-                                            Icons.favorite,
-                                            //color: _rating >= 1 ? Colors.orange : Colors.grey,
-                                            color:
-                                            record.favoriteSelected == true
-                                                ? Colors.redAccent[200]
-                                                : Colors.grey[300],
-                                            size: 21,
-                                          ),
-                                          //when 2 people click this
-                                          onTap: () =>
-                                              record.reference.updateData({
-                                                'noFavorite':
-                                                FieldValue.increment(1),
-                                                    //Todo removed next two lines
-//                                                'favoriteSelected':
-//                                                !record.favoriteSelected,
-                                              })
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Text((record.noFavorite).toString(),
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.black)),
-//            Text("309", style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold)),
-                              ],
-                            )
-                          ]));
-                }).toList(),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _starAndId(record, context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Icon(Icons.star, color: Colors.amber, size: 16),
-            Icon(Icons.star, color: Colors.amber, size: 16),
-            Icon(Icons.star, color: Colors.amber, size: 16),
-            Icon(Icons.star, color: Colors.amber, size: 16),
-            Icon(Icons.star, color: Colors.grey[300], size: 16),
-            Padding(padding: EdgeInsets.only(left: 10)),
-            Text(record.id,
-                style: TextStyle(color: Colors.grey[500], fontSize: 13)),
-
-//          IconButton(
-//            icon: Icon(Icons.create, color: Colors.grey[700], size: 19
-//            ),
-//            onPressed: () {
-//              Navigator.push(
-//                  context,
-//                  MaterialPageRoute(
-//                      builder: (context) => WriteReview()
-//                  ));
-//            },
-//          )
-          ],
-        ),
-
-        //TODO: GET
-        //MySnackBar(),
-
-//      Stack(
-//        children: <Widget>[
-//          Expanded(
-//            child: Container(
-//            width: 100,
-//            color: Colors.black.withOpacity(0.25), //transparent
-//            )
-//          )
-//        ],
-//      )
-      ],
-    );
-  }
-}
-
-Widget _dateAndLike(record) {
-  return Row(
-    children: <Widget>[
-      //Container(height: size.height * 0.05),
-
-      Text("2020.08.11",
-          style: TextStyle(color: Colors.grey[500], fontSize: 13)),
-//        Container(width: size.width * 0.63),
-      Padding(padding: EdgeInsets.all(18)),
-      Padding(padding: EdgeInsets.only(left: 235)),
-      Container(
-        //width: 500.0,
-        child: new Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            new GestureDetector(
-              child: new Icon(
-                Icons.favorite,
-                //color: _rating >= 1 ? Colors.orange : Colors.grey,
-                color: record.favoriteSelected == true
-                    ? Colors.redAccent[200]
-                    : Colors.grey[300],
-                size: 21,
-              ),
-              onTap: () {
-                //favorite(record.favoriteSelected, record.noFavorite);
-              },
-            )
-          ],
-        ),
-      ),
-
-      Text((record.noFavorite).toString(),
-          style: TextStyle(fontSize: 14, color: Colors.black)),
-//            Text("309", style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold)),
-    ],
-  );
-  */
 }

@@ -147,7 +147,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
     return Scaffold(
         backgroundColor: gray0_white,
-        appBar: CustomAppBarWithGoToBack('약 정보', Icon(Icons.arrow_back), 3),
+        appBar: CustomAppBarWithGoToBack('약 정보', Icon(Icons.arrow_back), 0.5),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.create),
             backgroundColor: Color(0xff00C2AE),
