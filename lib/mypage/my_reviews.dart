@@ -37,7 +37,7 @@ class _MyReviewsState extends State<MyReviews> {
     TheUser user = Provider.of<TheUser>(context);
 
     return Scaffold(
-        appBar: CustomAppBarWithGoToBack('리뷰', Icon(Icons.arrow_back), 3),
+        appBar: CustomAppBarWithGoToBack('리뷰', Icon(Icons.arrow_back), 0.5),
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(

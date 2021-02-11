@@ -402,13 +402,11 @@ class _WriteReviewState extends State<WriteReview> {
               itemCount: 5,
 //              unratedColor: Colors.grey[500],
               unratedColor: gray75,
-              itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
+              itemPadding: EdgeInsets.symmetric(horizontal: 4),
               itemBuilder: (context, _) =>
-                  Icon(Icons.star, color: primary300_main),
-              // ImageIcon(
-              //   AssetImage('assets/icons/rating_star.png'),
-              //   color: primary300_main,
-              // ),
+                  // Icon(Icons.star, color: primary300_main),
+              Image.asset('assets/icons/rating_star.png',
+                width: 28, height: 28,),
 
               onRatingUpdate: (rating) {
                 starRating = rating;
@@ -434,7 +432,7 @@ class _WriteReviewState extends State<WriteReview> {
                 children: <TextSpan>[
                   TextSpan(
                     text: starRatingText.isEmpty
-                        ? "선택하세요"
+                        ? "평가해주세요"
                         : '${starRatingText.split(" ")[0]}',
                     style: Theme.of(context).textTheme.caption.copyWith(
                         color: primary600_bold_text,
