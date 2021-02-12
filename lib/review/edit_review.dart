@@ -9,6 +9,7 @@ import 'package:semo_ver2/review/see_my_review.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
+import 'package:semo_ver2/shared/constants.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
@@ -29,6 +30,8 @@ class _EditReviewState extends State<EditReview> {
   TextEditingController myControllerSideEffect = TextEditingController();
   TextEditingController myControllerOverall = TextEditingController();
 
+  TextEditingController reasonForTakingPillController = TextEditingController();
+
   @override
   void dispose() {
     myControllerEffect.dispose();
@@ -44,6 +47,8 @@ class _EditReviewState extends State<EditReview> {
   String sideEffectText = '';
   String overallText = '';
   String starRatingText = '';
+  String reasonForTakingPill = '';
+
 
   bool editSwitch = false;
 
@@ -75,6 +80,7 @@ class _EditReviewState extends State<EditReview> {
               myControllerEffect.text = review.effectText;
               myControllerSideEffect.text = review.sideEffectText;
               myControllerOverall.text = review.overallText;
+              reasonForTakingPillController.text = review.reasonForTakingPill;
               editSwitch = true;
             }
 
@@ -109,6 +115,7 @@ class _EditReviewState extends State<EditReview> {
                       ReviewPillInfo(review.seqNum),
                       // _pillInfo(review),
                       _rating(review),
+                      _reasonForTakingPill(review),
                       _effect(review),
                       _sideEffect(review),
                       _overallReview(review),
@@ -535,6 +542,142 @@ class _EditReviewState extends State<EditReview> {
         ));
   }
 
+
+  Widget _reasonForTakingPill(Review review) {
+    return Container(
+//          height: 280,
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                  width: 0.8,
+                  color: Colors.grey[300],
+                ))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+//              crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text("어디가 아파서 사용하셨나요?",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: gray900, fontSize: 16)),
+            _textField("reason",reasonForTakingPillController),
+            // _exclusiveMultiButton(),
+            // writeReason(),
+            Container(height: 45,)
+            // _textField(myControllerEffect)
+          ],
+        ));
+  }
+
+
+  Widget _exclusiveMultiButton() {
+    return ButtonTheme(
+      minWidth: 40.0,
+      child: FlatButton(
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6.0),
+            side: BorderSide(
+                color: primary300_main)),
+        color: Colors.white,
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        onPressed: () {
+          setState(() {
+          });
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("buttonName",
+                style: Theme.of(context).textTheme.headline6.copyWith(
+                  color:primary500_light_text,
+                )),
+            Container(width: 1,),
+            Icon(
+              Icons.cancel,
+              color: gray200,
+              size: 20,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget writeReason() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      child: TextField(
+        controller: reasonForTakingPillController,
+        cursorColor: primary400_line,
+        decoration: textInputDecoration.copyWith(
+            hintText: '키워드 하나 입력하기   예시)치통',
+          suffixIcon: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+            child: InkWell(
+              child: Container(
+                height: 20,
+                width: 60,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: gray200,),
+                    borderRadius:
+                    const BorderRadius.all(const Radius.circular(4.0))
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add,
+                    size: 18,),
+                    Center(child: Text("추가")),
+                  ],
+                )
+              ),
+              onTap: () {
+                reasonForTakingPillController.clear();
+              },
+            ),
+          )
+
+          // Padding(
+          //   // padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+          //   padding: const EdgeInsets.fromLTRB(15,5,15,5),
+          //   child: Container(
+          //     height: 10,
+          //     // width: 40,
+          //     child: RaisedButton(
+          //       onPressed: () {},
+          //       child: Text('확인'),
+          //     ),
+          //   ),
+          // ),
+        ),
+    // suffixIcon: RaisedButton(
+    //   onPressed: () {},
+    //   child: new Row(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     mainAxisSize: MainAxisSize.min,
+    //     children: <Widget>[
+    //       new Text('Button with text and icon!'),
+    //       new Icon(Icons.lightbulb_outline),
+    //     ],
+    //   ),
+    // ),
+
+
+        keyboardType: TextInputType.text,
+        onChanged: (value) {
+          setState(() {
+          });
+        },
+      ),
+    );
+  }
+
+
   Widget _effect(Review review) {
     return Container(
 //          height: 280,
@@ -666,12 +809,57 @@ class _EditReviewState extends State<EditReview> {
             ),
 //              SizedBox(height: 20),
 //              Padding(padding: EdgeInsets.only(top: 25)),
-            _textField(myControllerEffect)
+            _textField("effect", myControllerEffect)
           ],
         ));
   }
 
-  Widget _textField(TextEditingController myControllerEffect) {
+  Widget _textFieldForSideEffect(TextEditingController myControllerEffect) {
+    if (sideEffect == "no") {
+      // myControllerSideEffect.text = " ";
+      return Container();
+    } else {
+      return Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: 20,
+        ),
+        child: Container(
+            width: 400,
+//                height: 100,
+            child: TextField(
+                style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: gray750_activated,
+                ),
+                maxLength: 500,
+                controller: myControllerEffect,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                decoration: new InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: gray75),
+                    borderRadius:
+                    const BorderRadius.all(const Radius.circular(4.0)),
+                  ),
+                  filled: true,
+                  fillColor: gray50,
+                ))
+        ),
+      );
+    }
+  }
+
+
+  Widget _textField(String type, TextEditingController myControllerEffect) {
+    String hintText;
+    if (type == "effect")
+      hintText = "효과에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
+    else if (type == "sideEffect")
+      hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
+    else if (type == "overall")
+      hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
+    else if(type == "reason")
+      hintText = "키워드 하나를 입력해주세요  예시)치통\n";
+
     return Padding(
       padding: EdgeInsets.symmetric(
         vertical: 20,
@@ -681,39 +869,28 @@ class _EditReviewState extends State<EditReview> {
 //                height: 100,
           child: TextField(
               style: Theme.of(context).textTheme.bodyText2.copyWith(
-                    color: gray750_activated,
-                  ),
-              maxLength: 500,
-              controller: myControllerEffect,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
+                color: gray750_activated,
+              ),
+              maxLength: type =="reason" ? 10 : 500,
               decoration: new InputDecoration(
+                hintText: hintText,
+                hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: gray300_inactivated,
+                ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: gray75),
                   borderRadius:
-                      const BorderRadius.all(const Radius.circular(4.0)),
+                  const BorderRadius.all(const Radius.circular(4.0)),
                 ),
                 filled: true,
                 fillColor: gray50,
-              ))
-
-//         TextField(
-//             controller: myControllerEffect,
-//             keyboardType: TextInputType.multiline,
-//             maxLines: null,
-//             decoration: new InputDecoration(
-//               border: InputBorder.none,
-// //                        border: OutlineInputBorder(
-// //                          borderRadius: const BorderRadius.all(
-// //                            const Radius.circular(8.0)
-// //                          ),
-// //                          borderSide: BorderSide(color:Colors.white)
-// //                        ),
-//               filled: true,
-// //                        fillColor: _grey,
-//               fillColor: Colors.grey[200],
-//             )),
-          ),
+              ),
+              controller: myControllerEffect,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              // dd
+          )
+      ),
     );
   }
 
@@ -816,22 +993,8 @@ class _EditReviewState extends State<EditReview> {
                 ),
               ],
             ),
-//              Padding(padding: EdgeInsets.only(top: 25)),
-//              Padding(
-//                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-//                child: Container(
-//                  width: 400,
-//                  height: 100,
-//                  child: TextField(
-//                      controller: myControllerSideEffect,
-////                          keyboardType: TextInputType.multiline,
-//                      maxLines: null,
-//                      decoration: new InputDecoration(
-//                          border: InputBorder.none
-//                      )),
-//                ),
 //              )
-            _textField(myControllerSideEffect)
+            _textFieldForSideEffect(myControllerSideEffect)
           ],
         ));
   }
@@ -855,25 +1018,7 @@ class _EditReviewState extends State<EditReview> {
                     .textTheme
                     .headline5
                     .copyWith(color: gray900, fontSize: 16)),
-//              Padding(padding: EdgeInsets.only(top: 25)),
-//              Padding(
-//                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
-//                child: Container(
-//                  width: 400,
-//                  height: 100,
-//                  child: TextField(
-//                      controller: myControllerOverall,
-////                          keyboardType: TextInputType.multiline,
-//                      maxLines: null,
-//                      decoration: new InputDecoration(
-//                          border: InputBorder.none
-////                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,
-////                        color: Colors.grey[400])
-//                      )),
-//                ),
-//
-//              ),
-            _textField(myControllerOverall),
+            _textField("overall",myControllerOverall),
 //            Padding(padding: EdgeInsets.only(top: 25)),
           ],
         ));
@@ -889,16 +1034,25 @@ class _EditReviewState extends State<EditReview> {
           isDone: true,
           textString: '완료',
           onPressed: () async {
-            if (myControllerOverall.text.length < 10)
+            if (sideEffect == "no")
+             myControllerSideEffect.text = "";
+            else if(sideEffect == "yes")
+              if( myControllerSideEffect.text.length < 10)
+                _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if (myControllerOverall.text.length < 10 && myControllerOverall.text.length > 0)
               _warning = "총평 리뷰를 10자 이상 작성해주세요";
-            if (myControllerSideEffect.text.length < 10)
-              _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+            // if(sideEffect == "yes" && myControllerSideEffect.text.length < 10)
+            // // if (myControllerSideEffect.text.length < 10 && sideEffect!= "no")
+            //   _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
             if (myControllerEffect.text.length < 10)
               _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
+            if(reasonForTakingPillController.text.length < 1)
+              _warning = "어디가 아파서 사용하셨는지 작성해주세요";
 
-            if (myControllerOverall.text.length < 10 ||
-                myControllerSideEffect.text.length < 10 ||
-                myControllerEffect.text.length < 10)
+            if (myControllerOverall.text.length < 10 && myControllerOverall.text.length > 0||
+                (myControllerSideEffect.text.length < 10 && sideEffect == "yes") ||
+                myControllerEffect.text.length < 10 ||
+                reasonForTakingPillController.text.length < 1)
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
                     _warning,
@@ -918,7 +1072,8 @@ class _EditReviewState extends State<EditReview> {
                       myControllerOverall.text /*?? review.overallText*/,
                       starRating == 0
                           ? review.starRating
-                          : starRating /*?? value.starRating*/
+                          : starRating ,/*?? value.starRating*/
+                      reasonForTakingPillController.text
                       );
               Navigator.pop(context);
               editSwitch = true;
@@ -1006,42 +1161,5 @@ class _EditReviewState extends State<EditReview> {
       },
     );
 
-
-
-//     return showDialog<void>(
-//       context: context,
-//       barrierDismissible: false, // user must tap button!
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-// //          title: Center(child: Text('AlertDialog Title')),
-//           content: SingleChildScrollView(
-//             child: ListBody(
-//               children: <Widget>[
-//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
-//                 SizedBox(height: 20),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                   children: [
-//                     TextButton(
-//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
-//                       onPressed: () {
-//                         Navigator.of(context).pop();
-//                       },
-//                     ),
-//                     TextButton(
-//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-//                       onPressed: () async {
-//                         Navigator.of(context).pop();
-//                         await ReviewService(documentId: record.documentId).deleteReviewData();
-//                       },
-//                     ),
-//                   ],
-//                 )
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
   }
 }

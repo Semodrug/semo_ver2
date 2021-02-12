@@ -12,14 +12,15 @@ class ReviewService {
   final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
   final CollectionReference reportReviewCollection = FirebaseFirestore.instance.collection('ReportReview');
 
-  Future<void> updateReviewData(String effect, String sideEffect, String effectText, String sideEffectText, String overallText, num starRating) async {
+  Future<void> updateReviewData(String effect, String sideEffect, String effectText, String sideEffectText, String overallText, num starRating, String reasonForTakingPill) async {
     return await reviewCollection.doc(documentId).update({
       'effect': effect,
       'sideEffect': sideEffect,
       'effectText': effectText,
       'sideEffectText': sideEffectText,
       'overallText': overallText,
-      'starRating': starRating
+      'starRating': starRating,
+      'reasonForTakingPill' : reasonForTakingPill
     });
   }
 
@@ -75,6 +76,8 @@ class ReviewService {
         itemName: doc.data()['itemName'],
         seqNum: doc.data()['seqNum'],
         nickName: doc.data()['nickName'],
+        reasonForTakingPill: doc.data()['reasonForTakingPill'],
+
       );
     }).toList();
   }
@@ -142,6 +145,8 @@ class ReviewService {
         itemName: doc.data()['itemName'],
         seqNum: doc.data()['seqNum'],
         nickName: doc.data()['nickName'],
+        reasonForTakingPill: doc.data()['reasonForTakingPill'],
+
       );
     });
   }

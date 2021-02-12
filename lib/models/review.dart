@@ -16,6 +16,7 @@ class Review {
   final String entpName;
   final String itemName;
   final String nickName;
+  final String reasonForTakingPill;
 
 
   Review({
@@ -32,5 +33,6 @@ class Review {
     this.seqNum,
     this.itemName,
     this.entpName,
-    this.nickName});
+    this.nickName,
+    this.reasonForTakingPill});
 }

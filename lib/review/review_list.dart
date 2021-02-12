@@ -837,6 +837,9 @@ class _ReviewListState extends State<ReviewList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          ReviewBox(context: context, review: review, type: "reason"),
+          Container(height:6),
+
           //effect
           widget.filter == "sideEffectOnly" ? Container()
            // : _reviewBox(review, "effect"),
@@ -853,8 +856,8 @@ class _ReviewListState extends State<ReviewList> {
           //overall
           widget.filter == "sideEffectOnly" || widget.filter == "effectOnly" ? Container()
             // : _reviewBox(review, "overall"),
-          : ReviewBox(context: context, review: review, type: "overall"),
-          Container(height:6),
+          : review.overallText =="" ? Container() : ReviewBox(context: context, review: review, type: "overall"),
+          review.overallText =="" ? Container() : Container(height:6),
         ],
       ),
     );
