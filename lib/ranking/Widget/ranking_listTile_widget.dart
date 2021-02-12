@@ -143,7 +143,7 @@ class RankingTile extends StatelessWidget {
                                 Expanded(
                                     child: Row(
                                   children: [
-                                    CategoryButton(str: drugStreamData.category)
+                                    CategoryButton(str: drugStreamData.category, forRanking: 'ranking')
                                   ],
                                 )),
                               ],
