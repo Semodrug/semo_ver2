@@ -666,7 +666,7 @@ class _WriteReviewState extends State<WriteReview> {
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
       child: Container(
           child: TextField(
-              maxLength: 500,
+              maxLength: type == "reason" ? 10: 500,
               controller: txtController,
               keyboardType: TextInputType.multiline,
               maxLines: null,

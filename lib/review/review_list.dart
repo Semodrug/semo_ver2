@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:semo_ver2/models/report_review.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/review.dart';
@@ -563,6 +564,7 @@ class _ReviewListState extends State<ReviewList> {
   Future<void> _IYMYCancleConfirmReportDialog(review, report, /*user*/) async {
     User user = FirebaseAuth.instance.currentUser;
 
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -630,6 +632,7 @@ class _ReviewListState extends State<ReviewList> {
 
                         //TODO :: ###########신고하기!!!!!!!!!!!!!!!!!!
                         await ReviewService(documentId: review.documentId).reportReview(review, report, user.uid);
+                        Navigator.pop(context);
                         Navigator.pop(context);
                         IYMYGotoSeeOrCheckDialog("이약모약 운영진에게\n신고가 접수되었어요");
 
