@@ -303,6 +303,8 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Container(
+                          //height: 50,
+                            width: 90,
                             //이미지는 고정값
                             //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: DrugImage(drugItemSeq: data.itemSeq)),
