@@ -40,7 +40,8 @@ class RankingPage extends StatelessWidget {
                               // TestRanking(categoryName: numCategory[index] + categories[index])
                               RankingContentPage(
                                   categoryName: numCategory[index] +
-                                      categories[index])),
+                                      categories[index], filter: '리뷰 많은 순',)
+                      ),
                     );
                   },
                 ),
