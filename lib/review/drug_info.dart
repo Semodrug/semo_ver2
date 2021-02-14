@@ -146,13 +146,22 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
-    String filter = widget.filter;
-    String rankingCategory = widget.type;
+    String filter = 'nothing';
+    bool check = false;
+    if(widget.filter != null){
+      filter = widget.filter;
+      check = true;
+    }
+    String rankingCategory = 'notFromRanking';
+    if(widget.type != null){
+      rankingCategory = widget.type;
+    }
+
 
 
     return Scaffold(
         backgroundColor: gray0_white,
-        appBar: CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5, filter, rankingCategory),
+        appBar: check ? CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5, filter:filter, category:rankingCategory) : CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.create),
             backgroundColor: Color(0xff00C2AE),

@@ -55,41 +55,64 @@ class CustomAppBarWithGoToRanking extends StatelessWidget
       this.title,
       this.customIcon,
       this.elevation,
+      {
       this.filter,
       this.category,
-      {
         Key key,
       })  : preferredSize = Size.fromHeight(56.0),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(
-        title,
-        style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
-      ),
-      elevation: elevation,
-      titleSpacing: 0,
-      backgroundColor: Colors.white,
-      automaticallyImplyLeading: false,
-      leading: IconButton(
-        icon: customIcon,
-        color: primary300_main,
-        onPressed: () {
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                // TestRanking(categoryName: numCategory[index] + categories[index])
-                RankingContentPage(
-                  categoryName: category, filter: filter,)
-            ),
-          );
-        },
-      ),
-    );
+
+    if(filter != null){
+      return AppBar(
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+        ),
+        elevation: elevation,
+        titleSpacing: 0,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: customIcon,
+          color: primary300_main,
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  // TestRanking(categoryName: numCategory[index] + categories[index])
+                  RankingContentPage(
+                    categoryName: category, filter: filter,)
+              ),
+            );
+          },
+        ),
+      );
+    }
+    else {
+      return AppBar(
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+        ),
+        elevation: elevation,
+        titleSpacing: 0,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: customIcon,
+          color: primary300_main,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      );
+    }
+
   }
 }
 
