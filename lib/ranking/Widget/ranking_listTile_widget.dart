@@ -11,8 +11,10 @@ import 'package:semo_ver2/theme/colors.dart';
 class RankingTile extends StatelessWidget {
   final Drug drug;
   final int index;
+  final String filter;
+  final String category;
 
-  RankingTile({this.drug, this.index});
+  RankingTile({this.drug, this.index, this.filter, this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +55,11 @@ class RankingTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => {
+        Navigator.pop(context),
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ReviewPage(drug.itemSeq),
+            builder: (context) => ReviewPage(drug.itemSeq, filter: filter, type: category),
           ),
         ),
       },

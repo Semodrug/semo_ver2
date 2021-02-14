@@ -94,7 +94,10 @@ class _ListViewReviewWidgetState extends State<ListViewReviewWidget> {
                   //print('${widget.drugsProvider.drugs[index].itemName}');
                   return RankingTile(
                       drug: widget.drugsProvider.drugs[index],
-                      index: (index + 1));
+                      index: (index + 1),
+                      filter: '리뷰 많은 순',
+                      category : widget.category,
+                  );
                 },
               ),
             ),
@@ -195,7 +198,11 @@ class _ListViewTotalRankingWidgetState
                   //print('${widget.drugsProvider.drugs[index].itemName}');
                   return RankingTile(
                       drug: widget.drugsProvider.drugs[index],
-                      index: (index + 1));
+                      index: (index + 1),
+                      filter: '별점순',
+                      category : widget.category,
+
+                  );
                 },
               ),
             ),

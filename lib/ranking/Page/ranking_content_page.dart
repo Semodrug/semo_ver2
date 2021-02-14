@@ -10,15 +10,17 @@ import 'package:semo_ver2/theme/colors.dart';
 
 class RankingContentPage extends StatefulWidget {
   final String categoryName;
+  //String signal;
+  String filter;
 
-  RankingContentPage({this.categoryName});
+  RankingContentPage({this.categoryName, this.filter});
 
   @override
   _RankingContentPageState createState() => _RankingContentPageState();
 }
 
 class _RankingContentPageState extends State<RankingContentPage> {
-  String _filterOrSort = "리뷰 많은 순";
+  //String _filterOrSort = "리뷰 많은 순";
 
   String _checkCategoryName(String data) {
     String newName = '';
@@ -36,9 +38,9 @@ class _RankingContentPageState extends State<RankingContentPage> {
       body: Column(
         children: [
           _countDropDown(context),
-          if (_filterOrSort == '리뷰 많은 순')
+          if (widget.filter == '리뷰 많은 순')
             fromFilterOfReview(context)
-          else if (_filterOrSort == '별점순')
+          else if (widget.filter == '별점순')
             fromFilterOfName(context)
         ],
       ),
@@ -86,14 +88,14 @@ class _RankingContentPageState extends State<RankingContentPage> {
                 Spacer(),
                 DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    value: _filterOrSort,
+                    value: widget.filter ,
                     icon: Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     elevation: 16,
                     style: TextStyle(color: Colors.black),
                     onChanged: (String newValue) {
                       setState(() {
-                        _filterOrSort = newValue;
+                        widget.filter  = newValue;
                       });
                     },
                     items: <String>['리뷰 많은 순','별점순']
