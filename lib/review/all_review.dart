@@ -40,9 +40,19 @@ class _AllReveiewState extends State<AllReview> {
 
   TabController _tabController;
 
-  GlobalKey _key1 = GlobalKey();
-  GlobalKey _key2 = GlobalKey();
-  GlobalKey _key3 = GlobalKey();
+  GlobalKey _key8 = GlobalKey();
+
+  double _getReviewSizes() {
+    final RenderBox renderBox1 = _key8.currentContext.findRenderObject();
+    // final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
+    // final RenderBox renderBox3 = _key3.currentContext.findRenderObject();
+    // final RenderBox renderBox4 = _key4.currentContext.findRenderObject();
+    double height = renderBox1.size.height ;
+        // + renderBox2.size.height +
+        // renderBox3.size.height;
+        // + 30;
+    return 1000;
+  }
 
   String _shortenName(String data) {
     String newName = data;
@@ -142,9 +152,9 @@ class _AllReveiewState extends State<AllReview> {
                         SliverToBoxAdapter(
                           child: TabBarView(
                                 children: [
-                                  _underTab("none"),
-                                  _underTab("effectOnly"),
-                                  _underTab("sideEffectOnly"),
+                                  _underTab("none", 1),
+                                  _underTab("effectOnly", 2),
+                                  _underTab("sideEffectOnly", 3),
                                 ],
                               ),
                         )
@@ -217,56 +227,114 @@ class _AllReveiewState extends State<AllReview> {
             ),
             //TODO: height 없이 괜찮게
 
+
+            // CustomScrollView(
+            //   slivers: [
+            //     SliverToBoxAdapter(
+            //       // child: _myTab(context),
+            //       child: _myTabbe(context),
+            //     ),
+            //   ],
+            // )
+
+
+
             Container(
-              padding: EdgeInsets.all(0.0),
-              width: double.infinity,
+              // padding: EdgeInsets.all(0.0),
+              // width: double.infinity,
+              // height: _getReviewSizes(),
               height: 5000,
               child: TabBarView(
                 children: [
-                  _underTab("none"),
-                  _underTab("effectOnly"),
-                  _underTab("sideEffectOnly"),
+                  _underTab("none", 1),
+                  _underTab("effectOnly", 2),
+                  _underTab("sideEffectOnly", 3),
                 ],
               ),
             )
+
+            // TabBarView(
+            //   children: [
+            //     _underTab("none", 1),
+            //     _underTab("effectOnly", 2),
+            //     _underTab("sideEffectOnly", 3),
+            //   ],
+            // ),
           ],
         ));
   }
 
-  Widget _underTab(String filter) {
-    return Container(
-        //key: _key1,
-      //TODO!!!!!!!!!!!!!
-        height: 5000,
-        //height: MediaQuery.of(context).size.height-500,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    //TODO EDIT num of reviews
-                    StreamBuilder<Drug>(
-                        stream: DatabaseService(itemSeq: widget.drugItemSeq)
-                            .drugData,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            Drug drug = snapshot.data;
-                            return Text(
-                                "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
-                                style: Theme.of(context).textTheme.headline5.copyWith(color: gray750_activated,fontSize: 14)
-                            );
-                          } else
-                            return Container();
-                        }),
-                  ],
-                )),
-            _searchBar(),
-            ReviewList(_searchText, filter, widget.drugItemSeq),
-          ],
-        ));
+  Widget _underTab(String filter, key) {
+
+
+
+
+    // return CustomScrollView(
+    //   slivers: [
+    //     SliverToBoxAdapter(
+    //       child: Container(
+    //           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+    //           child: Row(
+    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //             children: <Widget>[
+    //               //TODO EDIT num of reviews
+    //               StreamBuilder<Drug>(
+    //                   stream: DatabaseService(itemSeq: widget.drugItemSeq)
+    //                       .drugData,
+    //                   builder: (context, snapshot) {
+    //                     if (snapshot.hasData) {
+    //                       Drug drug = snapshot.data;
+    //                       return Text(
+    //                           "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
+    //                           style: Theme.of(context).textTheme.headline5.copyWith(color: gray750_activated,fontSize: 14)
+    //                       );
+    //                     } else
+    //                       return Container();
+    //                   }),
+    //             ],
+    //           )),
+    //     ),
+    //     SliverToBoxAdapter(
+    //       child: _searchBar(),
+    //     ),
+    //     SliverToBoxAdapter(
+    //       child: ReviewList(_searchText, filter, widget.drugItemSeq),
+    //     )
+    //
+    //     // _searchBar(),
+    //     // ReviewList(_searchText, filter, widget.drugItemSeq),
+    //   ],
+    // );
+
+    return ListView(
+        physics: NeverScrollableScrollPhysics(),
+      // mainAxisSize: MainAxisSize.max,
+      // key: _key8,
+      children: [
+        Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                StreamBuilder<Drug>(
+                    stream: DatabaseService(itemSeq: widget.drugItemSeq)
+                        .drugData,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        Drug drug = snapshot.data;
+                        return Text(
+                            "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
+                            style: Theme.of(context).textTheme.headline5.copyWith(color: gray750_activated,fontSize: 14)
+                        );
+                      } else
+                        return Container();
+                    }),
+              ],
+            )),
+        _searchBar(),
+        ReviewList(_searchText, filter, widget.drugItemSeq),
+      ],
+    );
   }
 
   Widget _searchBar() {

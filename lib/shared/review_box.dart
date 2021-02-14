@@ -18,17 +18,12 @@ class ReviewBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(9.5),
+        padding: type == "reason" ? EdgeInsets.all(5): EdgeInsets.all(9.5),
         decoration: BoxDecoration(
-            color: gray50,
+            color: type == "reason" ? gray0_white : gray50,
             border: Border.all(color: gray50),
             borderRadius: BorderRadius.all(Radius.circular(4.0))),
 
-
-    //     return Padding(
-    // padding: EdgeInsets.fromLTRB(20,0,20,0),
-    // child: Column(
-    // crossAxisAlignment: CrossAxisAlignment.start,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -36,59 +31,80 @@ class ReviewBox extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  type == "reason" ? " #"+review.reasonForTakingPill : type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
+                  style: type == "reason" ?
+                  Theme.of(context).textTheme.subtitle2.copyWith(
+                      color: Color(0xff005841), fontSize: 12
+                  ) :
+                  Theme.of(context).textTheme.bodyText2.copyWith(
                       color: gray900, fontSize: 12
-                  ),),
+                  ),
+                ),
                 Container(width:3),
                 _face(type == "effect" ? review.effect : type == "sideEffect" ? review.sideEffect : "overall",),
               ],
             ),
-            Container(height:4),
-            Text(type == "effect" ? review.effectText : type == "sideEffect" ? review.sideEffectText : review.overallText,
-              style: Theme.of(context).textTheme.bodyText2.copyWith(
-                  color: gray600,
-                  fontSize: 14
-              ),),
+            type == "reason" ? Container(): Container(height:4),
+
+            // if(review.reasonForTakingPill!="")
+
+
+            if(type == "effect")
+              Text(review.effectText),
+            if(type == "sideEffect" && review.sideEffect == "yes")
+              Text(review.sideEffectText),
+            if(type == "sideEffect" && review.sideEffect == "no")
+              Container(),
+            if(type == "overall") Text(review.overallText)
+
+            // Text(
+            //   type == "effect" ? review.effectText
+            //       : (type == "sideEffect" && review.sideEffect == "no") ?
+            //   "" : (type == "sideEffect" && review.sideEffect == "yes") ?
+            //   review.sideEffectText : review.overallText,
+            //   style: Theme.of(context).textTheme.bodyText2.copyWith(
+            //       color: gray600,
+            //       fontSize: 14
+            //   ),),
           ],
         )
     );
 
 
   }
-  Widget _reviewBox(review, type) {
-    return Container(
-        padding: EdgeInsets.all(9.5),
-        decoration: BoxDecoration(
-            color: gray50,
-            border: Border.all(color: gray50),
-            borderRadius: BorderRadius.all(Radius.circular(4.0))),
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
-                  style: Theme.of(context).textTheme.subtitle2.copyWith(
-                      color: gray900, fontSize: 12
-                  ),),
-                Container(width:3),
-                _face(type == "effect" ? review.effect : type == "sideEffect" ? review.sideEffect : "overall",),
-              ],
-            ),
-            Container(height:4),
-            Text(type == "effect" ? review.effectText : type == "sideEffect" ? review.sideEffectText : review.overallText,
-              style: Theme.of(context).textTheme.subtitle2.copyWith(
-                  color: gray600,
-                  fontSize: 14
-              ),),
-          ],
-        )
-    );
-  }
+  // Widget _reviewBox(review, type) {
+  //   return Container(
+  //       padding: EdgeInsets.all(9.5),
+  //       decoration: BoxDecoration(
+  //           color: gray50,
+  //           border: Border.all(color: gray50),
+  //           borderRadius: BorderRadius.all(Radius.circular(4.0))),
+  //
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Row(
+  //             crossAxisAlignment: CrossAxisAlignment.end,
+  //             children: [
+  //               Text(
+  //                 type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
+  //                 style: Theme.of(context).textTheme.subtitle2.copyWith(
+  //                     color: gray900, fontSize: 12
+  //                 ),),
+  //               Container(width:3),
+  //               _face(type == "effect" ? review.effect : type == "sideEffect" ? review.sideEffect : "overall",),
+  //             ],
+  //           ),
+  //           Container(height:4),
+  //           Text(type == "effect" ? review.effectText : type == "sideEffect" ? review.sideEffectText : review.overallText,
+  //             style: Theme.of(context).textTheme.subtitle2.copyWith(
+  //                 color: gray600,
+  //                 fontSize: 14
+  //             ),),
+  //         ],
+  //       )
+  //   );
+  // }
   Widget _face(face) {
     if(face == "good")
       return Row(

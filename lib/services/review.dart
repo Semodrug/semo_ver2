@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:semo_ver2/models/report_review.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/single_review.dart';
 import 'package:semo_ver2/models/user.dart';
@@ -12,14 +13,15 @@ class ReviewService {
   final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
   final CollectionReference reportReviewCollection = FirebaseFirestore.instance.collection('ReportReview');
 
-  Future<void> updateReviewData(String effect, String sideEffect, String effectText, String sideEffectText, String overallText, num starRating) async {
+  Future<void> updateReviewData(String effect, String sideEffect, String effectText, String sideEffectText, String overallText, num starRating, String reasonForTakingPill) async {
     return await reviewCollection.doc(documentId).update({
       'effect': effect,
       'sideEffect': sideEffect,
       'effectText': effectText,
       'sideEffectText': sideEffectText,
       'overallText': overallText,
-      'starRating': starRating
+      'starRating': starRating,
+      'reasonForTakingPill' : reasonForTakingPill
     });
   }
 
@@ -75,6 +77,8 @@ class ReviewService {
         itemName: doc.data()['itemName'],
         seqNum: doc.data()['seqNum'],
         nickName: doc.data()['nickName'],
+        reasonForTakingPill: doc.data()['reasonForTakingPill'],
+
       );
     }).toList();
   }
@@ -99,6 +103,7 @@ class ReviewService {
     return reviewCollection
         // .orderBy('registrationDate', descending: true)
         .where("seqNum", isEqualTo: seqNum)
+        // .orderBy('registrationDate', descending: true)
         .snapshots()
         .map(_reviewListFromSnapshot);
   }
@@ -142,6 +147,8 @@ class ReviewService {
         itemName: doc.data()['itemName'],
         seqNum: doc.data()['seqNum'],
         nickName: doc.data()['nickName'],
+        reasonForTakingPill: doc.data()['reasonForTakingPill'],
+
       );
     });
   }
@@ -190,7 +197,10 @@ class ReviewService {
     if(report == 4) reportContent = "개인 정보 노출";
     if(report == 5) reportContent = "기타 (명예훼손)";
 
-    return await reportReviewCollection.doc(review.documentId).set({
+
+
+
+    return await reportReviewCollection.add({
       'reviewDocumentId': review.documentId,
       'reportContent': FieldValue.arrayUnion([reportContent]),
       'effectText': review.effectText,
@@ -199,6 +209,17 @@ class ReviewService {
       'itemName': review.itemName,
       'reporterUid': FieldValue.arrayUnion([reporterUid]),
     });
+
+
+    // return await reportReviewCollection.doc(review.documentId).update({
+    //   'reviewDocumentId': review.documentId,
+    //   'reportContent': FieldValue.arrayUnion([reportContent]),
+    //   'effectText': review.effectText,
+    //   'sideEffectText': review.sideEffectText,
+    //   'overallText': review.overallText,
+    //   'itemName': review.itemName,
+    //   'reporterUid': FieldValue.arrayUnion([reporterUid]),
+    // });
   }
 
 
@@ -216,6 +237,53 @@ class ReviewService {
     });
   }
 
+
+  Stream<List<ReportReview>> getReport(String documentId) {
+    return reviewCollection
+    // .orderBy('registrationDate', descending: true)
+        .where("reviewDocumentId", isEqualTo: documentId)
+        .snapshots()
+        .map(_reportListFromSnapshot);
+  }
+
+  List<ReportReview> _reportListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return ReportReview(
+        reviewDocumentId: doc.data()['reviewDocumentId'] ?? '',
+        reportContent: doc.data()['reportContent'] ?? '',
+        effectText: doc.data()['effectText'] ?? '',
+        sideEffectText: doc.data()['sideEffectText'] ?? '',
+        overallText: doc.data()['overallText'] ?? '',
+        itemName: doc.data()['itemName'],
+        reporterUid: doc.data()['reporterUid'] ?? '',
+
+        //   reportContent: doc.data()['reportContent'] ?? '',
+        //   reportContent: doc.data()['reportContent'] ?? '',
+        //   reportContent: doc.data()['reportContent'] ?? '',
+        //
+        //
+        //
+        //   this.reviewDocumentId,
+        //   this.reportContent,
+        //   this.effectText,
+        //   this.sideEffectText,
+        //   this.overallText,
+        //   this.itemName,
+        //   this.reporterUid
+
+        // starRating: doc.data()['starRating'] ?? 0,
+        // noFavorite: doc.data()['noFavorite'] ?? 0,
+        // uid: doc.data()['uid'] ?? '',
+        // documentId: doc.id ?? '',
+        // registrationDate: doc.data()['registrationDate'],
+        // entpName: doc.data()['entpName'],
+        // seqNum: doc.data()['seqNum'],
+        // nickName: doc.data()['nickName'],
+        // reasonForTakingPill: doc.data()['reasonForTakingPill'],
+
+      );
+    }).toList();
+  }
 
 }
 

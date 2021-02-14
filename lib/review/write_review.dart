@@ -32,6 +32,7 @@ class _WriteReviewState extends State<WriteReview> {
   final myControllerEffect = TextEditingController();
   final myControllerSideEffect = TextEditingController();
   final myControllerOverall = TextEditingController();
+  TextEditingController reasonForTakingPillController = TextEditingController();
 
   @override
   void dispose() {
@@ -55,6 +56,7 @@ class _WriteReviewState extends State<WriteReview> {
   DateTime regDate = DateTime.now();
   String _entpName = ''; //약 제조사
   String _itemName = ''; //약 이름
+  String reasonForTakingPill = '';
 
   String starRatingText = '';
 
@@ -93,7 +95,8 @@ class _WriteReviewState extends State<WriteReview> {
       "registrationDate": DateTime.now(),
       "entpName": _entpName,
       "itemName": _itemName,
-      "nickName": nickName
+      "nickName": nickName,
+      "reasonForTakingPill":reasonForTakingPill
     });
   }
 
@@ -146,6 +149,7 @@ class _WriteReviewState extends State<WriteReview> {
                   //TODO: Bring pill information
                   _pillInfo(),
                   _rating(),
+                  _reasonForTakingPill(),
                   _effect(),
                   _sideEffect(),
                   _overallReview(),
@@ -451,6 +455,34 @@ class _WriteReviewState extends State<WriteReview> {
         ));
   }
 
+  Widget _reasonForTakingPill() {
+    return Container(
+//          height: 280,
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                  width: 0.8,
+                  color: Colors.grey[300],
+                ))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+//              crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text("어디가 아파서 사용하셨나요?",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: gray900, fontSize: 16)),
+            _textField("reason",reasonForTakingPillController),
+            // _exclusiveMultiButton(),
+            // writeReason(),
+            Container(height: 45,)
+            // _textField(myControllerEffect)
+          ],
+        ));
+  }
+
   Widget _effect() {
     return Container(
 //          height: 280,
@@ -581,6 +613,44 @@ class _WriteReviewState extends State<WriteReview> {
         ));
   }
 
+  Widget _textFieldForSideEffect(TextEditingController myControllerEffect) {
+    if (sideEffect == "no") {
+      // myControllerSideEffect.text = " ";
+      return Container();
+    } else {
+      return Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: 20,
+        ),
+        child: Container(
+            width: 400,
+//                height: 100,
+            child: TextField(
+                style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: gray750_activated,
+                ),
+                maxLength: 500,
+                controller: myControllerEffect,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                decoration: new InputDecoration(
+                  hintText: "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n",
+                  hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
+                    color: gray300_inactivated,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: gray75),
+                    borderRadius:
+                    const BorderRadius.all(const Radius.circular(4.0)),
+                  ),
+                  filled: true,
+                  fillColor: gray50,
+                ))
+        ),
+      );
+    }
+  }
+
   Widget _textField(String type, txtController) {
     String hintText;
     if (type == "effect")
@@ -588,13 +658,15 @@ class _WriteReviewState extends State<WriteReview> {
     else if (type == "sideEffect")
       hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
     else if (type == "overall")
-      hintText = "전체적인 만족도에 대한 후기를 남겨주세요\n(최소 10자 이상)\n";
+      hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
+    else if(type == "reason")
+      hintText = "키워드 하나를 입력해주세요  예시)치통\n";
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
       child: Container(
           child: TextField(
-              maxLength: 500,
+              maxLength: type == "reason" ? 10: 500,
               controller: txtController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
@@ -721,7 +793,7 @@ class _WriteReviewState extends State<WriteReview> {
                 ),
               ],
             ),
-            _textField("sideEffect", myControllerSideEffect)
+            _textFieldForSideEffect( myControllerSideEffect)
           ],
         ));
   }
@@ -765,30 +837,22 @@ class _WriteReviewState extends State<WriteReview> {
             effectText = myControllerEffect.text;
             sideEffectText = myControllerSideEffect.text;
             overallText = myControllerOverall.text;
+            reasonForTakingPill = reasonForTakingPillController.text;
 
-            if (overallText.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
-            if (sideEffectText.length < 10)
-              _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if (overallText.length < 10 && overallText.length > 0) _warning = "총평 리뷰를 10자 이상 작성해주세요";
+            if (sideEffectText.length < 10 && sideEffect == "yes")
+              _warning = "부작용에 대한 리뷰를 10자 이상 작성해주세요";
             if (sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
-            if (effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if (effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
             if (effect.isEmpty) _warning = "효과 별점을 등록해주세요";
             if (starRatingText.isEmpty) _warning = "별점을 등록해주세요";
 
-            if (overallText.length < 10 ||
-                sideEffectText.length < 10 ||
+            if (overallText.length < 10 && overallText.length > 0||
+                (sideEffectText.length < 10 && sideEffect == "yes") ||
                 effectText.length < 10 ||
                 sideEffect.isEmpty ||
                 effect.isEmpty ||
                 starRatingText.isEmpty)
-              // Fluttertoast.showToast(
-              //     msg: _warning,
-              //     toastLength: Toast.LENGTH_SHORT,
-              //     gravity: ToastGravity.BOTTOM,
-              //     timeInSecForIosWeb: 1,
-              //     backgroundColor: Colors.black,
-              //     textColor: Colors.white,
-              //     fontSize: 16.0
-              // );
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
                     _warning,
@@ -804,22 +868,6 @@ class _WriteReviewState extends State<WriteReview> {
               _registerReview(nickName);
               Navigator.pop(context);
               IYMYGotoSeeOrCheckDialog();
-              // IYMYShortCutDialog(
-              //   context: context,
-              //   dialogIcon: Icon(Icons.check, color: primary300_main),
-              //   boldBodyString: '',
-              //   normalBodyString: '리뷰 작성이 완료되었습니다',
-              //   topButtonName: '내가 작성한 리뷰 보러가기',
-              //   bottomButtonName: '확인',
-              //   onPressedTop: () {
-              //     Navigator.pop(context);
-              //     // Navigator.push(
-              //     //     context, MaterialPageRoute(builder: (context) => BottomBar() ));
-              //   },
-              //   onPressedBottom: () {
-              //     Navigator.pop(context);
-              //   },
-              // ).showWarning();
             }
           },
         ),

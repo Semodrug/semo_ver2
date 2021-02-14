@@ -238,12 +238,17 @@ class _MyReviewsState extends State<MyReviews> {
               padding: EdgeInsets.fromLTRB(60, 0, 16, 0),
               child: Column(
                 children: [
+                  ReviewBox(context: context, review: review, type: "reason"),
+                  Container(height: 6),
                   ReviewBox(context: context, review: review, type: "effect"),
-                  Container(height: 4),
+                  Container(height: 6),
                   ReviewBox(
                       context: context, review: review, type: "sideEffect"),
-                  Container(height: 4),
-                  ReviewBox(context: context, review: review, type: "overall"),
+                  Container(height: 6),
+
+                  review.overallText =="" ? Container() : ReviewBox(context: context, review: review, type: "overall"),
+                  review.overallText =="" ? Container() : Container(height:6),
+                  // ReviewBox(context: context, review: review, type: "overall"),
                 ],
               ),
             ),

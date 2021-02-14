@@ -78,8 +78,9 @@ class _GetRatingState extends State<GetRating> {
                                   color: gray750_activated,
                                   fontSize: 14
                               )),
+                          Container(height: 5,),
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               //#####
                               Row(
