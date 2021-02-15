@@ -16,11 +16,10 @@ import 'indicator.dart';
 //(1) 하이라이팅을 위함
 String _searchText = "";
 TextStyle posRes = TextStyle(
-    fontFamily: 'NotoSansKR',
-    fontSize: 12,
-    fontWeight: FontWeight.w800,
-    color: primary500_light_text
-),
+        fontFamily: 'NotoSansKR',
+        fontSize: 12,
+        fontWeight: FontWeight.w800,
+        color: primary500_light_text),
     negRes = TextStyle(
         fontFamily: 'NotoSansKR',
         fontSize: 12,
@@ -34,7 +33,6 @@ TextSpan searchMatch(String match) {
   var refinedMatch = match; // .toLowerCase();
   var refinedSearch = _searchText; // .toLowerCase();
   if (refinedMatch.contains(refinedSearch)) {
-
     if (refinedMatch.substring(0, refinedSearch.length) == refinedSearch) {
       return TextSpan(
         style: posRes,
@@ -96,7 +94,6 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-
   /*
   *  onPressed: () async {
                       if (actionCode == 'deleteSearchedList') {
@@ -115,15 +112,16 @@ class _SearchScreenState extends State<SearchScreen> {
                     },*/
 
   //전체삭제했을 때 dialog
-  void showWarning(BuildContext context, String bodyString, String leftButtonName,
-      String rightButtonName,  String uid) {
+  void showWarning(BuildContext context, String bodyString,
+      String leftButtonName, String rightButtonName, String uid) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           // title:
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -155,7 +153,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         primary: gray50,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
-                            side: BorderSide(color: gray50))),
+                            side: BorderSide(color: gray100))),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -177,20 +175,19 @@ class _SearchScreenState extends State<SearchScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: primary400_line))),
-                      onPressed:  () async {
-                           Navigator.of(context).pop();
-                          await FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(uid)
-                              .collection('searchList')
-                              .get()
-                              .then((snapshot) {
-                            for (DocumentSnapshot ds in snapshot.docs) {
-                              ds.reference.delete();
-                            }
-                          });
-                      }
-                      )
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(uid)
+                            .collection('searchList')
+                            .get()
+                            .then((snapshot) {
+                          for (DocumentSnapshot ds in snapshot.docs) {
+                            ds.reference.delete();
+                          }
+                        });
+                      })
                 ],
               )
             ],
@@ -222,7 +219,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Text(
             '검색 결과가 없습니다',
             style:
-            Theme.of(context).textTheme.headline5.copyWith(color: gray500),
+                Theme.of(context).textTheme.headline5.copyWith(color: gray500),
           )),
     );
   }
@@ -267,8 +264,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           .copyWith(fontSize: 13)),
                   onPressed: () {
                     //print('삭제되었음');
-                    showWarning(context, '전체 삭제 하시겠습니까?', '취소', '삭제',
-                         user.uid);
+                    showWarning(
+                        context, '정말 전체 삭제 하시겠어요?', '취소', '삭제', user.uid);
                   },
                 )
               ],
@@ -317,20 +314,21 @@ class _SearchScreenState extends State<SearchScreen> {
     QuerySnapshot _query;
     return GestureDetector(
         onTap: () async => {
-          _query = await userSearchList
-              .where('searchList', isEqualTo: _checkLongName(userDrug.itemName))
-              .get(),
-          if (_query.docs.length == 0)
-            {
-              addRecentSearchList(),
+              _query = await userSearchList
+                  .where('searchList',
+                      isEqualTo: _checkLongName(userDrug.itemName))
+                  .get(),
+              if (_query.docs.length == 0)
+                {
+                  addRecentSearchList(),
+                },
+              //Navigator.pop(context),
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReviewPage(userDrug.itemSeq),
+                  )),
             },
-          //Navigator.pop(context),
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ReviewPage(userDrug.itemSeq),
-              )),
-        },
         child: Container(
           padding: EdgeInsets.only(left: 16, bottom: 4),
           height: 40,
@@ -372,8 +370,7 @@ class _SearchScreenState extends State<SearchScreen> {
         // else
         else if (stream.data.isEmpty) {
           return _noResultContainer();
-        }
-        else {
+        } else {
           var streamFromAll = stream.data;
           return StreamBuilder<List<Drug>>(
               stream: DatabaseService() //categoryName: widget.categoryName
@@ -381,38 +378,47 @@ class _SearchScreenState extends State<SearchScreen> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
-                }
-                else {
+                } else {
                   var streamFromMatchStart = snapshot.data;
                   return StreamBuilder<List<SavedDrug>>(
                       stream: DatabaseService(
-                          uid: user.uid) //categoryName: widget.categoryName
+                              uid: user.uid) //categoryName: widget.categoryName
                           .setForSearchFromUser(searchVal, 30),
-                      builder: (context, snapshot){
+                      builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(child: CircularProgressIndicator());
-                        }
-                        else  return CustomScrollView(
-                          slivers: [
-                            SliverToBoxAdapter(
-                              child: Column(
-                                children: [
-                                  //유저가 가지고 있는 부분
-                                  _buildListOfAll(
-                                      context, streamFromAll, streamFromMatchStart, snapshot.data, 'USER'),
-                                  _buildListOfAll(
-                                      context, streamFromAll, streamFromMatchStart, snapshot.data, 'START'),
-                                  _buildListOfAll(context, streamFromAll, streamFromMatchStart,
-                                      snapshot.data, 'withoutUser'),
-                                ],
+                        } else
+                          return CustomScrollView(
+                            slivers: [
+                              SliverToBoxAdapter(
+                                child: Column(
+                                  children: [
+                                    //유저가 가지고 있는 부분
+                                    _buildListOfAll(
+                                        context,
+                                        streamFromAll,
+                                        streamFromMatchStart,
+                                        snapshot.data,
+                                        'USER'),
+                                    _buildListOfAll(
+                                        context,
+                                        streamFromAll,
+                                        streamFromMatchStart,
+                                        snapshot.data,
+                                        'START'),
+                                    _buildListOfAll(
+                                        context,
+                                        streamFromAll,
+                                        streamFromMatchStart,
+                                        snapshot.data,
+                                        'withoutUser'),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      }
-                  );
+                            ],
+                          );
+                      });
                 }
-
               });
         }
       },
@@ -420,12 +426,11 @@ class _SearchScreenState extends State<SearchScreen> {
     //}
   }
 
-  Widget _buildListOfAll(BuildContext context, List<Drug> drugs,  List<Drug> SADrugs, List<SavedDrug> userDrugs,
-      String type) {
+  Widget _buildListOfAll(BuildContext context, List<Drug> drugs,
+      List<Drug> SADrugs, List<SavedDrug> userDrugs, String type) {
     if (_searchText.length < 2) {
       return _noResultContainer();
     } else if (_searchText.length != 0) {
-
       //유저가 가지고 있는 약이 있을 때,
       if (!userDrugs.isEmpty) {
         if (type == 'USER') {
@@ -441,7 +446,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   Padding(
                     padding:
-                    const EdgeInsets.only(top: 12.0, left: 12, bottom: 4),
+                        const EdgeInsets.only(top: 12.0, left: 12, bottom: 4),
                     child: Row(
                       children: [
                         Icon(
@@ -489,13 +494,13 @@ class _SearchScreenState extends State<SearchScreen> {
                     }
                   }
                   return SearchResultTile(
-                    drug: SADrugs[index],);
+                    drug: SADrugs[index],
+                  );
                 },
               ),
             ],
           );
-        }
-        else if (type == 'withoutUser') {
+        } else if (type == 'withoutUser') {
           return ListView.builder(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
@@ -515,7 +520,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 }
               }
               return SearchResultTile(
-                drug: drugs[index],);
+                drug: drugs[index],
+              );
             },
           );
         }
@@ -532,13 +538,13 @@ class _SearchScreenState extends State<SearchScreen> {
               itemCount: SADrugs.length,
               itemBuilder: (context, index) {
                 return SearchResultTile(
-                  drug: SADrugs[index],);
+                  drug: SADrugs[index],
+                );
               },
             ),
           ],
         );
-      }
-      else if (type == 'withoutUser') {
+      } else if (type == 'withoutUser') {
         return ListView.builder(
           padding: EdgeInsets.zero,
           shrinkWrap: true,
@@ -552,11 +558,11 @@ class _SearchScreenState extends State<SearchScreen> {
               }
             }
             return SearchResultTile(
-              drug: drugs[index],);
+              drug: drugs[index],
+            );
           },
         );
-      }
-      else
+      } else
         return Container();
     }
   }
@@ -654,10 +660,12 @@ class _SearchScreenState extends State<SearchScreen> {
           slivers: [
             SliverToBoxAdapter(
               child: Column(
-                children: [Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: _searchBar(context),
-                )],
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: _searchBar(context),
+                  )
+                ],
               ),
             ),
             SliverToBoxAdapter(
@@ -714,8 +722,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               .where('searchList', isEqualTo: val)
                               .get();
                           if (_query.docs.length == 0) {
-                            if(searchList != '')
-                            addRecentSearchList();
+                            if (searchList != '') addRecentSearchList();
                           }
                           focusNode.unfocus();
                         }
@@ -725,56 +732,58 @@ class _SearchScreenState extends State<SearchScreen> {
                       autofocus: true,
                       controller: _filter,
                       decoration: InputDecoration(
-                          suffixIcon:  _filter.text.length > 0 ?  IconButton(
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              onPressed: () {
-                                setState(() {
-                                  _filter.clear();
-                                  _searchText = "";
-                                });
-                              },
-                            icon: Icon(
-                              Icons.cancel,
-                              size: 20,
-                              color: gray300_inactivated,
-                            ))
-                            : null,
+                          suffixIcon: _filter.text.length > 0
+                              ? IconButton(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  onPressed: () {
+                                    setState(() {
+                                      _filter.clear();
+                                      _searchText = "";
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.cancel,
+                                    size: 20,
+                                    color: gray300_inactivated,
+                                  ))
+                              : null,
                           //),
                           fillColor: gray50,
                           filled: true,
-                          prefixIcon:  SizedBox(
+                          prefixIcon: SizedBox(
                             height: 10,
                             width: 10,
                             child: Padding(
-                              padding: const EdgeInsets.only(top:4.0, bottom: 4),
-                              child: Image.asset('assets/icons/search_grey.png'),
+                              padding:
+                                  const EdgeInsets.only(top: 4.0, bottom: 4),
+                              child:
+                                  Image.asset('assets/icons/search_grey.png'),
                             ),
                           ),
-                          hintText: '두 글자 이상 입력해주세요',
+                          hintText: '약 이름을 두 글자 이상 입력해주세요',
                           hintStyle:
-                          Theme.of(context).textTheme.bodyText2.copyWith(
-                            color: gray300_inactivated,
-                          ),
+                              Theme.of(context).textTheme.bodyText2.copyWith(
+                                    color: gray300_inactivated,
+                                  ),
                           contentPadding: EdgeInsets.zero,
                           labelStyle:
-                          Theme.of(context).textTheme.bodyText2.copyWith(
-                            color: gray300_inactivated,
-                          ),
+                              Theme.of(context).textTheme.bodyText2.copyWith(
+                                    color: gray300_inactivated,
+                                  ),
                           focusedBorder: OutlineInputBorder(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(8)),
+                                  BorderRadius.all(Radius.circular(8)),
                               borderSide: BorderSide(color: gray75)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(8)),
+                                  BorderRadius.all(Radius.circular(8)),
                               borderSide: BorderSide(color: gray75)),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(
                                   style: BorderStyle.solid,
                                   width: 1.0,
                                   color: gray75),
-                              borderRadius: BorderRadius.circular(8.0))
-                      ),
+                              borderRadius: BorderRadius.circular(8.0))),
                     )),
               ],
             ),
@@ -792,36 +801,35 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 16.0,top: 10.0,right: 16.0, bottom: 10),
+              padding: const EdgeInsets.only(
+                  left: 16.0, top: 10.0, right: 16.0, bottom: 10),
               child: Container(
                 height: 35,
                 decoration: BoxDecoration(
                     color: gray75,
-                    borderRadius: BorderRadius.all(Radius.circular(4))
-                ),
+                    borderRadius: BorderRadius.all(Radius.circular(4))),
                 //color: gray75,
                 child: TabBar(
-                  labelStyle: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(color: gray750_activated,),
-                  unselectedLabelStyle: Theme.of(context)
-                      .textTheme
-                      .caption
-                      .copyWith( color: gray500),
-                  tabs: [
-                    Tab(
-                        child: Text(
-                          '전체 검색',
-                            style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
-                    Tab(
-                        child: Text(
-                          '나의 약 검색',
-                            style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
-                  ],
-
-                  indicator: CustomTabIndicator()
-                ),
+                    labelStyle: Theme.of(context).textTheme.subtitle2.copyWith(
+                          color: gray750_activated,
+                        ),
+                    unselectedLabelStyle: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(color: gray500),
+                    tabs: [
+                      Tab(
+                          child: Text('전체 검색',
+                              style: TextStyle(
+                                  color: gray750_activated,
+                                  fontFamily: 'NotoSansKR'))),
+                      Tab(
+                          child: Text('나의 약 검색',
+                              style: TextStyle(
+                                  color: gray750_activated,
+                                  fontFamily: 'NotoSansKR'))),
+                    ],
+                    indicator: CustomTabIndicator()),
               ),
             ),
             Container(
@@ -865,7 +873,8 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         GestureDetector(
           onTap: () async => {
-            _searchText = searchSnapshot.recent, _filter.text = _searchText,
+            _searchText = searchSnapshot.recent,
+            _filter.text = _searchText,
             updateRecentSearchList()
           },
           child: Container(

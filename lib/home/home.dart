@@ -84,7 +84,9 @@ class _HomePageState extends State<HomePage> {
         stream: DatabaseService(uid: user.uid).savedDrugs,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator(),);
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
           return _buildList(context, snapshot.data);
         });
@@ -92,7 +94,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildList(BuildContext context, List<SavedDrug> snapshot) {
     double mw = MediaQuery.of(context).size.width;
-    print('ㅇㅇㅇ'+mw.toString());
+    print('ㅇㅇㅇ' + mw.toString());
     num = 0;
     int check = 0;
     int count = snapshot.length;
@@ -141,14 +143,20 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(4.0),
                         ),
                         child: Center(
-                          child: Text(
-                            ' + 추가하기',
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(color: Colors.white,  ),
-                          )
-                        )),
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add, color: gray0_white, size: 16),
+                            Text(
+                              '추가하기',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(color: gray0_white),
+                            ),
+                            SizedBox(width: 2)
+                          ],
+                        ))),
                   ),
                 ],
               ),
@@ -158,22 +166,21 @@ class _HomePageState extends State<HomePage> {
         Divider(height: 3, thickness: 0.5, indent: 1, endIndent: 0),
         Expanded(
           child:
-          // ListView(
-          //   children:
-          //       snapshot.map((data) => _buildListItem(context, data)).toList(),
-          // ),
-          ListView.builder(
+              // ListView(
+              //   children:
+              //       snapshot.map((data) => _buildListItem(context, data)).toList(),
+              // ),
+              ListView.builder(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
-            itemCount: snapshot.length + 1 ,
+            itemCount: snapshot.length + 1,
             itemBuilder: (context, index) {
               check++;
-              if(check == snapshot.length + 1 ){
+              if (check == snapshot.length + 1) {
                 return Container(height: 30);
-              }
-              else
-              return _buildListItem(context, snapshot[index]);
+              } else
+                return _buildListItem(context, snapshot[index]);
             },
           ),
         ),
@@ -257,12 +264,11 @@ class _HomePageState extends State<HomePage> {
               builder: (context) => ReviewPage(data.itemSeq),
             ),
           ),
-        // //페이지 네비게이션 좌 --> 우
-        // Navigator.push(
-        // context,
-        // CupertinoPageRoute(builder: (_) => ReviewPage(data.itemSeq))
-        // )
-
+          // //페이지 네비게이션 좌 --> 우
+          // Navigator.push(
+          // context,
+          // CupertinoPageRoute(builder: (_) => ReviewPage(data.itemSeq))
+          // )
         },
         child: Container(
           decoration: BoxDecoration(
@@ -1121,12 +1127,19 @@ class _HomePageState extends State<HomePage> {
                         color: primary300_main,
                         borderRadius: BorderRadius.circular(4.0),
                       ),
-                      child: Text(
-                        ' + 추가하기',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: gray0_white),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add, color: gray0_white, size: 16),
+                          Text(
+                            '추가하기',
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(color: gray0_white),
+                          ),
+                          SizedBox(width: 2)
+                        ],
                       )),
                 ),
               ],

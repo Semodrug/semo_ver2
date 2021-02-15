@@ -148,20 +148,21 @@ class _ReviewPageState extends State<ReviewPage> {
     TheUser user = Provider.of<TheUser>(context);
     String filter = 'nothing';
     bool check = false;
-    if(widget.filter != null){
+    if (widget.filter != null) {
       filter = widget.filter;
       check = true;
     }
     String rankingCategory = 'notFromRanking';
-    if(widget.type != null){
+    if (widget.type != null) {
       rankingCategory = widget.type;
     }
 
-
-
     return Scaffold(
         backgroundColor: gray0_white,
-        appBar: check ? CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5, filter:filter, category:rankingCategory) : CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5),
+        appBar: check
+            ? CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5,
+                filter: filter, category: rankingCategory)
+            : CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.create),
             backgroundColor: Color(0xff00C2AE),
@@ -435,122 +436,143 @@ class _ReviewPageState extends State<ReviewPage> {
                                 .copyWith(
                                     color: gray300_inactivated, fontSize: 12))
                       ]),
-                      Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                        CategoryButton(str: drug.category),
-                        Expanded(
-                          child: Container(),
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            if (_isFavorite) {
-                              await DatabaseService(uid: user.uid)
-                                  .removeFromFavoriteList(drug.itemSeq);
-                            } else {
-                              IYMYShortCutDialog(
-                                context: context,
-                                dialogIcon:
-                                    Icon(Icons.favorite, color: warning),
-                                boldBodyString: '찜 목록',
-                                normalBodyString: '에 추가되었습니다',
-                                topButtonName: '바로가기',
-                                bottomButtonName: '확인',
-                                onPressedTop: () {
-                                  Navigator.pop(context);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MyFavorites()));
-                                },
-                                onPressedBottom: () {
-                                  Navigator.pop(context);
-                                },
-                              ).showWarning();
+                      Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Container(
+                                height: 24,
+                                child: CategoryButton(str: drug.category)),
+                            Expanded(
+                              child: Container(),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                if (_isFavorite) {
+                                  await DatabaseService(uid: user.uid)
+                                      .removeFromFavoriteList(drug.itemSeq);
+                                } else {
+                                  IYMYShortCutDialog(
+                                    context: context,
+                                    dialogIcon:
+                                        Icon(Icons.favorite, color: warning),
+                                    boldBodyString: '찜 목록',
+                                    normalBodyString: '에 추가되었습니다',
+                                    topButtonName: '바로가기',
+                                    bottomButtonName: '확인',
+                                    onPressedTop: () {
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MyFavorites()));
+                                    },
+                                    onPressedBottom: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ).showWarning();
 
-                              await DatabaseService(uid: user.uid)
-                                  .addToFavoriteList(drug.itemSeq);
-                              // _showFavoriteWell(context);
-                            }
-                          },
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: gray75),
-                              color: gray50,
-                              borderRadius: BorderRadius.circular(4.0),
+                                  await DatabaseService(uid: user.uid)
+                                      .addToFavoriteList(drug.itemSeq);
+                                  // _showFavoriteWell(context);
+                                }
+                              },
+                              child: Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: gray75),
+                                  color: gray50,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                child: Icon(
+                                  _isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: _isFavorite
+                                      ? warning
+                                      : gray300_inactivated,
+                                  size: 24,
+                                ),
+                              ),
                             ),
-                            child: Icon(
-                              _isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color:
-                                  _isFavorite ? warning : gray300_inactivated,
-                              size: 20,
+                            Container(
+                              width: 8,
                             ),
-                          ),
-                        ),
-                        Container(
-                          width: 8,
-                        ),
-                        ButtonTheme(
-                          minWidth: 20,
-                          height: 30,
-                          child: FlatButton(
-                            color: primary300_main,
-                            child: Text(
-                              '+ 담기',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .copyWith(
-                                    color: gray0_white,
-                                  ),
-                            ),
-                            onPressed: () {
-                              if (_isSaved) {
-                                IYMYShortCutDialog(
-                                  context: context,
-                                  dialogIcon: SizedBox(
-                                      width: 24,
-                                      height: 24,
-                                      child: Image.asset(
-                                          'assets/icons/warning_icon_primary.png')),
-                                  boldBodyString: '',
-                                  normalBodyString: '이미 저장한 약입니다',
-                                  topButtonName: '나의 약 보관함 바로가기',
-                                  bottomButtonName: '확인',
-                                  onPressedTop: () {
-                                    Navigator.pop(context);
+                            ButtonTheme(
+                              minWidth: 80,
+                              height: 36,
+                              child: FlatButton(
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                color: primary300_main,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.add,
+                                        color: gray0_white, size: 18),
+                                    Text(
+                                      '담기',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(color: gray0_white),
+                                    ),
+                                    SizedBox(width: 2)
+                                  ],
+                                ),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    side: BorderSide(
+                                      color: primary400_line,
+                                    )),
+                                onPressed: () {
+                                  if (_isSaved) {
+                                    IYMYShortCutDialog(
+                                      context: context,
+                                      dialogIcon: SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: Image.asset(
+                                              'assets/icons/warning_icon_primary.png')),
+                                      boldBodyString: '',
+                                      normalBodyString: '이미 저장한 약입니다',
+                                      topButtonName: '나의 약 보관함 바로가기',
+                                      bottomButtonName: '확인',
+                                      onPressedTop: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BottomBar()));
+                                      },
+                                      onPressedBottom: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ).showWarning();
+                                  } else {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => BottomBar()));
-                                  },
-                                  onPressedBottom: () {
-                                    Navigator.pop(context);
-                                  },
-                                ).showWarning();
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        fullscreenDialog: true,
-                                        builder: (context) {
-                                          if (drug.etcOtcCode == '일반의약품') {
-                                            return GeneralExpiration(
-                                              drugItemSeq: drug.itemSeq,
-                                            );
-                                          } else {
-                                            return PreparedExpiration(
-                                              drugItemSeq: drug.itemSeq,
-                                            );
-                                          }
-                                        }));
-                              }
-                            },
-                          ),
-                        ),
-                      ]),
+                                            fullscreenDialog: true,
+                                            builder: (context) {
+                                              if (drug.etcOtcCode == '일반의약품') {
+                                                return GeneralExpiration(
+                                                  drugItemSeq: drug.itemSeq,
+                                                );
+                                              } else {
+                                                return PreparedExpiration(
+                                                  drugItemSeq: drug.itemSeq,
+                                                );
+                                              }
+                                            }));
+                                  }
+                                },
+                              ),
+                            ),
+                          ]),
                     ]),
               ),
               SizedBox(
@@ -657,53 +679,41 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /* Top Information - Dialogs */
   Widget _warningMessage(context, carefulDiseaseList, drugItemSeq) {
-    return Stack(children: [
-      Container(
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-        decoration: BoxDecoration(
-          color: primary50,
-          borderRadius: BorderRadius.circular(4.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(width: 21), // 15 + 6
-            Container(
-              width: MediaQuery.of(context).size.width - 165,
-              child: RichText(
-                text: TextSpan(
-                  // Note: Styles for TextSpans must be explicitly defined.
-                  // Child text spans will inherit styles from parent
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(color: gray600, fontSize: 12),
-                  children: <TextSpan>[
-                    TextSpan(
-                        text: '${carefulDiseaseList.join(", ")}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: gray900, fontSize: 12)),
-                    TextSpan(text: '에 관한 주의사항이 있습니다.'),
-                  ],
-                ),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+      decoration: BoxDecoration(
+        // color: primary50,
+        color: Color(0xFFDCF5F2).withOpacity(0.87),
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+              width: 18,
+              height: 18,
+              child: Image.asset('assets/icons/warning_icon.png')),
+          Container(
+            width: MediaQuery.of(context).size.width - 165,
+            child: RichText(
+              text: TextSpan(
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    .copyWith(color: gray600, fontSize: 12),
+                children: <TextSpan>[
+                  TextSpan(
+                      text: '${carefulDiseaseList.join(", ")}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: gray900, fontSize: 12)),
+                  TextSpan(text: '에 관한 주의사항이 있습니다.'),
+                ],
               ),
             ),
-            SizedBox(width: 78), // 68 + 10 + 10
-          ],
-        ),
-      ),
-      Positioned(
-          left: 10,
-          top: 13,
-          width: 17,
-          height: 17,
-          child: Image.asset('assets/icons/warning_icon.png')),
-      Positioned(
-          right: 10,
-          bottom: 9,
-          child: SizedBox(
+          ),
+          SizedBox(
             width: 68,
             height: 24,
             child: ElevatedButton(
@@ -729,8 +739,10 @@ class _ReviewPageState extends State<ReviewPage> {
                             )));
               },
             ),
-          ))
-    ]);
+          )
+        ],
+      ),
+    );
   }
 
   /* Under Information */
@@ -762,7 +774,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       )),
             ),
             _drugDocInfo(context, drug.itemSeq, 'EE'),
-            SizedBox(height: 20),
+            SizedBox(height: 22),
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text('용법용량',
@@ -771,7 +783,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       )),
             ),
             _drugDocInfo(context, drug.itemSeq, 'UD'),
-            SizedBox(height: 20),
+            SizedBox(height: 22),
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Text('저장방법',
@@ -780,11 +792,24 @@ class _ReviewPageState extends State<ReviewPage> {
                       )),
             ),
             Text(drug.storageMethod,
-                style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      color: gray600,
-                  height: 1.6
-                    )),
-            SizedBox(height: 20),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .copyWith(color: gray600, height: 1.6)),
+            SizedBox(height: 22),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text('주요성분',
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: gray750_activated,
+                      )),
+            ),
+            Text(drug.mainItemIngr,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .copyWith(color: gray600, height: 1.6)),
+            SizedBox(height: 22),
             Row(
               children: [
                 Expanded(child: Container()),
@@ -848,10 +873,10 @@ class _ReviewPageState extends State<ReviewPage> {
                   itemCount: drug.eeDocData.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Text(drug.eeDocData[index].toString(),
-                        style: Theme.of(context).textTheme.bodyText2.copyWith(
-                              color: gray600,
-                          height:  1.6
-                            ));
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2
+                            .copyWith(color: gray600, height: 1.6));
                   });
             } else if (type == 'NB') {
               return ListView.builder(
@@ -872,10 +897,10 @@ class _ReviewPageState extends State<ReviewPage> {
                   itemCount: drug.udDocData.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Text(drug.udDocData[index].toString(),
-                        style: Theme.of(context).textTheme.bodyText2.copyWith(
-                              color: gray600,
-                            height:  1.6
-                            ));
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2
+                            .copyWith(color: gray600, height: 1.6));
                   });
             } else {
               return Container();

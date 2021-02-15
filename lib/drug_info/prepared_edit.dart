@@ -147,6 +147,8 @@ class _PreparedEditState extends State<PreparedEdit> {
             onPressed: () {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
+                  theme: DatePickerTheme(
+                      doneStyle: TextStyle(color: primary500_light_text)),
                   minTime: DateTime(2000, 1, 1),
                   maxTime: DateTime(2030, 12, 31),
                   onChanged: (date) {}, onConfirm: (date) async {
