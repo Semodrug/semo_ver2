@@ -644,19 +644,27 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWithGoToBack('약 검색', Icon(Icons.arrow_back), 3),
+      appBar: CustomAppBarWithGoToBack('약 검색', Icon(Icons.arrow_back), 0.5),
       backgroundColor: Colors.white,
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              children: [_searchBar(context)],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: _searchBar(context),
+                )],
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: _myTab(_searchText),
-          )
-        ],
+            SliverToBoxAdapter(
+              child: _myTab(_searchText),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -673,7 +681,6 @@ class _SearchScreenState extends State<SearchScreen> {
     Future<void> addRecentSearchList() async {
       try {
         assert(_searchText != null);
-        print('검색 결과 =====> $_searchText ');
         searchList = _searchText;
         assert(searchList != null);
         //검색어 저장 기능 array로 저장해주기
@@ -689,7 +696,7 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           Container(
             //
-            width: MediaQuery.of(context).size.width - 75,
+            width: MediaQuery.of(context).size.width - 32,
             height: 33,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -718,20 +725,21 @@ class _SearchScreenState extends State<SearchScreen> {
                       autofocus: true,
                       controller: _filter,
                       decoration: InputDecoration(
-                          suffixIcon: IconButton(
+                          suffixIcon:  _filter.text.length > 0 ?  IconButton(
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              onPressed: () {
+                                setState(() {
+                                  _filter.clear();
+                                  _searchText = "";
+                                });
+                              },
                             icon: Icon(
                               Icons.cancel,
                               size: 20,
                               color: gray300_inactivated,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _filter.clear();
-                                _searchText = "";
-                              });
-                            },
-                          ),
+                            ))
+                            : null,
+                          //),
                           fillColor: gray50,
                           filled: true,
                           prefixIcon:  SizedBox(
@@ -771,24 +779,6 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left:8.0,top: 0, right:10),
-            child: SizedBox(
-              width: 40,
-              child: FlatButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    '취소',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        .copyWith(color: gray700),
-                  )),
-            ),
-          )
         ],
       ),
     );
