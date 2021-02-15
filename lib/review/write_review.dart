@@ -15,6 +15,7 @@ import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/review_pill_info.dart';
 import 'package:semo_ver2/shared/shortcut_dialog.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
+import 'package:semo_ver2/shared/textfield.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'review.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -661,12 +662,15 @@ class _WriteReviewState extends State<WriteReview> {
       hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
     else if(type == "reason")
       hintText = "키워드 하나를 입력해주세요  예시)치통\n";
-
+    double bottom = 20;
+    if(type == "overall")
+      bottom += 70;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+      // padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+      padding: EdgeInsets.fromLTRB(0, 20, 0, bottom),
       child: Container(
           child: TextField(
-              maxLength: type == "reason" ? 10: 500,
+              maxLength: 500,
               controller: txtController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
@@ -818,6 +822,7 @@ class _WriteReviewState extends State<WriteReview> {
                     .headline5
                     .copyWith(color: gray900, fontSize: 16)),
             _textField("overall", myControllerOverall),
+            // ReviewTextField(type: "overall", txtController: myControllerOverall),
             Padding(padding: EdgeInsets.only(top: 25)),
           ],
         ));

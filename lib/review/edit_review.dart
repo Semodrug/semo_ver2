@@ -849,51 +849,6 @@ class _EditReviewState extends State<EditReview> {
   }
 
 
-  Widget _textField(String type, TextEditingController myControllerEffect) {
-    String hintText;
-    if (type == "effect")
-      hintText = "효과에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
-    else if (type == "sideEffect")
-      hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
-    else if (type == "overall")
-      hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
-    else if(type == "reason")
-      hintText = "키워드 하나를 입력해주세요  예시)치통\n";
-
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: 20,
-      ),
-      child: Container(
-          width: 400,
-//                height: 100,
-          child: TextField(
-              style: Theme.of(context).textTheme.bodyText2.copyWith(
-                color: gray750_activated,
-              ),
-              maxLength: type =="reason" ? 10 : 500,
-              decoration: new InputDecoration(
-                hintText: hintText,
-                hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
-                  color: gray300_inactivated,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: gray75),
-                  borderRadius:
-                  const BorderRadius.all(const Radius.circular(4.0)),
-                ),
-                filled: true,
-                fillColor: gray50,
-              ),
-              controller: myControllerEffect,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              // dd
-          )
-      ),
-    );
-  }
-
   Widget _sideEffect(Review review) {
     return Container(
 //          height: 280,
@@ -997,6 +952,55 @@ class _EditReviewState extends State<EditReview> {
             _textFieldForSideEffect(myControllerSideEffect)
           ],
         ));
+  }
+
+  Widget _textField(String type, TextEditingController myControllerEffect) {
+    String hintText;
+    if (type == "effect")
+      hintText = "효과에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
+    else if (type == "sideEffect")
+      hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
+    else if (type == "overall")
+      hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
+    else if(type == "reason")
+      hintText = "키워드 하나를 입력해주세요  예시)치통\n";
+    double bottom;
+    if(type == "overall")
+      bottom += 70;
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 20, 0, bottom),
+      // padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+      // padding: EdgeInsets.symmetric(
+      //   vertical: 20,
+      // ),
+      child: Container(
+          width: 400,
+//                height: 100,
+          child: TextField(
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                color: gray750_activated,
+              ),
+              maxLength: type =="reason" ? 10 : 500,
+              decoration: new InputDecoration(
+                hintText: hintText,
+                hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: gray300_inactivated,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: gray75),
+                  borderRadius:
+                  const BorderRadius.all(const Radius.circular(4.0)),
+                ),
+                filled: true,
+                fillColor: gray50,
+              ),
+              controller: myControllerEffect,
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              // dd
+          )
+      ),
+    );
   }
 
   Widget _overallReview(Review review) {
