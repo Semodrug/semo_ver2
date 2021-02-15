@@ -15,6 +15,7 @@ import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/review_pill_info.dart';
 import 'package:semo_ver2/shared/shortcut_dialog.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
+import 'package:semo_ver2/shared/textfield.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'review.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,6 +33,7 @@ class _WriteReviewState extends State<WriteReview> {
   final myControllerEffect = TextEditingController();
   final myControllerSideEffect = TextEditingController();
   final myControllerOverall = TextEditingController();
+  TextEditingController reasonForTakingPillController = TextEditingController();
 
   @override
   void dispose() {
@@ -55,6 +57,7 @@ class _WriteReviewState extends State<WriteReview> {
   DateTime regDate = DateTime.now();
   String _entpName = ''; //약 제조사
   String _itemName = ''; //약 이름
+  String reasonForTakingPill = '';
 
   String starRatingText = '';
 
@@ -93,7 +96,8 @@ class _WriteReviewState extends State<WriteReview> {
       "registrationDate": DateTime.now(),
       "entpName": _entpName,
       "itemName": _itemName,
-      "nickName": nickName
+      "nickName": nickName,
+      "reasonForTakingPill":reasonForTakingPill
     });
   }
 
@@ -116,7 +120,25 @@ class _WriteReviewState extends State<WriteReview> {
     TheUser user = Provider.of<TheUser>(context);
     return Scaffold(
         backgroundColor: gray0_white,
-        appBar: CustomAppBarWithGoToBack('리뷰 쓰기', Icon(Icons.close), 3),
+        // appBar: CustomAppBarWithGoToBack('리뷰 쓰기', Icon(Icons.close), 3),
+        appBar: AppBar(
+          title: Text(
+            "리뷰 쓰기",
+            style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+          ),
+          elevation: 0.5,
+          titleSpacing: 0,
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Icon(Icons.close),
+            color: primary300_main,
+            onPressed: () {
+              _IYMYCancleConfirmReportDialog();
+              // Navigator.pop(context);
+            },
+          ),
+        ),
         body: ChangeNotifierProvider(
             create: (context) => Review(),
             child: GestureDetector(
@@ -128,6 +150,7 @@ class _WriteReviewState extends State<WriteReview> {
                   //TODO: Bring pill information
                   _pillInfo(),
                   _rating(),
+                  _reasonForTakingPill(),
                   _effect(),
                   _sideEffect(),
                   _overallReview(),
@@ -384,13 +407,11 @@ class _WriteReviewState extends State<WriteReview> {
               itemCount: 5,
 //              unratedColor: Colors.grey[500],
               unratedColor: gray75,
-              itemPadding: EdgeInsets.symmetric(horizontal: 0.5),
+              itemPadding: EdgeInsets.symmetric(horizontal: 4),
               itemBuilder: (context, _) =>
-                  Icon(Icons.star, color: primary300_main),
-              // ImageIcon(
-              //   AssetImage('assets/icons/rating_star.png'),
-              //   color: primary300_main,
-              // ),
+                  // Icon(Icons.star, color: primary300_main),
+              Image.asset('assets/icons/rating_star.png',
+                width: 28, height: 28,),
 
               onRatingUpdate: (rating) {
                 starRating = rating;
@@ -416,7 +437,7 @@ class _WriteReviewState extends State<WriteReview> {
                 children: <TextSpan>[
                   TextSpan(
                     text: starRatingText.isEmpty
-                        ? "선택하세요"
+                        ? "평가해주세요"
                         : '${starRatingText.split(" ")[0]}',
                     style: Theme.of(context).textTheme.caption.copyWith(
                         color: primary600_bold_text,
@@ -431,6 +452,34 @@ class _WriteReviewState extends State<WriteReview> {
                 ],
               ),
             ),
+          ],
+        ));
+  }
+
+  Widget _reasonForTakingPill() {
+    return Container(
+//          height: 280,
+        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                  width: 0.8,
+                  color: Colors.grey[300],
+                ))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+//              crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text("어디가 아파서 사용하셨나요?",
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: gray900, fontSize: 16)),
+            _textField("reason",reasonForTakingPillController),
+            // _exclusiveMultiButton(),
+            // writeReason(),
+            Container(height: 45,)
+            // _textField(myControllerEffect)
           ],
         ));
   }
@@ -565,6 +614,44 @@ class _WriteReviewState extends State<WriteReview> {
         ));
   }
 
+  Widget _textFieldForSideEffect(TextEditingController myControllerEffect) {
+    if (sideEffect == "no") {
+      // myControllerSideEffect.text = " ";
+      return Container();
+    } else {
+      return Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: 20,
+        ),
+        child: Container(
+            width: 400,
+//                height: 100,
+            child: TextField(
+                style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: gray750_activated,
+                ),
+                maxLength: 500,
+                controller: myControllerEffect,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                decoration: new InputDecoration(
+                  hintText: "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n",
+                  hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
+                    color: gray300_inactivated,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: gray75),
+                    borderRadius:
+                    const BorderRadius.all(const Radius.circular(4.0)),
+                  ),
+                  filled: true,
+                  fillColor: gray50,
+                ))
+        ),
+      );
+    }
+  }
+
   Widget _textField(String type, txtController) {
     String hintText;
     if (type == "effect")
@@ -572,10 +659,15 @@ class _WriteReviewState extends State<WriteReview> {
     else if (type == "sideEffect")
       hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
     else if (type == "overall")
-      hintText = "전체적인 만족도에 대한 후기를 남겨주세요\n(최소 10자 이상)\n";
-
+      hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
+    else if(type == "reason")
+      hintText = "키워드 하나를 입력해주세요  예시)치통\n";
+    double bottom = 20;
+    if(type == "overall")
+      bottom += 70;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+      // padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+      padding: EdgeInsets.fromLTRB(0, 20, 0, bottom),
       child: Container(
           child: TextField(
               maxLength: 500,
@@ -705,7 +797,7 @@ class _WriteReviewState extends State<WriteReview> {
                 ),
               ],
             ),
-            _textField("sideEffect", myControllerSideEffect)
+            _textFieldForSideEffect( myControllerSideEffect)
           ],
         ));
   }
@@ -730,6 +822,7 @@ class _WriteReviewState extends State<WriteReview> {
                     .headline5
                     .copyWith(color: gray900, fontSize: 16)),
             _textField("overall", myControllerOverall),
+            // ReviewTextField(type: "overall", txtController: myControllerOverall),
             Padding(padding: EdgeInsets.only(top: 25)),
           ],
         ));
@@ -749,30 +842,22 @@ class _WriteReviewState extends State<WriteReview> {
             effectText = myControllerEffect.text;
             sideEffectText = myControllerSideEffect.text;
             overallText = myControllerOverall.text;
+            reasonForTakingPill = reasonForTakingPillController.text;
 
-            if (overallText.length < 10) _warning = "총평 리뷰를 10자 이상 작성해주세요";
-            if (sideEffectText.length < 10)
-              _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if (overallText.length < 10 && overallText.length > 0) _warning = "총평 리뷰를 10자 이상 작성해주세요";
+            if (sideEffectText.length < 10 && sideEffect == "yes")
+              _warning = "부작용에 대한 리뷰를 10자 이상 작성해주세요";
             if (sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
-            if (effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if (effectText.length < 10) _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
             if (effect.isEmpty) _warning = "효과 별점을 등록해주세요";
             if (starRatingText.isEmpty) _warning = "별점을 등록해주세요";
 
-            if (overallText.length < 10 ||
-                sideEffectText.length < 10 ||
+            if (overallText.length < 10 && overallText.length > 0||
+                (sideEffectText.length < 10 && sideEffect == "yes") ||
                 effectText.length < 10 ||
                 sideEffect.isEmpty ||
                 effect.isEmpty ||
                 starRatingText.isEmpty)
-              // Fluttertoast.showToast(
-              //     msg: _warning,
-              //     toastLength: Toast.LENGTH_SHORT,
-              //     gravity: ToastGravity.BOTTOM,
-              //     timeInSecForIosWeb: 1,
-              //     backgroundColor: Colors.black,
-              //     textColor: Colors.white,
-              //     fontSize: 16.0
-              // );
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
                     _warning,
@@ -788,22 +873,6 @@ class _WriteReviewState extends State<WriteReview> {
               _registerReview(nickName);
               Navigator.pop(context);
               IYMYGotoSeeOrCheckDialog();
-              // IYMYShortCutDialog(
-              //   context: context,
-              //   dialogIcon: Icon(Icons.check, color: primary300_main),
-              //   boldBodyString: '',
-              //   normalBodyString: '리뷰 작성이 완료되었습니다',
-              //   topButtonName: '내가 작성한 리뷰 보러가기',
-              //   bottomButtonName: '확인',
-              //   onPressedTop: () {
-              //     Navigator.pop(context);
-              //     // Navigator.push(
-              //     //     context, MaterialPageRoute(builder: (context) => BottomBar() ));
-              //   },
-              //   onPressedBottom: () {
-              //     Navigator.pop(context);
-              //   },
-              // ).showWarning();
             }
           },
         ),
@@ -901,5 +970,124 @@ class _WriteReviewState extends State<WriteReview> {
         );
       },
     );
+  }
+
+
+
+  Future<void> _IYMYCancleConfirmReportDialog() async {
+    User user = FirebaseAuth.instance.currentUser;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 16),
+              /* BODY */
+              Text("저장하지 않고 나가시겠어요?",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: gray700)),
+              SizedBox(height: 28),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  /* LEFT ACTION BUTTON */
+                  ElevatedButton(
+                    child: Text(
+                      "취소",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: primary400_line),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(120, 40),
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        elevation: 0,
+                        primary: gray50,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            side: BorderSide(color: gray75))),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(width: 16),
+                  /* RIGHT ACTION BUTTON */
+                  ElevatedButton(
+                      child: Text(
+                        "확인",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: gray0_white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(120, 40),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          elevation: 0,
+                          primary: primary300_main,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(color: primary400_line))),
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      }
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+
+
+
+//     return showDialog<void>(
+//       context: context,
+//       barrierDismissible: false, // user must tap button!
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+// //          title: Center(child: Text('AlertDialog Title')),
+//           content: SingleChildScrollView(
+//             child: ListBody(
+//               children: <Widget>[
+//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
+//                 SizedBox(height: 20),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                   children: [
+//                     TextButton(
+//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () {
+//                         Navigator.of(context).pop();
+//                       },
+//                     ),
+//                     TextButton(
+//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
+//                       onPressed: () async {
+//                         Navigator.of(context).pop();
+//                         await ReviewService(documentId: record.documentId).deleteReviewData();
+//                       },
+//                     ),
+//                   ],
+//                 )
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
   }
 }

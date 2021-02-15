@@ -37,8 +37,10 @@ String entpName;
 class ReviewPage extends StatefulWidget {
   final String drugItemSeq;
   String fromRankingTile = '';
+  final String filter;
+  final String type;
 
-  ReviewPage(this.drugItemSeq, {this.fromRankingTile});
+  ReviewPage(this.drugItemSeq, {this.fromRankingTile, this.filter, this.type});
 
   @override
   _ReviewPageState createState() => _ReviewPageState();
@@ -144,10 +146,22 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
+    String filter = 'nothing';
+    bool check = false;
+    if(widget.filter != null){
+      filter = widget.filter;
+      check = true;
+    }
+    String rankingCategory = 'notFromRanking';
+    if(widget.type != null){
+      rankingCategory = widget.type;
+    }
+
+
 
     return Scaffold(
         backgroundColor: gray0_white,
-        appBar: CustomAppBarWithGoToBack('약 정보', Icon(Icons.arrow_back), 3),
+        appBar: check ? CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5, filter:filter, category:rankingCategory) : CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.create),
             backgroundColor: Color(0xff00C2AE),
@@ -303,8 +317,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                 else if (_scrollController.position.pixels *
                                         1.0 >=
                                     _getReviewSizes()) pillInfoTab = false;
-                                print(pillInfoTab);
-                                print(notification.metrics.pixels);
+                                // print(pillInfoTab);
+                                // print(notification.metrics.pixels);
                                 //print(_scrollController.position.pixels);
                               },
                             ),
@@ -740,25 +754,35 @@ class _ReviewPageState extends State<ReviewPage> {
                     drug.itemSeq)
                 : Container(),
             _isCareful ? SizedBox(height: 20) : Container(),
-            Text('효능효과',
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      color: gray750_activated,
-                    )),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text('효능효과',
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: gray750_activated,
+                      )),
+            ),
             _drugDocInfo(context, drug.itemSeq, 'EE'),
             SizedBox(height: 20),
-            Text('용법용량',
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      color: gray750_activated,
-                    )),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text('용법용량',
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: gray750_activated,
+                      )),
+            ),
             _drugDocInfo(context, drug.itemSeq, 'UD'),
             SizedBox(height: 20),
-            Text('저장방법',
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      color: gray750_activated,
-                    )),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text('저장방법',
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: gray750_activated,
+                      )),
+            ),
             Text(drug.storageMethod,
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       color: gray600,
+                  height: 1.6
                     )),
             SizedBox(height: 20),
             Row(
@@ -826,6 +850,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     return Text(drug.eeDocData[index].toString(),
                         style: Theme.of(context).textTheme.bodyText2.copyWith(
                               color: gray600,
+                          height:  1.6
                             ));
                   });
             } else if (type == 'NB') {
@@ -849,6 +874,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     return Text(drug.udDocData[index].toString(),
                         style: Theme.of(context).textTheme.bodyText2.copyWith(
                               color: gray600,
+                            height:  1.6
                             ));
                   });
             } else {

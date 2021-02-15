@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/home/search_screen.dart';
+import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class CustomAppBarWithGoToBack extends StatelessWidget
@@ -37,6 +38,81 @@ class CustomAppBarWithGoToBack extends StatelessWidget
         },
       ),
     );
+  }
+}
+
+class CustomAppBarWithGoToRanking extends StatelessWidget
+    with PreferredSizeWidget {
+  final Size preferredSize;
+
+  final String title;
+  final Icon customIcon;
+  final double elevation;
+  final String filter;
+  final String category;
+
+  CustomAppBarWithGoToRanking(
+      this.title,
+      this.customIcon,
+      this.elevation,
+      {
+      this.filter,
+      this.category,
+        Key key,
+      })  : preferredSize = Size.fromHeight(56.0),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+
+    if(filter != null){
+      return AppBar(
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+        ),
+        elevation: elevation,
+        titleSpacing: 0,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: customIcon,
+          color: primary300_main,
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  // TestRanking(categoryName: numCategory[index] + categories[index])
+                  RankingContentPage(
+                    categoryName: category, filter: filter,)
+              ),
+            );
+          },
+        ),
+      );
+    }
+    else {
+      return AppBar(
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+        ),
+        elevation: elevation,
+        titleSpacing: 0,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: customIcon,
+          color: primary300_main,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      );
+    }
+
   }
 }
 

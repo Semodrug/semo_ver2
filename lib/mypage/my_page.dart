@@ -35,7 +35,7 @@ class _MyPageState extends State<MyPage> {
     return (user == null)
         ? Loading()
         : Scaffold(
-            appBar: CustomAppBarWithGoToBack('마이페이지', Icon(Icons.close), 3),
+            appBar: CustomAppBarWithGoToBack('마이페이지', Icon(Icons.close), 0.5),
             backgroundColor: Colors.white,
             body: StreamBuilder<UserData>(
               stream: DatabaseService(uid: user.uid).userData,

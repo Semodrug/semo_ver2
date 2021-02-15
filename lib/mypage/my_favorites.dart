@@ -25,7 +25,7 @@ class _MyFavoritesState extends State<MyFavorites> {
     TheUser user = Provider.of<TheUser>(context);
 
     return Scaffold(
-        appBar: CustomAppBarWithGoToBack('찜', Icon(Icons.arrow_back), 3),
+        appBar: CustomAppBarWithGoToBack('찜', Icon(Icons.arrow_back), 0.5),
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
@@ -46,6 +46,26 @@ class _MyFavoritesState extends State<MyFavorites> {
                           color: gray75,
                           height: 1,
                         ),
+
+                        favoriteList.length == 0 ?
+                        Container(
+                            height: 310,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 30,
+                                ),
+                                Image.asset(
+                                  'assets/images/no_review.png',
+                                ),
+                                Container(
+                                  height: 10,
+                                ),
+                                Text("아직 찜한 약 없어요")
+                              ],
+                            ))
+                        :
                         ListView.builder(
                             shrinkWrap: true,
                             physics: const ClampingScrollPhysics(),
@@ -63,11 +83,6 @@ class _MyFavoritesState extends State<MyFavorites> {
           ],
         ));
   }
-
-  // StreamBuilder<Drug>(
-  // stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
-  // builder: (context, snapshot) {
-  // if (snapshot.hasData) {
   Widget _favorite(context, favorite) {
     TheUser user = Provider.of<TheUser>(context);
 
@@ -97,15 +112,6 @@ class _MyFavoritesState extends State<MyFavorites> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      //   Column(
-                      //     children: [
-                      //       SizedBox(
-                      //         height: 64, width: 88,
-                      //         child: DrugImage(drugItemSeq: favorite),
-                      //       ),
-                      //       Container(height: 10,),
-                      //     ],
-                      //   ),
                       Container(
                         width: 88,
                         child: DrugImage(drugItemSeq: favorite),
@@ -202,10 +208,12 @@ class _MyFavoritesState extends State<MyFavorites> {
                             Expanded(child: Container()),
                             IconButton(
                               padding: EdgeInsets.only(right: 0),
-                              icon: ImageIcon(
-                                AssetImage('assets/icons/small_x.png'),
-                                // color: primary400_line,
-                              ),
+                              icon: Icon(Icons.close, color: gray500,
+                              size: 18),
+                              // icon: ImageIcon(
+                              //   AssetImage('assets/icons/small_x.png'),
+                              //   // color: primary400_line,
+                              // ),
                               onPressed: () {
                                 _showDeleteDialog(drug, user);
                               },

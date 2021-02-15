@@ -37,7 +37,7 @@ class _MyReviewsState extends State<MyReviews> {
     TheUser user = Provider.of<TheUser>(context);
 
     return Scaffold(
-        appBar: CustomAppBarWithGoToBack('리뷰', Icon(Icons.arrow_back), 3),
+        appBar: CustomAppBarWithGoToBack('리뷰', Icon(Icons.arrow_back), 0.5),
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
@@ -51,12 +51,32 @@ class _MyReviewsState extends State<MyReviews> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-                          child: Text("리뷰" + reviews.length.toString() + "개"),
+                          child: Text("리뷰 " + reviews.length.toString() + "개"),
                         ),
                         Divider(
                           color: gray75,
                           height: 1,
                         ),
+
+                        reviews.length == 0
+                            ? Container(
+                            height: 310,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 30,
+                                ),
+                                Image.asset(
+                                  'assets/images/no_review.png',
+                                ),
+                                Container(
+                                  height: 10,
+                                ),
+                                Text("아직 작성된 리뷰가 없어요")
+                              ],
+                            ))
+                            : // ReviewList(_searchText, "all", widget.drugItemSeq),
                         ListView.builder(
                             shrinkWrap: true,
                             physics: const ClampingScrollPhysics(),
@@ -218,12 +238,17 @@ class _MyReviewsState extends State<MyReviews> {
               padding: EdgeInsets.fromLTRB(60, 0, 16, 0),
               child: Column(
                 children: [
+                  ReviewBox(context: context, review: review, type: "reason"),
+                  Container(height: 6),
                   ReviewBox(context: context, review: review, type: "effect"),
-                  Container(height: 4),
+                  Container(height: 6),
                   ReviewBox(
                       context: context, review: review, type: "sideEffect"),
-                  Container(height: 4),
-                  ReviewBox(context: context, review: review, type: "overall"),
+                  Container(height: 6),
+
+                  review.overallText =="" ? Container() : ReviewBox(context: context, review: review, type: "overall"),
+                  review.overallText =="" ? Container() : Container(height:6),
+                  // ReviewBox(context: context, review: review, type: "overall"),
                 ],
               ),
             ),
