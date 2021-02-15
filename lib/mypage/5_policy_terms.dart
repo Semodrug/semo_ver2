@@ -11,7 +11,7 @@ class _PolicyTermPageState extends State<PolicyTermPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBarWithGoToBack('이용약관', Icon(Icons.arrow_back), 3),
+        appBar: CustomAppBarWithGoToBack('이용약관', Icon(Icons.arrow_back), 0.5),
         backgroundColor: Colors.white,
         body: Text('이용약관 페이지'));
   }

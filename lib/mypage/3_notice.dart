@@ -14,7 +14,7 @@ class _NoticePageState extends State<NoticePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWithGoToBack('공지사항', Icon(Icons.arrow_back), 3),
+      appBar: CustomAppBarWithGoToBack('공지사항', Icon(Icons.arrow_back), 0.5),
       backgroundColor: Colors.white,
       body: StreamBuilder(
         stream: DatabaseService().noticeData,

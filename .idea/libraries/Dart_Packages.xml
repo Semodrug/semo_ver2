@@ -16,7 +16,7 @@
             </list>
           </value>
         </entry>
-        <entry key="args">
+        <entry key="async">
           <value>
             <list>
               <option value="$USER_HOME$/Downloads/flutter/.pub-cache/hosted/pub.dartlang.org/args-1.6.0/lib" />

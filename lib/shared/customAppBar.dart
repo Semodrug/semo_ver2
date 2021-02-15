@@ -52,20 +52,18 @@ class CustomAppBarWithGoToRanking extends StatelessWidget
   final String category;
 
   CustomAppBarWithGoToRanking(
-      this.title,
-      this.customIcon,
-      this.elevation,
-      {
-      this.filter,
-      this.category,
-        Key key,
-      })  : preferredSize = Size.fromHeight(56.0),
+    this.title,
+    this.customIcon,
+    this.elevation, {
+    this.filter,
+    this.category,
+    Key key,
+  })  : preferredSize = Size.fromHeight(56.0),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
-    if(filter != null){
+    if (filter != null) {
       return AppBar(
         title: Text(
           title,
@@ -84,16 +82,16 @@ class CustomAppBarWithGoToRanking extends StatelessWidget
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                  // TestRanking(categoryName: numCategory[index] + categories[index])
-                  RankingContentPage(
-                    categoryName: category, filter: filter,)
-              ),
+                      // TestRanking(categoryName: numCategory[index] + categories[index])
+                      RankingContentPage(
+                        categoryName: category,
+                        filter: filter,
+                      )),
             );
           },
         ),
       );
-    }
-    else {
+    } else {
       return AppBar(
         title: Text(
           title,
@@ -112,7 +110,6 @@ class CustomAppBarWithGoToRanking extends StatelessWidget
         ),
       );
     }
-
   }
 }
 
@@ -182,7 +179,7 @@ class CustomAppBarBarcode extends StatelessWidget with PreferredSizeWidget {
         '바코드 인식',
         style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
       ),
-      elevation: 3,
+      elevation: 0.5,
       titleSpacing: 0,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
