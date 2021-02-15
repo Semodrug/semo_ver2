@@ -33,17 +33,8 @@ class RankingTile extends StatelessWidget {
       return newName;
     }
 
-    //디자이너님이 1-3위까지는 위를 붙이고, 4위부터는 그냥 숫자로만
+    //디자이너님이 그냥 숫자로만
     Widget _upToThree(index) {
-      if (index < 4) {
-        return Center(
-          child: Text('${index.toString()}위',
-              style: Theme.of(context)
-                  .textTheme
-                  .overline
-                  .copyWith(fontSize: 10, color: gray750_activated)),
-        );
-      } else
         return Center(
           child: Text(index.toString(),
               style: Theme.of(context)

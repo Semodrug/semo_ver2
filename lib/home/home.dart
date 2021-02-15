@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -67,40 +68,40 @@ class _HomePageState extends State<HomePage> {
 
     if (widget.appBarForSearch == 'search') {
       return Scaffold(
-        appBar: AppBar(
-          // centerTitle: true,
-          automaticallyImplyLeading: false,
-          title: Text(
-            '이약모약',
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.person,
-                color: Colors.teal[200],
-              ),
-            ),
-            //for test home
-          ],
-
-          backgroundColor: Colors.white,
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: <Color>[
-                  Color(0xFFE9FFFB),
-                  Color(0xFFE9FFFB),
-                  Color(0xFFFFFFFF),
-                ])),
-          ),
-        ),
+        // appBar: AppBar(
+        //   // centerTitle: true,
+        //   automaticallyImplyLeading: false,
+        //   title: Text(
+        //     '이약모약',
+        //     style: TextStyle(
+        //         fontSize: 20.0,
+        //         fontWeight: FontWeight.bold,
+        //         color: Colors.black),
+        //   ),
+        //   actions: [
+        //     IconButton(
+        //       icon: Icon(
+        //         Icons.person,
+        //         color: Colors.teal[200],
+        //       ),
+        //     ),
+        //     //for test home
+        //   ],
+        //
+        //   backgroundColor: Colors.white,
+        //   elevation: 0,
+        //   flexibleSpace: Container(
+        //     decoration: BoxDecoration(
+        //         gradient: LinearGradient(
+        //             begin: Alignment.topCenter,
+        //             end: Alignment.bottomCenter,
+        //             colors: <Color>[
+        //           Color(0xFFE9FFFB),
+        //           Color(0xFFE9FFFB),
+        //           Color(0xFFFFFFFF),
+        //         ])),
+        //   ),
+        // ),
         backgroundColor: Colors.white,
         body: _buildBody(context),
       );
@@ -119,15 +120,17 @@ class _HomePageState extends State<HomePage> {
         stream: DatabaseService(uid: user.uid).savedDrugs,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return LinearProgressIndicator();
+            return Center(child: CircularProgressIndicator(),);
           }
           return _buildList(context, snapshot.data);
         });
   }
 
   Widget _buildList(BuildContext context, List<SavedDrug> snapshot) {
+    double mw = MediaQuery.of(context).size.width;
+    print('ㅇㅇㅇ'+mw.toString());
     num = 0;
-
+    int check = 0;
     int count = snapshot.length;
     if (count == 0) {
       return _noDrugPage();
@@ -166,19 +169,21 @@ class _HomePageState extends State<HomePage> {
                     child: Container(
                         padding:
                             EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        width: 86,
-                        height: 26,
+                        width: 95,
+                        height: 28,
                         decoration: BoxDecoration(
-                          border: Border.all(color: primary300_main),
+                          border: Border.all(color: primary400_line),
                           color: primary300_main,
                           borderRadius: BorderRadius.circular(4.0),
                         ),
-                        child: Text(
-                          ' + 추가하기',
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .copyWith(color: Colors.white),
+                        child: Center(
+                          child: Text(
+                            ' + 추가하기',
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(color: Colors.white,  ),
+                          )
                         )),
                   ),
                 ],
@@ -188,9 +193,24 @@ class _HomePageState extends State<HomePage> {
         ),
         Divider(height: 3, thickness: 0.5, indent: 1, endIndent: 0),
         Expanded(
-          child: ListView(
-            children:
-                snapshot.map((data) => _buildListItem(context, data)).toList(),
+          child:
+          // ListView(
+          //   children:
+          //       snapshot.map((data) => _buildListItem(context, data)).toList(),
+          // ),
+          ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+            itemCount: snapshot.length + 1 ,
+            itemBuilder: (context, index) {
+              check++;
+              if(check == snapshot.length + 1 ){
+                return Container(height: 30);
+              }
+              else
+              return _buildListItem(context, snapshot[index]);
+            },
           ),
         ),
       ],
@@ -273,6 +293,12 @@ class _HomePageState extends State<HomePage> {
               builder: (context) => ReviewPage(data.itemSeq),
             ),
           ),
+        // //페이지 네비게이션 좌 --> 우
+        // Navigator.push(
+        // context,
+        // CupertinoPageRoute(builder: (_) => ReviewPage(data.itemSeq))
+        // )
+
         },
         child: Container(
           decoration: BoxDecoration(
@@ -1123,7 +1149,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      width: 86,
+                      width: 95,
                       height: 26,
                       decoration: BoxDecoration(
                         border: Border.all(color: primary400_line),
