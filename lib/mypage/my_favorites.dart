@@ -62,7 +62,7 @@ class _MyFavoritesState extends State<MyFavorites> {
                                 Container(
                                   height: 10,
                                 ),
-                                Text("아직 찜한 약 없어요")
+                                Text("아직 찜한 약이 없어요")
                               ],
                             ))
                         :

@@ -964,9 +964,9 @@ class _EditReviewState extends State<EditReview> {
       hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
     else if(type == "reason")
       hintText = "키워드 하나를 입력해주세요  예시)치통\n";
-    double bottom;
+    double bottom = 20;
     if(type == "overall")
-      bottom += 70;
+      bottom = bottom+ 70;
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 20, 0, bottom),
       // padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
