@@ -22,7 +22,7 @@ class _WarningInfoState extends State<WarningInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWithGoToBack('자세히보기', Icon(Icons.arrow_back), 3),
+      appBar: CustomAppBarWithGoToBack('자세히보기', Icon(Icons.arrow_back), 0.5),
       backgroundColor: Colors.white,
       body: Column(
         children: [
@@ -56,13 +56,17 @@ Widget _specificInfo(
                       '주의사항',
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
-                    Center(
-                      child: DynamicTextHighlighting(
-                        highlights: warnings,
-                        text: _changeToText(context, drug.nbDocData),
-                        style: Theme.of(context).textTheme.bodyText2,
-                        color: warning.withOpacity(0.3),
-                        caseSensitive: false,
+
+                    Padding(
+                      padding: const EdgeInsets.only(top:8.0, bottom: 20),
+                      child: Center(
+                        child: DynamicTextHighlighting(
+                          highlights: warnings,
+                          text: _changeToText(context, drug.nbDocData),
+                          style: Theme.of(context).textTheme.bodyText2.copyWith(height: 1.6),
+                          color: warning.withOpacity(0.3),
+                          caseSensitive: false,
+                        ),
                       ),
                     ),
                   ]),
