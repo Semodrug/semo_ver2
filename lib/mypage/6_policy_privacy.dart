@@ -11,7 +11,7 @@ class _PolicyPrivacyPageState extends State<PolicyPrivacyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar:
-            CustomAppBarWithGoToBack('개인정보 처리방침', Icon(Icons.arrow_back), 3),
+            CustomAppBarWithGoToBack('개인정보 처리방침', Icon(Icons.arrow_back), 0.5),
         backgroundColor: Colors.white,
         body: Text('개인정보 처리방침 페이지'));
   }

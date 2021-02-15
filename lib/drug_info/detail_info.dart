@@ -25,7 +25,8 @@ class _DetailInfoState extends State<DetailInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWithGoToBack('약 정보 전체보기', Icon(Icons.arrow_back), 3),
+      appBar:
+          CustomAppBarWithGoToBack('약 정보 전체보기', Icon(Icons.arrow_back), 0.5),
       backgroundColor: Colors.white,
       body: Column(
         children: [

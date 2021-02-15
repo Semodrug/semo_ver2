@@ -10,7 +10,7 @@ class _InquiryPageState extends State<InquiryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWithGoToBack('1:1 문의', Icon(Icons.arrow_back), 3),
+      appBar: CustomAppBarWithGoToBack('1:1 문의', Icon(Icons.arrow_back), 0.5),
       backgroundColor: Colors.white,
       body: Text('1:1 문의 페이지 입니다.'),
     );
