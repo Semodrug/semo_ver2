@@ -754,25 +754,35 @@ class _ReviewPageState extends State<ReviewPage> {
                     drug.itemSeq)
                 : Container(),
             _isCareful ? SizedBox(height: 20) : Container(),
-            Text('효능효과',
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      color: gray750_activated,
-                    )),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text('효능효과',
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: gray750_activated,
+                      )),
+            ),
             _drugDocInfo(context, drug.itemSeq, 'EE'),
             SizedBox(height: 20),
-            Text('용법용량',
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      color: gray750_activated,
-                    )),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text('용법용량',
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: gray750_activated,
+                      )),
+            ),
             _drugDocInfo(context, drug.itemSeq, 'UD'),
             SizedBox(height: 20),
-            Text('저장방법',
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      color: gray750_activated,
-                    )),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text('저장방법',
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: gray750_activated,
+                      )),
+            ),
             Text(drug.storageMethod,
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       color: gray600,
+                  height: 1.6
                     )),
             SizedBox(height: 20),
             Row(
@@ -840,6 +850,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     return Text(drug.eeDocData[index].toString(),
                         style: Theme.of(context).textTheme.bodyText2.copyWith(
                               color: gray600,
+                          height:  1.6
                             ));
                   });
             } else if (type == 'NB') {
@@ -863,6 +874,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     return Text(drug.udDocData[index].toString(),
                         style: Theme.of(context).textTheme.bodyText2.copyWith(
                               color: gray600,
+                            height:  1.6
                             ));
                   });
             } else {
