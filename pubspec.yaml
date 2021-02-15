@@ -45,10 +45,14 @@ dependencies:
   provider: ^4.3.2+3
 
   #camera
-  image_picker: ^0.6.7+22
+#  image_picker: ^0.6.7+22
   firebase_ml_vision: ^0.10.0
-  permission_handler: ^5.0.1+1
-  app_settings: 4.0.4
+#  permission_handler: ^5.0.1+1
+#  app_settings: 4.0.4
+  camera: ^0.7.0+2
+  path_provider: ^1.6.27
+  path: ^1.7.0
+  xfile: ^1.1.0
 
   #functions
   flappy_search_bar: ^1.7.2
@@ -92,9 +96,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/login/
-    - assets/images/
+    - assets/camera/
     - assets/icons/
+    - assets/images/
+    - assets/login/
+    - assets/logo/
 
   #   - images/a_dot_ham.jpeg
 

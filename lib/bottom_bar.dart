@@ -1,15 +1,8 @@
-import 'dart:io';
-
-import 'package:app_settings/app_settings.dart';
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:semo_ver2/camera/no_result.dart';
+import 'package:semo_ver2/camera/camera.dart';
 import 'package:semo_ver2/home/home.dart';
 import 'package:semo_ver2/ranking/ranking.dart';
-import 'package:semo_ver2/review/drug_info.dart';
-import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/appbar.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -26,59 +19,6 @@ class _BottomBarState extends State<BottomBar> {
     Container(),
     RankingPage(),
   ];
-
-  File pickedImage;
-  String barcodeNum;
-  bool imageLoaded = false;
-
-  Future<bool> checkIfPermissionGranted() async {
-    Map<Permission, PermissionStatus> statuses =
-        await [Permission.camera].request();
-
-    bool permitted = true;
-
-    statuses.forEach((permission, permissionStatus) {
-      if (!permissionStatus.isGranted) permitted = false;
-    });
-
-    return permitted;
-  }
-
-  Future<void> pickImage() async {
-    if (await checkIfPermissionGranted()) {
-      var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-      setState(() {
-        pickedImage = awaitImage;
-        imageLoaded = true;
-      });
-
-      FirebaseVisionImage visionImage =
-          FirebaseVisionImage.fromFile(pickedImage);
-      VisionText readedText;
-
-      final BarcodeDetector barcodeDetector =
-          FirebaseVision.instance.barcodeDetector();
-
-      final List<Barcode> barcodes =
-          await barcodeDetector.detectInImage(visionImage);
-
-      for (Barcode barcode in barcodes) {
-        final String rawValue = barcode.rawValue;
-        final BarcodeValueType valueType = barcode.valueType;
-
-        setState(() {
-          barcodeNum = "$rawValue";
-        });
-      }
-
-      barcodeDetector.close();
-    } else {
-      print('권한을 허용해주세요');
-      AppSettings.openAppSettings();
-      // Navigator.of(context).pop();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +59,7 @@ class _BottomBarState extends State<BottomBar> {
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
         padding: EdgeInsets.only(top: 30),
         child: FloatingActionButton(
@@ -126,25 +67,23 @@ class _BottomBarState extends State<BottomBar> {
           elevation: 0,
           child: Image.asset('assets/icons/bottom_camera.png'),
           onPressed: () async {
-            await pickImage();
+            // 디바이스에서 이용가능한 카메라 목록을 받아옵니다.
+            final cameras = await availableCameras();
 
-            var data = await DatabaseService().itemSeqFromBarcode(barcodeNum);
+            // 이용가능한 카메라 목록에서 특정 카메라를 얻습니다.
+            final firstCamera = cameras.first;
 
-            (barcodeNum != null && data != null)
-                ? Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ReviewPage(data),
-                    ))
-                : Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NoResult(),
-                    ));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CameraPage(
+                  camera: firstCamera,
+                ),
+              ),
+            );
           },
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
