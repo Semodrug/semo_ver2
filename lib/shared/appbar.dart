@@ -18,11 +18,17 @@ class IYMYAppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     if (title == 'home') {
       return AppBar(
-        elevation: 3,
-        title: SizedBox(
-            height: 56,
-            width: 70,
-            child: Image(image: AssetImage('assets/icons/iymy.png'))),
+        elevation: 0.5,
+        titleSpacing: 8,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+                height: 56,
+                width: 70,
+                child: Image(image: AssetImage('assets/icons/iymy.png'))),
+          ],
+        ),
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         actions: [
@@ -44,9 +50,18 @@ class IYMYAppBar extends StatelessWidget with PreferredSizeWidget {
       );
     } else //category bar
       return AppBar(
-        title: Text(
-          title,
-          style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+        titleSpacing: 8,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: gray800),
+            ),
+          ],
         ),
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,

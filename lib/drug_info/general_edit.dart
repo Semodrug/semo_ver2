@@ -173,7 +173,7 @@ class _GeneralEditState extends State<GeneralEdit> {
           ],
         ),
         SizedBox(height: 10),
-        _submitButton(context, user, drug, _pickedString)
+        _submitButton(context, user, drug, _pickedString, _pickedDateTime)
       ],
     );
   }
@@ -347,7 +347,7 @@ class _GeneralEditState extends State<GeneralEdit> {
           ],
         ),
         SizedBox(height: 10),
-        _submitButton(context, user, drug, _finalString),
+        _submitButton(context, user, drug, _finalString, _finalDateTime),
       ],
     );
   }
@@ -371,6 +371,8 @@ class _GeneralEditState extends State<GeneralEdit> {
                   onChanged: (date) {}, onConfirm: (date) async {
                 setState(() {
                   _madeDateTime = date;
+                  _isSelf = false;
+                  _addDays = 60;
                   _finalDateTime = _madeDateTime.add(Duration(days: _addDays));
                   _finalString =
                       DateFormat('yyyy.MM.dd').format(_finalDateTime);
@@ -615,8 +617,8 @@ class _GeneralEditState extends State<GeneralEdit> {
     );
   }
 
-  Widget _submitButton(
-      context, TheUser user, Drug drug, String expirationString) {
+  Widget _submitButton(context, TheUser user, Drug drug,
+      String expirationString, DateTime expirationDateTime) {
     String newName = drug.itemName;
     List splitName = [];
 
@@ -639,29 +641,52 @@ class _GeneralEditState extends State<GeneralEdit> {
       }
     }
 
+    bool _isPast = false;
+
+    if (expirationDateTime.year < DateTime.now().year)
+      _isPast = true;
+    else if (expirationDateTime.year == DateTime.now().year &&
+        expirationDateTime.month < DateTime.now().month)
+      _isPast = true;
+    else if (expirationDateTime.year == DateTime.now().year &&
+        expirationDateTime.month == DateTime.now().month &&
+        expirationDateTime.day < DateTime.now().day) _isPast = true;
+
     return IYMYSubmitButton(
       context: context,
       isDone: true,
       textString: '수정하기',
       onPressed: () async {
-        IYMYOkDialog(
-          context: context,
-          dialogIcon: Icon(Icons.check, color: primary300_main),
-          bodyString: '사용기한이 수정되었습니다',
-          buttonName: '확인',
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-          },
-        ).showWarning();
+        if (_isPast) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                '사용기한이 지났습니다. 다시 확인해주세요',
+                textAlign: TextAlign.center,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.black.withOpacity(0.87)));
+        } else {
+          IYMYOkDialog(
+            context: context,
+            dialogIcon: Icon(Icons.check, color: primary300_main),
+            bodyString: '사용기한이 수정되었습니다',
+            buttonName: '확인',
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+          ).showWarning();
 
-        await DatabaseService(uid: user.uid).addSavedList(
-            drug.itemName,
-            drug.itemSeq,
-            drug.category,
-            drug.etcOtcCode,
-            expirationString,
-            searchListOutput);
+          await DatabaseService(uid: user.uid).addSavedList(
+              drug.itemName,
+              drug.itemSeq,
+              drug.category,
+              drug.etcOtcCode,
+              expirationString,
+              searchListOutput);
+        }
       },
     );
   }

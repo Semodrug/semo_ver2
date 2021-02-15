@@ -1,13 +1,6 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:semo_ver2/camera/no_result.dart';
-import 'package:semo_ver2/camera/barcode.dart';
 import 'package:semo_ver2/home/home.dart';
-import 'package:semo_ver2/review/drug_info.dart';
-import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 import 'case_recognition.dart';
@@ -109,7 +102,7 @@ class _AddButtonState extends State<AddButton> {
                 duration: Duration(milliseconds: 200),
                 left: 0,
                 bottom: (showBottomMenu) ? -60 : -(height / 3),
-                child: FixMenuWidget())// MenuWidget()),
+                child: FixMenuWidget()) // MenuWidget()),
           ],
         ),
       ),
@@ -162,7 +155,6 @@ class _AddButtonState extends State<AddButton> {
 class FixMenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
@@ -171,11 +163,10 @@ class FixMenuWidget extends StatelessWidget {
       child: Container(
         color: Colors.white,
         width: width,
-        height: height/3 + 100,
+        height: height / 3 + 100,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2.0,horizontal: 10.0),
-          child:
-          Column(
+          padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 10.0),
+          child: Column(
             children: <Widget>[
               Container(
                 width: width / 4 * 3.8,
@@ -210,7 +201,8 @@ class FixMenuWidget extends StatelessWidget {
                         child: SizedBox(
                           height: 24,
                           width: 24,
-                          child: Image.asset('assets/icons/barcode_icon_grey.png'),
+                          child:
+                              Image.asset('assets/icons/barcode_icon_grey.png'),
                         ),
                       ),
                       SizedBox(width: 15),
@@ -237,7 +229,7 @@ class FixMenuWidget extends StatelessWidget {
                 width: width / 4 * 3.8,
                 height: height / 10,
                 child: FlatButton(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/search');
                   },
@@ -269,9 +261,11 @@ class FixMenuWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(height: 10,decoration: BoxDecoration(
-                  border: Border(bottom:BorderSide(width: 1, color: gray500)))
-              ),
+              Container(
+                  height: 10,
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(width: 1, color: gray500)))),
               Container(
                 width: width / 4 * 3.8,
                 height: height / 10,
@@ -280,7 +274,10 @@ class FixMenuWidget extends StatelessWidget {
                     padding: EdgeInsets.all(10),
                     child: Text(
                       "닫기",
-                      style: Theme.of(context).textTheme.subtitle1.copyWith(fontSize: 14, color: gray500),
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(fontSize: 14, color: gray500),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -296,7 +293,6 @@ class FixMenuWidget extends StatelessWidget {
     );
   }
 }
-
 
 /*
 class MenuWidget extends StatefulWidget {
@@ -632,5 +628,3 @@ class CurvePainter extends CustomPainter {
 }
 
 */
-
-

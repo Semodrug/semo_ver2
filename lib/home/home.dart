@@ -1,11 +1,8 @@
-import 'dart:io';
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/camera/no_result.dart';
+import 'package:semo_ver2/camera/camera.dart';
 import 'package:semo_ver2/drug_info/general_edit.dart';
 import 'package:semo_ver2/drug_info/prepared_edit.dart';
 import 'package:semo_ver2/review/drug_info.dart';
@@ -29,39 +26,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  File pickedImage;
-  String barcodeNum;
-  bool imageLoaded = false;
-
-  Future<void> pickImage() async {
-    var awaitImage = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      pickedImage = awaitImage;
-      imageLoaded = true;
-    });
-
-    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(pickedImage);
-    VisionText readedText;
-
-    final BarcodeDetector barcodeDetector =
-        FirebaseVision.instance.barcodeDetector();
-
-    final List<Barcode> barcodes =
-        await barcodeDetector.detectInImage(visionImage);
-
-    for (Barcode barcode in barcodes) {
-      final String rawValue = barcode.rawValue;
-      final BarcodeValueType valueType = barcode.valueType;
-
-      setState(() {
-        barcodeNum = "$rawValue";
-      });
-    }
-
-    barcodeDetector.close();
-  }
-
   @override
   Widget build(BuildContext context) {
     //widget.appBarForSearch = false;
@@ -329,8 +293,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Container(
-                          //height: 50,
-                            width: 90,
+                            width: 88,
                             //이미지는 고정값
                             //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: DrugImage(drugItemSeq: data.itemSeq)),
@@ -461,7 +424,7 @@ class _HomePageState extends State<HomePage> {
                             //이미지는 고정값
                             //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Container(
-                                width: 90,
+                                width: 88,
                                 child: DrugImage(drugItemSeq: data.itemSeq))),
                         Container(
                             padding: EdgeInsets.only(left: 12, top: 0),
@@ -593,7 +556,7 @@ class _HomePageState extends State<HomePage> {
                             //이미지는 고정값
                             //padding: EdgeInsets.symmetric(horizontal: 5),
                             child: Container(
-                                width: 90,
+                                width: 88,
                                 child: DrugImage(drugItemSeq: data.itemSeq))),
                         Container(
                             padding: EdgeInsets.only(left: 12, top: 0),
@@ -705,22 +668,22 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(top: 5.0),
             child: MaterialButton(
               onPressed: () async {
-                await pickImage();
+                // 디바이스에서 이용가능한 카메라 목록을 받아옵니다.
+                final cameras = await availableCameras();
 
-                var data =
-                    await DatabaseService().itemSeqFromBarcode(barcodeNum);
+                // 이용가능한 카메라 목록에서 특정 카메라를 얻습니다.
+                final firstCamera = cameras.first;
 
-                (barcodeNum != null && data != null)
-                    ? Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ReviewPage(data),
-                        ))
-                    : Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NoResult(),
-                        ));
+                Navigator.pop(context);
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CameraPage(
+                      camera: firstCamera,
+                    ),
+                  ),
+                );
               },
               child: Row(
                 children: <Widget>[
@@ -892,6 +855,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -909,7 +873,8 @@ class _HomePageState extends State<HomePage> {
                       .copyWith(color: gray700)),
               SizedBox(height: 28),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
                     child: Text(
@@ -926,7 +891,7 @@ class _HomePageState extends State<HomePage> {
                         primary: gray50,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
-                            side: BorderSide(color: gray50))),
+                            side: BorderSide(color: gray75))),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -1012,7 +977,7 @@ class _HomePageState extends State<HomePage> {
                     primary: gray50,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
-                        side: BorderSide(color: gray50))),
+                        side: BorderSide(color: gray75))),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -1161,7 +1126,7 @@ class _HomePageState extends State<HomePage> {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle1
-                            .copyWith(color: Colors.white),
+                            .copyWith(color: gray0_white),
                       )),
                 ),
               ],
