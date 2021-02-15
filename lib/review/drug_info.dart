@@ -317,8 +317,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                 else if (_scrollController.position.pixels *
                                         1.0 >=
                                     _getReviewSizes()) pillInfoTab = false;
-                                print(pillInfoTab);
-                                print(notification.metrics.pixels);
+                                // print(pillInfoTab);
+                                // print(notification.metrics.pixels);
                                 //print(_scrollController.position.pixels);
                               },
                             ),
