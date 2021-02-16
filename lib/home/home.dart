@@ -14,8 +14,6 @@ import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-int num = 0;
-
 class HomePage extends StatefulWidget {
   String appBarForSearch;
 
@@ -94,9 +92,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildList(BuildContext context, List<SavedDrug> snapshot) {
     double mw = MediaQuery.of(context).size.width;
-    print('ㅇㅇㅇ' + mw.toString());
-    num = 0;
-    int check = 0;
     int count = snapshot.length;
     if (count == 0) {
       return _noDrugPage();
@@ -174,13 +169,9 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
-            itemCount: snapshot.length + 1,
+            itemCount: snapshot.length  ,
             itemBuilder: (context, index) {
-              check++;
-              if (check == snapshot.length + 1) {
-                return Container(height: 30);
-              } else
-                return _buildListItem(context, snapshot[index]);
+              return _buildListItem(context, snapshot[index], index + 1, count);
             },
           ),
         ),
@@ -188,9 +179,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, SavedDrug data) {
+  Widget _buildListItem(BuildContext context, SavedDrug data, int index, int totalNum) {
+
     TheUser user = Provider.of<TheUser>(context);
-    num++;
+
     double mw = MediaQuery.of(context).size.width;
 
     String _checkLongName(SavedDrug data) {
@@ -205,7 +197,7 @@ class _HomePageState extends State<HomePage> {
       }
       //미디어 쿼리 기준 width가 370이하면
       if (newName.length > 15) {
-        if (mw < 375) {
+        if (mw < 390) {
           newName = newName.substring(0, 9);
           newName = newName + '...';
         } else {
@@ -270,7 +262,8 @@ class _HomePageState extends State<HomePage> {
           // CupertinoPageRoute(builder: (_) => ReviewPage(data.itemSeq))
           // )
         },
-        child: Container(
+        child: index == totalNum ?
+        Container(
           decoration: BoxDecoration(
               border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
           child: Column(
@@ -290,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                           child: SizedBox(
                             width: 15,
                             child: Center(
-                              child: Text(num.toString(),
+                              child: Text(index.toString(),
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle1
@@ -381,24 +374,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: _warningRemainMessage(context, difference),
                 ),
-              )
+              ),
+              Container(height: 20,)
             ],
           ),
-        ),
-      );
-    }
-    //사용기한 지남
-    else if (difference < 0) {
-      return GestureDetector(
-        onTap: () => {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ReviewPage(data.itemSeq),
-            ),
-          ),
-        },
-        child: Container(
+        )
+        : Container(
           decoration: BoxDecoration(
               border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
           child: Column(
@@ -418,7 +399,137 @@ class _HomePageState extends State<HomePage> {
                           child: SizedBox(
                             width: 15,
                             child: Center(
-                              child: Text(num.toString(),
+                              child: Text(index.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(color: gray600, fontSize: 11)),
+                            ),
+                          ),
+                        ),
+                        Container(
+                            width: 88,
+                            //이미지는 고정값
+                            //padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: DrugImage(drugItemSeq: data.itemSeq)),
+                        Container(
+                            padding: EdgeInsets.only(left: 12, top: 0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    child: Text(_checkLongName(data),
+                                        maxLines: 2,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(
+                                            color: gray750_activated))),
+                                //SizedBox(height: 2,),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 3),
+                                  child: Container(
+                                      height: 23,
+                                      child: CategoryButton(
+                                          str: data.category,
+                                          fromHome: 'home')),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Row(
+                                  children: [
+                                    Text('${data.expiration}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(
+                                            color: gray600, fontSize: 11)),
+                                    Text('까지 ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(
+                                            color: gray600, fontSize: 11)),
+                                  ],
+                                )
+                              ],
+                            )),
+                        Spacer(),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.more_vert,
+                              size: 20,
+                              color: gray500,
+                            ),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return _popUpMenu(context, data, user);
+                                  });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(33, 0, 16, 12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: yellow),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: _warningRemainMessage(context, difference),
+                ),
+              )
+            ],
+          ),
+        )
+        ,
+      );
+    }
+    //사용기한 지남
+    else if (difference < 0) {
+      return GestureDetector(
+        onTap: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReviewPage(data.itemSeq),
+            ),
+          ),
+        },
+        child:  index == totalNum ?
+        Container(
+          decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Container(
+                  padding: EdgeInsets.only(left: 16.0),
+                  //width: double.infinity,
+                  height: 90,
+                  child: Material(
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: SizedBox(
+                            width: 15,
+                            child: Center(
+                              child: Text(index.toString(),
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle1
@@ -510,6 +621,122 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: _warningOverDayMessage(context, difference),
                 ),
+              ),
+              Container(height: 20,)
+            ],
+          ),
+        ) : Container(
+          decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Container(
+                  padding: EdgeInsets.only(left: 16.0),
+                  //width: double.infinity,
+                  height: 90,
+                  child: Material(
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: SizedBox(
+                            width: 15,
+                            child: Center(
+                              child: Text(index.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(color: gray600, fontSize: 11)),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          //이미지는 고정값
+                          //padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: Container(
+                                width: 88,
+                                child: DrugImage(drugItemSeq: data.itemSeq))),
+                        Container(
+                            padding: EdgeInsets.only(left: 12, top: 0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    child: Text(_checkLongName(data),
+                                        maxLines: 2,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(
+                                            color: gray750_activated))),
+                                //SizedBox(height: 2,),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 3),
+                                  child: Container(
+                                      height: 23,
+                                      child: CategoryButton(
+                                          str: data.category,
+                                          fromHome: 'home')),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Row(
+                                  children: [
+                                    Text('${data.expiration}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(
+                                            color: gray600, fontSize: 11)),
+                                    Text('까지 ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(
+                                            color: gray600, fontSize: 11)),
+                                  ],
+                                )
+                              ],
+                            )),
+                        Spacer(),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.more_vert,
+                              size: 20,
+                              color: gray500,
+                            ),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return _popUpMenu(context, data, user);
+                                  });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(33, 0, 16, 12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: warning),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: _warningOverDayMessage(context, difference),
+                ),
               )
             ],
           ),
@@ -527,7 +754,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         },
-        child: Container(
+        child: index == totalNum ? Container(
           //padding: EdgeInsets.only(bottom: 10.0),
           decoration: BoxDecoration(
               border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
@@ -550,7 +777,7 @@ class _HomePageState extends State<HomePage> {
                           child: SizedBox(
                             width: 15,
                             child: Center(
-                              child: Text(num.toString(),
+                              child: Text(index.toString(),
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle1
@@ -633,9 +860,118 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+              Container(height :20)
             ],
           ),
-        ),
+        ) : Container(
+          //padding: EdgeInsets.only(bottom: 10.0),
+          decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Container(
+                  padding: EdgeInsets.only(
+                    left: 16.0,
+                  ),
+                  //width: double.infinity,
+                  height: 90,
+                  child: Material(
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: SizedBox(
+                            width: 15,
+                            child: Center(
+                              child: Text(index.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(color: gray600, fontSize: 11)),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          //이미지는 고정값
+                          //padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: Container(
+                                width: 88,
+                                child: DrugImage(drugItemSeq: data.itemSeq))),
+                        Container(
+                            padding: EdgeInsets.only(left: 12, top: 0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    child: Text(_checkLongName(data),
+                                        maxLines: 2,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(
+                                            color: gray750_activated))),
+                                //SizedBox(height: 2,),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 3),
+                                  child: Container(
+                                      height: 23,
+                                      child: CategoryButton(
+                                          str: data.category,
+                                          fromHome: 'home')),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Row(
+                                  children: [
+                                    Text('${data.expiration}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(
+                                            color: gray600, fontSize: 11)),
+                                    Text('까지 ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .copyWith(
+                                            color: gray600, fontSize: 11)),
+                                  ],
+                                )
+                              ],
+                            )),
+                        Spacer(),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.more_vert,
+                              size: 20,
+                              color: gray500,
+                            ),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return _popUpMenu(context, data, user);
+                                  });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ) ,
       );
   }
 

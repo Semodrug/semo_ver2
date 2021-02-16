@@ -478,7 +478,7 @@ class _WriteReviewState extends State<WriteReview> {
             _textField("reason",reasonForTakingPillController),
             // _exclusiveMultiButton(),
             // writeReason(),
-            Container(height: 45,)
+            // Container(height: 45,)
             // _textField(myControllerEffect)
           ],
         ));
@@ -670,7 +670,7 @@ class _WriteReviewState extends State<WriteReview> {
       padding: EdgeInsets.fromLTRB(0, 20, 0, bottom),
       child: Container(
           child: TextField(
-              maxLength: 500,
+              maxLength: type =="reason" ? 10 : 500,
               controller: txtController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
@@ -981,6 +981,7 @@ class _WriteReviewState extends State<WriteReview> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),

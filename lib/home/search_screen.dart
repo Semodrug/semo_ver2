@@ -361,11 +361,14 @@ class _SearchScreenState extends State<SearchScreen> {
       stream: DatabaseService() //categoryName: widget.categoryName
           .setForSearchFromAllAfterRemainStartAt(searchVal, 30),
       builder: (context, stream) {
-        if (!stream.hasData) {
-          return Center(child: CircularProgressIndicator());
-        }
+        // if (!stream.hasData) {
+        //   return Center(child: CircularProgressIndicator());
+        // }
         if (searchVal == '' || searchVal.length < 2) {
           return _streamOfSearch(context);
+        }
+        if (!stream.hasData) {
+          return Center(child: CircularProgressIndicator());
         }
         // else
         else if (stream.data.isEmpty) {
@@ -426,11 +429,9 @@ class _SearchScreenState extends State<SearchScreen> {
     //}
   }
 
-  Widget _buildListOfAll(BuildContext context, List<Drug> drugs,
-      List<Drug> SADrugs, List<SavedDrug> userDrugs, String type) {
-    if (_searchText.length < 2) {
-      return _noResultContainer();
-    } else if (_searchText.length != 0) {
+
+  Widget _buildListOfAll(BuildContext context, List<Drug> drugs,  List<Drug> SADrugs, List<SavedDrug> userDrugs,
+      String type) {
       //유저가 가지고 있는 약이 있을 때,
       if (!userDrugs.isEmpty) {
         if (type == 'USER') {
@@ -516,12 +517,17 @@ class _SearchScreenState extends State<SearchScreen> {
               //앞에 나온 애들 제외
               for (int j = 0; j < SADrugs.length; j++) {
                 if (drugs[index].itemName == SADrugs[j].itemName) {
+
                   return Container();
                 }
               }
+
+              print('II == '+ index.toString());
+              print('DL == '+ drugs.length.toString());
+              print(drugs[index].itemName);
+
               return SearchResultTile(
-                drug: drugs[index],
-              );
+                drug: drugs[index], index: index, totNum: drugs.length );
             },
           );
         }
@@ -557,14 +563,17 @@ class _SearchScreenState extends State<SearchScreen> {
                 return Container();
               }
             }
+            //print('총 길이 ${drugs.length} 언급된 애들 ${SADrugs.length}');
+            int totCount = drugs.length - SADrugs.length;
+
+
             return SearchResultTile(
-              drug: drugs[index],
-            );
+              drug: drugs[index], index: index, totNum: totCount );
           },
         );
       } else
         return Container();
-    }
+    //}
   }
 
   Widget _buildBodyOfUser(BuildContext context, String searchVal) {
@@ -600,9 +609,9 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildListOfUser(BuildContext context, List<SavedDrug> userDrugs) {
-    if (_searchText.length < 2) {
-      return _noResultContainer();
-    } else {
+    // if (_searchText.length < 2) {
+    //   return _noResultContainer();
+    // } else {
       return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
@@ -644,7 +653,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       );
-    }
+   // }
   }
 
   @override
@@ -679,6 +688,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _searchBar(BuildContext context) {
     String searchList;
+    double mw = MediaQuery.of(context).size.width;
+
     TheUser user = Provider.of<TheUser>(context);
 
     CollectionReference userSearchList = FirebaseFirestore.instance
@@ -704,7 +715,7 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           Container(
             //
-            width: MediaQuery.of(context).size.width - 32,
+            width: mw > 375 ? mw - 32-20: mw - 95 ,
             height: 33,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -713,7 +724,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Row(
               children: [
                 Expanded(
-                    flex: 5,
+                   // flex: 5,
                     child: TextFormField(
                       cursorColor: primary300_main,
                       onFieldSubmitted: (val) async {
@@ -810,26 +821,31 @@ class _SearchScreenState extends State<SearchScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(4))),
                 //color: gray75,
                 child: TabBar(
-                    labelStyle: Theme.of(context).textTheme.subtitle2.copyWith(
-                          color: gray750_activated,
-                        ),
-                    unselectedLabelStyle: Theme.of(context)
-                        .textTheme
-                        .caption
-                        .copyWith(color: gray500),
-                    tabs: [
-                      Tab(
-                          child: Text('전체 검색',
-                              style: TextStyle(
-                                  color: gray750_activated,
-                                  fontFamily: 'NotoSansKR'))),
-                      Tab(
-                          child: Text('나의 약 검색',
-                              style: TextStyle(
-                                  color: gray750_activated,
-                                  fontFamily: 'NotoSansKR'))),
-                    ],
-                    indicator: CustomTabIndicator()),
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      .copyWith(color: gray750_activated, fontSize: 13),
+                  unselectedLabelStyle: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith( color: gray500),
+                  tabs: [
+                    Tab(
+                        child: Container(
+                          width: 100,
+                          child: Center(
+                            child: Text(
+                              '전체 검색',
+                                style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        ),
+                          ),
+                        )),
+                    Tab(
+                        child: Text(
+                          '나의 약 검색',
+                            style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
+                  ],
+                   indicator: CustomTabIndicator()
+                ),
               ),
             ),
             Container(
