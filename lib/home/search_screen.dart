@@ -363,11 +363,14 @@ class _SearchScreenState extends State<SearchScreen> {
       stream: DatabaseService() //categoryName: widget.categoryName
           .setForSearchFromAllAfterRemainStartAt(searchVal, 30),
       builder: (context, stream) {
-        if (!stream.hasData) {
-          return Center(child: CircularProgressIndicator());
-        }
+        // if (!stream.hasData) {
+        //   return Center(child: CircularProgressIndicator());
+        // }
         if (searchVal == '' || searchVal.length < 2) {
           return _streamOfSearch(context);
+        }
+        if (!stream.hasData) {
+          return Center(child: CircularProgressIndicator());
         }
         // else
         else if (stream.data.isEmpty) {
@@ -422,9 +425,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildListOfAll(BuildContext context, List<Drug> drugs,  List<Drug> SADrugs, List<SavedDrug> userDrugs,
       String type) {
-    if (_searchText.length < 2) {
-      return _noResultContainer();
-    } else if (_searchText.length != 0) {
+    // if (_searchText.length < 2) {
+    //   return _noResultContainer();
+    // } else if (_searchText.length != 0) {
 
       //유저가 가지고 있는 약이 있을 때,
       if (!userDrugs.isEmpty) {
@@ -558,7 +561,7 @@ class _SearchScreenState extends State<SearchScreen> {
       }
       else
         return Container();
-    }
+    //}
   }
 
   Widget _buildBodyOfUser(BuildContext context, String searchVal) {
@@ -594,9 +597,9 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildListOfUser(BuildContext context, List<SavedDrug> userDrugs) {
-    if (_searchText.length < 2) {
-      return _noResultContainer();
-    } else {
+    // if (_searchText.length < 2) {
+    //   return _noResultContainer();
+    // } else {
       return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
@@ -638,7 +641,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       );
-    }
+   // }
   }
 
   @override
@@ -804,23 +807,27 @@ class _SearchScreenState extends State<SearchScreen> {
                   labelStyle: Theme.of(context)
                       .textTheme
                       .subtitle2
-                      .copyWith(color: gray750_activated,),
+                      .copyWith(color: gray750_activated, fontSize: 13),
                   unselectedLabelStyle: Theme.of(context)
                       .textTheme
                       .caption
                       .copyWith( color: gray500),
                   tabs: [
                     Tab(
-                        child: Text(
-                          '전체 검색',
-                            style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
+                        child: Container(
+                          width: 100,
+                          child: Center(
+                            child: Text(
+                              '전체 검색',
+                                style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        ),
+                          ),
+                        )),
                     Tab(
                         child: Text(
                           '나의 약 검색',
                             style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
                   ],
-
-                  indicator: CustomTabIndicator()
+                   indicator: CustomTabIndicator()
                 ),
               ),
             ),
