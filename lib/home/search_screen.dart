@@ -522,9 +522,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 }
               }
 
-              print('II == '+ index.toString());
-              print('DL == '+ drugs.length.toString());
-              print(drugs[index].itemName);
+              //int totNum = drugs.length - userDrugs.length - SADrugs.length;
 
               return SearchResultTile(
                 drug: drugs[index], index: index, totNum: drugs.length );
