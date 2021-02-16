@@ -97,7 +97,7 @@ class _WriteReviewState extends State<WriteReview> {
       "entpName": _entpName,
       "itemName": _itemName,
       "nickName": nickName,
-      "reasonForTakingPill":reasonForTakingPill
+      "reasonForTakingPill": reasonForTakingPill
     });
   }
 
@@ -124,7 +124,8 @@ class _WriteReviewState extends State<WriteReview> {
         appBar: AppBar(
           title: Text(
             "리뷰 쓰기",
-            style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+            style:
+                Theme.of(context).textTheme.headline5.copyWith(color: gray800),
           ),
           elevation: 0.5,
           titleSpacing: 0,
@@ -410,8 +411,11 @@ class _WriteReviewState extends State<WriteReview> {
               itemPadding: EdgeInsets.symmetric(horizontal: 4),
               itemBuilder: (context, _) =>
                   // Icon(Icons.star, color: primary300_main),
-              Image.asset('assets/icons/rating_star.png',
-                width: 28, height: 28,),
+                  Image.asset(
+                'assets/icons/rating_star.png',
+                width: 28,
+                height: 28,
+              ),
 
               onRatingUpdate: (rating) {
                 starRating = rating;
@@ -463,9 +467,9 @@ class _WriteReviewState extends State<WriteReview> {
         decoration: BoxDecoration(
             border: Border(
                 bottom: BorderSide(
-                  width: 0.8,
-                  color: Colors.grey[300],
-                ))),
+          width: 0.8,
+          color: Colors.grey[300],
+        ))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
@@ -475,7 +479,7 @@ class _WriteReviewState extends State<WriteReview> {
                     .textTheme
                     .headline5
                     .copyWith(color: gray900, fontSize: 16)),
-            _textField("reason",reasonForTakingPillController),
+            _textField("reason", reasonForTakingPillController),
             // _exclusiveMultiButton(),
             // writeReason(),
             // Container(height: 45,)
@@ -628,8 +632,8 @@ class _WriteReviewState extends State<WriteReview> {
 //                height: 100,
             child: TextField(
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
-                  color: gray750_activated,
-                ),
+                      color: gray750_activated,
+                    ),
                 maxLength: 500,
                 controller: myControllerEffect,
                 keyboardType: TextInputType.multiline,
@@ -637,17 +641,21 @@ class _WriteReviewState extends State<WriteReview> {
                 decoration: new InputDecoration(
                   hintText: "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n",
                   hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
-                    color: gray300_inactivated,
-                  ),
+                        color: gray300_inactivated,
+                      ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: gray75),
                     borderRadius:
-                    const BorderRadius.all(const Radius.circular(4.0)),
+                        const BorderRadius.all(const Radius.circular(4.0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: primary300_main),
+                    borderRadius:
+                        const BorderRadius.all(const Radius.circular(4.0)),
                   ),
                   filled: true,
                   fillColor: gray50,
-                ))
-        ),
+                ))),
       );
     }
   }
@@ -660,17 +668,15 @@ class _WriteReviewState extends State<WriteReview> {
       hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
     else if (type == "overall")
       hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
-    else if(type == "reason")
-      hintText = "키워드 하나를 입력해주세요  예시)치통\n";
+    else if (type == "reason") hintText = "키워드 하나를 입력해주세요  예시)치통\n";
     double bottom = 20;
-    if(type == "overall")
-      bottom += 70;
+    if (type == "overall") bottom += 70;
     return Padding(
       // padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
       padding: EdgeInsets.fromLTRB(0, 20, 0, bottom),
       child: Container(
           child: TextField(
-              maxLength: type =="reason" ? 10 : 500,
+              maxLength: type == "reason" ? 10 : 500,
               controller: txtController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
@@ -681,6 +687,11 @@ class _WriteReviewState extends State<WriteReview> {
                     ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: gray75),
+                  borderRadius:
+                      const BorderRadius.all(const Radius.circular(4.0)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: primary300_main),
                   borderRadius:
                       const BorderRadius.all(const Radius.circular(4.0)),
                 ),
@@ -797,7 +808,7 @@ class _WriteReviewState extends State<WriteReview> {
                 ),
               ],
             ),
-            _textFieldForSideEffect( myControllerSideEffect)
+            _textFieldForSideEffect(myControllerSideEffect)
           ],
         ));
   }
@@ -844,7 +855,8 @@ class _WriteReviewState extends State<WriteReview> {
             overallText = myControllerOverall.text;
             reasonForTakingPill = reasonForTakingPillController.text;
 
-            if (overallText.length < 10 && overallText.length > 0) _warning = "총평 리뷰를 10자 이상 작성해주세요";
+            if (overallText.length < 10 && overallText.length > 0)
+              _warning = "총평 리뷰를 10자 이상 작성해주세요";
             if (sideEffectText.length < 10 && sideEffect == "yes")
               _warning = "부작용에 대한 리뷰를 10자 이상 작성해주세요";
             if (sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
@@ -852,7 +864,7 @@ class _WriteReviewState extends State<WriteReview> {
             if (effect.isEmpty) _warning = "효과 별점을 등록해주세요";
             if (starRatingText.isEmpty) _warning = "별점을 등록해주세요";
 
-            if (overallText.length < 10 && overallText.length > 0||
+            if (overallText.length < 10 && overallText.length > 0 ||
                 (sideEffectText.length < 10 && sideEffect == "yes") ||
                 effectText.length < 10 ||
                 sideEffect.isEmpty ||
@@ -972,8 +984,6 @@ class _WriteReviewState extends State<WriteReview> {
     );
   }
 
-
-
   Future<void> _IYMYCancleConfirmReportDialog() async {
     User user = FirebaseAuth.instance.currentUser;
 
@@ -984,7 +994,7 @@ class _WriteReviewState extends State<WriteReview> {
           insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1043,8 +1053,7 @@ class _WriteReviewState extends State<WriteReview> {
                       onPressed: () async {
                         Navigator.pop(context);
                         Navigator.pop(context);
-                      }
-                  )
+                      })
                 ],
               )
             ],
@@ -1052,8 +1061,6 @@ class _WriteReviewState extends State<WriteReview> {
         );
       },
     );
-
-
 
 //     return showDialog<void>(
 //       context: context,
