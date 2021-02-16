@@ -514,11 +514,17 @@ class _SearchScreenState extends State<SearchScreen> {
               //앞에 나온 애들 제외
               for (int j = 0; j < SADrugs.length; j++) {
                 if (drugs[index].itemName == SADrugs[j].itemName) {
+
                   return Container();
                 }
               }
+
+              print('II == '+ index.toString());
+              print('DL == '+ drugs.length.toString());
+              print(drugs[index].itemName);
+
               return SearchResultTile(
-                drug: drugs[index],);
+                drug: drugs[index], index: index, totNum: drugs.length );
             },
           );
         }
@@ -554,8 +560,12 @@ class _SearchScreenState extends State<SearchScreen> {
                 return Container();
               }
             }
+            //print('총 길이 ${drugs.length} 언급된 애들 ${SADrugs.length}');
+            int totCount = drugs.length - SADrugs.length;
+
+
             return SearchResultTile(
-              drug: drugs[index],);
+              drug: drugs[index], index: index, totNum: totCount );
           },
         );
       }
@@ -674,6 +684,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _searchBar(BuildContext context) {
     String searchList;
+    double mw = MediaQuery.of(context).size.width;
+
     TheUser user = Provider.of<TheUser>(context);
 
     CollectionReference userSearchList = FirebaseFirestore.instance
@@ -699,7 +711,7 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           Container(
             //
-            width: MediaQuery.of(context).size.width - 32,
+            width: mw > 375 ? mw - 32-20: mw - 95 ,
             height: 33,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -708,7 +720,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Row(
               children: [
                 Expanded(
-                    flex: 5,
+                   // flex: 5,
                     child: TextFormField(
                       cursorColor: primary300_main,
                       onFieldSubmitted: (val) async {

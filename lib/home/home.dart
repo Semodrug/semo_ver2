@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
       }
       //미디어 쿼리 기준 width가 370이하면
       if (newName.length > 15) {
-        if (mw < 375) {
+        if (mw < 390) {
           newName = newName.substring(0, 9);
           newName = newName + '...';
         } else {

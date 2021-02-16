@@ -13,6 +13,8 @@ class CategoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double mw = MediaQuery.of(context).size.width;
+
     String _shortenCategory(String data) {
       String newName = '';
 
@@ -25,7 +27,12 @@ class CategoryButton extends StatelessWidget {
         if (newName.length > 15) {
           newName = newName.substring(0, 13);
           newName = newName + '...';
+          if (mw < 390) {
+            newName = newName.substring(0, 10);
+            newName = newName + '...';
+          }
         }
+
       }
 
       if (forRanking =='ranking') {
