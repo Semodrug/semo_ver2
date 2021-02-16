@@ -238,9 +238,10 @@ class _ReviewPageState extends State<ReviewPage> {
                                                               ? primary500_light_text
                                                               : gray300_inactivated,
                                                         ))),
-                                            onTap: () {
-                                              _onTapPillInfo;
-                                            },
+                                              onTap: _onTapPillInfo
+                                            // onTap: () {
+                                            //   _onTapPillInfo;
+                                            // },
                                           ),
                                           width: MediaQuery.of(context)
                                                   .size

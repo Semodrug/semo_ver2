@@ -20,6 +20,8 @@ class _GetRatingState extends State<GetRating> {
 
   @override
   Widget build(BuildContext context) {
+
+    var mqWidth = MediaQuery.of(context).size.width;
     TheUser user = Provider.of<TheUser>(context);
     bool _isRated = false;
     return StreamBuilder<Drug> (
@@ -69,7 +71,7 @@ class _GetRatingState extends State<GetRating> {
                   DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(ratingResult, length);
 
                   return Container(
-                      padding: EdgeInsets.fromLTRB(20,20,10,20),
+                      padding: EdgeInsets.fromLTRB(16,20,16,20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -82,41 +84,50 @@ class _GetRatingState extends State<GetRating> {
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              //#####
-                              Row(
-                                children: [
-                                  Image.asset('assets/icons/star.png',
-                                  width: 28, height: 28,),
-                                  //Todo : Rating평
-                                  Container(width: 5),
-                                  Text("",
-                                      style: Theme.of(context).textTheme.headline1.copyWith(
-                                          color: gray750_activated,
-                                          fontSize: 24
-                                      )),
-                                ],
-                              ),
-
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(ratingResult.toStringAsFixed(2),
-                                      style: Theme.of(context).textTheme.headline1.copyWith(
-                                          color: gray750_activated,
-                                          fontSize: 24
-                                      )),
-                                  Column(
+                              Container(
+                                width: mqWidth <=320 ? mqWidth/2.4:
+                                mqWidth/2-16,
+                                child: Row(children: [
+                                  Row(
                                     children: [
-                                      Text(" /5",
-                                          style: Theme.of(context).textTheme.headline4.copyWith(
-                                              color: gray300_inactivated,
-                                              fontSize: 16
+                                      Image.asset('assets/icons/star.png',
+                                        width: 28, height: 28,),
+                                      //Todo : Rating평
+                                      Container(width: 5),
+                                      Text("",
+                                          style: Theme.of(context).textTheme.headline1.copyWith(
+                                              color: gray750_activated,
+                                              fontSize: 24
                                           )),
-                                      Container(height:4)
                                     ],
                                   ),
-                                ],) ,
-                              Expanded(child: Container()),
+
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(ratingResult.toStringAsFixed(2),
+                                          style: Theme.of(context).textTheme.headline1.copyWith(
+                                              color: gray750_activated,
+                                              fontSize: 24
+                                          )),
+                                      Column(
+                                        children: [
+                                          Text(" /5",
+                                              style: Theme.of(context).textTheme.headline4.copyWith(
+                                                  color: gray300_inactivated,
+                                                  fontSize: 16
+                                              )),
+                                          Container(height:4)
+                                        ],
+                                      ),
+                                    ],) ,
+                                ],),
+                              ),
+
+
+
+
+                              // Expanded(child: Container()),
 
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,8 +252,7 @@ class _GetRatingState extends State<GetRating> {
                                       // )
                                     ],
                                   ),
-                                  Container(width:MediaQuery.of(context).size.width*0.15)
-                                  //MyPieChart("effect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
+                                  // Container(width:MediaQuery.of(context).size.width*0.15)
                                 ],
                               ),
                               // Column(

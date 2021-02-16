@@ -235,10 +235,8 @@ class _ReviewListState extends State<ReviewList> {
         ));
   }
 
-  Widget _reportReviewPopup(
-    review,
-    /*user*/
-  ) {
+  Widget _reportReviewPopup(review,) {
+    var mqWidth = MediaQuery.of(context).size.width;
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -259,117 +257,138 @@ class _ReviewListState extends State<ReviewList> {
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
               // padding: const EdgeInsets.only(top: 4.0),
-              child: MaterialButton(
-                  onPressed: () {
-                    _IYMYCancleConfirmReportDialog(
-                      review,
-                      1, /*user*/
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Center(
-                          child: Text(
-                        "광고, 홍보 / 거래 시도",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(color: gray900),
-                      )),
-                    ],
-                  )),
+              child: Container(
+                height: mqWidth <=320 ? (mqWidth*0.6)/4.6 : null,
+                child: MaterialButton(
+                    onPressed: () {
+                      _IYMYCancleConfirmReportDialog(
+                        review,
+                        1, /*user*/
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Center(
+                            child: Text(
+                          "광고, 홍보 / 거래 시도",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: gray900),
+                        )),
+                      ],
+                    )),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
-              child: MaterialButton(
-                  onPressed: () {
-                    _IYMYCancleConfirmReportDialog(
-                      review,
-                      2, /*user*/
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Center(
-                          child: Text(
-                        "욕설, 음란어 사용",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(color: gray900),
-                      )),
-                    ],
-                  )),
+              child: Container(
+                // height: (mqWidth*0.6)/4.6,
+                height: mqWidth <=320 ? (mqWidth*0.6)/4.7 : null,
+                child: MaterialButton(
+                    onPressed: () {
+                      _IYMYCancleConfirmReportDialog(
+                        review,
+                        2, /*user*/
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Center(
+                            child: Text(
+                          "욕설, 음란어 사용",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: gray900),
+                        )),
+                      ],
+                    )),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
-              child: MaterialButton(
-                  onPressed: () {
-                    _IYMYCancleConfirmReportDialog(
-                      review,
-                      3, /*user*/
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Center(
-                          child: Text(
-                        "약과 무관한 리뷰 작성",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(color: gray900),
-                      )),
-                    ],
-                  )),
+              child: Container(
+                // height: (mqWidth*0.6)/4.6,
+                height: mqWidth <=320 ? (mqWidth*0.6)/4.7 : null,
+                child: MaterialButton(
+                    onPressed: () {
+                      _IYMYCancleConfirmReportDialog(
+                        review,
+                        3, /*user*/
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Center(
+                            child: Text(
+                          "약과 무관한 리뷰 작성",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: gray900),
+                        )),
+                      ],
+                    )),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
-              child: MaterialButton(
-                  onPressed: () {
-                    _IYMYCancleConfirmReportDialog(
-                      review,
-                      4, /*user*/
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Center(
-                          child: Text(
-                        "개인 정보 노출",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(color: gray900),
-                      )),
-                    ],
-                  )),
+              child: Container(
+                // height: (mqWidth*0.6)/4.6,
+                height: mqWidth <=320 ? (mqWidth*0.6)/4.7 : null,
+                child: MaterialButton(
+                    onPressed: () {
+                      _IYMYCancleConfirmReportDialog(
+                        review,
+                        4, /*user*/
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Center(
+                            child: Text(
+                          "개인 정보 노출",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: gray900),
+                        )),
+                      ],
+                    )),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
-              child: MaterialButton(
-                  onPressed: () {
-                    _IYMYCancleConfirmReportDialog(
-                      review,
-                      5, /*user*/
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      Center(
-                          child: Text(
-                        "기타 (명예훼손)",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(color: gray900),
-                      )),
-                    ],
-                  )),
+              child: Container(
+                // height: (mqWidth*0.6)/4.6,
+                height: mqWidth <=320 ? (mqWidth*0.6)/4.7 : null,
+                child: MaterialButton(
+                    onPressed: () {
+                      _IYMYCancleConfirmReportDialog(
+                        review,
+                        5, /*user*/
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Center(
+                            child: Text(
+                          "기타 (명예훼손)",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: gray900),
+                        )),
+                      ],
+                    )),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Container(
+                // height: (mqWidth*0.6)/4.5,
+                height: mqWidth <=320 ? (mqWidth*0.6)/4.7 : null,
                 decoration: BoxDecoration(
                   border: Border(
                       // bottom: BorderSide(color: Theme.of(context).hintColor),
@@ -866,7 +885,7 @@ class _ReviewListState extends State<ReviewList> {
 
   Widget _review(review) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
