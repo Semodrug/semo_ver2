@@ -1077,7 +1077,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Divider(thickness: 1, color: gray300_inactivated),
+          Divider(thickness: 1, color: gray100),
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: MaterialButton(
