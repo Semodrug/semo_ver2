@@ -149,7 +149,15 @@ class _PreparedEditState extends State<PreparedEdit> {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
                   theme: DatePickerTheme(
-                      doneStyle: TextStyle(color: primary500_light_text)),
+                      cancelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: gray600),
+                      doneStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: primary500_light_text),
+                      itemStyle: Theme.of(context).textTheme.headline5),
                   minTime: DateTime(2000, 1, 1),
                   maxTime: DateTime(2030, 12, 31),
                   onChanged: (date) {}, onConfirm: (date) async {
@@ -323,6 +331,16 @@ class _PreparedEditState extends State<PreparedEdit> {
             onPressed: () {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
+                  theme: DatePickerTheme(
+                      cancelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: gray600),
+                      doneStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: primary500_light_text),
+                      itemStyle: Theme.of(context).textTheme.headline5),
                   minTime: DateTime.now(),
                   maxTime: DateTime(2030, 12, 31),
                   onChanged: (date) {}, onConfirm: (date) async {

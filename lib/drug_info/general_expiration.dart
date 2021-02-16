@@ -191,7 +191,15 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
             DatePicker.showDatePicker(context,
                 showTitleActions: true,
                 theme: DatePickerTheme(
-                    doneStyle: TextStyle(color: primary500_light_text)),
+                    cancelStyle: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray600),
+                    doneStyle: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: primary500_light_text),
+                    itemStyle: Theme.of(context).textTheme.headline5),
                 minTime: DateTime.now(),
                 maxTime: DateTime(2100, 12, 31),
                 onChanged: (date) {}, onConfirm: (date) async {
@@ -246,7 +254,17 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
                 style: Theme.of(context).textTheme.caption,
                 children: <TextSpan>[
                   TextSpan(
-                    text: '- 알약, 연고류: 6',
+                    text: '- 알약: 1',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: '년 / ',
+                  ),
+                  TextSpan(
+                    text: '시럽제: 1',
                     style: Theme.of(context)
                         .textTheme
                         .caption
@@ -256,17 +274,17 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
                     text: '개월 / ',
                   ),
                   TextSpan(
-                    text: '크림류: 3',
+                    text: '연고: 6',
                     style: Theme.of(context)
                         .textTheme
                         .caption
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   TextSpan(
-                    text: '개월 / ',
+                    text: '개월 /',
                   ),
                   TextSpan(
-                    text: '물약, 시럽약: 1',
+                    text: '안약: 1',
                     style: Theme.of(context)
                         .textTheme
                         .caption
@@ -338,6 +356,16 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
             onPressed: () {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
+                  theme: DatePickerTheme(
+                      cancelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: gray600),
+                      doneStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: primary500_light_text),
+                      itemStyle: Theme.of(context).textTheme.headline5),
                   minTime: DateTime(2000, 1, 1),
                   maxTime: DateTime(2030, 12, 31),
                   onChanged: (date) {}, onConfirm: (date) async {
@@ -513,6 +541,16 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
             onPressed: () {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
+                  theme: DatePickerTheme(
+                      cancelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: gray600),
+                      doneStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: primary500_light_text),
+                      itemStyle: Theme.of(context).textTheme.headline5),
                   minTime: DateTime.now(),
                   maxTime: DateTime(2030, 12, 31),
                   onChanged: (date) {}, onConfirm: (date) async {
