@@ -72,39 +72,7 @@ class ReviewBox extends StatelessWidget {
 
 
   }
-  // Widget _reviewBox(review, type) {
-  //   return Container(
-  //       padding: EdgeInsets.all(9.5),
-  //       decoration: BoxDecoration(
-  //           color: gray50,
-  //           border: Border.all(color: gray50),
-  //           borderRadius: BorderRadius.all(Radius.circular(4.0))),
-  //
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Row(
-  //             crossAxisAlignment: CrossAxisAlignment.end,
-  //             children: [
-  //               Text(
-  //                 type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
-  //                 style: Theme.of(context).textTheme.subtitle2.copyWith(
-  //                     color: gray900, fontSize: 12
-  //                 ),),
-  //               Container(width:3),
-  //               _face(type == "effect" ? review.effect : type == "sideEffect" ? review.sideEffect : "overall",),
-  //             ],
-  //           ),
-  //           Container(height:4),
-  //           Text(type == "effect" ? review.effectText : type == "sideEffect" ? review.sideEffectText : review.overallText,
-  //             style: Theme.of(context).textTheme.subtitle2.copyWith(
-  //                 color: gray600,
-  //                 fontSize: 14
-  //             ),),
-  //         ],
-  //       )
-  //   );
-  // }
+
   Widget _face(face) {
     if(face == "good")
       return Row(
