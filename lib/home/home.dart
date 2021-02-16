@@ -192,6 +192,8 @@ class _HomePageState extends State<HomePage> {
         if (mw < 390) {
           newName = newName.substring(0, 9);
           newName = newName + '...';
+
+
         } else {
           newName = newName.substring(0, 12);
           newName = newName + '...';
