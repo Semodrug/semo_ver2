@@ -197,15 +197,6 @@ class _RegisterFormState extends State<RegisterForm> {
             else {
               await _auth.signOut();
 
-              // dynamic result = await _auth.signInWithEmail(
-              //     _emailController.text, _passwordController.text);
-              // //
-              // // if (result == null) {
-              // //   print('알 수 없는 오류 발생');
-              // // }
-              // print('회원가입 완료');
-              // print(user.uid);
-
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
                     '회원가입이 완료되었습니다.',
