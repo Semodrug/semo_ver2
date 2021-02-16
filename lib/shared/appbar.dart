@@ -23,10 +23,13 @@ class IYMYAppBar extends StatelessWidget with PreferredSizeWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(
-                height: 56,
-                width: 70,
-                child: Image(image: AssetImage('assets/icons/iymy.png'))),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: SizedBox(
+                  height: 56,
+                  width: 70,
+                  child: Image(image: AssetImage('assets/icons/iymy.png'))),
+            ),
           ],
         ),
         backgroundColor: Colors.white,
@@ -54,12 +57,15 @@ class IYMYAppBar extends StatelessWidget with PreferredSizeWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: Theme.of(context)
-                  .textTheme
-                  .headline5
-                  .copyWith(color: gray800),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(
+                title,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    .copyWith(color: gray800),
+              ),
             ),
           ],
         ),
