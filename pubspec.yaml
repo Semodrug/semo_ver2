@@ -73,7 +73,6 @@ dependencies:
   flutter_spinkit: ^4.1.2+1
   fluttertoast: ^7.1.6
   dynamic_text_highlighting: ^2.2.0
-  device_preview: ^0.5.5
 
 
 

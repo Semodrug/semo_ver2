@@ -714,8 +714,7 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Row(
         children: [
           Container(
-            //
-            width: mw > 375 ? mw - 32-20: mw - 95 ,
+            width: mw - 32 ,
             height: 33,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
