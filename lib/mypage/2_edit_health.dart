@@ -197,17 +197,30 @@ class _EditHealthPageState extends State<EditHealthPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text('알림을 받고싶은 키워드를 선택해주세요 ',
-                  style: Theme.of(context).textTheme.subtitle1),
-              Text('(복수선택가능)',
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1
-                      .copyWith(fontWeight: FontWeight.w100))
-            ],
-          ),
+          MediaQuery.of(context).size.width > 350
+              ? Row(
+                  children: [
+                    Text('알림을 받고싶은 키워드를 선택해주세요 ',
+                        style: Theme.of(context).textTheme.subtitle1),
+                    Text('(복수선택가능)',
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(fontWeight: FontWeight.w100))
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('알림을 받고싶은 키워드를 선택해주세요 ',
+                        style: Theme.of(context).textTheme.subtitle1),
+                    Text('(복수선택가능)',
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(fontWeight: FontWeight.w100))
+                  ],
+                ),
           SizedBox(height: 12.0),
           Row(
             children: [
@@ -456,7 +469,9 @@ class _EditHealthPageState extends State<EditHealthPage> {
             side: BorderSide(
                 color: isPressed[index] ? primary300_main : gray200)),
         color: Colors.white,
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        padding: EdgeInsets.symmetric(
+            vertical: 8.0,
+            horizontal: MediaQuery.of(context).size.width > 350 ? 16.0 : 12.0),
         onPressed: () {
           setState(() {
             // 0번 버튼을 누르면 나머지 버튼 값은 모두 false
