@@ -43,26 +43,28 @@ class _PreparedExpirationState extends State<PreparedExpiration> {
           Drug drug = snapshot.data;
 
           if (snapshot.hasData) {
-            return Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    _topInfo(context, drug),
-                    SizedBox(height: 20),
-                    _pickPreparedDay(),
-                    SizedBox(height: 20),
-                    Container(
-                        alignment: Alignment.bottomLeft,
-                        child: _pickDuration()),
-                    SizedBox(height: 20),
-                    _isSelf ? _pickSelf() : Container(),
-                    _showExpiration(),
-                    SizedBox(height: 20),
-                    _submitButton(
-                        context, user, drug, _finalString, _finalDateTime),
-                  ],
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      _topInfo(context, drug),
+                      SizedBox(height: 20),
+                      _pickPreparedDay(),
+                      SizedBox(height: 20),
+                      Container(
+                          alignment: Alignment.bottomLeft,
+                          child: _pickDuration()),
+                      SizedBox(height: 20),
+                      _isSelf ? _pickSelf() : Container(),
+                      _showExpiration(),
+                      SizedBox(height: 20),
+                      _submitButton(
+                          context, user, drug, _finalString, _finalDateTime),
+                    ],
+                  ),
                 ),
               ),
             );

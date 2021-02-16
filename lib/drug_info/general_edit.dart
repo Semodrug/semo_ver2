@@ -75,25 +75,26 @@ class _GeneralEditState extends State<GeneralEdit> {
           Drug drug = snapshot.data;
 
           if (snapshot.hasData) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  _topInfo(context, drug),
-                  SizedBox(height: 20),
-                  _isGeneral
-                      ? _generalCase(
-                          context,
-                          drug,
-                          user,
-                        )
-                      : _preparedCase(
-                          context,
-                          drug,
-                          user,
-                        ),
-                ],
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: Column(
+                  children: [
+                    _topInfo(context, drug),
+                    SizedBox(height: 20),
+                    _isGeneral
+                        ? _generalCase(
+                            context,
+                            drug,
+                            user,
+                          )
+                        : _preparedCase(
+                            context,
+                            drug,
+                            user,
+                          ),
+                  ],
+                ),
               ),
             );
           } else {
@@ -147,7 +148,7 @@ class _GeneralEditState extends State<GeneralEdit> {
         _pickDay(),
         SizedBox(height: 11),
         _tip(),
-        SizedBox(height: 70),
+        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
