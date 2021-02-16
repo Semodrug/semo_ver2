@@ -166,12 +166,15 @@ class _MyPageState extends State<MyPage> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<Review> reviews = snapshot.data;
-                        return Container(
-                            width: 136,
-                            child: _myMenu('리뷰', reviews.length.toString(),
-                                context, MyReviews()));
+                        return Row(
+                          children: [
+                            _myMenu('리뷰', reviews.length.toString(), context,
+                                MyReviews()),
+                            SizedBox(width: 10)
+                          ],
+                        );
                       } else
-                        return Container();
+                        return CircularProgressIndicator();
                     },
                   ),
                   Container(
@@ -185,12 +188,15 @@ class _MyPageState extends State<MyPage> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List favoriteList = snapshot.data.favoriteList;
-                        return Container(
-                            width: 136,
-                            child: _myMenu('찜', favoriteList.length.toString(),
-                                context, MyFavorites()));
+                        return Row(
+                          children: [
+                            SizedBox(width: 10),
+                            _myMenu('찜', favoriteList.length.toString(),
+                                context, MyFavorites()),
+                          ],
+                        );
                       } else
-                        return Container();
+                        return CircularProgressIndicator();
                     },
                   ),
                   //_myMenu('1:1 문의', '0', context, MyReviews())
