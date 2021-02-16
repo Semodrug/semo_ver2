@@ -70,7 +70,7 @@ class _ReviewPageState extends State<ReviewPage> {
     final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
     final RenderBox renderBox3 = _key3.currentContext.findRenderObject();
     // final RenderBox renderBox4 = _key4.currentContext.findRenderObject();
-    double height = renderBox1.size.height /*+ renderBox2.size.height*/ +
+    double height = renderBox1.size.height + /*renderBox2.size.height +*/
         renderBox3.size.height +
         // renderBox4.size.height +
         30;
@@ -80,7 +80,7 @@ class _ReviewPageState extends State<ReviewPage> {
   double _getPillInfoSize() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
     final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
-    double height = renderBox1.size.height /*+ renderBox2.size.height*/;
+    double height = renderBox1.size.height  /*+ renderBox2.size.height*/;
     return height;
   }
 
@@ -89,14 +89,15 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.offset * 1.0 > _getReviewSizes())
-        pillInfoTab = false;
-      else
-        pillInfoTab = true;
-      //print("MORE THAN 1000");
-      // print('offset = ${_scrollController.offset}');
-    });
+    // _scrollController.addListener(() {
+    //   if (_scrollController.offset * 1.0 > _getReviewSizes())
+    //     pillInfoTab = false;
+    //   else
+    //     pillInfoTab = true;
+    //   //print("MORE THAN 1000");
+    //   print('offset = ${_scrollController.offset}');
+    //   print(pillInfoTab);
+    // });
   }
 
   // void checkScroller() {
@@ -120,11 +121,11 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   void _onTapReview() {
-    _scrollController.animateTo(_getReviewSizes(),
-        duration: Duration(milliseconds: 400), curve: Curves.easeOut);
     setState(() {
       pillInfoTab = false;
     });
+    _scrollController.animateTo(_getReviewSizes(),
+        duration: Duration(milliseconds: 400), curve: Curves.easeOut);
   }
 
   bool pillInfoTab = true;
@@ -237,7 +238,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                                               ? primary500_light_text
                                                               : gray300_inactivated,
                                                         ))),
-                                            onTap: _onTapPillInfo,
+                                            onTap: () {
+                                              _onTapPillInfo;
+                                            },
                                           ),
                                           width: MediaQuery.of(context)
                                                   .size
@@ -310,18 +313,18 @@ class _ReviewPageState extends State<ReviewPage> {
                                   )
                                 ],
                               ),
-                              onNotification: (notification) {
-                                //List scroll position
-                                if (_scrollController.position.pixels * 1.0 <
-                                    _getReviewSizes())
-                                  pillInfoTab = true;
-                                else if (_scrollController.position.pixels *
-                                        1.0 >=
-                                    _getReviewSizes()) pillInfoTab = false;
-                                // print(pillInfoTab);
-                                // print(notification.metrics.pixels);
-                                //print(_scrollController.position.pixels);
-                              },
+                              // onNotification: (notification) {
+                              //   //List scroll position
+                              //   if (_scrollController.position.pixels * 1.0 <
+                              //       _getReviewSizes())
+                              //     pillInfoTab = true;
+                              //   else if (_scrollController.position.pixels *
+                              //           1.0 >=
+                              //       _getReviewSizes()) pillInfoTab = false;
+                              //   // print(pillInfoTab);
+                              //   // print(notification.metrics.pixels);
+                              //   //print(_scrollController.position.pixels);
+                              // },
                             ),
                           );
                         } else {
@@ -925,44 +928,85 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   Widget _reviewWarning() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 4, 20, 5),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        height: 36,
-        decoration: BoxDecoration(
-          // color: gray50,
-          borderRadius: BorderRadius.circular(4.0),
-        ),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 15,
-              height: 15,
-              child: Image.asset('assets/icons/warning_icon_primary.png'),
-            ),
-            SizedBox(width: 6),
-            RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                // Note: Styles for TextSpans must be explicitly defined.
-                // Child text spans will inherit styles from parent
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2
-                    .copyWith(color: gray600, fontSize: 12),
-                children: <TextSpan>[
-                  TextSpan(
-                      text: "효과 및 부작용은 개인에 따라 다를 수 있습니다.",
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle2
-                          .copyWith(color: gray600, fontSize: 12)),
-                  // TextSpan(text: '은 개인에 따라 다를 수 있습니다.'),
-                ],
+    return Container(
+      width:  MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 5),
+        child: Container(
+          // padding: EdgeInsets.symmetric(horizontal: 10),
+          // padding: EdgeInsets.only(right: 10),
+          height: 36,
+          decoration: BoxDecoration(
+            // color: gray50,
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: 15,
+                height: 15,
+                child: Image.asset('assets/icons/warning_icon_primary.png'),
               ),
-            ),
-          ],
+              SizedBox(width: 6),
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  // Note: Styles for TextSpans must be explicitly defined.
+                  // Child text spans will inherit styles from parent
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle2
+                      .copyWith(color: gray300_inactivated, fontSize: 11),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: "효과 및 부작용은 개인에 따라 다를 수 있습니다.",
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle2
+                            .copyWith(color: gray600, fontSize: 12)),
+                  ],
+                ),
+              ),
+              Expanded(child: Container(),),
+              // Container(width: 20),
+
+              /*InkWell(
+                child: RichText(
+
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        .copyWith(color: gray300_inactivated, fontSize: 11,
+                      decoration: TextDecoration.underline,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(text: '더 보기 '),
+                    ],
+                  ),
+                ),
+
+
+                // Text(
+                //   '처방받은 약인가요?',
+                //   style: TextStyle(
+                //     color: primary500_light_text,
+                //     fontSize: 12.0,
+                //     fontWeight: FontWeight.w400,
+                //     decoration: TextDecoration.underline,
+                //   ),
+                // ),
+                onTap: () {
+                  setState(() {
+                    // _isGeneral = false;
+                  });
+                },
+              ),*/
+
+            ],
+          ),
         ),
       ),
     );

@@ -60,7 +60,7 @@ class ReviewService {
 
   List<Review> _reviewListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      print(doc.data()['registrationDate'].toString());
+      // print(doc.data()['registrationDate'].toString());
       return Review(
         effect: doc.data()['effect'] ?? '',
         sideEffect: doc.data()['sideEffect'] ?? '',
