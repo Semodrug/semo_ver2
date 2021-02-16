@@ -14,7 +14,7 @@ class InquiryPage extends StatefulWidget {
   @override
   _InquiryPageState createState() => _InquiryPageState();
 }
-ㄴ
+
 class _InquiryPageState extends State<InquiryPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
