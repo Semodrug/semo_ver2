@@ -196,17 +196,17 @@ class _HomePageState extends State<HomePage> {
         }
       }
       //미디어 쿼리 기준 width가 370이하면
-      if (newName.length > 15) {
-        if (mw < 390) {
-          newName = newName.substring(0, 9);
-          newName = newName + '...';
-
-
-        } else {
-          newName = newName.substring(0, 12);
-          newName = newName + '...';
-        }
-      }
+      // if (newName.length > 18) {
+      //   if (mw < 320) {
+      //     newName = newName.substring(0, 15);
+      //     newName = newName + '...';
+      //
+      //
+      //   } else {
+      //     newName = newName.substring(0, 12);
+      //     newName = newName + '...';
+      //   }
+      // }
       return newName;
     }
 
@@ -305,8 +305,10 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
+                                    width: mw - 200,
                                     child: Text(_checkLongName(data),
-                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -421,8 +423,10 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
+                                    width: mw - 200,
                                     child: Text(_checkLongName(data),
-                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -552,8 +556,10 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
+                                    width: mw - 200,
                                     child: Text(_checkLongName(data),
-                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -668,8 +674,10 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
+                                  width: mw - 200,
                                     child: Text(_checkLongName(data),
-                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -800,8 +808,10 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
+                                    width: mw - 200,
                                     child: Text(_checkLongName(data),
-                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -909,8 +919,10 @@ class _HomePageState extends State<HomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
+                                    width: mw - 200,
                                     child: Text(_checkLongName(data),
-                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
