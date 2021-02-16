@@ -43,7 +43,9 @@ class SearchResultTile extends StatelessWidget {
 
   //(2) 하이라이팅을 위한
   Widget _highlightText(BuildContext context, String text) {
-    return RichText(textScaleFactor: 1.08, text: searchMatch(text));
+    return RichText(textScaleFactor: 1.08, text: searchMatch(text),
+      overflow: TextOverflow.ellipsis,
+    );
   }
   //(2) 여기까지
 
@@ -137,7 +139,7 @@ class SearchResultTile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                    width: mw > 390 ? mw - 130 : mw - 200,
+                                    //width: mw > 390 ? mw - 130 : mw -150,
                                     child:
                                         // Text(
                                         //     _checkLongName(drugStreamData.itemName),
@@ -191,7 +193,7 @@ class SearchResultTile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                    width: mw > 390 ? mw - 130 : mw - 200,
+                                    width: mw > 390 ? mw - 120 : mw - 150,
                                     child:
                                     // Text(
                                     //     _checkLongName(drugStreamData.itemName),
