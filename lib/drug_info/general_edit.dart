@@ -217,6 +217,8 @@ class _GeneralEditState extends State<GeneralEdit> {
           onPressed: () {
             DatePicker.showDatePicker(context,
                 showTitleActions: true,
+                theme: DatePickerTheme(
+                    doneStyle: TextStyle(color: primary500_light_text)),
                 minTime: DateTime.now(),
                 maxTime: DateTime(2100, 12, 31),
                 onChanged: (date) {}, onConfirm: (date) async {

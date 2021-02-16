@@ -115,7 +115,7 @@ class _EditHealthPageState extends State<EditHealthPage> {
                             children: [
                               chooseKeywords(),
                               SizedBox(
-                                height: 10,
+                                height: 20,
                               ),
                               InkWell(
                                 child: Padding(
@@ -220,7 +220,7 @@ class _EditHealthPageState extends State<EditHealthPage> {
               _exclusiveMultiButton(3, _isKeywordList, '소아'),
             ],
           ),
-          SizedBox(height: 4.0),
+          SizedBox(height: 6.0),
           Row(
             children: [
               _exclusiveMultiButton(4, _isKeywordList, '간'),
@@ -230,14 +230,14 @@ class _EditHealthPageState extends State<EditHealthPage> {
               _exclusiveMultiButton(6, _isKeywordList, '심장'),
             ],
           ),
-          SizedBox(height: 4.0),
+          SizedBox(height: 6.0),
           Row(
             children: [
               _exclusiveMultiButton(7, _isKeywordList, '고혈압'),
               SizedBox(width: 6),
               _exclusiveMultiButton(8, _isKeywordList, '당뇨'),
               SizedBox(width: 6),
-              _exclusiveMultiButton(9, _isKeywordList, '유당분해요소 결핍증'),
+              _exclusiveMultiButton(9, _isKeywordList, '유당분해효소 결핍증'),
             ],
           ),
         ],
@@ -456,7 +456,7 @@ class _EditHealthPageState extends State<EditHealthPage> {
             side: BorderSide(
                 color: isPressed[index] ? primary300_main : gray200)),
         color: Colors.white,
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         onPressed: () {
           setState(() {
             // 0번 버튼을 누르면 나머지 버튼 값은 모두 false

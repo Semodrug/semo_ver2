@@ -82,7 +82,9 @@ class _HomePageState extends State<HomePage> {
         stream: DatabaseService(uid: user.uid).savedDrugs,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator(),);
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
           return _buildList(context, snapshot.data);
         });
@@ -136,14 +138,20 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(4.0),
                         ),
                         child: Center(
-                          child: Text(
-                            ' + 추가하기',
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(color: Colors.white,  ),
-                          )
-                        )),
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add, color: gray0_white, size: 16),
+                            Text(
+                              '추가하기',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  .copyWith(color: gray0_white),
+                            ),
+                            SizedBox(width: 2)
+                          ],
+                        ))),
                   ),
                 ],
               ),
@@ -153,17 +161,17 @@ class _HomePageState extends State<HomePage> {
         Divider(height: 3, thickness: 0.5, indent: 1, endIndent: 0),
         Expanded(
           child:
-          // ListView(
-          //   children:
-          //       snapshot.map((data) => _buildListItem(context, data)).toList(),
-          // ),
-          ListView.builder(
+              // ListView(
+              //   children:
+              //       snapshot.map((data) => _buildListItem(context, data)).toList(),
+              // ),
+              ListView.builder(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
             itemCount: snapshot.length  ,
             itemBuilder: (context, index) {
-              return _buildListItem(context, snapshot[index], index + 1, count );
+              return _buildListItem(context, snapshot[index], index + 1, count);
             },
           ),
         ),
@@ -248,12 +256,11 @@ class _HomePageState extends State<HomePage> {
               builder: (context) => ReviewPage(data.itemSeq),
             ),
           ),
-        // //페이지 네비게이션 좌 --> 우
-        // Navigator.push(
-        // context,
-        // CupertinoPageRoute(builder: (_) => ReviewPage(data.itemSeq))
-        // )
-
+          // //페이지 네비게이션 좌 --> 우
+          // Navigator.push(
+          // context,
+          // CupertinoPageRoute(builder: (_) => ReviewPage(data.itemSeq))
+          // )
         },
         child: index == totalNum ?
         Container(
@@ -1456,12 +1463,19 @@ class _HomePageState extends State<HomePage> {
                         color: primary300_main,
                         borderRadius: BorderRadius.circular(4.0),
                       ),
-                      child: Text(
-                        ' + 추가하기',
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: gray0_white),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add, color: gray0_white, size: 16),
+                          Text(
+                            '추가하기',
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(color: gray0_white),
+                          ),
+                          SizedBox(width: 2)
+                        ],
                       )),
                 ),
               ],

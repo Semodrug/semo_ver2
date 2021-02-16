@@ -459,4 +459,32 @@ class DatabaseService {
       'favoriteList': FieldValue.arrayRemove([itemSeq]),
     });
   }
+
+  final CollectionReference inquiryCollection =
+      FirebaseFirestore.instance.collection('Inquiry');
+
+  Future<void> createInquiry(index, title, body, from) async {
+    String type;
+    if (index == 1)
+      type = '1. 의약품 정보 문의 및 요청';
+    else if (index == 2)
+      type = '2. 서비스 불편, 오류 제보';
+    else if (index == 3)
+      type = '3. 사용 방법, 기타 문의';
+    else if (index == 4)
+      type = '4. 의견 제안, 칭찬';
+    else if (index == 5)
+      type = '5. 제휴 문의';
+    else
+      type = '';
+
+    print('$type, $title, $body, $from');
+
+    return await inquiryCollection.add({
+      'type': type,
+      'title': title,
+      'body': body,
+      'from': from,
+    });
+  }
 }
