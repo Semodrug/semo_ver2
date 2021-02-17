@@ -296,6 +296,8 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
                 ],
               ),
             ),
+            Text("(위의 기준은 일반적인 기준이며, 의약품의 종류에 따라 달라질 수 있습니다. 출처: 미국 약전 USP)",
+                style: Theme.of(context).textTheme.caption),
           ],
         ),
       ),
@@ -451,9 +453,9 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
                 },
               ),
               DropdownMenuItem(
-                value: 14,
+                value: 30,
                 child: Text(
-                  '[2주] 개봉된 액체상태의 시럽',
+                  '[1개월] 시럽병에 덜어서 받은 시럽제',
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
@@ -468,7 +470,7 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
               DropdownMenuItem(
                 value: 30,
                 child: Text(
-                  '[1개월] 개봉된 액체상태의 안약',
+                  '[1개월] 연고곽에 덜어서 받은 연고',
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
@@ -481,9 +483,24 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
                 },
               ),
               DropdownMenuItem(
-                value: 180,
+                value: 30,
                 child: Text(
-                  '[6개월] 개봉된 연고',
+                  '[1개월] 조제받은 가루약',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: gray750_activated),
+                ),
+                onTap: () {
+                  setState(() {
+                    _isSelf = false;
+                  });
+                },
+              ),
+              DropdownMenuItem(
+                value: 30,
+                child: Text(
+                  '[1개월] 개봉한 안약',
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
