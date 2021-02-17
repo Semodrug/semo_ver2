@@ -883,6 +883,7 @@ class _WriteReviewState extends State<WriteReview> {
               String nickName =
                   await DatabaseService(uid: user.uid).getNickName();
               _registerReview(nickName);
+
               Navigator.pop(context);
               IYMYGotoSeeOrCheckDialog();
             }
