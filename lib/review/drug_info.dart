@@ -14,6 +14,7 @@ import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/my_favorites.dart';
 import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
+import 'package:semo_ver2/review/review_policy_more.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
@@ -965,14 +966,14 @@ class _ReviewPageState extends State<ReviewPage> {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle2
-                            .copyWith(color: gray600, fontSize: 12)),
+                            .copyWith(color: gray600, fontSize: MediaQuery.of(context).size.width<=320? 11: 12)),
                   ],
                 ),
               ),
-              Expanded(child: Container(),),
-              // Container(width: 20),
+              // Expanded(child: Container(),),
+              Container(width: 5),
 
-              /*InkWell(
+              InkWell(
                 child: RichText(
 
                   textAlign: TextAlign.center,
@@ -980,7 +981,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     style: Theme.of(context)
                         .textTheme
                         .subtitle2
-                        .copyWith(color: gray300_inactivated, fontSize: 11,
+                        .copyWith(color: gray300_inactivated, fontSize:  MediaQuery.of(context).size.width<=320? 10: 11,
                       decoration: TextDecoration.underline,
                     ),
                     children: <TextSpan>[
@@ -1000,11 +1001,12 @@ class _ReviewPageState extends State<ReviewPage> {
                 //   ),
                 // ),
                 onTap: () {
-                  setState(() {
-                    // _isGeneral = false;
-                  });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ReviewPolicyMore()));
                 },
-              ),*/
+              ),
 
             ],
           ),

@@ -38,6 +38,7 @@ class _MyReviewsState extends State<MyReviews> {
 
     return Scaffold(
         appBar: CustomAppBarWithGoToBack('리뷰', Icon(Icons.arrow_back), 0.5),
+        backgroundColor: gray0_white,
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
