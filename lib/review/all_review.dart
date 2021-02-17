@@ -209,14 +209,17 @@ class _AllReveiewState extends State<AllReview> {
                       .copyWith( color: gray500),
                   tabs: [
                     Tab(child: Text('전체리뷰',
+                      style: TextStyle(fontSize: MediaQuery.of(context).size.width<=320 ? 11: 12),
                       // style: Theme.of(context).textTheme.subtitle2
                       //     .copyWith(color: gray750_activated, fontSize: 12)
                     )),
                     Tab(child: Text('효과리뷰만',
+                      style: TextStyle(fontSize: MediaQuery.of(context).size.width<=320 ? 11: 12),
                         // style: Theme.of(context).textTheme.subtitle2
                         // .copyWith(color: gray750_activated, fontSize: 12)
                     )),
                     Tab(child: Text('부작용리뷰만',
+                      style: TextStyle(fontSize: MediaQuery.of(context).size.width<=320 ? 11: 12),
                         // style: Theme.of(context).textTheme.subtitle2
                         //     .copyWith(color: gray750_activated, fontSize: 12)
                     )),
