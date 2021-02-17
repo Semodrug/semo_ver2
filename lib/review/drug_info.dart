@@ -228,22 +228,22 @@ class _ReviewPageState extends State<ReviewPage> {
                                       children: [
                                         Container(
                                           child: InkWell(
-                                            child: Center(
-                                                child: Text("약정보",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .subtitle1
-                                                        .copyWith(
-                                                          color: pillInfoTab ==
-                                                                  true
-                                                              ? primary500_light_text
-                                                              : gray300_inactivated,
-                                                        ))),
+                                              child: Center(
+                                                  child: Text("약정보",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .subtitle1
+                                                          .copyWith(
+                                                            color: pillInfoTab ==
+                                                                    true
+                                                                ? primary500_light_text
+                                                                : gray300_inactivated,
+                                                          ))),
                                               onTap: _onTapPillInfo
-                                            // onTap: () {
-                                            //   _onTapPillInfo;
-                                            // },
-                                          ),
+                                              // onTap: () {
+                                              //   _onTapPillInfo;
+                                              // },
+                                              ),
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width /
@@ -964,10 +964,11 @@ class _ReviewPageState extends State<ReviewPage> {
                   children: <TextSpan>[
                     TextSpan(
                         text: "효과 및 부작용은 개인에 따라 다를 수 있습니다.",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2
-                            .copyWith(color: gray600, fontSize: MediaQuery.of(context).size.width<=320? 11: 12)),
+                        style: Theme.of(context).textTheme.subtitle2.copyWith(
+                            color: gray600,
+                            fontSize: MediaQuery.of(context).size.width <= 320
+                                ? 11
+                                : 12)),
                   ],
                 ),
               ),
@@ -976,21 +977,20 @@ class _ReviewPageState extends State<ReviewPage> {
 
               InkWell(
                 child: RichText(
-
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2
-                        .copyWith(color: gray300_inactivated, fontSize:  MediaQuery.of(context).size.width<=320? 10: 11,
-                      decoration: TextDecoration.underline,
-                    ),
+                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                          color: gray300_inactivated,
+                          fontSize: MediaQuery.of(context).size.width <= 320
+                              ? 10
+                              : 11,
+                          decoration: TextDecoration.underline,
+                        ),
                     children: <TextSpan>[
                       TextSpan(text: '더 보기 '),
                     ],
                   ),
                 ),
-
 
                 // Text(
                 //   '처방받은 약인가요?',
@@ -1210,6 +1210,7 @@ class _ReviewPageState extends State<ReviewPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),

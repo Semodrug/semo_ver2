@@ -58,33 +58,32 @@ class _MyReviewsState extends State<MyReviews> {
                           color: gray75,
                           height: 1,
                         ),
-
                         reviews.length == 0
                             ? Container(
-                            height: 310,
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 30,
-                                ),
-                                Image.asset(
-                                  'assets/images/no_review.png',
-                                ),
-                                Container(
-                                  height: 10,
-                                ),
-                                Text("아직 작성된 리뷰가 없어요")
-                              ],
-                            ))
+                                height: 310,
+                                width: MediaQuery.of(context).size.width,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                    ),
+                                    Image.asset(
+                                      'assets/images/no_review.png',
+                                    ),
+                                    Container(
+                                      height: 10,
+                                    ),
+                                    Text("아직 작성된 리뷰가 없어요")
+                                  ],
+                                ))
                             : // ReviewList(_searchText, "all", widget.drugItemSeq),
-                        ListView.builder(
-                            shrinkWrap: true,
-                            physics: const ClampingScrollPhysics(),
-                            itemCount: reviews.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return _review(context, reviews[index]);
-                            }),
+                            ListView.builder(
+                                shrinkWrap: true,
+                                physics: const ClampingScrollPhysics(),
+                                itemCount: reviews.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _review(context, reviews[index]);
+                                }),
                       ],
                     );
                   } else
@@ -247,8 +246,11 @@ class _MyReviewsState extends State<MyReviews> {
                       context: context, review: review, type: "sideEffect"),
                   Container(height: 6),
 
-                  review.overallText =="" ? Container() : ReviewBox(context: context, review: review, type: "overall"),
-                  review.overallText =="" ? Container() : Container(height:6),
+                  review.overallText == ""
+                      ? Container()
+                      : ReviewBox(
+                          context: context, review: review, type: "overall"),
+                  review.overallText == "" ? Container() : Container(height: 6),
                   // ReviewBox(context: context, review: review, type: "overall"),
                 ],
               ),
@@ -352,6 +354,7 @@ class _MyReviewsState extends State<MyReviews> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -420,6 +423,7 @@ class _MyReviewsState extends State<MyReviews> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
+                              insetPadding: EdgeInsets.zero,
                               contentPadding: EdgeInsets.all(16),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0)),

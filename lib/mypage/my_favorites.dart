@@ -46,33 +46,32 @@ class _MyFavoritesState extends State<MyFavorites> {
                           color: gray75,
                           height: 1,
                         ),
-
-                        favoriteList.length == 0 ?
-                        Container(
-                            height: 310,
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 30,
-                                ),
-                                Image.asset(
-                                  'assets/images/no_review.png',
-                                ),
-                                Container(
-                                  height: 10,
-                                ),
-                                Text("아직 찜한 약이 없어요")
-                              ],
-                            ))
-                        :
-                        ListView.builder(
-                            shrinkWrap: true,
-                            physics: const ClampingScrollPhysics(),
-                            itemCount: favoriteList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return _favorite(context, favoriteList[index]);
-                            }),
+                        favoriteList.length == 0
+                            ? Container(
+                                height: 310,
+                                width: MediaQuery.of(context).size.width,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                    ),
+                                    Image.asset(
+                                      'assets/images/no_review.png',
+                                    ),
+                                    Container(
+                                      height: 10,
+                                    ),
+                                    Text("아직 찜한 약이 없어요")
+                                  ],
+                                ))
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                physics: const ClampingScrollPhysics(),
+                                itemCount: favoriteList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _favorite(
+                                      context, favoriteList[index]);
+                                }),
                       ],
                     );
                   } else
@@ -83,6 +82,7 @@ class _MyFavoritesState extends State<MyFavorites> {
           ],
         ));
   }
+
   Widget _favorite(context, favorite) {
     TheUser user = Provider.of<TheUser>(context);
 
@@ -208,8 +208,7 @@ class _MyFavoritesState extends State<MyFavorites> {
                             Expanded(child: Container()),
                             IconButton(
                               padding: EdgeInsets.only(right: 0),
-                              icon: Icon(Icons.close, color: gray500,
-                              size: 18),
+                              icon: Icon(Icons.close, color: gray500, size: 18),
                               // icon: ImageIcon(
                               //   AssetImage('assets/icons/small_x.png'),
                               //   // color: primary400_line,
@@ -241,6 +240,7 @@ class _MyFavoritesState extends State<MyFavorites> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -309,6 +309,7 @@ class _MyFavoritesState extends State<MyFavorites> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
+                              insetPadding: EdgeInsets.zero,
                               contentPadding: EdgeInsets.all(16),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0)),
