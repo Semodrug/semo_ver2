@@ -49,7 +49,6 @@ class _EditReviewState extends State<EditReview> {
   String starRatingText = '';
   String reasonForTakingPill = '';
 
-
   bool editSwitch = false;
 
 //  String editOrWrite = 'edit'; // 'write'
@@ -90,7 +89,10 @@ class _EditReviewState extends State<EditReview> {
                 appBar: AppBar(
                   title: Text(
                     "리뷰 쓰기",
-                    style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        .copyWith(color: gray800),
                   ),
                   elevation: 0.5,
                   titleSpacing: 0,
@@ -105,7 +107,6 @@ class _EditReviewState extends State<EditReview> {
                     },
                   ),
                 ),
-
                 body: GestureDetector(
                   onTap: () {
                     FocusScope.of(context).unfocus();
@@ -480,8 +481,11 @@ class _EditReviewState extends State<EditReview> {
 //                   Icon(Icons.star,
 // //                color: Colors.amber[300],
 //                   color: primary300_main),
-              Image.asset('assets/icons/rating_star.png',
-                width: 28, height: 28,),
+                  Image.asset(
+                'assets/icons/rating_star.png',
+                width: 28,
+                height: 28,
+              ),
 
               onRatingUpdate: (rating) {
                 starRating = rating;
@@ -542,7 +546,6 @@ class _EditReviewState extends State<EditReview> {
         ));
   }
 
-
   Widget _reasonForTakingPill(Review review) {
     return Container(
 //          height: 280,
@@ -550,9 +553,9 @@ class _EditReviewState extends State<EditReview> {
         decoration: BoxDecoration(
             border: Border(
                 bottom: BorderSide(
-                  width: 0.8,
-                  color: Colors.grey[300],
-                ))),
+          width: 0.8,
+          color: Colors.grey[300],
+        ))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
 //              crossAxisAlignment: CrossAxisAlignment.center,
@@ -562,15 +565,16 @@ class _EditReviewState extends State<EditReview> {
                     .textTheme
                     .headline5
                     .copyWith(color: gray900, fontSize: 16)),
-            _textField("reason",reasonForTakingPillController),
+            _textField("reason", reasonForTakingPillController),
             // _exclusiveMultiButton(),
             // writeReason(),
-            Container(height: 45,)
+            Container(
+              height: 45,
+            )
             // _textField(myControllerEffect)
           ],
         ));
   }
-
 
   Widget _exclusiveMultiButton() {
     return ButtonTheme(
@@ -579,22 +583,22 @@ class _EditReviewState extends State<EditReview> {
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6.0),
-            side: BorderSide(
-                color: primary300_main)),
+            side: BorderSide(color: primary300_main)),
         color: Colors.white,
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
         onPressed: () {
-          setState(() {
-          });
+          setState(() {});
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text("buttonName",
                 style: Theme.of(context).textTheme.headline6.copyWith(
-                  color:primary500_light_text,
-                )),
-            Container(width: 1,),
+                      color: primary500_light_text,
+                    )),
+            Container(
+              width: 1,
+            ),
             Icon(
               Icons.cancel,
               color: gray200,
@@ -614,69 +618,67 @@ class _EditReviewState extends State<EditReview> {
         cursorColor: primary400_line,
         decoration: textInputDecoration.copyWith(
             hintText: '키워드 하나 입력하기   예시)치통',
-          suffixIcon: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-            child: InkWell(
-              child: Container(
-                height: 20,
-                width: 60,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: gray200,),
-                    borderRadius:
-                    const BorderRadius.all(const Radius.circular(4.0))
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add,
-                    size: 18,),
-                    Center(child: Text("추가")),
-                  ],
-                )
+            suffixIcon: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+              child: InkWell(
+                child: Container(
+                    height: 20,
+                    width: 60,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: gray200,
+                        ),
+                        borderRadius:
+                            const BorderRadius.all(const Radius.circular(4.0))),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add,
+                          size: 18,
+                        ),
+                        Center(child: Text("추가")),
+                      ],
+                    )),
+                onTap: () {
+                  reasonForTakingPillController.clear();
+                },
               ),
-              onTap: () {
-                reasonForTakingPillController.clear();
-              },
+            )
+
+            // Padding(
+            //   // padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            //   padding: const EdgeInsets.fromLTRB(15,5,15,5),
+            //   child: Container(
+            //     height: 10,
+            //     // width: 40,
+            //     child: RaisedButton(
+            //       onPressed: () {},
+            //       child: Text('확인'),
+            //     ),
+            //   ),
+            // ),
             ),
-          )
-
-          // Padding(
-          //   // padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-          //   padding: const EdgeInsets.fromLTRB(15,5,15,5),
-          //   child: Container(
-          //     height: 10,
-          //     // width: 40,
-          //     child: RaisedButton(
-          //       onPressed: () {},
-          //       child: Text('확인'),
-          //     ),
-          //   ),
-          // ),
-        ),
-    // suffixIcon: RaisedButton(
-    //   onPressed: () {},
-    //   child: new Row(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     mainAxisSize: MainAxisSize.min,
-    //     children: <Widget>[
-    //       new Text('Button with text and icon!'),
-    //       new Icon(Icons.lightbulb_outline),
-    //     ],
-    //   ),
-    // ),
-
+        // suffixIcon: RaisedButton(
+        //   onPressed: () {},
+        //   child: new Row(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: <Widget>[
+        //       new Text('Button with text and icon!'),
+        //       new Icon(Icons.lightbulb_outline),
+        //     ],
+        //   ),
+        // ),
 
         keyboardType: TextInputType.text,
         onChanged: (value) {
-          setState(() {
-          });
+          setState(() {});
         },
       ),
     );
   }
-
 
   Widget _effect(Review review) {
     return Container(
@@ -828,8 +830,8 @@ class _EditReviewState extends State<EditReview> {
 //                height: 100,
             child: TextField(
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
-                  color: gray750_activated,
-                ),
+                      color: gray750_activated,
+                    ),
                 maxLength: 500,
                 controller: myControllerEffect,
                 keyboardType: TextInputType.multiline,
@@ -838,16 +840,19 @@ class _EditReviewState extends State<EditReview> {
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: gray75),
                     borderRadius:
-                    const BorderRadius.all(const Radius.circular(4.0)),
+                        const BorderRadius.all(const Radius.circular(4.0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: primary300_main),
+                    borderRadius:
+                        const BorderRadius.all(const Radius.circular(4.0)),
                   ),
                   filled: true,
                   fillColor: gray50,
-                ))
-        ),
+                ))),
       );
     }
   }
-
 
   Widget _sideEffect(Review review) {
     return Container(
@@ -962,11 +967,9 @@ class _EditReviewState extends State<EditReview> {
       hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
     else if (type == "overall")
       hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
-    else if(type == "reason")
-      hintText = "키워드 하나를 입력해주세요  예시)치통\n";
+    else if (type == "reason") hintText = "키워드 하나를 입력해주세요  예시)치통\n";
     double bottom = 20;
-    if(type == "overall")
-      bottom = bottom+ 70;
+    if (type == "overall") bottom = bottom + 70;
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 20, 0, bottom),
       // padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
@@ -977,29 +980,33 @@ class _EditReviewState extends State<EditReview> {
           width: 400,
 //                height: 100,
           child: TextField(
-              style: Theme.of(context).textTheme.bodyText2.copyWith(
-                color: gray750_activated,
-              ),
-              maxLength: type =="reason" ? 10 : 500,
-              decoration: new InputDecoration(
-                hintText: hintText,
-                hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
-                  color: gray300_inactivated,
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  color: gray750_activated,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: gray75),
-                  borderRadius:
-                  const BorderRadius.all(const Radius.circular(4.0)),
-                ),
-                filled: true,
-                fillColor: gray50,
+            maxLength: type == "reason" ? 10 : 500,
+            decoration: new InputDecoration(
+              hintText: hintText,
+              hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
+                    color: gray300_inactivated,
+                  ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: gray75),
+                borderRadius:
+                    const BorderRadius.all(const Radius.circular(4.0)),
               ),
-              controller: myControllerEffect,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              // dd
-          )
-      ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: primary300_main),
+                borderRadius:
+                    const BorderRadius.all(const Radius.circular(4.0)),
+              ),
+              filled: true,
+              fillColor: gray50,
+            ),
+            controller: myControllerEffect,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            // dd
+          )),
     );
   }
 
@@ -1022,7 +1029,7 @@ class _EditReviewState extends State<EditReview> {
                     .textTheme
                     .headline5
                     .copyWith(color: gray900, fontSize: 16)),
-            _textField("overall",myControllerOverall),
+            _textField("overall", myControllerOverall),
 //            Padding(padding: EdgeInsets.only(top: 25)),
           ],
         ));
@@ -1039,22 +1046,25 @@ class _EditReviewState extends State<EditReview> {
           textString: '완료',
           onPressed: () async {
             if (sideEffect == "no")
-             myControllerSideEffect.text = "";
-            else if(sideEffect == "yes")
-              if( myControllerSideEffect.text.length < 10)
-                _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
-            if (myControllerOverall.text.length < 10 && myControllerOverall.text.length > 0)
+              myControllerSideEffect.text = "";
+            else if (sideEffect ==
+                "yes") if (myControllerSideEffect.text.length < 10)
+              _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
+            if (myControllerOverall.text.length < 10 &&
+                myControllerOverall.text.length > 0)
               _warning = "총평 리뷰를 10자 이상 작성해주세요";
             // if(sideEffect == "yes" && myControllerSideEffect.text.length < 10)
             // // if (myControllerSideEffect.text.length < 10 && sideEffect!= "no")
             //   _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
             if (myControllerEffect.text.length < 10)
               _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
-            if(reasonForTakingPillController.text.length < 1)
+            if (reasonForTakingPillController.text.length < 1)
               _warning = "어디가 아파서 사용하셨는지 작성해주세요";
 
-            if (myControllerOverall.text.length < 10 && myControllerOverall.text.length > 0||
-                (myControllerSideEffect.text.length < 10 && sideEffect == "yes") ||
+            if (myControllerOverall.text.length < 10 &&
+                    myControllerOverall.text.length > 0 ||
+                (myControllerSideEffect.text.length < 10 &&
+                    sideEffect == "yes") ||
                 myControllerEffect.text.length < 10 ||
                 reasonForTakingPillController.text.length < 1)
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1074,11 +1084,9 @@ class _EditReviewState extends State<EditReview> {
                       myControllerEffect.text /*?? review.effectText*/,
                       myControllerSideEffect.text /*?? review.sideEffectText*/,
                       myControllerOverall.text /*?? review.overallText*/,
-                      starRating == 0
-                          ? review.starRating
-                          : starRating ,/*?? value.starRating*/
-                      reasonForTakingPillController.text
-                      );
+                      starRating == 0 ? review.starRating : starRating,
+                      /*?? value.starRating*/
+                      reasonForTakingPillController.text);
               Navigator.pop(context);
               editSwitch = true;
               IYMYGotoSeeOrCheckDialog(review.seqNum);
@@ -1096,7 +1104,7 @@ class _EditReviewState extends State<EditReview> {
         return AlertDialog(
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1155,8 +1163,7 @@ class _EditReviewState extends State<EditReview> {
                       onPressed: () async {
                         Navigator.pop(context);
                         Navigator.pop(context);
-                      }
-                  )
+                      })
                 ],
               )
             ],
@@ -1164,6 +1171,5 @@ class _EditReviewState extends State<EditReview> {
         );
       },
     );
-
   }
 }
