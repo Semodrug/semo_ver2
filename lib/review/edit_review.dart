@@ -516,7 +516,7 @@ class _EditReviewState extends State<EditReview> {
                                     ? "3점 "
                                     : review.starRating == 4
                                         ? "4점 "
-                                        : "5점 (최고예요)",
+                                        : "5점 ",
                     style: Theme.of(context).textTheme.caption.copyWith(
                         color: primary600_bold_text,
                         fontSize: 12,
@@ -533,7 +533,7 @@ class _EditReviewState extends State<EditReview> {
                                     ? "(괜찮아요)"
                                     : review.starRating == 4
                                         ? "(좋아요)"
-                                        : "5점 (최고예요)",
+                                        : "(최고예요)",
                   ),
                 ],
               ),

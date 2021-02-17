@@ -31,7 +31,7 @@ class _SeeMyReviewState extends State<SeeMyReview> {
           if(snapshot.hasData) {
             List<Review> reviews = snapshot.data;
             // return Text(review[0].effectText);
-            return Column(
+            return ListView(
               children: [
                 ReviewPillInfo(widget.drugItemSeq),
                 reviews.length == 0 ?
