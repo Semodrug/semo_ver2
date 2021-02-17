@@ -79,8 +79,11 @@ class Others extends StatelessWidget {
                         context: context,
                         bodyString: '정말 로그아웃하시겠어요?',
                         leftButtonName: '취소',
+                        leftOnPressed: () {
+                          Navigator.pop(context);
+                        },
                         rightButtonName: '로그아웃',
-                        onPressed: () async {
+                        rightOnPressed: () async {
                           await _auth.signOut();
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               '/start', (Route<dynamic> route) => false);

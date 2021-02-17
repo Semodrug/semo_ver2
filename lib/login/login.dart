@@ -69,13 +69,13 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
             _emailField(),
             SizedBox(height: 10),
             _passwordField(),
-            SizedBox(height: 40.0),
-            _submitButton(),
             SizedBox(height: 30),
+            _submitButton(),
+            SizedBox(height: 28),
             _findPasswordButton(),
-            SizedBox(height: 5),
+            SizedBox(height: 10),
             _registerButton(),
-            SizedBox(height: 25),
+            SizedBox(height: 24),
           ],
         ),
       ),
@@ -181,17 +181,18 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
         '비밀번호를 잊으셨나요? ',
         style: Theme.of(context).textTheme.caption,
       ),
-      FlatButton(
-        height: 20,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        child: Text(
-          '비밀번호 재설정',
-          style: Theme.of(context)
-              .textTheme
-              .subtitle2
-              .copyWith(decoration: TextDecoration.underline),
+      InkWell(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+          child: Text(
+            '비밀번호 재설정',
+            style: Theme.of(context)
+                .textTheme
+                .subtitle2
+                .copyWith(decoration: TextDecoration.underline),
+          ),
         ),
-        onPressed: () {
+        onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => FindPassword()),
@@ -207,17 +208,18 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
         '혹시, 이약모약 사용이 처음이신가요?',
         style: Theme.of(context).textTheme.caption,
       ),
-      FlatButton(
-        height: 20,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        child: Text(
-          '회원가입',
-          style: Theme.of(context)
-              .textTheme
-              .subtitle2
-              .copyWith(decoration: TextDecoration.underline),
+      InkWell(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+          child: Text(
+            '회원가입',
+            style: Theme.of(context)
+                .textTheme
+                .subtitle2
+                .copyWith(decoration: TextDecoration.underline),
+          ),
         ),
-        onPressed: () {
+        onTap: () {
           // register page로 이동
           Navigator.push(
             context,

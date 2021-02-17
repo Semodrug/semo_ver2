@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:semo_ver2/camera/no_result.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/services/db.dart';
+import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 import 'package:camera_platform_interface/camera_platform_interface.dart';
@@ -233,69 +234,98 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       // 경로로 `Image.file`을 생성하세요.
       body: Image.file(File(widget.imagePath)),
       bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            TextButton(
-              child: Text('다시 찍기'),
-              onPressed: () async {
-                Navigator.pop(context);
-              },
-            ),
-            TextButton(
-              child: Text('사진 사용'),
-              onPressed: () async {
-                FirebaseVisionImage visionImage =
-                    FirebaseVisionImage.fromFile(File(widget.imagePath));
-                VisionText readedText;
-                print('$barcodeNum');
+        color: gray750_activated,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.12,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text('다시 찍기',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: gray0_white)),
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  TextButton(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text('사진 사용',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: gray0_white)),
+                    ),
+                    onPressed: () async {
+                      FirebaseVisionImage visionImage =
+                          FirebaseVisionImage.fromFile(File(widget.imagePath));
+                      VisionText readedText;
+                      print('$barcodeNum');
 
-                final BarcodeDetector barcodeDetector =
-                    FirebaseVision.instance.barcodeDetector();
+                      final BarcodeDetector barcodeDetector =
+                          FirebaseVision.instance.barcodeDetector();
 
-                final List<Barcode> barcodes =
-                    await barcodeDetector.detectInImage(visionImage);
+                      final List<Barcode> barcodes =
+                          await barcodeDetector.detectInImage(visionImage);
 
-                for (Barcode barcode in barcodes) {
-                  final String rawValue = barcode.rawValue;
-                  final BarcodeValueType valueType = barcode.valueType;
+                      for (Barcode barcode in barcodes) {
+                        final String rawValue = barcode.rawValue;
+                        final BarcodeValueType valueType = barcode.valueType;
 
-                  setState(() {
-                    barcodeNum = "$rawValue";
-                  });
-                }
+                        setState(() {
+                          barcodeNum = "$rawValue";
+                        });
+                      }
 
-                barcodeDetector.close();
-                print('=============');
-                print('barcode: $barcodeNum');
+                      barcodeDetector.close();
 
-                if (barcodeNum == null) {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                      if (barcodeNum == null) {
+                        IYMYDialog(
+                            context: context,
+                            bodyString: '바코드 인식이 어렵습니다\n다시 촬영해주세요',
+                            leftButtonName: '취소',
+                            leftOnPressed: () {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/bottom_bar',
+                                  (Route<dynamic> route) => false);
+                            },
+                            rightButtonName: '확인',
+                            rightOnPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            }).showWarning();
+                      } else {
+                        var data = await DatabaseService()
+                            .itemSeqFromBarcode(barcodeNum);
 
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => NoResult()));
-                } else {
-                  var data =
-                      await DatabaseService().itemSeqFromBarcode(barcodeNum);
-
-                  print('data $data');
-                  print('=============');
-
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  if (data != null) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ReviewPage(data)));
-                  } else {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => NoResult()));
-                  }
-                }
-              },
-            )
-          ],
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        if (data != null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ReviewPage(data)));
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NoResult()));
+                        }
+                      }
+                    },
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

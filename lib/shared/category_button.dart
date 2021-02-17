@@ -6,10 +6,15 @@ class CategoryButton extends StatelessWidget {
   String fromHome = '';
   String forRanking = '';
   final bool forsearch;
-
+  final bool fromDrugInfo;
 
   //const
-  CategoryButton({this.str, this.fromHome, this.forsearch, this.forRanking}); // : super(key: key);
+  CategoryButton(
+      {this.str,
+      this.fromHome,
+      this.forsearch,
+      this.forRanking,
+      this.fromDrugInfo}); // : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class CategoryButton extends StatelessWidget {
     String _shortenCategory(String data) {
       String newName = '';
 
-      if(data == '')
+      if (data == '')
         newName = '카테고리 없음';
       else
         newName = data.substring(7, (data.length));
@@ -27,30 +32,47 @@ class CategoryButton extends StatelessWidget {
         if (newName.length > 15) {
           newName = newName.substring(0, 13);
           newName = newName + '...';
-          if (mw < 320) {
-            newName = newName.substring(0, 10);
+        }
+        if (newName.length > 10) {
+          if (mw < 350) {
+            newName = newName.substring(0, 9);
             newName = newName + '...';
           }
         }
-
       }
 
-      if (forRanking =='ranking') {
+      if (forRanking == 'ranking') {
         if (newName.length > 22) {
           newName = newName.substring(0, 20);
           newName = newName + '...';
+        }
+        if (newName.length > 15) {
+          if (mw < 350) {
+            newName = newName.substring(0, 13);
+            newName = newName + '...';
+          }
+        }
+      }
+
+      if (fromDrugInfo == true) {
+        if (newName.length > 15) {
+          newName = newName.substring(0, 13);
+          newName = newName + '...';
+          if (mw < 350) {
+            newName = newName.substring(0, 10);
+            newName = newName + '...';
+          }
         }
       }
 
       return newName;
     }
 
-    if(forsearch == true){
+    if (forsearch == true) {
       return ElevatedButton(
-        child: Text(
-          '${_shortenCategory(str)}',
-          style: Theme.of(context).textTheme.caption.copyWith(color: gray500)
-        ),
+        child: Text('${_shortenCategory(str)}',
+            style:
+                Theme.of(context).textTheme.caption.copyWith(color: gray500)),
         style: ElevatedButton.styleFrom(
             minimumSize: Size(12, 23),
             padding: EdgeInsets.symmetric(horizontal: 10),
@@ -64,10 +86,11 @@ class CategoryButton extends StatelessWidget {
     }
 
     return ElevatedButton(
-      child: Text(
-        '${_shortenCategory(str)}',
-          style: Theme.of(context).textTheme.subtitle2.copyWith(color: primary600_bold_text)
-      ),
+      child: Text('${_shortenCategory(str)}',
+          style: Theme.of(context)
+              .textTheme
+              .subtitle2
+              .copyWith(color: primary600_bold_text)),
       style: ElevatedButton.styleFrom(
           minimumSize: Size(12, 23),
           padding: EdgeInsets.symmetric(horizontal: 10),

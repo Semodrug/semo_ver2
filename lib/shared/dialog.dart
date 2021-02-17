@@ -8,7 +8,8 @@ class IYMYDialog extends StatelessWidget {
   final String bodyString;
   final String leftButtonName;
   final String rightButtonName;
-  final Function onPressed;
+  final Function leftOnPressed;
+  final Function rightOnPressed;
 
   const IYMYDialog({
     Key key,
@@ -16,7 +17,8 @@ class IYMYDialog extends StatelessWidget {
     @required this.bodyString,
     @required this.leftButtonName,
     @required this.rightButtonName,
-    @required this.onPressed,
+    @required this.leftOnPressed,
+    @required this.rightOnPressed,
   }) : super(key: key);
 
   void showWarning() {
@@ -39,32 +41,30 @@ class IYMYDialog extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
-                      .copyWith(color: gray700)),
+                      .copyWith(color: gray700),
+                  textAlign: TextAlign.center),
               SizedBox(height: 28),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   /* LEFT ACTION BUTTON */
                   ElevatedButton(
-                    child: Text(
-                      leftButtonName,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(color: primary400_line),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(120, 40),
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        elevation: 0,
-                        primary: gray50,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            side: BorderSide(color: gray75))),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+                      child: Text(
+                        leftButtonName,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline5
+                            .copyWith(color: primary400_line),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(120, 40),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          elevation: 0,
+                          primary: gray50,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: BorderSide(color: gray75))),
+                      onPressed: leftOnPressed),
                   SizedBox(width: 16),
                   /* RIGHT ACTION BUTTON */
                   ElevatedButton(
@@ -83,7 +83,7 @@ class IYMYDialog extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: primary400_line))),
-                      onPressed: onPressed)
+                      onPressed: rightOnPressed)
                 ],
               )
             ],

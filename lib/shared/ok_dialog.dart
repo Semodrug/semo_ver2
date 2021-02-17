@@ -22,6 +22,7 @@ class IYMYOkDialog extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),

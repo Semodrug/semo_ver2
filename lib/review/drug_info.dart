@@ -81,7 +81,7 @@ class _ReviewPageState extends State<ReviewPage> {
   double _getPillInfoSize() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
     final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
-    double height = renderBox1.size.height  /*+ renderBox2.size.height*/;
+    double height = renderBox1.size.height /*+ renderBox2.size.height*/;
     return height;
   }
 
@@ -447,7 +447,8 @@ class _ReviewPageState extends State<ReviewPage> {
                           children: <Widget>[
                             Container(
                                 height: 24,
-                                child: CategoryButton(str: drug.category)),
+                                child: CategoryButton(
+                                    str: drug.category, fromDrugInfo: true)),
                             Expanded(
                               child: Container(),
                             ),
@@ -931,7 +932,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   Widget _reviewWarning() {
     return Container(
-      width:  MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 4, 20, 5),
         child: Container(
@@ -1007,7 +1008,6 @@ class _ReviewPageState extends State<ReviewPage> {
                           builder: (context) => ReviewPolicyMore()));
                 },
               ),
-
             ],
           ),
         ),

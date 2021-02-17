@@ -75,25 +75,26 @@ class _GeneralEditState extends State<GeneralEdit> {
           Drug drug = snapshot.data;
 
           if (snapshot.hasData) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  _topInfo(context, drug),
-                  SizedBox(height: 20),
-                  _isGeneral
-                      ? _generalCase(
-                          context,
-                          drug,
-                          user,
-                        )
-                      : _preparedCase(
-                          context,
-                          drug,
-                          user,
-                        ),
-                ],
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: Column(
+                  children: [
+                    _topInfo(context, drug),
+                    SizedBox(height: 20),
+                    _isGeneral
+                        ? _generalCase(
+                            context,
+                            drug,
+                            user,
+                          )
+                        : _preparedCase(
+                            context,
+                            drug,
+                            user,
+                          ),
+                  ],
+                ),
               ),
             );
           } else {
@@ -147,7 +148,7 @@ class _GeneralEditState extends State<GeneralEdit> {
         _pickDay(),
         SizedBox(height: 11),
         _tip(),
-        SizedBox(height: 70),
+        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -218,7 +219,15 @@ class _GeneralEditState extends State<GeneralEdit> {
             DatePicker.showDatePicker(context,
                 showTitleActions: true,
                 theme: DatePickerTheme(
-                    doneStyle: TextStyle(color: primary500_light_text)),
+                    cancelStyle: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: gray600),
+                    doneStyle: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(color: primary500_light_text),
+                    itemStyle: Theme.of(context).textTheme.headline5),
                 minTime: DateTime.now(),
                 maxTime: DateTime(2100, 12, 31),
                 onChanged: (date) {}, onConfirm: (date) async {
@@ -273,7 +282,17 @@ class _GeneralEditState extends State<GeneralEdit> {
                 style: Theme.of(context).textTheme.caption,
                 children: <TextSpan>[
                   TextSpan(
-                    text: '- 알약, 연고류: 6',
+                    text: '- 알약: 1',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: '년 / ',
+                  ),
+                  TextSpan(
+                    text: '시럽제: 1',
                     style: Theme.of(context)
                         .textTheme
                         .caption
@@ -283,17 +302,17 @@ class _GeneralEditState extends State<GeneralEdit> {
                     text: '개월 / ',
                   ),
                   TextSpan(
-                    text: '크림류: 3',
+                    text: '연고: 6',
                     style: Theme.of(context)
                         .textTheme
                         .caption
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   TextSpan(
-                    text: '개월 / ',
+                    text: '개월 /',
                   ),
                   TextSpan(
-                    text: '물약, 시럽약: 1',
+                    text: '안약: 1',
                     style: Theme.of(context)
                         .textTheme
                         .caption
@@ -305,6 +324,8 @@ class _GeneralEditState extends State<GeneralEdit> {
                 ],
               ),
             ),
+            Text("(위의 기준은 일반적인 기준이며, 의약품의 종류에 따라 달라질 수 있습니다. 출처: 미국 약전 USP)",
+                style: Theme.of(context).textTheme.caption),
           ],
         ),
       ),
@@ -368,6 +389,16 @@ class _GeneralEditState extends State<GeneralEdit> {
             onPressed: () {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
+                  theme: DatePickerTheme(
+                      cancelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: gray600),
+                      doneStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: primary500_light_text),
+                      itemStyle: Theme.of(context).textTheme.headline5),
                   minTime: DateTime(2000, 1, 1),
                   maxTime: DateTime(2030, 12, 31),
                   onChanged: (date) {}, onConfirm: (date) async {
@@ -453,9 +484,9 @@ class _GeneralEditState extends State<GeneralEdit> {
                 },
               ),
               DropdownMenuItem(
-                value: 14,
+                value: 30,
                 child: Text(
-                  '[2주] 개봉된 액체상태의 시럽',
+                  '[1개월] 시럽병에 덜어서 받은 시럽제',
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
@@ -470,7 +501,7 @@ class _GeneralEditState extends State<GeneralEdit> {
               DropdownMenuItem(
                 value: 30,
                 child: Text(
-                  '[1개월] 개봉된 액체상태의 안약',
+                  '[1개월] 연고곽에 덜어서 받은 연고',
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
@@ -483,9 +514,24 @@ class _GeneralEditState extends State<GeneralEdit> {
                 },
               ),
               DropdownMenuItem(
-                value: 180,
+                value: 30,
                 child: Text(
-                  '[6개월] 개봉된 연고',
+                  '[1개월] 조제받은 가루약',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(color: gray750_activated),
+                ),
+                onTap: () {
+                  setState(() {
+                    _isSelf = false;
+                  });
+                },
+              ),
+              DropdownMenuItem(
+                value: 30,
+                child: Text(
+                  '[1개월] 개봉한 안약',
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2
@@ -543,6 +589,16 @@ class _GeneralEditState extends State<GeneralEdit> {
             onPressed: () {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
+                  theme: DatePickerTheme(
+                      cancelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: gray600),
+                      doneStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: primary500_light_text),
+                      itemStyle: Theme.of(context).textTheme.headline5),
                   minTime: DateTime.now(),
                   maxTime: DateTime(2030, 12, 31),
                   onChanged: (date) {}, onConfirm: (date) async {

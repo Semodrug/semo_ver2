@@ -108,7 +108,7 @@ class RankingTile extends StatelessWidget {
                                               color: gray300_inactivated)),
                                 ),
                                 Container(
-                                  width: mw > 320 ? mw - 170 : mw - 200,
+                                  width:  mw - 160,
                                   child: Text(
                                       //_checkLongName(drugStreamData.itemName),
                                       drugStreamData.itemName,
