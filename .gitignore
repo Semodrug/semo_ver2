@@ -93,3 +93,4 @@ pubspec.lock
 .vscode/
 pubspec.lock
 *.xml
+android/app/key.jks
