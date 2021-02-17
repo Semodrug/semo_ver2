@@ -32,7 +32,6 @@ class RankingPage extends StatelessWidget {
                   onTap: () {
                     getCategory = numCategory[index] +
                         categories[index];
-                    print('        ==>    $getCategory');//카테고리 설정해주기
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -103,7 +102,7 @@ final categories = [
 
   '통경제',
   '피임제',
-  //'비뇨생식기관용제(성병예방제포함)',
+  '비뇨생식기관용제(성병예방제포함)',
   '치질용제',
   '기타의 비뇨생식기관 및 항문용약',
 
@@ -217,7 +216,7 @@ final numCategory = [
 
   '[02530]',//통경제
   '[02540]',//피임제
-  //'[02550]'//비뇨생식기관용제(성병예방제포함)
+  '[02550]',//비뇨생식기관용제(성병예방제포함)
   '[02560]',//치질용제
   '[02590]',//기타의 비뇨생식기관 및 항문용약
 
