@@ -266,9 +266,9 @@ class _HomePageState extends State<HomePage> {
         },
         child: index == totalNum
             ? Container(
-                decoration: BoxDecoration(
-                    border:
-                        Border(bottom: BorderSide(width: 0.6, color: gray50))),
+                // decoration: BoxDecoration(
+                //     border:
+                //         Border(bottom: BorderSide(width: 0.6, color: gray50))),
                 child: Column(
                   children: [
                     Padding(
@@ -387,7 +387,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Container(
-                      height: 20,
+                      decoration: BoxDecoration(
+                          border:
+                              Border(top: BorderSide(width: 0.6, color: gray50))),
+                    height: 20,
                     )
                   ],
                 ),
@@ -531,9 +534,9 @@ class _HomePageState extends State<HomePage> {
         },
         child: index == totalNum
             ? Container(
-                decoration: BoxDecoration(
-                    border:
-                        Border(bottom: BorderSide(width: 0.6, color: gray50))),
+                // decoration: BoxDecoration(
+                //     border:
+                //         Border(bottom: BorderSide(width: 0.6, color: gray50))),
                 child: Column(
                   children: [
                     Padding(
@@ -654,6 +657,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Container(
+                      decoration: BoxDecoration(
+                          border:
+                          Border(top: BorderSide(width: 0.6, color: gray50))),
+
                       height: 20,
                     )
                   ],
@@ -801,9 +808,9 @@ class _HomePageState extends State<HomePage> {
         child: index == totalNum
             ? Container(
                 //padding: EdgeInsets.only(bottom: 10.0),
-                decoration: BoxDecoration(
-                    border:
-                        Border(bottom: BorderSide(width: 0.6, color: gray50))),
+                // decoration: BoxDecoration(
+                //     border:
+                //         Border(bottom: BorderSide(width: 0.6, color: gray50))),
                 child: Column(
                   children: [
                     Padding(
@@ -915,7 +922,12 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    Container(height: 20)
+                    Container(
+                        decoration: BoxDecoration(
+                            border:
+                            Border(top: BorderSide(width: 0.6, color: gray50))),
+
+                        height: 20)
                   ],
                 ),
               )
