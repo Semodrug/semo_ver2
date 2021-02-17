@@ -124,7 +124,7 @@ class _GeneralExpirationState extends State<GeneralExpiration> {
         _pickDay(),
         SizedBox(height: 10),
         _tip(),
-        SizedBox(height: 70),
+        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
