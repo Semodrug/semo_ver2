@@ -235,7 +235,9 @@ class _ReviewListState extends State<ReviewList> {
         ));
   }
 
-  Widget _reportReviewPopup(review,) {
+  Widget _reportReviewPopup(
+    review,
+  ) {
     var mqWidth = MediaQuery.of(context).size.width;
     return Container(
         decoration: BoxDecoration(
@@ -258,7 +260,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
               // padding: const EdgeInsets.only(top: 4.0),
               child: Container(
-                height: mqWidth <=320 ? (mqWidth*0.6)/4.6 : null,
+                height: mqWidth <= 320 ? (mqWidth * 0.6) / 4.6 : null,
                 child: MaterialButton(
                     onPressed: () {
                       _IYMYCancleConfirmReportDialog(
@@ -284,7 +286,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(top: 4.0),
               child: Container(
                 // height: (mqWidth*0.6)/4.6,
-                height: mqWidth <=320 ? (mqWidth*0.6)/4.7 : null,
+                height: mqWidth <= 320 ? (mqWidth * 0.6) / 4.7 : null,
                 child: MaterialButton(
                     onPressed: () {
                       _IYMYCancleConfirmReportDialog(
@@ -310,7 +312,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(top: 4.0),
               child: Container(
                 // height: (mqWidth*0.6)/4.6,
-                height: mqWidth <=320 ? (mqWidth*0.6)/4.7 : null,
+                height: mqWidth <= 320 ? (mqWidth * 0.6) / 4.7 : null,
                 child: MaterialButton(
                     onPressed: () {
                       _IYMYCancleConfirmReportDialog(
@@ -336,7 +338,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(top: 4.0),
               child: Container(
                 // height: (mqWidth*0.6)/4.6,
-                height: mqWidth <=320 ? (mqWidth*0.6)/4.7 : null,
+                height: mqWidth <= 320 ? (mqWidth * 0.6) / 4.7 : null,
                 child: MaterialButton(
                     onPressed: () {
                       _IYMYCancleConfirmReportDialog(
@@ -362,7 +364,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
               child: Container(
                 // height: (mqWidth*0.6)/4.6,
-                height: mqWidth <=320 ? (mqWidth*0.6)/4.7 : null,
+                height: mqWidth <= 320 ? (mqWidth * 0.6) / 4.7 : null,
                 child: MaterialButton(
                     onPressed: () {
                       _IYMYCancleConfirmReportDialog(
@@ -388,7 +390,7 @@ class _ReviewListState extends State<ReviewList> {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Container(
                 // height: (mqWidth*0.6)/4.5,
-                height: mqWidth <=320 ? (mqWidth*0.6)/4.7 : null,
+                height: mqWidth <= 320 ? (mqWidth * 0.6) / 4.7 : null,
                 decoration: BoxDecoration(
                   border: Border(
                       // bottom: BorderSide(color: Theme.of(context).hintColor),
@@ -738,6 +740,7 @@ class _ReviewListState extends State<ReviewList> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),

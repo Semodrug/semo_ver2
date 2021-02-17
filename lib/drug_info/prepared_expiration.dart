@@ -43,26 +43,28 @@ class _PreparedExpirationState extends State<PreparedExpiration> {
           Drug drug = snapshot.data;
 
           if (snapshot.hasData) {
-            return Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    _topInfo(context, drug),
-                    SizedBox(height: 20),
-                    _pickPreparedDay(),
-                    SizedBox(height: 20),
-                    Container(
-                        alignment: Alignment.bottomLeft,
-                        child: _pickDuration()),
-                    SizedBox(height: 20),
-                    _isSelf ? _pickSelf() : Container(),
-                    _showExpiration(),
-                    SizedBox(height: 20),
-                    _submitButton(
-                        context, user, drug, _finalString, _finalDateTime),
-                  ],
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      _topInfo(context, drug),
+                      SizedBox(height: 20),
+                      _pickPreparedDay(),
+                      SizedBox(height: 20),
+                      Container(
+                          alignment: Alignment.bottomLeft,
+                          child: _pickDuration()),
+                      SizedBox(height: 20),
+                      _isSelf ? _pickSelf() : Container(),
+                      _showExpiration(),
+                      SizedBox(height: 20),
+                      _submitButton(
+                          context, user, drug, _finalString, _finalDateTime),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -126,7 +128,15 @@ class _PreparedExpirationState extends State<PreparedExpiration> {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
                   theme: DatePickerTheme(
-                      doneStyle: TextStyle(color: primary500_light_text)),
+                      cancelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: gray600),
+                      doneStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: primary500_light_text),
+                      itemStyle: Theme.of(context).textTheme.headline5),
                   minTime: DateTime(2000, 1, 1),
                   maxTime: DateTime(2030, 12, 31),
                   onChanged: (date) {}, onConfirm: (date) async {
@@ -300,6 +310,16 @@ class _PreparedExpirationState extends State<PreparedExpiration> {
             onPressed: () {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
+                  theme: DatePickerTheme(
+                      cancelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: gray600),
+                      doneStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: primary500_light_text),
+                      itemStyle: Theme.of(context).textTheme.headline5),
                   minTime: DateTime.now(),
                   maxTime: DateTime(2030, 12, 31),
                   onChanged: (date) {}, onConfirm: (date) async {
