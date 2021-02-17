@@ -264,51 +264,29 @@ class _HomePageState extends State<HomePage> {
           // CupertinoPageRoute(builder: (_) => ReviewPage(data.itemSeq))
           // )
         },
-        child: index == totalNum ?
-        Container(
-          decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0),
-                child: Container(
-                  padding: EdgeInsets.only(left: 16.0),
-                  //width: double.infinity,
-                  height: 90,
-                  child: Material(
-                    color: Colors.white,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: SizedBox(
-                            width: 15,
-                            child: Center(
-                              child: Text(index.toString(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle1
-                                      .copyWith(color: gray600, fontSize: 11)),
-                            ),
-                          ),
-                        ),
-                        Container(
-                            width: 88,
-                            //이미지는 고정값
-                            //padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: DrugImage(drugItemSeq: data.itemSeq)),
-                        Container(
-                            padding: EdgeInsets.only(left: 12, top: 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                    width: mw - 200,
-                                    child: Text(_checkLongName(data),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
+        child: index == totalNum
+            ? Container(
+                decoration: BoxDecoration(
+                    border:
+                        Border(bottom: BorderSide(width: 0.6, color: gray50))),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Container(
+                        padding: EdgeInsets.only(left: 16.0),
+                        //width: double.infinity,
+                        height: 90,
+                        child: Material(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: SizedBox(
+                                  width: 15,
+                                  child: Center(
+                                    child: Text(index.toString(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -330,8 +308,10 @@ class _HomePageState extends State<HomePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
+                                          width: mw - 200,
                                           child: Text(_checkLongName(data),
-                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subtitle1
@@ -403,22 +383,37 @@ class _HomePageState extends State<HomePage> {
                           border: Border.all(color: yellow),
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        Container(
-                            width: 88,
-                            //이미지는 고정값
-                            //padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: DrugImage(drugItemSeq: data.itemSeq)),
-                        Container(
-                            padding: EdgeInsets.only(left: 12, top: 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                    width: mw - 200,
-                                    child: Text(_checkLongName(data),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
+                        child: _warningRemainMessage(context, difference),
+                      ),
+                    ),
+                    Container(
+                      height: 20,
+                    )
+                  ],
+                ),
+              )
+            : Container(
+                decoration: BoxDecoration(
+                    border:
+                        Border(bottom: BorderSide(width: 0.6, color: gray50))),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Container(
+                        padding: EdgeInsets.only(left: 16.0),
+                        //width: double.infinity,
+                        height: 90,
+                        child: Material(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: SizedBox(
+                                  width: 15,
+                                  child: Center(
+                                    child: Text(index.toString(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -440,8 +435,10 @@ class _HomePageState extends State<HomePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
+                                          width: mw - 200,
                                           child: Text(_checkLongName(data),
-                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subtitle1
@@ -532,52 +529,29 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         },
-        child:  index == totalNum ?
-        Container(
-          decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0),
-                child: Container(
-                  padding: EdgeInsets.only(left: 16.0),
-                  //width: double.infinity,
-                  height: 90,
-                  child: Material(
-                    color: Colors.white,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: SizedBox(
-                            width: 15,
-                            child: Center(
-                              child: Text(index.toString(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle1
-                                      .copyWith(color: gray600, fontSize: 11)),
-                            ),
-                          ),
-                        ),
-                        Container(
-                            //이미지는 고정값
-                            //padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Container(
-                                width: 88,
-                                child: DrugImage(drugItemSeq: data.itemSeq))),
-                        Container(
-                            padding: EdgeInsets.only(left: 12, top: 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                    width: mw - 200,
-                                    child: Text(_checkLongName(data),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
+        child: index == totalNum
+            ? Container(
+                decoration: BoxDecoration(
+                    border:
+                        Border(bottom: BorderSide(width: 0.6, color: gray50))),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Container(
+                        padding: EdgeInsets.only(left: 16.0),
+                        //width: double.infinity,
+                        height: 90,
+                        child: Material(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: SizedBox(
+                                  width: 15,
+                                  child: Center(
+                                    child: Text(index.toString(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -601,8 +575,10 @@ class _HomePageState extends State<HomePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
+                                          width: mw - 200,
                                           child: Text(_checkLongName(data),
-                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subtitle1
@@ -674,23 +650,37 @@ class _HomePageState extends State<HomePage> {
                           border: Border.all(color: warning),
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        Container(
-                          //이미지는 고정값
-                          //padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Container(
-                                width: 88,
-                                child: DrugImage(drugItemSeq: data.itemSeq))),
-                        Container(
-                            padding: EdgeInsets.only(left: 12, top: 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: mw - 200,
-                                    child: Text(_checkLongName(data),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
+                        child: _warningOverDayMessage(context, difference),
+                      ),
+                    ),
+                    Container(
+                      height: 20,
+                    )
+                  ],
+                ),
+              )
+            : Container(
+                decoration: BoxDecoration(
+                    border:
+                        Border(bottom: BorderSide(width: 0.6, color: gray50))),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Container(
+                        padding: EdgeInsets.only(left: 16.0),
+                        //width: double.infinity,
+                        height: 90,
+                        child: Material(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: SizedBox(
+                                  width: 15,
+                                  child: Center(
+                                    child: Text(index.toString(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -714,8 +704,10 @@ class _HomePageState extends State<HomePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
+                                          width: mw - 200,
                                           child: Text(_checkLongName(data),
-                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subtitle1
@@ -820,23 +812,18 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(
                           left: 16.0,
                         ),
-                        Container(
-                            //이미지는 고정값
-                            //padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Container(
-                                width: 88,
-                                child: DrugImage(drugItemSeq: data.itemSeq))),
-                        Container(
-                            padding: EdgeInsets.only(left: 12, top: 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                    width: mw - 200,
-                                    child: Text(_checkLongName(data),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
+                        //width: double.infinity,
+                        height: 90,
+                        child: Material(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: SizedBox(
+                                  width: 15,
+                                  child: Center(
+                                    child: Text(index.toString(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -860,8 +847,10 @@ class _HomePageState extends State<HomePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
+                                          width: mw - 200,
                                           child: Text(_checkLongName(data),
-                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subtitle1
@@ -943,23 +932,18 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(
                           left: 16.0,
                         ),
-                        Container(
-                          //이미지는 고정값
-                          //padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Container(
-                                width: 88,
-                                child: DrugImage(drugItemSeq: data.itemSeq))),
-                        Container(
-                            padding: EdgeInsets.only(left: 12, top: 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                    width: mw - 200,
-                                    child: Text(_checkLongName(data),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
+                        //width: double.infinity,
+                        height: 90,
+                        child: Material(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: SizedBox(
+                                  width: 15,
+                                  child: Center(
+                                    child: Text(index.toString(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle1
@@ -983,8 +967,10 @@ class _HomePageState extends State<HomePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
+                                          width: mw - 200,
                                           child: Text(_checkLongName(data),
-                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subtitle1
