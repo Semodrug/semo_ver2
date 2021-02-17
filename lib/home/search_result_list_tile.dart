@@ -51,9 +51,6 @@ class SearchResultTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    print('index =  $index');
-    print('totNum =  $totNum');
     int forCheckLast = 0;
     if(index != null){
       forCheckLast = index + 1;
