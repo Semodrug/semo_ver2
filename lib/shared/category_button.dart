@@ -32,8 +32,10 @@ class CategoryButton extends StatelessWidget {
         if (newName.length > 15) {
           newName = newName.substring(0, 13);
           newName = newName + '...';
-          if (mw < 320) {
-            newName = newName.substring(0, 10);
+        }
+        if (newName.length > 10) {
+          if (mw < 350) {
+            newName = newName.substring(0, 9);
             newName = newName + '...';
           }
         }
@@ -43,6 +45,12 @@ class CategoryButton extends StatelessWidget {
         if (newName.length > 22) {
           newName = newName.substring(0, 20);
           newName = newName + '...';
+        }
+        if (newName.length > 15) {
+          if (mw < 350) {
+            newName = newName.substring(0, 13);
+            newName = newName + '...';
+          }
         }
       }
 
