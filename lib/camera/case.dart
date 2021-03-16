@@ -165,6 +165,37 @@ class CameraPreviewScreen extends StatelessWidget {
                           .textTheme
                           .headline3
                           .copyWith(color: gray0_white),
+                    )),
+                Positioned(
+                    bottom: 0,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 120,
+                      color: gray750_activated,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(width: 25),
+                              Text('바코드',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(color: gray200)),
+                              SizedBox(width: 24),
+                              Text('케이스',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(color: primary200)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ))
               ],
             ),

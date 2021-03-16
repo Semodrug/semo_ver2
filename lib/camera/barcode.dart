@@ -165,6 +165,37 @@ class CameraPreviewScreen extends StatelessWidget {
                           .textTheme
                           .headline3
                           .copyWith(color: gray0_white),
+                    )),
+                Positioned(
+                    bottom: 0,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 120,
+                      color: gray750_activated,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(width: 55),
+                              Text('바코드',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(color: primary200)),
+                              SizedBox(width: 24),
+                              Text('케이스',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(color: gray200)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ))
               ],
             ),
@@ -233,11 +264,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       backgroundColor:
           gray750_activated, // 이미지는 디바이스에 파일로 저장됩니다. 이미지를 보여주기 위해 주어진
       // 경로로 `Image.file`을 생성하세요.
-      body: Image.file(File(widget.imagePath)),
+      body: Center(child: Image.file(File(widget.imagePath))),
       bottomNavigationBar: BottomAppBar(
         color: gray750_activated,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.12,
+          height: 100,
           child: Column(
             children: [
               Row(

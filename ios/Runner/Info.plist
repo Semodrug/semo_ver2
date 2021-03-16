@@ -62,7 +62,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>바코드 인식을 위해 카메라 권한을 허용해주세요.</string>
+	<string>카메라 권한을 허용해주세요.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>마이크 권한을 허용해주세요.</string>
 	<key>NSPhotoUsageDescription</key>
