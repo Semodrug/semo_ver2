@@ -13,16 +13,16 @@ import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-class CameraPage extends StatefulWidget {
+class CasePage extends StatefulWidget {
   final CameraDescription camera;
 
-  const CameraPage({Key key, @required this.camera}) : super(key: key);
+  const CasePage({Key key, @required this.camera}) : super(key: key);
 
   @override
   _CameraPageState createState() => _CameraPageState();
 }
 
-class _CameraPageState extends State<CameraPage> {
+class _CameraPageState extends State<CasePage> {
   // CameraController와 Future를 저장하기 위해 두 개의 변수를 state 클래스에 정의합니다.
   CameraController _controller;
   Future<void> _initializeControllerFuture;
@@ -143,7 +143,6 @@ class CameraPreviewScreen extends StatelessWidget {
                 : (1 / controller.value.aspectRatio),
             child: Stack(
               alignment: AlignmentDirectional.center,
-              fit: StackFit.expand,
               children: [
                 RotatedBox(
                   quarterTurns: _getQuarterTurns(),
@@ -155,11 +154,11 @@ class CameraPreviewScreen extends StatelessWidget {
                     top: MediaQuery.of(context).size.height * 0.25,
                     width: 140,
                     height: 140,
-                    child: Image.asset('assets/camera/barcode_area.png')),
+                    child: Image.asset('assets/camera/case_area.png')),
                 Positioned(
                     top: MediaQuery.of(context).size.height * 0.5,
                     child: Text(
-                      '바코드를\n인식해주세요',
+                      '케이스를\n인식해주세요',
                       textAlign: TextAlign.center,
                       style: Theme.of(context)
                           .textTheme
@@ -178,7 +177,6 @@ class CameraPreviewScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(width: 25),
                               Text('바코드',
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
@@ -192,6 +190,7 @@ class CameraPreviewScreen extends StatelessWidget {
                                       .textTheme
                                       .headline6
                                       .copyWith(color: primary200)),
+                              SizedBox(width: 55),
                             ],
                           ),
                         ],
@@ -264,102 +263,108 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       backgroundColor:
           gray750_activated, // 이미지는 디바이스에 파일로 저장됩니다. 이미지를 보여주기 위해 주어진
       // 경로로 `Image.file`을 생성하세요.
-      body: Image.file(File(widget.imagePath)),
-      bottomNavigationBar: BottomAppBar(
-        color: gray750_activated,
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.12,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(alignment: AlignmentDirectional.center, children: [
+        Image.file(File(widget.imagePath)),
+        Positioned(
+            bottom: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 120,
+              color: gray750_activated,
+              child: Column(
                 children: [
-                  TextButton(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text('다시 찍기',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .copyWith(color: gray0_white)),
-                    ),
-                    onPressed: () async {
-                      Navigator.pop(context);
-                    },
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Text('다시 찍기',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(color: gray0_white)),
+                        ),
+                        onPressed: () async {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      TextButton(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Text('사진 사용',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(color: gray0_white)),
+                        ),
+                        onPressed: () async {
+                          FirebaseVisionImage visionImage =
+                              FirebaseVisionImage.fromFile(
+                                  File(widget.imagePath));
+                          VisionText readedText;
+                          print('$barcodeNum');
+
+                          final BarcodeDetector barcodeDetector =
+                              FirebaseVision.instance.barcodeDetector();
+
+                          final List<Barcode> barcodes =
+                              await barcodeDetector.detectInImage(visionImage);
+
+                          for (Barcode barcode in barcodes) {
+                            final String rawValue = barcode.rawValue;
+                            final BarcodeValueType valueType =
+                                barcode.valueType;
+
+                            setState(() {
+                              barcodeNum = "$rawValue";
+                            });
+                          }
+
+                          barcodeDetector.close();
+
+                          if (barcodeNum == null) {
+                            IYMYDialog(
+                                context: context,
+                                bodyString: '바코드 인식이 어렵습니다\n다시 촬영해주세요',
+                                leftButtonName: '취소',
+                                leftOnPressed: () {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                      '/bottom_bar',
+                                      (Route<dynamic> route) => false);
+                                },
+                                rightButtonName: '확인',
+                                rightOnPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                }).showWarning();
+                          } else {
+                            var data = await DatabaseService()
+                                .itemSeqFromBarcode(barcodeNum);
+
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            if (data != null) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ReviewPage(data)));
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NoResult()));
+                            }
+                          }
+                        },
+                      )
+                    ],
                   ),
-                  TextButton(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text('사진 사용',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .copyWith(color: gray0_white)),
-                    ),
-                    onPressed: () async {
-                      FirebaseVisionImage visionImage =
-                          FirebaseVisionImage.fromFile(File(widget.imagePath));
-                      VisionText readedText;
-                      print('$barcodeNum');
-
-                      final BarcodeDetector barcodeDetector =
-                          FirebaseVision.instance.barcodeDetector();
-
-                      final List<Barcode> barcodes =
-                          await barcodeDetector.detectInImage(visionImage);
-
-                      for (Barcode barcode in barcodes) {
-                        final String rawValue = barcode.rawValue;
-                        final BarcodeValueType valueType = barcode.valueType;
-
-                        setState(() {
-                          barcodeNum = "$rawValue";
-                        });
-                      }
-
-                      barcodeDetector.close();
-
-                      if (barcodeNum == null) {
-                        IYMYDialog(
-                            context: context,
-                            bodyString: '바코드 인식이 어렵습니다\n다시 촬영해주세요',
-                            leftButtonName: '취소',
-                            leftOnPressed: () {
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/bottom_bar',
-                                  (Route<dynamic> route) => false);
-                            },
-                            rightButtonName: '확인',
-                            rightOnPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            }).showWarning();
-                      } else {
-                        var data = await DatabaseService()
-                            .itemSeqFromBarcode(barcodeNum);
-
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        if (data != null) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ReviewPage(data)));
-                        } else {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NoResult()));
-                        }
-                      }
-                    },
-                  )
                 ],
               ),
-            ],
-          ),
-        ),
-      ),
+            ))
+      ]),
     );
   }
 }
