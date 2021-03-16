@@ -8,7 +8,7 @@ import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 import 'bottom_bar.dart';
-import 'camera/camera.dart';
+import 'camera/barcode.dart';
 import 'home/home.dart';
 import 'login/login.dart';
 import 'ranking/ranking.dart';
@@ -18,9 +18,7 @@ import 'package:semo_ver2/wrapper.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(
-     MyApp()
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -33,6 +33,12 @@ dependencies:
   firebase_auth: ^0.18.1+2
   firebase_dynamic_links: ^0.5.3
   firebase_storage: ^5.2.0
+  firebase_ml_vision: ^0.11.0
+#  firebase_ml_vision:
+#    git:
+#      path: packages/firebase_ml_vision
+#      ref: feature/googlemlkit-migration
+#      url: "https://github.com/fmauro/flutterfire"
 
   #login
   google_sign_in: ^4.5.1
@@ -46,7 +52,6 @@ dependencies:
 
   #camera
 #  image_picker: ^0.6.7+22
-  firebase_ml_vision: ^0.10.0
 #  permission_handler: ^5.0.1+1
 #  app_settings: 4.0.4
   camera: ^0.7.0+2

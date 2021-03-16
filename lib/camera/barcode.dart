@@ -34,8 +34,9 @@ class _CameraPageState extends State<CameraPage> {
     _controller = CameraController(
       // 이용 가능한 카메라 목록에서 특정 카메라를 가져옵니다.
       widget.camera,
+
       // 적용할 해상도를 지정합니다.
-      ResolutionPreset.medium,
+      ResolutionPreset.veryHigh,
     );
 
     // 다음으로 controller를 초기화합니다. 초기화 메서드는 Future를 반환합니다.

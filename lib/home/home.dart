@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/camera/camera.dart';
+import 'package:semo_ver2/camera/barcode.dart';
 import 'package:semo_ver2/drug_info/general_edit.dart';
 import 'package:semo_ver2/drug_info/prepared_edit.dart';
 import 'package:semo_ver2/review/drug_info.dart';
@@ -388,9 +388,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                          border:
-                              Border(top: BorderSide(width: 0.6, color: gray50))),
-                    height: 20,
+                          border: Border(
+                              top: BorderSide(width: 0.6, color: gray50))),
+                      height: 20,
                     )
                   ],
                 ),
@@ -658,9 +658,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                          border:
-                          Border(top: BorderSide(width: 0.6, color: gray50))),
-
+                          border: Border(
+                              top: BorderSide(width: 0.6, color: gray50))),
                       height: 20,
                     )
                   ],
@@ -924,9 +923,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Container(
                         decoration: BoxDecoration(
-                            border:
-                            Border(top: BorderSide(width: 0.6, color: gray50))),
-
+                            border: Border(
+                                top: BorderSide(width: 0.6, color: gray50))),
                         height: 20)
                   ],
                 ),
