@@ -34,8 +34,9 @@ class _CameraPageState extends State<CameraPage> {
     _controller = CameraController(
       // 이용 가능한 카메라 목록에서 특정 카메라를 가져옵니다.
       widget.camera,
+
       // 적용할 해상도를 지정합니다.
-      ResolutionPreset.medium,
+      ResolutionPreset.veryHigh,
     );
 
     // 다음으로 controller를 초기화합니다. 초기화 메서드는 Future를 반환합니다.
@@ -164,6 +165,37 @@ class CameraPreviewScreen extends StatelessWidget {
                           .textTheme
                           .headline3
                           .copyWith(color: gray0_white),
+                    )),
+                Positioned(
+                    bottom: 0,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 120,
+                      color: gray750_activated,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(width: 55),
+                              Text('바코드',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(color: primary200)),
+                              SizedBox(width: 24),
+                              Text('케이스',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(color: gray200)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ))
               ],
             ),
@@ -232,11 +264,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       backgroundColor:
           gray750_activated, // 이미지는 디바이스에 파일로 저장됩니다. 이미지를 보여주기 위해 주어진
       // 경로로 `Image.file`을 생성하세요.
-      body: Image.file(File(widget.imagePath)),
+      body: Center(child: Image.file(File(widget.imagePath))),
       bottomNavigationBar: BottomAppBar(
         color: gray750_activated,
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.12,
+          height: 100,
           child: Column(
             children: [
               Row(
