@@ -13,16 +13,16 @@ import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-class CameraPage extends StatefulWidget {
+class BarcodePage extends StatefulWidget {
   final CameraDescription camera;
 
-  const CameraPage({Key key, @required this.camera}) : super(key: key);
+  const BarcodePage({Key key, @required this.camera}) : super(key: key);
 
   @override
-  _CameraPageState createState() => _CameraPageState();
+  _BarcodePageState createState() => _BarcodePageState();
 }
 
-class _CameraPageState extends State<CameraPage> {
+class _BarcodePageState extends State<BarcodePage> {
   // CameraController와 Future를 저장하기 위해 두 개의 변수를 state 클래스에 정의합니다.
   CameraController _controller;
   Future<void> _initializeControllerFuture;
