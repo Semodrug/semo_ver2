@@ -79,6 +79,10 @@ dependencies:
   fluttertoast: ^7.1.6
   dynamic_text_highlighting: ^2.2.0
 
+  #case recognition
+  tflite: ^1.0.4
+  image_picker: ^0.6.2+3
+
 
 
 dev_dependencies:
@@ -106,6 +110,8 @@ flutter:
     - assets/images/
     - assets/login/
     - assets/logo/
+    - assets/case_model/model_unquant.tflite
+    - assets/case_model/labels.txt
 
   #   - images/a_dot_ham.jpeg
 
