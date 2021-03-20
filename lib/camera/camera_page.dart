@@ -531,6 +531,31 @@ class _CaseResultState extends State<CaseResult> {
     classifyImage(image);
   }
 
+  String onlyName(String label) {
+    String seq = label;
+    List res = [];
+
+    if (seq.contains('[')) {
+      res = seq.split('[');
+      seq = res[0];
+    }
+
+    return seq;
+  }
+
+  String onlySeq(String label) {
+    String seq = label;
+    List res = [];
+
+    if (seq.contains('[')) {
+      res = seq.split('[');
+      seq = res[1];
+      res = seq.split(']');
+      seq = res[0];
+    }
+    return seq;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -559,16 +584,9 @@ class _CaseResultState extends State<CaseResult> {
             _outputs != null && _outputs.length != 0
                 ? Column(
                     children: [
+                      Text(onlySeq(_outputs[0]["label"])),
                       Text(
-                        "${_outputs[0]["confidence"]}",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          background: Paint()..color = Colors.white,
-                        ),
-                      ),
-                      Text(
-                        "${_outputs[0]["label"]}",
+                        onlyName(_outputs[0]["label"]),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20.0,
@@ -590,7 +608,22 @@ class _CaseResultState extends State<CaseResult> {
                             background: Paint()..color = Colors.white,
                           ),
                         ),
-                      )
+                      ),
+            IconButton(
+              icon: Icon(Icons.keyboard_arrow_right),
+              onPressed: () async {
+                if (onlySeq(_outputs[0]["label"]) != null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ReviewPage(onlySeq(_outputs[0]["label"]))));
+                } else {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NoResult()));
+                }
+              },
+            ),
             //Container(),
           ],
         ),
