@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/camera/barcode.dart';
+import 'package:semo_ver2/camera/camera_page.dart';
 import 'package:semo_ver2/drug_info/general_edit.dart';
 import 'package:semo_ver2/drug_info/prepared_edit.dart';
 import 'package:semo_ver2/review/drug_info.dart';
@@ -1099,6 +1100,7 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                     builder: (context) => CameraPage(
                       camera: firstCamera,
+                      initial: 0,
                     ),
                   ),
                 );
@@ -1116,6 +1118,53 @@ class _HomePageState extends State<HomePage> {
                     child: Center(
                       child: Text(
                         "바코드 인식",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: gray900),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: MaterialButton(
+              onPressed: () async {
+                // 디바이스에서 이용가능한 카메라 목록을 받아옵니다.
+                final cameras = await availableCameras();
+
+                // 이용가능한 카메라 목록에서 특정 카메라를 얻습니다.
+                final firstCamera = cameras.first;
+
+                Navigator.pop(context);
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CameraPage(
+                      camera: firstCamera,
+                      initial: 1,
+                    ),
+                  ),
+                );
+              },
+              child: Row(
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Image.asset('assets/icons/case_icon_grey.png'),
+                  ),
+                  SizedBox(width: 15),
+                  Container(
+                    child: Center(
+                      child: Text(
+                        "케이스 인식",
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1
