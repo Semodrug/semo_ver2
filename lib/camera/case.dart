@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:camera/camera.dart';
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/camera/no_result.dart';
 import 'package:semo_ver2/review/drug_info.dart';
@@ -12,6 +11,7 @@ import 'package:semo_ver2/theme/colors.dart';
 import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:tflite/tflite.dart';
 
 class CasePage extends StatefulWidget {
   final CameraDescription camera;
@@ -237,9 +237,10 @@ class DisplayPictureScreen extends StatefulWidget {
 }
 
 class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
+
   @override
   Widget build(BuildContext context) {
-    String barcodeNum;
+    //String barcodeNum;
 
     return Scaffold(
       appBar: AppBar(
@@ -300,62 +301,13 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                   .copyWith(color: gray0_white)),
                         ),
                         onPressed: () async {
-                          FirebaseVisionImage visionImage =
-                              FirebaseVisionImage.fromFile(
-                                  File(widget.imagePath));
-                          VisionText readedText;
-                          print('$barcodeNum');
-
-                          final BarcodeDetector barcodeDetector =
-                              FirebaseVision.instance.barcodeDetector();
-
-                          final List<Barcode> barcodes =
-                              await barcodeDetector.detectInImage(visionImage);
-
-                          for (Barcode barcode in barcodes) {
-                            final String rawValue = barcode.rawValue;
-                            final BarcodeValueType valueType =
-                                barcode.valueType;
-
-                            setState(() {
-                              barcodeNum = "$rawValue";
-                            });
-                          }
-
-                          barcodeDetector.close();
-
-                          if (barcodeNum == null) {
-                            IYMYDialog(
-                                context: context,
-                                bodyString: '바코드 인식이 어렵습니다\n다시 촬영해주세요',
-                                leftButtonName: '취소',
-                                leftOnPressed: () {
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                      '/bottom_bar',
-                                      (Route<dynamic> route) => false);
-                                },
-                                rightButtonName: '확인',
-                                rightOnPressed: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                }).showWarning();
-                          } else {
-                            var data = await DatabaseService()
-                                .itemSeqFromBarcode(barcodeNum);
-
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            if (data != null) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ReviewPage(data)));
-                            } else {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => NoResult()));
-                            }
+                          Navigator.pop(context);
+                          if(File(widget.imagePath) != null){
+                            print('사진 사용 한 후에 일어나는 일들 ');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CaseResult(image: File(widget.imagePath),)));
                           }
                         },
                       )
@@ -367,4 +319,156 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       ]),
     );
   }
+}
+
+class CaseResult extends StatefulWidget {
+  final File image;
+
+  const CaseResult({Key key, this.image}) : super(key: key);
+
+
+  @override
+  _CaseResultState createState() => _CaseResultState();
+}
+
+class _CaseResultState extends State<CaseResult> {
+  List _outputs;
+  File _image;
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loading = true;
+
+    loadModel().then((value) {
+      setState(() {
+        _loading = false;
+      });
+    });
+
+    pickImage();
+    // setState(() {
+    //   _loading = true;
+    //   _image = widget.image;
+    // });
+    //
+    // classifyImage(_image);
+
+  }
+
+  pickImage() {
+    var image = widget.image;
+    if (image == null) return null;
+    setState(() {
+      _loading = true;
+      _image = image;
+    });
+    classifyImage(image);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return  Scaffold(
+      appBar: AppBar(
+        title: const Text('Case 인식'),
+      ),
+      body:
+      /*
+      _loading
+          ? Container(
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(),
+      )
+          :
+          */
+      Container(
+        width: MediaQuery.of(context).size.width-200,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _image == null ? Container() : Image.file(_image),
+            SizedBox(
+              height: 20,
+            ),
+            _outputs != null && _outputs.length != 0
+                ? Column(
+              children: [
+                Text(
+                  "${_outputs[0]["confidence"]}",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    background: Paint()..color = Colors.white,
+                  ),
+                ),
+                Text(
+                  "${_outputs[0]["label"]}",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    background: Paint()..color = Colors.white,
+                  ),
+                ),
+              ],
+            )
+                : _image == null
+                ? Container()
+                :
+            //검색 결과가 없는 페이지로 넘어가기!!
+            Container(
+              child: Text(
+                "결과가 없습니다",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  background: Paint()..color = Colors.white,
+                ),
+              ),
+            )
+            //Container(),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+  classifyImage(File image) async {
+    print('  3104   ');
+    print(image);
+    print( '     ');
+
+    var output = await Tflite.runModelOnImage(
+      path: image.path,
+      numResults: 2,
+      threshold: 0.5,
+      imageMean: 127.5,
+      imageStd: 127.5,
+    );
+    print('알고 싶다');
+    print(image.path);
+    setState(() {
+      _loading = false;
+      _outputs = output;
+    });
+  }
+
+  loadModel() async {
+    String res = await Tflite.loadModel(
+       model: "assets/case_model/model_unquant.tflite",
+       labels: "assets/case_model/labels.txt",
+    );
+    print('ohoh');
+    print(res);
+  }
+
+  @override
+  void dispose() {
+    Tflite.close();
+    super.dispose();
+  }
+
 }
