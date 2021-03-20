@@ -55,8 +55,6 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('###_selectedIndex is $_selectedIndex###');
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -162,8 +160,6 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('######_selectedIndex is $_selectedIndex######');
-
     Widget barcodeArea() {
       return Stack(
         alignment: AlignmentDirectional.center,
@@ -403,9 +399,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                   .copyWith(color: gray0_white)),
                         ),
                         onPressed: () async {
-                          print('check');
-                          print(_selectedIndex);
-
                           if (_selectedIndex == 0) {
                             FirebaseVisionImage visionImage =
                                 FirebaseVisionImage.fromFile(
@@ -468,7 +461,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                           } else {
                             Navigator.pop(context);
                             if (File(widget.imagePath) != null) {
-                              print('사진 사용 한 후에 일어나는 일들');
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -601,10 +593,6 @@ class _CaseResultState extends State<CaseResult> {
   }
 
   classifyImage(File image) async {
-    print('  3104   ');
-    print(image);
-    print('     ');
-
     var output = await Tflite.runModelOnImage(
       path: image.path,
       numResults: 2,
@@ -612,8 +600,7 @@ class _CaseResultState extends State<CaseResult> {
       imageMean: 127.5,
       imageStd: 127.5,
     );
-    print('알고 싶다');
-    print(image.path);
+    //print(image.path);
     setState(() {
       _loading = false;
       _outputs = output;
@@ -625,8 +612,7 @@ class _CaseResultState extends State<CaseResult> {
       model: "assets/case_model/model_unquant.tflite",
       labels: "assets/case_model/labels.txt",
     );
-    print('ohoh');
-    print(res);
+    //print(res);
   }
 
   @override
