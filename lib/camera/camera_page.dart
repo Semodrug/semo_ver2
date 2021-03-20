@@ -14,6 +14,8 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/dialog.dart';
 import 'package:tflite/tflite.dart';
 
+int _selectedIndex;
+
 class CameraPage extends StatefulWidget {
   final int initial;
   final CameraDescription camera;
@@ -32,6 +34,8 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.initial;
+
     _cameraController = CameraController(
         // 이용 가능한 카메라 목록에서 특정 카메라를 가져옵니다.
         widget.camera,
@@ -51,6 +55,8 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('###_selectedIndex is $_selectedIndex###');
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -76,7 +82,7 @@ class _CameraPageState extends State<CameraPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             // Future가 완료되면, 프리뷰를 보여줍니다.
-            return CameraPreviewScreen(_cameraController, widget.initial);
+            return CameraPreviewScreen(_cameraController);
           } else {
             // Otherwise, display a loading indicator.
             // 그렇지 않다면, 진행 표시기를 보여줍니다.
@@ -126,11 +132,10 @@ class _CameraPageState extends State<CameraPage> {
 /// A widget showing a live camera preview.
 class CameraPreviewScreen extends StatefulWidget {
   /// Creates a preview widget for the given camera controller.
-  const CameraPreviewScreen(this.controller, this.initial, {this.child});
+  const CameraPreviewScreen(this.controller, {this.child});
 
   /// The controller for the camera that the preview is shown for.
   final CameraController controller;
-  final int initial;
 
   /// A widget to overlay on top of the camera preview
   final Widget child;
@@ -142,12 +147,10 @@ class CameraPreviewScreen extends StatefulWidget {
 class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   // swipe에 따라 page를 보여주기 위한 두 개의 변수를 state 클래스에 정의합니다.
   PageController _pageController;
-  int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initial;
     _pageController = PageController(initialPage: _selectedIndex);
   }
 
@@ -159,6 +162,8 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('######_selectedIndex is $_selectedIndex######');
+
     Widget barcodeArea() {
       return Stack(
         alignment: AlignmentDirectional.center,
@@ -327,10 +332,8 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
 // 사용자가 촬영한 사진을 보여주는 위젯
 class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
-  final int selectedIndex;
 
-  const DisplayPictureScreen({Key key, this.imagePath, this.selectedIndex})
-      : super(key: key);
+  const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
 
   @override
   _DisplayPictureScreenState createState() => _DisplayPictureScreenState();
@@ -400,7 +403,10 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                   .copyWith(color: gray0_white)),
                         ),
                         onPressed: () async {
-                          if (widget.selectedIndex == 0) {
+                          print('check');
+                          print(_selectedIndex);
+
+                          if (_selectedIndex == 0) {
                             FirebaseVisionImage visionImage =
                                 FirebaseVisionImage.fromFile(
                                     File(widget.imagePath));
@@ -462,7 +468,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                           } else {
                             Navigator.pop(context);
                             if (File(widget.imagePath) != null) {
-                              print('사진 사용 한 후에 일어나는 일들 ');
+                              print('사진 사용 한 후에 일어나는 일들');
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
