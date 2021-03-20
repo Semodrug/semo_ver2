@@ -1,7 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:semo_ver2/camera/barcode.dart';
-import 'package:semo_ver2/camera/case.dart';
 import 'package:semo_ver2/camera/camera_page.dart';
 import 'package:semo_ver2/home/home.dart';
 import 'package:semo_ver2/ranking/ranking.dart';
