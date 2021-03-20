@@ -2,7 +2,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:semo_ver2/camera/barcode.dart';
 import 'package:semo_ver2/camera/camera_page.dart';
 import 'package:semo_ver2/drug_info/general_edit.dart';
 import 'package:semo_ver2/drug_info/prepared_edit.dart';
