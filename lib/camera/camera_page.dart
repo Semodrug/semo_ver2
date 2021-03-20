@@ -165,9 +165,10 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
         alignment: AlignmentDirectional.center,
         children: [
           Positioned(
-              top: 160,
-              width: MediaQuery.of(context).size.width * 0.5,
-              // height: 140,
+              //top: 160,
+              top: MediaQuery.of(context).size.height * 0.15,
+              // width: MediaQuery.of(context).size.height * 0.8,
+              height: MediaQuery.of(context).size.height * 0.25,
               child: Image.asset('assets/camera/barcode_area.png')),
           Positioned(
               top: MediaQuery.of(context).size.height * 0.5,
@@ -219,9 +220,10 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
         alignment: AlignmentDirectional.center,
         children: [
           Positioned(
-              top: 160,
-              width: MediaQuery.of(context).size.width * 0.8,
-              // height: 140,
+              //top: 160,
+              top: MediaQuery.of(context).size.height * 0.15,
+              // width: MediaQuery.of(context).size.height * 0.8,
+              height: MediaQuery.of(context).size.height * 0.25,
               child: Image.asset('assets/camera/case_area.png')),
           Positioned(
               top: MediaQuery.of(context).size.height * 0.5,
@@ -269,33 +271,35 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
     }
 
     return widget.controller.value.isInitialized
-        ? AspectRatio(
-            aspectRatio: _isLandscape()
-                ? widget.controller.value.aspectRatio
-                : (1 / widget.controller.value.aspectRatio),
-            child: Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                RotatedBox(
-                  quarterTurns: _getQuarterTurns(),
-                  child: CameraPlatform.instance
-                      .buildPreview(widget.controller.cameraId),
-                ),
-                // child ?? Container(),
-                PageView(
-                  // physics: new NeverScrollableScrollPhysics(),
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
-                  },
-                  children: [
-                    barcodeArea(),
-                    caseArea(),
-                  ],
-                )
-              ],
+        ? Center(
+            child: AspectRatio(
+              aspectRatio: _isLandscape()
+                  ? widget.controller.value.aspectRatio
+                  : (1 / widget.controller.value.aspectRatio),
+              child: Stack(
+                alignment: AlignmentDirectional.center,
+                children: [
+                  RotatedBox(
+                    quarterTurns: _getQuarterTurns(),
+                    child: CameraPlatform.instance
+                        .buildPreview(widget.controller.cameraId),
+                  ),
+                  // child ?? Container(),
+                  PageView(
+                    // physics: new NeverScrollableScrollPhysics(),
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    },
+                    children: [
+                      barcodeArea(),
+                      caseArea(),
+                    ],
+                  )
+                ],
+              ),
             ),
           )
         : Container();
@@ -339,6 +343,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   @override
   Widget build(BuildContext context) {
     String barcodeNum;
+    print(Image.file(File(widget.imagePath)).width);
+    print(MediaQuery.of(context).size.width);
 
     return Scaffold(
       appBar: AppBar(
@@ -362,8 +368,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       backgroundColor:
           gray750_activated, // 이미지는 디바이스에 파일로 저장됩니다. 이미지를 보여주기 위해 주어진
       // 경로로 `Image.file`을 생성하세요.
-      body: Stack(alignment: AlignmentDirectional.center, children: [
-        Image.file(File(widget.imagePath)),
+      body: Stack(children: [
+        Center(child: Image.file(File(widget.imagePath))),
         Positioned(
             bottom: 0,
             child: Container(
