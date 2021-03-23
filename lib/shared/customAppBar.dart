@@ -164,19 +164,19 @@ class CustomAppBarWithArrowBackAndSearch extends StatelessWidget
   }
 }
 
-class CustomAppBarBarcode extends StatelessWidget with PreferredSizeWidget {
+class ResultAppBarBarcode extends StatelessWidget with PreferredSizeWidget {
   final Size preferredSize;
+  final int type;
 
-  CustomAppBarBarcode({
-    Key key,
-  })  : preferredSize = Size.fromHeight(56.0),
+  ResultAppBarBarcode({Key key, this.type})
+      : preferredSize = Size.fromHeight(56.0),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        '바코드 인식',
+        type == 1 ? '바코드 인식 결과' : '케이스 인식 결과',
         style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
       ),
       elevation: 0.5,

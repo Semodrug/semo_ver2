@@ -10,7 +10,7 @@ class _NoResultState extends State<NoResult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarBarcode(),
+      appBar: ResultAppBarBarcode(type: 1),
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
