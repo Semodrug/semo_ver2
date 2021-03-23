@@ -245,8 +245,8 @@ class _SocialSignInSectionState extends State<_SocialSignInSection> {
       children: <Widget>[
         Container(
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            _googleLoginButton(),
-            _facebookLoginButton(),
+            // _googleLoginButton(),
+            // _facebookLoginButton(),
             // _appleLoginButton(),
           ]),
         ),
