@@ -6,6 +6,11 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:semo_ver2/models/drug.dart';
+import 'package:semo_ver2/shared/category_button.dart';
+import 'package:semo_ver2/shared/customAppBar.dart';
+import 'package:semo_ver2/shared/image.dart';
 
 import 'package:semo_ver2/theme/colors.dart';
 import 'package:semo_ver2/camera/no_result.dart';
@@ -343,8 +348,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   @override
   Widget build(BuildContext context) {
     String barcodeNum;
-    print(Image.file(File(widget.imagePath)).width);
-    print(MediaQuery.of(context).size.width);
 
     return Scaffold(
       appBar: AppBar(
@@ -465,13 +468,57 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                               }
                             }
                           } else {
-                            Navigator.pop(context);
-                            if (File(widget.imagePath) != null) {
+                            List _outputs;
+                            File _image;
+                            bool _loading = false;
+
+                            _loading = true;
+
+                            // 1. Load a Model
+                            String res = await Tflite.loadModel(
+                              model: "assets/case_model/model_unquant.tflite",
+                              labels: "assets/case_model/labels.txt",
+                            );
+
+                            _loading = false;
+
+                            // 2. get Image
+                            var image = File(widget.imagePath);
+                            if (image == null) return null;
+                            _loading = true;
+                            _image = image;
+
+                            // 3. Classify Image
+                            var output = await Tflite.runModelOnImage(
+                              path: image.path,
+                              numResults: 2,
+                              threshold: 0.5,
+                              imageMean: 127.5,
+                              imageStd: 127.5,
+                            );
+                            //print(image.path);
+                            _loading = false;
+                            _outputs = output;
+
+                            // 4. TF close
+                            Tflite.close();
+
+                            if (_outputs.isEmpty) {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NoResult()));
+                              return Container();
+                            } else {
+                              String resultSequence =
+                                  onlySeq(_outputs[0]["label"]);
+                              Navigator.pop(context);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => CaseResult(
-                                            image: File(widget.imagePath),
+                                            itemSeq: resultSequence,
                                           )));
                             }
                           }
@@ -484,63 +531,6 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             ))
       ]),
     );
-  }
-}
-
-class CaseResult extends StatefulWidget {
-  final File image;
-
-  const CaseResult({Key key, this.image}) : super(key: key);
-
-  @override
-  _CaseResultState createState() => _CaseResultState();
-}
-
-class _CaseResultState extends State<CaseResult> {
-  List _outputs;
-  File _image;
-  bool _loading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _loading = true;
-
-    loadModel().then((value) {
-      setState(() {
-        _loading = false;
-      });
-    });
-
-    pickImage();
-    // setState(() {
-    //   _loading = true;
-    //   _image = widget.image;
-    // });
-    //
-    // classifyImage(_image);
-  }
-
-  pickImage() {
-    var image = widget.image;
-    if (image == null) return null;
-    setState(() {
-      _loading = true;
-      _image = image;
-    });
-    classifyImage(image);
-  }
-
-  String onlyName(String label) {
-    String seq = label;
-    List res = [];
-
-    if (seq.contains('[')) {
-      res = seq.split('[');
-      seq = res[0];
-    }
-
-    return seq;
   }
 
   String onlySeq(String label) {
@@ -555,108 +545,220 @@ class _CaseResultState extends State<CaseResult> {
     }
     return seq;
   }
+}
+
+class CaseResult extends StatefulWidget {
+  final String itemSeq;
+
+  const CaseResult({Key key, this.itemSeq}) : super(key: key);
+
+  @override
+  _CaseResultState createState() => _CaseResultState();
+}
+
+class _CaseResultState extends State<CaseResult> {
+  Widget _getRateStar(RatingResult) {
+    return RatingBarIndicator(
+      rating: RatingResult * 1.0,
+      //ignoreGestures: true,
+      direction: Axis.horizontal,
+      itemCount: 5,
+      itemSize: 14,
+      itemPadding: EdgeInsets.symmetric(horizontal: 0),
+      unratedColor: gray75,
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: yellow,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Case 인식'),
-      ),
-      body:
-          /*
-      _loading
-          ? Container(
-        alignment: Alignment.center,
-        child: CircularProgressIndicator(),
-      )
-          :
-          */
-          Container(
-        width: MediaQuery.of(context).size.width - 200,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _image == null ? Container() : Image.file(_image),
-            SizedBox(
-              height: 20,
-            ),
-            _outputs != null && _outputs.length != 0
-                ? Column(
-                    children: [
-                      Text(onlySeq(_outputs[0]["label"])),
-                      Text(
-                        onlyName(_outputs[0]["label"]),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          background: Paint()..color = Colors.white,
-                        ),
-                      ),
-                    ],
-                  )
-                : _image == null
-                    ? Container()
-                    :
-                    //검색 결과가 없는 페이지로 넘어가기!!
-                    Container(
-                        child: Text(
-                          "결과가 없습니다",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            background: Paint()..color = Colors.white,
+      appBar: ResultAppBarBarcode(type: 2),
+      backgroundColor: gray0_white,
+      body: StreamBuilder<Drug>(
+          stream: DatabaseService(itemSeq: widget.itemSeq).drugData,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              Drug drugStreamData = snapshot.data;
+              String drugRating = drugStreamData.totalRating.toStringAsFixed(2);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                      width: MediaQuery.of(context).size.width,
+                      color: gray50,
+                      child: OutlinedButton(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 100.0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 88,
+                                      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                      child: Container(
+                                          padding: EdgeInsets
+                                              .zero, //fromLTRB(5, 0, 5, 5),
+                                          child: SizedBox(
+                                              child: DrugImage(
+                                                  drugItemSeq:
+                                                      drugStreamData.itemSeq))),
+                                    ),
+                                    Container(
+                                        margin:
+                                            EdgeInsets.fromLTRB(10, 8, 10, 8),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 3.0),
+                                              child: Text(
+                                                  drugStreamData.entpName,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .overline
+                                                      .copyWith(
+                                                          fontSize: 10,
+                                                          color:
+                                                              gray300_inactivated)),
+                                            ),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  210,
+                                              child: Text(
+                                                  //_checkLongName(drugStreamData.itemName),
+                                                  drugStreamData.itemName,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .copyWith(
+                                                          color: gray900)),
+                                            ),
+                                            Row(
+                                              children: [
+                                                _getRateStar(
+                                                    drugStreamData.totalRating),
+                                                SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Text(drugRating,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .subtitle2
+                                                        .copyWith(
+                                                            color: gray900)),
+                                                Text(
+                                                    ' (${drugStreamData.numOfReviews}개)',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .overline
+                                                        .copyWith(
+                                                            fontSize: 10,
+                                                            color:
+                                                                gray300_inactivated)),
+                                              ],
+                                            ),
+                                            Expanded(
+                                                child: Row(
+                                              children: [
+                                                CategoryButton(
+                                                    str:
+                                                        drugStreamData.category,
+                                                    forRanking: 'ranking')
+                                              ],
+                                            )),
+                                          ],
+                                        )),
+                                  ],
+                                ),
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_right,
+                                    size: 40,
+                                    color: primary300_main,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ReviewPage(widget.itemSeq)));
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-            IconButton(
-              icon: Icon(Icons.keyboard_arrow_right),
-              onPressed: () async {
-                if (onlySeq(_outputs[0]["label"]) != null) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ReviewPage(onlySeq(_outputs[0]["label"]))));
-                } else {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => NoResult()));
-                }
-              },
-            ),
-            //Container(),
-          ],
-        ),
-      ),
+                        style: OutlinedButton.styleFrom(
+                            backgroundColor: gray0_white,
+                            // minimumSize: Size(12, 23),
+                            padding: EdgeInsets.zero,
+                            // elevation: 0,
+                            // primary: gray0_white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            side: BorderSide(color: primary400_line)),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ReviewPage(widget.itemSeq)));
+                        },
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '내가 찾는 약이 아니라면?',
+                          style: Theme.of(context).textTheme.subtitle1,
+                        ),
+                        SizedBox(height: 5),
+                        InkWell(
+                          child: Text(
+                            '다시 촬영하기',
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.w400,
+                                    color: gray500),
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            } else
+              return LinearProgressIndicator();
+          }),
     );
-  }
-
-  classifyImage(File image) async {
-    var output = await Tflite.runModelOnImage(
-      path: image.path,
-      numResults: 2,
-      threshold: 0.5,
-      imageMean: 127.5,
-      imageStd: 127.5,
-    );
-    //print(image.path);
-    setState(() {
-      _loading = false;
-      _outputs = output;
-    });
-  }
-
-  loadModel() async {
-    String res = await Tflite.loadModel(
-      model: "assets/case_model/model_unquant.tflite",
-      labels: "assets/case_model/labels.txt",
-    );
-    //print(res);
-  }
-
-  @override
-  void dispose() {
-    Tflite.close();
-    super.dispose();
   }
 }
