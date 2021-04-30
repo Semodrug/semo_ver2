@@ -78,6 +78,7 @@ dependencies:
   flutter_spinkit: ^4.1.2+1
   fluttertoast: ^7.1.6
   dynamic_text_highlighting: ^2.2.0
+  carousel_slider: ^3.0.0
 
   #case recognition
   tflite: ^1.0.4

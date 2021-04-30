@@ -258,30 +258,6 @@ class ReviewService {
         itemName: doc.data()['itemName'],
         reporterUid: doc.data()['reporterUid'] ?? '',
 
-        //   reportContent: doc.data()['reportContent'] ?? '',
-        //   reportContent: doc.data()['reportContent'] ?? '',
-        //   reportContent: doc.data()['reportContent'] ?? '',
-        //
-        //
-        //
-        //   this.reviewDocumentId,
-        //   this.reportContent,
-        //   this.effectText,
-        //   this.sideEffectText,
-        //   this.overallText,
-        //   this.itemName,
-        //   this.reporterUid
-
-        // starRating: doc.data()['starRating'] ?? 0,
-        // noFavorite: doc.data()['noFavorite'] ?? 0,
-        // uid: doc.data()['uid'] ?? '',
-        // documentId: doc.id ?? '',
-        // registrationDate: doc.data()['registrationDate'],
-        // entpName: doc.data()['entpName'],
-        // seqNum: doc.data()['seqNum'],
-        // nickName: doc.data()['nickName'],
-        // reasonForTakingPill: doc.data()['reasonForTakingPill'],
-
       );
     }).toList();
   }

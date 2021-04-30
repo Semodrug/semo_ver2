@@ -10,9 +10,6 @@ class MyPieChart extends StatefulWidget {
   double sideEffectYes;
   double sideEffectNo;
 
-//  MyPieChart( { this.effectOrSideEffect, this.effectGood, this.effectSoso , this.effectBad, this.sideEffectYes, this.sideEffectNo});
-//  MyPieChart(String effectOrSideEffect, int effectGood, int effectSoso,  { this.effectOrSideEffect, this.effectGood, this.effectSoso , this.effectBad, this.sideEffectYes, this.sideEffectNo});
-
   MyPieChart(this.effectOrSideEffect, this.effectGood, this.effectSoso, this.effectBad, this.sideEffectYes, this.sideEffectNo);
 
   @override

@@ -36,6 +36,7 @@ class Drug {
   final num totalRating;
   final num numOfReviews;
   final List searchNameList;
+  final List pharmacistTips;
 
   // TODO : category
   final String category;
@@ -69,8 +70,8 @@ class Drug {
       this.category,
       this.totalRating,
       this.numOfReviews,
-      this.searchNameList
-
+      this.searchNameList,
+      this.pharmacistTips
       });
 }
 
