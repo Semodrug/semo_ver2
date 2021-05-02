@@ -20,15 +20,11 @@ class _GetRatingState extends State<GetRating> {
 
   @override
   Widget build(BuildContext context) {
-
     var mqWidth = MediaQuery.of(context).size.width;
-    TheUser user = Provider.of<TheUser>(context);
-    bool _isRated = false;
     return StreamBuilder<Drug> (
       stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
       builder: (context, snapshot) {
         if(snapshot.hasData) {
-          Drug drug = snapshot.data;
           return StreamBuilder<List<Review>>(
               stream: ReviewService().getReviews(widget.drugItemSeq),
               builder: (context, snapshot) {
@@ -67,7 +63,6 @@ class _GetRatingState extends State<GetRating> {
                   if (yes.isNaN) yes = 0;
                   if (no.isNaN) no = 0;
 
-
                   DatabaseService(itemSeq: widget.drugItemSeq).updateTotalRating(ratingResult, length);
 
                   return Container(
@@ -92,7 +87,6 @@ class _GetRatingState extends State<GetRating> {
                                     children: [
                                       Image.asset('assets/icons/star.png',
                                         width: 28, height: 28,),
-                                      //Todo : Rating평
                                       Container(width: 5),
                                       Text("",
                                           style: Theme.of(context).textTheme.headline1.copyWith(
@@ -317,7 +311,6 @@ class _GetRatingState extends State<GetRating> {
               children: <Widget>[
                 Center(child: Icon(Icons.star, size: 30, color: Colors.amberAccent)),
                 SizedBox(height: 5),
-//                Center(child: Text('별점이 반영되었습니다.', style: TextStyle(color: Colors.black45, fontSize: 14))),
                 SizedBox(height: 20),
                 Center(child: Text('Rating updated', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
                 SizedBox(height: 20),
@@ -330,16 +323,6 @@ class _GetRatingState extends State<GetRating> {
                         Navigator.of(context).pop();
                       },
                     ),
-//                    TextButton(
-//                      child: Text('확인', style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-//                      onPressed: () {
-//                        //TODO: GOTO Edit Review
-//                        Navigator.of(context).pop();
-//                        Navigator.push(context, MaterialPageRoute(
-//                            builder: (context) => WriteReview(drugItemSeq: widget.drugItemSeq, tapToRatingResult: rating)
-//                        ));
-//                      },
-//                    ),
                   ],
                 )
               ],

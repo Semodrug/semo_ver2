@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:semo_ver2/models/report_review.dart';
 import 'package:semo_ver2/models/review.dart';
-import 'package:semo_ver2/models/single_review.dart';
-import 'package:semo_ver2/models/user.dart';
 
 
 class ReviewService {
@@ -181,15 +179,6 @@ class ReviewService {
   }
 
 
-
-  // Future<void> increaseFavorite(String docId, String currentUserUid) async {
-  //   return await reviewCollection.doc(docId).update({
-  //     'favoriteSelected': FieldValue.arrayUnion([currentUserUid]),
-  //     'noFavorite': FieldValue.increment(1),
-  //   });
-  // }
-
-
   Future<void> reportReview(review, report, reporterUid) async {
     String reportContent;
     if(report == 1) reportContent = "광고, 홍보 / 거래시도";
@@ -211,16 +200,6 @@ class ReviewService {
       'reporterUid': FieldValue.arrayUnion([reporterUid]),
     });
 
-
-    // return await reportReviewCollection.doc(review.documentId).update({
-    //   'reviewDocumentId': review.documentId,
-    //   'reportContent': FieldValue.arrayUnion([reportContent]),
-    //   'effectText': review.effectText,
-    //   'sideEffectText': review.sideEffectText,
-    //   'overallText': review.overallText,
-    //   'itemName': review.itemName,
-    //   'reporterUid': FieldValue.arrayUnion([reporterUid]),
-    // });
   }
 
 

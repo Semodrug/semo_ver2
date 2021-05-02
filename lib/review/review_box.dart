@@ -34,20 +34,15 @@ class ReviewBox extends StatelessWidget {
                   type == "reason" ? " #"+review.reasonForTakingPill : type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
                   style: type == "reason" ?
                   Theme.of(context).textTheme.subtitle2.copyWith(
-                      color: Color(0xff005841), fontSize: 12
-                  ) :
+                      color: Color(0xff005841), fontSize: 12) :
                   Theme.of(context).textTheme.bodyText2.copyWith(
-                      color: gray900, fontSize: 12
-                  ),
+                      color: gray900, fontSize: 12),
                 ),
                 Container(width:3),
                 _face(type == "effect" ? review.effect : type == "sideEffect" ? review.sideEffect : "overall",),
               ],
             ),
             type == "reason" ? Container(): Container(height:4),
-
-            // if(review.reasonForTakingPill!="")
-
 
             if(type == "effect")
               Text(review.effectText),
@@ -56,16 +51,6 @@ class ReviewBox extends StatelessWidget {
             if(type == "sideEffect" && review.sideEffect == "no")
               Container(),
             if(type == "overall") Text(review.overallText)
-
-            // Text(
-            //   type == "effect" ? review.effectText
-            //       : (type == "sideEffect" && review.sideEffect == "no") ?
-            //   "" : (type == "sideEffect" && review.sideEffect == "yes") ?
-            //   review.sideEffectText : review.overallText,
-            //   style: Theme.of(context).textTheme.bodyText2.copyWith(
-            //       color: gray600,
-            //       fontSize: 14
-            //   ),),
           ],
         )
     );

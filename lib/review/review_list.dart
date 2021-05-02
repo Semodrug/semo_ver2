@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:semo_ver2/models/report_review.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/review/review_box.dart';
-import 'package:semo_ver2/shared/review_pill_info.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'edit_review.dart';
 import 'package:flutter/material.dart';
@@ -53,8 +51,7 @@ class _ReviewListState extends State<ReviewList> {
                       review.sideEffectText.contains(widget.searchText) ||
                       review.overallText.contains(widget.searchText)) {
                     searchResults.add(review);
-                  } else
-                    print('    RESULT Nothing     ');
+                  }
                 }
                 return ListView.builder(
                   physics: const ClampingScrollPhysics(),
@@ -107,10 +104,6 @@ class _ReviewListState extends State<ReviewList> {
             itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
             unratedColor: gray75,
             itemBuilder: (context, _) =>
-                //     Icon(
-                //   Icons.star,
-                //   color: yellow,
-                // ),
                 ImageIcon(
               AssetImage('assets/icons/star.png'),
               color: yellow,
@@ -125,7 +118,6 @@ class _ReviewListState extends State<ReviewList> {
           Expanded(child: Container()),
           IconButton(
             padding: EdgeInsets.only(right: 0),
-            // constraints: BoxConstraints(),
             icon: Icon(Icons.more_horiz, color: gray500, size: 19),
             onPressed: () {
               if (user.uid == review.uid) {
@@ -150,9 +142,7 @@ class _ReviewListState extends State<ReviewList> {
     );
   }
 
-  Widget _popUpMenu(
-    review,
-  ) {
+  Widget _popUpMenu(review) {
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -170,7 +160,6 @@ class _ReviewListState extends State<ReviewList> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            //TODO
                             builder: (context) => EditReview(review, "edit")));
                   },
                   child: Center(

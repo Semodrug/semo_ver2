@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/drug.dart';
-import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/image.dart';
@@ -40,10 +39,6 @@ class _ReviewPillInfoState extends State<ReviewPillInfo> {
         ))),
         child: Row(
           children: <Widget>[
-//            Container(
-//              width: 100, height: 100,
-//              color: Colors.teal[100],
-//            ),
             SizedBox(
               child: DrugImage(drugItemSeq: widget.seqNum),
               width: 88.0,
@@ -101,21 +96,6 @@ class _ReviewPillInfoState extends State<ReviewPillInfo> {
                                   itemPadding:
                                       EdgeInsets.symmetric(horizontal: 0.0),
                                 ),
-
-                                // RatingBarIndicator(
-                                //   itemSize: 16,
-                                //   initialRating: drug.totalRating ,
-                                //   minRating: 0,
-                                //   direction: Axis.horizontal,
-                                //   allowHalfRating: true,
-                                //   itemCount: 5,
-                                //   unratedColor: gray75,
-                                //   itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
-                                //   itemBuilder: (context, _) => ImageIcon(
-                                //     AssetImage('assets/icons/star.png'),
-                                //     color: yellow,
-                                //   ),
-                                // ),
                                 Container(width: 5),
                                 Text(
                                   drug.totalRating.toStringAsFixed(2),
@@ -140,11 +120,6 @@ class _ReviewPillInfoState extends State<ReviewPillInfo> {
                             CategoryButton(str: drug.category)
                           ],
                         );
-                        // Text(drug.totalRating.toStringAsFixed(2)+drug.numOfReviews.toStringAsFixed(0) + "개",
-                        //   style: TextStyle(
-                        //     fontSize: 16.5,
-                        //     fontWeight: FontWeight.bold,
-                        //   ));
                       } else
                         return Container();
                     }),
