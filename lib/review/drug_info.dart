@@ -13,7 +13,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/my_favorites.dart';
-import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
+import 'package:semo_ver2/review/ph_tips.dart';
 import 'package:semo_ver2/review/review_policy_more.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -28,6 +28,8 @@ import 'package:semo_ver2/review/review_list.dart';
 import 'package:semo_ver2/review/write_review.dart';
 import 'package:semo_ver2/shared/shortcut_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
 
 List infoEE;
 List infoNB;
@@ -64,24 +66,17 @@ class _ReviewPageState extends State<ReviewPage> {
   GlobalKey _key1 = GlobalKey();
   GlobalKey _key2 = GlobalKey();
   GlobalKey _key3 = GlobalKey();
-  // GlobalKey _key4 = GlobalKey();
 
   double _getReviewSizes() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
-    final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
     final RenderBox renderBox3 = _key3.currentContext.findRenderObject();
-    // final RenderBox renderBox4 = _key4.currentContext.findRenderObject();
-    double height = renderBox1.size.height + /*renderBox2.size.height +*/
-        renderBox3.size.height +
-        // renderBox4.size.height +
-        30;
+    double height = renderBox1.size.height + renderBox3.size.height + 30;
     return height;
   }
 
   double _getPillInfoSize() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
-    final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
-    double height = renderBox1.size.height /*+ renderBox2.size.height*/;
+    double height = renderBox1.size.height;
     return height;
   }
 
@@ -90,27 +85,8 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   void initState() {
     super.initState();
-    // _scrollController.addListener(() {
-    //   if (_scrollController.offset * 1.0 > _getReviewSizes())
-    //     pillInfoTab = false;
-    //   else
-    //     pillInfoTab = true;
-    //   //print("MORE THAN 1000");
-    //   print('offset = ${_scrollController.offset}');
-    //   print(pillInfoTab);
-    // });
   }
 
-  // void checkScroller() {
-  //   _scrollController.addListener(() {
-  //     if(_scrollController.offset*1.0 < _getPillInfoSize())
-  //       pillInfoTab = true;
-  //     else if(_scrollController.offset*1.0 >= _getPillInfoSize())
-  //       pillInfoTab = false;
-  //     //print('offset = ${_scrollController.offset}');
-  //   });
-  //
-  // }
 
   void _onTapPillInfo() {
     _scrollController.animateTo(_getPillInfoSize(),
@@ -130,7 +106,6 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   bool pillInfoTab = true;
-
   bool _ifZeroReview = true;
 
   void _noReview() {
@@ -144,6 +119,7 @@ class _ReviewPageState extends State<ReviewPage> {
   bool checkReviewIsZero() {
     return _ifZeroReview;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -173,18 +149,6 @@ class _ReviewPageState extends State<ReviewPage> {
               if (await ReviewService()
                       .findUserWroteReview(widget.drugItemSeq, user.uid) ==
                   false)
-                // return StreamBuilder<List<Review>>(
-                //   stream: ReviewService().findUserReview(widget.drugItemSeq, user.uid),
-                //   builder: (context, snapshot) {
-                //     if(snapshot.hasData) {
-                //       return IYMYGotoSeeOrCheckDialog();
-                //     }
-                //     else {
-                //         print("FAIL");
-                //       return Container();
-                //     }
-                //   }
-                // );
                 IYMYGotoSeeOrCheckDialog();
               else
                 Navigator.push(
@@ -212,7 +176,6 @@ class _ReviewPageState extends State<ReviewPage> {
                             child:
                                 NotificationListener<ScrollUpdateNotification>(
                               child: CustomScrollView(
-                                //physics: PageScrollPhysics(),
                                 controller: _scrollController,
                                 slivers: <Widget>[
                                   SliverToBoxAdapter(
@@ -240,9 +203,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                                                 : gray300_inactivated,
                                                           ))),
                                               onTap: _onTapPillInfo
-                                              // onTap: () {
-                                              //   _onTapPillInfo;
-                                              // },
                                               ),
                                           width: MediaQuery.of(context)
                                                   .size
@@ -307,6 +267,25 @@ class _ReviewPageState extends State<ReviewPage> {
                                       ),
                                     ],
                                   )),
+
+                                    SliverToBoxAdapter(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // _pharmacistTip(),
+                                        PhTipsList(widget.drugItemSeq),
+
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 10.0,
+                                          child: Container(
+                                            color: gray50,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ),
+
                                   SliverToBoxAdapter(
                                     child: _totalRating(),
                                   ),
@@ -656,33 +635,6 @@ class _ReviewPageState extends State<ReviewPage> {
     return _resultList;
   }
 
-  //              child: Image.asset('assets/icons/warning_icon.png')
-
-  //ElevatedButton(
-  //             child: Text('자세히보기',
-  //                 style: Theme.of(context)
-  //                     .textTheme
-  //                     .subtitle1
-  //                     .copyWith(color: primary600_bold_text, fontSize: 12)),
-  //             style: ElevatedButton.styleFrom(
-  //                 minimumSize: Size(68, 24),
-  //                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-  //                 elevation: 0,
-  //                 primary: gray0_white,
-  //                 shape: RoundedRectangleBorder(
-  //                     borderRadius: BorderRadius.circular(4.0),
-  //                     side: BorderSide(color: Colors.grey[300]))),
-  //             onPressed: () async {
-  //               Navigator.push(
-  //                   context,
-  //                   MaterialPageRoute(
-  //                       builder: (context) => WarningInfo(
-  //                             drugItemSeq: drugItemSeq,
-  //                             warningList: carefulDiseaseList,
-  //                           )));
-  //             },
-  //           )
-
   /* Top Information - Dialogs */
   Widget _warningMessage(context, carefulDiseaseList, drugItemSeq) {
     return Container(
@@ -1030,6 +982,8 @@ class _ReviewPageState extends State<ReviewPage> {
               _existReview();
             else
               _noReview();
+
+
             return Column(
               children: [
                 Padding(
@@ -1106,56 +1060,63 @@ class _ReviewPageState extends State<ReviewPage> {
         });
   }
 
-  Widget _searchBar() {
-    // return Center(
-    //   child: Column(
-    //     children: [
-    //       Container(
-    //         margin: EdgeInsets.fromLTRB(20, 12, 20, 0),
-    //         child: SizedBox(
-    //             height: 35,
-    //             child: FlatButton(
-    //               child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.start,
-    //                 children: [
-    //                   Icon(Icons.search, size: 20),
-    //                   Padding(
-    //                     padding:
-    //                     const EdgeInsets.symmetric(horizontal: 10.0),
-    //                     child: Text(
-    //                       "어떤 약정보를 찾고 계세요?",
-    //                       style: Theme.of(context).textTheme.bodyText2,
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //               // onPressed: () {
-    //               //   Navigator.push(
-    //               //       context,
-    //               //       MaterialPageRoute(
-    //               //           builder: (BuildContext context) =>
-    //               //               SearchHighlightingScreen(
-    //               //                   infoEE: infoEE,
-    //               //                   infoNB: infoNB,
-    //               //                   infoUD: infoUD,
-    //               //                   storage: storage,
-    //               //                   entp_name: entpName)));
-    //               // },
-    //               textColor: gray300_inactivated,
-    //               color: gray50,
-    //               shape: OutlineInputBorder(
-    //                   borderSide: BorderSide(
-    //                       style: BorderStyle.solid,
-    //                       width: 1.0,
-    //                       color: gray200),
-    //                   borderRadius: BorderRadius.circular(8.0)),
-    //             )),
-    //       ),
-    //       SizedBox(height: 10)
-    //     ],
-    //   ),
-    // );
+  Widget _pharmacistTip() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                color: yellow
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                    text: "약사의 한마디",
+                    style: Theme.of(context).textTheme.subtitle1,),
+                TextSpan(text: '  '+'1'), //TODO: connect with DB
+              ],
+            ),
+          ),
 
+          Container(
+            height: 15
+          ),
+
+          CarouselSlider(
+            options: CarouselOptions(height: 200.0),
+            items: [1,2,3,4,5].map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Card(
+                    elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+
+                      decoration: BoxDecoration(
+
+                          // color: Colors.amber
+                      ),
+                      child: Text('text $i', style: TextStyle(fontSize: 16.0),)
+                    )
+
+
+                  );
+                },
+              );
+            }).toList(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _searchBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(

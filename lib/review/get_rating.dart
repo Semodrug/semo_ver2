@@ -127,8 +127,6 @@ class _GetRatingState extends State<GetRating> {
 
 
 
-                              // Expanded(child: Container()),
-
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -203,11 +201,6 @@ class _GetRatingState extends State<GetRating> {
                                           ],
                                         ),
                                       ),
-                                      // Text(good == 0 && soso == 0 && bad == 0 ? "" : "좋아요  " + bad.toStringAsFixed(0) + "%",
-                                      //     style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                      //       color: gray600,
-                                      //     )
-                                      // ),
                                       Container(height: 6),
 
                                       //side effect
@@ -245,26 +238,12 @@ class _GetRatingState extends State<GetRating> {
                                           ],
                                         ),
                                       )
-                                      // Text(good == 0 && soso == 0 && bad == 0 ? "" : "없어요  " +  no.toStringAsFixed(0) + "%",
-                                      //     style: Theme.of(context).textTheme.bodyText2.copyWith(
-                                      //       color: gray600,
-                                      //     )
-                                      // )
                                     ],
                                   ),
-                                  // Container(width:MediaQuery.of(context).size.width*0.15)
                                 ],
                               ),
-                              // Column(
-                              //   children: [
-                              //     Text("부작용"),
-                              //     MyPieChart("sideEffect", effectGood, effectSoso, effectBad, sideEffectYes, sideEffectNo)
-                              //   ],
-                              // ),
                             ],
                           ),
-
-
                         ],
                       ));
                 }

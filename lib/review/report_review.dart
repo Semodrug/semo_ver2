@@ -9,8 +9,6 @@ class _ReportReviewState extends State<ReportReview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      //TODO
       appBar: AppBar(
         leading: IconButton(
             icon: Icon(

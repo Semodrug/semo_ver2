@@ -44,13 +44,7 @@ class _AllReveiewState extends State<AllReview> {
 
   double _getReviewSizes() {
     final RenderBox renderBox1 = _key8.currentContext.findRenderObject();
-    // final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
-    // final RenderBox renderBox3 = _key3.currentContext.findRenderObject();
-    // final RenderBox renderBox4 = _key4.currentContext.findRenderObject();
     double height = renderBox1.size.height ;
-        // + renderBox2.size.height +
-        // renderBox3.size.height;
-        // + 30;
     return 1000;
   }
 
@@ -83,20 +77,10 @@ class _AllReveiewState extends State<AllReview> {
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-               // child: _myTab(context),
               child: _myTabbe(context),
             ),
           ],
         ),
-        // floatingActionButton: FloatingActionButton(
-        //   child: Icon(Icons.create),
-        //   backgroundColor: Colors.teal[300],
-        //   elevation: 0.0,
-//          onPressed: () {
-//            Navigator.push(context,
-//                MaterialPageRoute(builder: (context) => WriteReview()));
-//          }
- //       ),
       ),
     );
   }
@@ -228,24 +212,8 @@ class _AllReveiewState extends State<AllReview> {
                 ),
               ),
             ),
-            //TODO: height 없이 괜찮게
-
-
-            // CustomScrollView(
-            //   slivers: [
-            //     SliverToBoxAdapter(
-            //       // child: _myTab(context),
-            //       child: _myTabbe(context),
-            //     ),
-            //   ],
-            // )
-
-
 
             Container(
-              // padding: EdgeInsets.all(0.0),
-              // width: double.infinity,
-              // height: _getReviewSizes(),
               height: 5000,
               child: TabBarView(
                 children: [
@@ -255,60 +223,11 @@ class _AllReveiewState extends State<AllReview> {
                 ],
               ),
             )
-
-            // TabBarView(
-            //   children: [
-            //     _underTab("none", 1),
-            //     _underTab("effectOnly", 2),
-            //     _underTab("sideEffectOnly", 3),
-            //   ],
-            // ),
           ],
         ));
   }
 
   Widget _underTab(String filter, key) {
-
-
-
-
-    // return CustomScrollView(
-    //   slivers: [
-    //     SliverToBoxAdapter(
-    //       child: Container(
-    //           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             children: <Widget>[
-    //               //TODO EDIT num of reviews
-    //               StreamBuilder<Drug>(
-    //                   stream: DatabaseService(itemSeq: widget.drugItemSeq)
-    //                       .drugData,
-    //                   builder: (context, snapshot) {
-    //                     if (snapshot.hasData) {
-    //                       Drug drug = snapshot.data;
-    //                       return Text(
-    //                           "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
-    //                           style: Theme.of(context).textTheme.headline5.copyWith(color: gray750_activated,fontSize: 14)
-    //                       );
-    //                     } else
-    //                       return Container();
-    //                   }),
-    //             ],
-    //           )),
-    //     ),
-    //     SliverToBoxAdapter(
-    //       child: _searchBar(),
-    //     ),
-    //     SliverToBoxAdapter(
-    //       child: ReviewList(_searchText, filter, widget.drugItemSeq),
-    //     )
-    //
-    //     // _searchBar(),
-    //     // ReviewList(_searchText, filter, widget.drugItemSeq),
-    //   ],
-    // );
-
     return ListView(
         physics: NeverScrollableScrollPhysics(),
       // mainAxisSize: MainAxisSize.max,
@@ -366,11 +285,6 @@ class _AllReveiewState extends State<AllReview> {
                           child: Image.asset('assets/icons/search_grey.png'),
                         ),
                       ),
-
-                      //     ImageIcon(
-                      //     AssetImage('assets/icons/search_grey.png'),
-                      // // color: primary400_line,
-                      //     ),
                       hintText: '어떤 리뷰를 찾고계세요?',
                       hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
                         color: gray300_inactivated,
