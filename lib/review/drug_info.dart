@@ -13,6 +13,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/my_favorites.dart';
+import 'package:semo_ver2/review/ph_tips.dart';
 import 'package:semo_ver2/review/review_policy_more.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -65,24 +66,17 @@ class _ReviewPageState extends State<ReviewPage> {
   GlobalKey _key1 = GlobalKey();
   GlobalKey _key2 = GlobalKey();
   GlobalKey _key3 = GlobalKey();
-  // GlobalKey _key4 = GlobalKey();
 
   double _getReviewSizes() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
-    final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
     final RenderBox renderBox3 = _key3.currentContext.findRenderObject();
-    // final RenderBox renderBox4 = _key4.currentContext.findRenderObject();
-    double height = renderBox1.size.height + /*renderBox2.size.height +*/
-        renderBox3.size.height +
-        // renderBox4.size.height +
-        30;
+    double height = renderBox1.size.height + renderBox3.size.height + 30;
     return height;
   }
 
   double _getPillInfoSize() {
     final RenderBox renderBox1 = _key1.currentContext.findRenderObject();
-    final RenderBox renderBox2 = _key2.currentContext.findRenderObject();
-    double height = renderBox1.size.height /*+ renderBox2.size.height*/;
+    double height = renderBox1.size.height;
     return height;
   }
 
@@ -182,7 +176,6 @@ class _ReviewPageState extends State<ReviewPage> {
                             child:
                                 NotificationListener<ScrollUpdateNotification>(
                               child: CustomScrollView(
-                                //physics: PageScrollPhysics(),
                                 controller: _scrollController,
                                 slivers: <Widget>[
                                   SliverToBoxAdapter(
@@ -210,9 +203,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                                                 : gray300_inactivated,
                                                           ))),
                                               onTap: _onTapPillInfo
-                                              // onTap: () {
-                                              //   _onTapPillInfo;
-                                              // },
                                               ),
                                           width: MediaQuery.of(context)
                                                   .size
@@ -282,9 +272,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        // Text(drug.pharmacistTips[0]),
+                                        // _pharmacistTip(),
+                                        PhTipsList(widget.drugItemSeq),
 
-                                        _pharmacistTip(),
                                         SizedBox(
                                           width: double.infinity,
                                           height: 10.0,

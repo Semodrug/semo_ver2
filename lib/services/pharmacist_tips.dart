@@ -3,14 +3,11 @@ import 'package:semo_ver2/models/pharmacist_tips.dart';
 
 class PhTipService {
 
-  final String documentId;
-  PhTipService({ this.documentId });
-
   final CollectionReference phTipsCollection = FirebaseFirestore.instance.collection('PharmacistTips');
   Query phTipsQuery = FirebaseFirestore.instance.collection('PharmacistTips');
-  Stream<List<PhTip>> PhTipSnapshots;
+  Stream<List<PhTip>> phTipSnapshots;
 
-  List<PhTip> _PhTipListFromSnapshot(QuerySnapshot snapshot) {
+  List<PhTip> _phTipListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return PhTip(
         content: doc.data()['content'] ?? '',
@@ -31,9 +28,12 @@ class PhTipService {
   Stream<List<PhTip>> getPhTips(String seqNum) {
     return phTipsCollection
         .where("seqNum", isEqualTo: seqNum)
+    //todo: DELETE???
         .snapshots()
-        .map(_PhTipListFromSnapshot);
+        .map(_phTipListFromSnapshot);
   }
+
+
 
   // Stream<List<Review>> getUserReviews(String uid) {
   //   return reviewCollection.where("uid", isEqualTo: uid).snapshots()

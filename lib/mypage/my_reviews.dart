@@ -10,7 +10,7 @@ import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/shared/loading.dart';
-import 'package:semo_ver2/shared/review_box.dart';
+import 'package:semo_ver2/review/review_box.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'package:intl/intl.dart';
 

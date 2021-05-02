@@ -1,17 +1,17 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:semo_ver2/models/pharmacist_tips.dart';
 import 'package:semo_ver2/services/pharmacist_tips.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class PhTipsList extends StatefulWidget {
-  String drugItemSeq;
-  PhTip phTip;
-  PhTipsList(this.drugItemSeq, this.phTip);
+  final String drugItemSeq;
+  PhTipsList(this.drugItemSeq, /*this.phTip*/);
 
   @override
   _PhTipsListState createState() => _PhTipsListState();
@@ -20,81 +20,139 @@ class PhTipsList extends StatefulWidget {
 class _PhTipsListState extends State<PhTipsList> {
   @override
   Widget build(BuildContext context) {
-    StreamBuilder<List<PhTip>>(
-            stream: PhTipService().getPhTips(widget.drugItemSeq),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                List<PhTip> phTips = snapshot.data;
-                return ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: phTips.length,
-                  itemBuilder: (context, index) {
-                    // return _buildListItem(context, phTips[index]);
-                  },
-                );
-              } else
-                return Loading();
-            },
-          );
+    return StreamBuilder<List<PhTip>>(
+      stream: PhTipService().getPhTips(widget.drugItemSeq),
+      builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        List<PhTip> phTips = snapshot.data;
+        return Column(children: [
+           // Text(phTips[0].content)
+        ],);
+        // return ListView.builder(
+        //   physics: const ClampingScrollPhysics(),
+        //   shrinkWrap: true,
+        //   itemCount: phTips.length,
+        //   itemBuilder: (context, index) {
+        //     return _buildListItem(context, phTips[index]);
+        //     },
+        // );
+      } else
+        return Container();
+      },
+    );
   }
 
-  //
-  // Widget _buildListItem(BuildContext context, PhTip phtip) {
-  //   FirebaseAuth auth = FirebaseAuth.instance;
-  //   List<String> names = List.from(phtip.favoriteSelected);
-  //
-  //   return Container(
-  //       padding: EdgeInsets.fromLTRB(0, 10, 0, 21.5),
-  //       decoration: BoxDecoration(
-  //           border: Border(bottom: BorderSide(width: 0.6, color: gray75))),
-  //       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-  //         _review(review),
-  //         Container(height: 11.5),
-  //         _dateAndFavorite(
-  //             DateFormat('yyyy.MM.dd').format(review.registrationDate.toDate()),
-  //             names,
-  //             auth,
-  //             review)
-  //       ]));
-  // }
-  //
-  //
-  // Widget _review(review) {
-  //   return Padding(
-  //     padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: <Widget>[
-  //         ReviewBox(context: context, review: review, type: "reason"),
-  //         Container(height: 6),
-  //
-  //         //effect
-  //         widget.filter == "sideEffectOnly"
-  //             ? Container()
-  //             // : _reviewBox(review, "effect"),
-  //             : ReviewBox(context: context, review: review, type: "effect"),
-  //         Container(height: 6),
-  //
-  //         //side effect
-  //         widget.filter == "effectOnly"
-  //             ? Container()
-  //             // : _reviewBox(review, "sideEffect"),
-  //             : ReviewBox(context: context, review: review, type: "sideEffect"),
-  //         Container(height: 6),
-  //
-  //         //overall
-  //         widget.filter == "sideEffectOnly" || widget.filter == "effectOnly"
-  //             ? Container()
-  //             // : _reviewBox(review, "overall"),
-  //             : review.overallText == ""
-  //                 ? Container()
-  //                 : ReviewBox(
-  //                     context: context, review: review, type: "overall"),
-  //         review.overallText == "" ? Container() : Container(height: 6),
-  //       ],
-  //     ),
-  //   );
-  // }
 
+  Widget _pharmacistTip() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                  color: yellow
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: "약사의 한마디",
+                  style: Theme.of(context).textTheme.subtitle1,),
+                TextSpan(text: '  '+'1'), //TODO: connect with DB
+              ],
+            ),
+          ),
+
+          Container(
+              height: 15
+          ),
+
+          CarouselSlider(
+            options: CarouselOptions(height: 200.0),
+            items: [1,2,3,4,5].map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Card(
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+
+                          decoration: BoxDecoration(
+
+                            // color: Colors.amber
+                          ),
+                          child: Text('text $i', style: TextStyle(fontSize: 16.0),)
+                      )
+
+
+                  );
+                },
+              );
+            }).toList(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, PhTip phtip) {
+    return Text( phtip.content);
+    // return Padding(
+    //   padding: const EdgeInsets.all(16.0),
+    //   child: Column(
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: [
+    //       RichText(
+    //         text: TextSpan(
+    //           style: Theme.of(context).textTheme.subtitle1.copyWith(
+    //               color: yellow
+    //           ),
+    //           children: <TextSpan>[
+    //             TextSpan(
+    //               text: "약사의 한마디",
+    //               style: Theme.of(context).textTheme.subtitle1,),
+    //             TextSpan(text: '  '+'1'), //TODO: connect with DB
+    //           ],
+    //         ),
+    //       ),
+    //
+    //       Container(
+    //           height: 15
+    //       ),
+    //
+    //       // CarouselSlider(
+    //       //   options: CarouselOptions(height: 200.0),
+    //       //   items: [1,2,3,4,5].map((i) {
+    //       //     return Builder(
+    //       //       builder: (BuildContext context) {
+    //       //         return Card(
+    //       //             elevation: 10,
+    //       //             shape: RoundedRectangleBorder(
+    //       //               borderRadius: BorderRadius.circular(8.0),
+    //       //             ),
+    //       //             child: Container(
+    //       //                 width: MediaQuery.of(context).size.width,
+    //       //                 margin: EdgeInsets.symmetric(horizontal: 5.0),
+    //       //
+    //       //                 decoration: BoxDecoration(
+    //       //
+    //       //                   // color: Colors.amber
+    //       //                 ),
+    //       //                 child: Text('text $i', style: TextStyle(fontSize: 16.0),)
+    //       //             )
+    //       //
+    //       //
+    //       //         );
+    //       //       },
+    //       //     );
+    //       //   }).toList(),
+    //       // )
+    //     ],
+    //   ),
+    // );
+  }
 }
