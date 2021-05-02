@@ -5,7 +5,7 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/review_list.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
-import 'package:semo_ver2/shared/review_pill_info.dart';
+import 'package:semo_ver2/review/review_pill_info.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
 class SeeMyReview extends StatefulWidget {

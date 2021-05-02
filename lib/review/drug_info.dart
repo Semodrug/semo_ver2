@@ -93,7 +93,6 @@ class _ReviewPageState extends State<ReviewPage> {
         duration: Duration(milliseconds: 400), curve: Curves.easeOut);
     setState(() {
       pillInfoTab = true;
-      //print("HEIGHT"+_scrollController.position.pixels.toString());
     });
   }
 
@@ -294,18 +293,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                   )
                                 ],
                               ),
-                              // onNotification: (notification) {
-                              //   //List scroll position
-                              //   if (_scrollController.position.pixels * 1.0 <
-                              //       _getReviewSizes())
-                              //     pillInfoTab = true;
-                              //   else if (_scrollController.position.pixels *
-                              //           1.0 >=
-                              //       _getReviewSizes()) pillInfoTab = false;
-                              //   // print(pillInfoTab);
-                              //   // print(notification.metrics.pixels);
-                              //   //print(_scrollController.position.pixels);
-                              // },
                             ),
                           );
                         } else {
@@ -871,7 +858,6 @@ class _ReviewPageState extends State<ReviewPage> {
 
   Widget _totalRating() {
     return Column(
-      // key: _key4,
       children: [
         GetRating(widget.drugItemSeq),
         Container(
@@ -888,11 +874,8 @@ class _ReviewPageState extends State<ReviewPage> {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 4, 20, 5),
         child: Container(
-          // padding: EdgeInsets.symmetric(horizontal: 10),
-          // padding: EdgeInsets.only(right: 10),
           height: 36,
           decoration: BoxDecoration(
-            // color: gray50,
             borderRadius: BorderRadius.circular(4.0),
           ),
           child: Row(
@@ -907,8 +890,6 @@ class _ReviewPageState extends State<ReviewPage> {
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  // Note: Styles for TextSpans must be explicitly defined.
-                  // Child text spans will inherit styles from parent
                   style: Theme.of(context)
                       .textTheme
                       .subtitle2
@@ -924,7 +905,6 @@ class _ReviewPageState extends State<ReviewPage> {
                   ],
                 ),
               ),
-              // Expanded(child: Container(),),
               Container(width: 5),
 
               InkWell(
@@ -943,16 +923,6 @@ class _ReviewPageState extends State<ReviewPage> {
                     ],
                   ),
                 ),
-
-                // Text(
-                //   '처방받은 약인가요?',
-                //   style: TextStyle(
-                //     color: primary500_light_text,
-                //     fontSize: 12.0,
-                //     fontWeight: FontWeight.w400,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
                 onTap: () {
                   Navigator.push(
                       context,
@@ -969,9 +939,6 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /* Review */
   Widget _drugReviews() {
-    // body: StreamProvider<List<Review>>.value(
-    //     value: ReviewService().getReviews(widget.drugItemSeq),
-    //     child: StreamBuilder<Drug>(
 
     return StreamBuilder<Drug>(
         stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
@@ -983,7 +950,6 @@ class _ReviewPageState extends State<ReviewPage> {
             else
               _noReview();
 
-
             return Column(
               children: [
                 Padding(
@@ -991,7 +957,6 @@ class _ReviewPageState extends State<ReviewPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      //TODO EDIT num of reviews
                       Text("리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
                           style: Theme.of(context).textTheme.subtitle1.copyWith(
                                 color: gray750_activated,
@@ -1032,8 +997,7 @@ class _ReviewPageState extends State<ReviewPage> {
                     ],
                   ),
                 ),
-                checkReviewIsZero() == true ? Container() : _searchBar(),
-                checkReviewIsZero() == true ? Container() : _reviewWarning(),
+                checkReviewIsZero() == true ? Container() : _searchBar(), _reviewWarning(),
                 checkReviewIsZero() == true
                     ? Container(
                         height: 310,
