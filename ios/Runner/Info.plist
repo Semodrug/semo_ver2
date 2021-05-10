@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>이약모약</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -36,7 +38,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
 	<string>754294605520507</string>
 	<key>FacebookDisplayName</key>
@@ -62,11 +64,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>카메라 권한을 허용해주세요.</string>
+	<string>의약품의 바코드, 케이스 인식을 위해 활용됩니다.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>마이크 권한을 허용해주세요.</string>
+	<string>의약품의 바코드, 케이스 인식을 위해 활용됩니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>의약품의 바코드, 케이스 인식을 위해 활용됩니다.</string>
 	<key>NSPhotoUsageDescription</key>
-	<string>사진 권한을 허용해주세요.</string>
+	<string>의약품의 바코드, 케이스 인식을 위해 활용됩니다.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
