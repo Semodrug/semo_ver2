@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:semo_ver2/models/report_review.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/loading.dart';
-import 'package:semo_ver2/shared/review_box.dart';
-import 'package:semo_ver2/shared/review_pill_info.dart';
+import 'package:semo_ver2/review/review_box.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'edit_review.dart';
 import 'package:flutter/material.dart';
@@ -53,8 +51,7 @@ class _ReviewListState extends State<ReviewList> {
                       review.sideEffectText.contains(widget.searchText) ||
                       review.overallText.contains(widget.searchText)) {
                     searchResults.add(review);
-                  } else
-                    print('    RESULT Nothing     ');
+                  }
                 }
                 return ListView.builder(
                   physics: const ClampingScrollPhysics(),
@@ -68,13 +65,6 @@ class _ReviewListState extends State<ReviewList> {
                 return Loading();
             },
           );
-
-//    return ListView.builder(
-//      itemCount: reviews.length,
-//      itemBuilder: (context, index) {
-//        return ReviewContainer(review: reviews[index]);
-//      },
-//    );
   }
 
   Widget _buildListItem(BuildContext context, Review review) {
@@ -114,10 +104,6 @@ class _ReviewListState extends State<ReviewList> {
             itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
             unratedColor: gray75,
             itemBuilder: (context, _) =>
-                //     Icon(
-                //   Icons.star,
-                //   color: yellow,
-                // ),
                 ImageIcon(
               AssetImage('assets/icons/star.png'),
               color: yellow,
@@ -132,7 +118,6 @@ class _ReviewListState extends State<ReviewList> {
           Expanded(child: Container()),
           IconButton(
             padding: EdgeInsets.only(right: 0),
-            // constraints: BoxConstraints(),
             icon: Icon(Icons.more_horiz, color: gray500, size: 19),
             onPressed: () {
               if (user.uid == review.uid) {
@@ -157,9 +142,7 @@ class _ReviewListState extends State<ReviewList> {
     );
   }
 
-  Widget _popUpMenu(
-    review,
-  ) {
+  Widget _popUpMenu(review) {
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -177,7 +160,6 @@ class _ReviewListState extends State<ReviewList> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            //TODO
                             builder: (context) => EditReview(review, "edit")));
                   },
                   child: Center(
@@ -479,11 +461,6 @@ class _ReviewListState extends State<ReviewList> {
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
-                        // Timer(Duration(seconds: 3), () {
-                        //   print("Yeah, this line is printed after 3 seconds");
-                        // });
-
-                        //TODO!!!!!!!!!!!#################
                         await ReviewService(documentId: record.documentId)
                             .deleteReviewData();
                         Navigator.of(context).pop();
@@ -543,17 +520,6 @@ class _ReviewListState extends State<ReviewList> {
                             );
                           },
                         );
-
-                        // IYMYOkDialog(
-                        //   context: context,
-                        //   dialogIcon: Icon(Icons.check, color: primary300_main),
-                        //   bodyString: '리뷰가 삭제되었습니다',
-                        //   buttonName: '확인',
-                        //   onPressed: () {
-                        //     Navigator.pop(context);
-                        //     Navigator.pop(context);
-                        //   },
-                        // ).showWarning();
                       })
                 ],
               )
@@ -563,41 +529,6 @@ class _ReviewListState extends State<ReviewList> {
       },
     );
 
-//     return showDialog<void>(
-//       context: context,
-//       barrierDismissible: false, // user must tap button!
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-// //          title: Center(child: Text('AlertDialog Title')),
-//           content: SingleChildScrollView(
-//             child: ListBody(
-//               children: <Widget>[
-//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
-//                 SizedBox(height: 20),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                   children: [
-//                     TextButton(
-//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
-//                       onPressed: () {
-//                         Navigator.of(context).pop();
-//                       },
-//                     ),
-//                     TextButton(
-//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-//                       onPressed: () async {
-//                         Navigator.of(context).pop();
-//                         await ReviewService(documentId: record.documentId).deleteReviewData();
-//                       },
-//                     ),
-//                   ],
-//                 )
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
   }
 
   Future<void> _IYMYCancleConfirmReportDialog(
@@ -700,41 +631,6 @@ class _ReviewListState extends State<ReviewList> {
       },
     );
 
-//     return showDialog<void>(
-//       context: context,
-//       barrierDismissible: false, // user must tap button!
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-// //          title: Center(child: Text('AlertDialog Title')),
-//           content: SingleChildScrollView(
-//             child: ListBody(
-//               children: <Widget>[
-//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
-//                 SizedBox(height: 20),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                   children: [
-//                     TextButton(
-//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
-//                       onPressed: () {
-//                         Navigator.of(context).pop();
-//                       },
-//                     ),
-//                     TextButton(
-//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-//                       onPressed: () async {
-//                         Navigator.of(context).pop();
-//                         await ReviewService(documentId: record.documentId).deleteReviewData();
-//                       },
-//                     ),
-//                   ],
-//                 )
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
   }
 
   Widget IYMYGotoSeeOrCheckDialog(alertContent) {
@@ -754,7 +650,6 @@ class _ReviewListState extends State<ReviewList> {
               SizedBox(height: 10),
               Icon(Icons.check, color: primary300_main),
               SizedBox(height: 13),
-              /* BODY */
               RichText(
                 text: TextSpan(
                   style: Theme.of(context)
@@ -762,10 +657,6 @@ class _ReviewListState extends State<ReviewList> {
                       .headline5
                       .copyWith(color: gray700),
                   children: <TextSpan>[
-                    // TextSpan(
-                    //     text: boldBodyString,
-                    //     style: Theme.of(context).textTheme.headline4.copyWith(
-                    //         color: gray700, fontWeight: FontWeight.w700)),
                     TextSpan(text: alertContent),
                   ],
                 ),
@@ -806,7 +697,6 @@ class _ReviewListState extends State<ReviewList> {
                         side: BorderSide(color: gray75))),
                 onPressed: () {
                   Navigator.pop(context);
-                  //#########신고 접수!!!!!!!!!!!!!!!!!!!!###############
                 },
               )
             ],

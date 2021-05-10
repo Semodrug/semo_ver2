@@ -380,11 +380,6 @@ class DatabaseService {
 
   Future<void> updateTotalRating(num rating, num length) async {
     return await drugCollection.doc(itemSeq).update({
-//      'totalRating': (formerTotalRating * formerNumOfReview + rating) /
-//              (formerNumOfReview + 1) ??
-//          0,
-//      'numOfReview': FieldValue.increment(1),
-
       'totalRating': rating,
       'numOfReviews': length,
     });

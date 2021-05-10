@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
@@ -10,10 +9,9 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/constants.dart';
-import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/shared/image.dart';
-import 'package:semo_ver2/shared/review_pill_info.dart';
+import 'package:semo_ver2/review/review_pill_info.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -88,7 +86,7 @@ class _EditReviewState extends State<EditReview> {
                 backgroundColor: gray0_white,
                 appBar: AppBar(
                   title: Text(
-                    "리뷰 쓰기",
+                    "리뷰 수정하기",
                     style: Theme.of(context)
                         .textTheme
                         .headline5
@@ -103,7 +101,6 @@ class _EditReviewState extends State<EditReview> {
                     color: primary300_main,
                     onPressed: () {
                       _IYMYCancleConfirmReportDialog();
-                      // Navigator.pop(context);
                     },
                   ),
                 ),
@@ -114,14 +111,12 @@ class _EditReviewState extends State<EditReview> {
                   child: ListView(
                     children: <Widget>[
                       ReviewPillInfo(review.seqNum),
-                      // _pillInfo(review),
                       _rating(review),
                       _reasonForTakingPill(review),
                       _effect(review),
                       _sideEffect(review),
                       _overallReview(review),
                       _edit(review),
-//                      Padding(padding: EdgeInsets.only(top: 35)),
                     ],
                   ),
                 ));
@@ -1054,14 +1049,10 @@ class _EditReviewState extends State<EditReview> {
             if (myControllerOverall.text.length < 10 &&
                 myControllerOverall.text.length > 0)
               _warning = "총평 리뷰를 10자 이상 작성해주세요";
-            // if(sideEffect == "yes" && myControllerSideEffect.text.length < 10)
-            // // if (myControllerSideEffect.text.length < 10 && sideEffect!= "no")
-            //   _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
             if (myControllerEffect.text.length < 10)
               _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
             if (reasonForTakingPillController.text.length < 1)
               _warning = "어디가 아파서 사용하셨는지 작성해주세요";
-
             if (myControllerOverall.text.length < 10 &&
                     myControllerOverall.text.length > 0 ||
                 (myControllerSideEffect.text.length < 10 &&
