@@ -84,7 +84,11 @@ dependencies:
   tflite: ^1.0.4
   image_picker: ^0.6.2+3
 
+  #imgae
+  cached_network_image: ^2.5.1
 
+ #scrolling
+  infinite_scroll_pagination: ^3.0.1
 
 dev_dependencies:
   flutter_test:

@@ -58,7 +58,7 @@ Future<String> _downloadURLExample(String itemSeq) async {
 }
 
 /*
-//cahched image 쓴거
+//cahched image 쓴거 써도 크게 이미지 업로드 속도에 크게 차이가 없음 추후 알아보기!!
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:semo_ver2/theme/colors.dart';
@@ -126,3 +126,4 @@ Future<String> _downloadURLExample(String itemSeq) async {
   }
 }
 */
+

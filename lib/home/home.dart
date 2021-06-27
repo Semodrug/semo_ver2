@@ -161,10 +161,6 @@ class _HomePageState extends State<HomePage> {
         Divider(height: 3, thickness: 0.5, indent: 1, endIndent: 0),
         Expanded(
           child:
-              // ListView(
-              //   children:
-              //       snapshot.map((data) => _buildListItem(context, data)).toList(),
-              // ),
               ListView.builder(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
@@ -195,18 +191,6 @@ class _HomePageState extends State<HomePage> {
           newName = splitName[0];
         }
       }
-      //미디어 쿼리 기준 width가 370이하면
-      // if (newName.length > 18) {
-      //   if (mw < 320) {
-      //     newName = newName.substring(0, 15);
-      //     newName = newName + '...';
-      //
-      //
-      //   } else {
-      //     newName = newName.substring(0, 12);
-      //     newName = newName + '...';
-      //   }
-      // }
       return newName;
     }
 
@@ -245,8 +229,6 @@ class _HomePageState extends State<HomePage> {
 
     final difference = expirationTime.difference(rightNowTime).inDays;
 
-    //print('difference==> $difference');
-    //시간 계산하기 위한 코드 끝
 
     //사용기한 7일 남음
     if (difference < 8 && difference > -1) {
@@ -258,17 +240,9 @@ class _HomePageState extends State<HomePage> {
               builder: (context) => ReviewPage(data.itemSeq),
             ),
           ),
-          // //페이지 네비게이션 좌 --> 우
-          // Navigator.push(
-          // context,
-          // CupertinoPageRoute(builder: (_) => ReviewPage(data.itemSeq))
-          // )
         },
         child: index == totalNum
             ? Container(
-                // decoration: BoxDecoration(
-                //     border:
-                //         Border(bottom: BorderSide(width: 0.6, color: gray50))),
                 child: Column(
                   children: [
                     Padding(
@@ -297,8 +271,6 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Container(
                                   width: 88,
-                                  //이미지는 고정값
-                                  //padding: EdgeInsets.symmetric(horizontal: 5),
                                   child: DrugImage(drugItemSeq: data.itemSeq)),
                               Container(
                                   padding: EdgeInsets.only(left: 12, top: 0),
@@ -318,7 +290,6 @@ class _HomePageState extends State<HomePage> {
                                                   .copyWith(
                                                       color:
                                                           gray750_activated))),
-                                      //SizedBox(height: 2,),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 3),
@@ -405,7 +376,6 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.only(top: 5.0),
                       child: Container(
                         padding: EdgeInsets.only(left: 16.0),
-                        //width: double.infinity,
                         height: 90,
                         child: Material(
                           color: Colors.white,
@@ -427,8 +397,6 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Container(
                                   width: 88,
-                                  //이미지는 고정값
-                                  //padding: EdgeInsets.symmetric(horizontal: 5),
                                   child: DrugImage(drugItemSeq: data.itemSeq)),
                               Container(
                                   padding: EdgeInsets.only(left: 12, top: 0),
@@ -448,7 +416,6 @@ class _HomePageState extends State<HomePage> {
                                                   .copyWith(
                                                       color:
                                                           gray750_activated))),
-                                      //SizedBox(height: 2,),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 3),
@@ -534,16 +501,12 @@ class _HomePageState extends State<HomePage> {
         },
         child: index == totalNum
             ? Container(
-                // decoration: BoxDecoration(
-                //     border:
-                //         Border(bottom: BorderSide(width: 0.6, color: gray50))),
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
                       child: Container(
                         padding: EdgeInsets.only(left: 16.0),
-                        //width: double.infinity,
                         height: 90,
                         child: Material(
                           color: Colors.white,
@@ -564,8 +527,6 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               Container(
-                                  //이미지는 고정값
-                                  //padding: EdgeInsets.symmetric(horizontal: 5),
                                   child: Container(
                                       width: 88,
                                       child: DrugImage(
@@ -588,7 +549,6 @@ class _HomePageState extends State<HomePage> {
                                                   .copyWith(
                                                       color:
                                                           gray750_activated))),
-                                      //SizedBox(height: 2,),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 3),
@@ -675,7 +635,6 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.only(top: 5.0),
                       child: Container(
                         padding: EdgeInsets.only(left: 16.0),
-                        //width: double.infinity,
                         height: 90,
                         child: Material(
                           color: Colors.white,
@@ -696,8 +655,6 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               Container(
-                                  //이미지는 고정값
-                                  //padding: EdgeInsets.symmetric(horizontal: 5),
                                   child: Container(
                                       width: 88,
                                       child: DrugImage(
@@ -720,7 +677,6 @@ class _HomePageState extends State<HomePage> {
                                                   .copyWith(
                                                       color:
                                                           gray750_activated))),
-                                      //SizedBox(height: 2,),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 3),
@@ -806,10 +762,6 @@ class _HomePageState extends State<HomePage> {
         },
         child: index == totalNum
             ? Container(
-                //padding: EdgeInsets.only(bottom: 10.0),
-                // decoration: BoxDecoration(
-                //     border:
-                //         Border(bottom: BorderSide(width: 0.6, color: gray50))),
                 child: Column(
                   children: [
                     Padding(
@@ -818,7 +770,6 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(
                           left: 16.0,
                         ),
-                        //width: double.infinity,
                         height: 90,
                         child: Material(
                           color: Colors.white,
@@ -839,8 +790,6 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               Container(
-                                  //이미지는 고정값
-                                  //padding: EdgeInsets.symmetric(horizontal: 5),
                                   child: Container(
                                       width: 88,
                                       child: DrugImage(
@@ -863,7 +812,6 @@ class _HomePageState extends State<HomePage> {
                                                   .copyWith(
                                                       color:
                                                           gray750_activated))),
-                                      //SizedBox(height: 2,),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 3),
@@ -930,7 +878,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               )
             : Container(
-                //padding: EdgeInsets.only(bottom: 10.0),
                 decoration: BoxDecoration(
                     border:
                         Border(bottom: BorderSide(width: 0.6, color: gray50))),
@@ -942,7 +889,6 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(
                           left: 16.0,
                         ),
-                        //width: double.infinity,
                         height: 90,
                         child: Material(
                           color: Colors.white,
@@ -963,8 +909,6 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               Container(
-                                  //이미지는 고정값
-                                  //padding: EdgeInsets.symmetric(horizontal: 5),
                                   child: Container(
                                       width: 88,
                                       child: DrugImage(
@@ -987,7 +931,6 @@ class _HomePageState extends State<HomePage> {
                                                   .copyWith(
                                                       color:
                                                           gray750_activated))),
-                                      //SizedBox(height: 2,),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 3),
@@ -1053,7 +996,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget _popUpAddDrug(context) {
     return Container(
-      //color: yellow,
       decoration: new BoxDecoration(
           color: Colors.white,
           borderRadius: new BorderRadius.only(
@@ -1570,9 +1512,7 @@ class _HomePageState extends State<HomePage> {
                 Spacer(),
                 InkWell(
                   onTap: () {
-                    // Navigator.push(context,
-                    //    MaterialPageRoute(builder: (context) => AddButton()));
-                    showModalBottomSheet(
+                      showModalBottomSheet(
                         backgroundColor: Colors.transparent,
                         context: context,
                         builder: (BuildContext context) {
@@ -1608,29 +1548,38 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      Divider(height: 3, thickness: 0.5, indent: 1, endIndent: 0),
       Container(
-        padding: EdgeInsets.symmetric(vertical: 46),
+        margin: EdgeInsets.only(right: 13),
+        padding: EdgeInsets.zero,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+                height: 45,
+                child: Image(image: AssetImage('assets/images/msg_box.png'))),
+          ],
+        ),
+      ),
+      SizedBox(height: 70,),
+      Container(
         child: Center(
           child: Column(
             children: [
-              Text('나의 약 보관함 목록이 비었어요',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5
-                      .copyWith(color: gray500)),
               SizedBox(
-                height: 5,
-              ),
-              Text(
-                '\'+ 추가하기\' 버튼으로 약을 추가해보세요',
-                style: Theme.of(context).textTheme.headline5.copyWith(
-                    fontSize: 12, fontWeight: FontWeight.w400, color: gray400),
-              )
+                  height: 150,
+                  child: Image(image: AssetImage('assets/images/background_nothing.png'))),
             ],
           ),
         ),
-      )
+      ),
+      Spacer(),
+      Container(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 18.0),
+            child: SizedBox(
+                height: 45,
+                child: Image(image: AssetImage('assets/images/bottom_msg_box.png'))),
+          )),
     ]);
   }
 }
