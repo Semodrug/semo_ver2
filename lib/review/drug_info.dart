@@ -997,7 +997,8 @@ class _ReviewPageState extends State<ReviewPage> {
                     ],
                   ),
                 ),
-                checkReviewIsZero() == true ? Container() : _searchBar(), _reviewWarning(),
+                checkReviewIsZero() == true ? Container() : _searchBar(),
+                checkReviewIsZero() == true ? Container() : _reviewWarning(),
                 checkReviewIsZero() == true
                     ? Container(
                         height: 310,

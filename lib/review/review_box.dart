@@ -18,9 +18,9 @@ class ReviewBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: type == "reason" ? EdgeInsets.all(5): EdgeInsets.all(9.5),
+        padding: EdgeInsets.all(9.5),
         decoration: BoxDecoration(
-            color: type == "reason" ? gray0_white : gray50,
+            color: gray50,
             border: Border.all(color: gray50),
             borderRadius: BorderRadius.all(Radius.circular(4.0))),
 
@@ -31,18 +31,15 @@ class ReviewBox extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  type == "reason" ? " #"+review.reasonForTakingPill : type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
-                  style: type == "reason" ?
-                  Theme.of(context).textTheme.subtitle2.copyWith(
-                      color: Color(0xff005841), fontSize: 12) :
-                  Theme.of(context).textTheme.bodyText2.copyWith(
+                  type == "effect" ? "효과" : type == "sideEffect" ? "부작용" : "총평",
+                  style: Theme.of(context).textTheme.bodyText2.copyWith(
                       color: gray900, fontSize: 12),
                 ),
                 Container(width:3),
-                _face(type == "effect" ? review.effect : type == "sideEffect" ? review.sideEffect : "overall",),
+                _face(type == "effect" ? review.effect : type == "sideEffect" ? review.sideEffect : "",),
               ],
             ),
-            type == "reason" ? Container(): Container(height:4),
+            Container(height:4),
 
             if(type == "effect")
               Text(review.effectText),
@@ -50,7 +47,6 @@ class ReviewBox extends StatelessWidget {
               Text(review.sideEffectText),
             if(type == "sideEffect" && review.sideEffect == "no")
               Container(),
-            if(type == "overall") Text(review.overallText)
           ],
         )
     );
@@ -139,7 +135,5 @@ class ReviewBox extends StatelessWidget {
           )
         ],
       );
-    if(face == "overall")
-      return Container();
   }
 }

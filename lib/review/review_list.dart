@@ -48,8 +48,7 @@ class _ReviewListState extends State<ReviewList> {
                 List<Review> searchResults = [];
                 for (Review review in reviews) {
                   if (review.effectText.contains(widget.searchText) ||
-                      review.sideEffectText.contains(widget.searchText) ||
-                      review.overallText.contains(widget.searchText)) {
+                      review.sideEffectText.contains(widget.searchText)) {
                     searchResults.add(review);
                   }
                 }
@@ -736,7 +735,7 @@ class _ReviewListState extends State<ReviewList> {
                       ? review.effect
                       : type == "sideEffect"
                           ? review.sideEffect
-                          : "overall",
+                          : "",
                 ),
               ],
             ),
@@ -744,9 +743,9 @@ class _ReviewListState extends State<ReviewList> {
             Text(
               type == "effect"
                   ? review.effectText
-                  : type == "sideEffect"
-                      ? review.sideEffectText
-                      : review.overallText,
+                  : type == "sideEffect",
+                      // ? review.sideEffectText
+                      // : "",
               style: Theme.of(context)
                   .textTheme
                   .subtitle2
@@ -775,7 +774,6 @@ class _ReviewListState extends State<ReviewList> {
         color: warning,
         size: 16,
       );
-    if (face == "overall") return Container();
   }
 
   Widget _review(review) {
@@ -784,7 +782,6 @@ class _ReviewListState extends State<ReviewList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          ReviewBox(context: context, review: review, type: "reason"),
           Container(height: 6),
 
           //effect
@@ -801,15 +798,15 @@ class _ReviewListState extends State<ReviewList> {
               : ReviewBox(context: context, review: review, type: "sideEffect"),
           Container(height: 6),
 
-          //overall
+/*          //overall
           widget.filter == "sideEffectOnly" || widget.filter == "effectOnly"
               ? Container()
               // : _reviewBox(review, "overall"),
               : review.overallText == ""
                   ? Container()
                   : ReviewBox(
-                      context: context, review: review, type: "overall"),
-          review.overallText == "" ? Container() : Container(height: 6),
+                      context: context, review: review, type: ""),
+          review.overallText == "" ? Container() : Container(height: 6),*/
         ],
       ),
     );
