@@ -5,7 +5,6 @@ class Review {
   final String sideEffect;
   final String effectText;
   final String sideEffectText;
-  final String overallText;
   List favoriteSelected;
   final num starRating;
   var noFavorite;
@@ -16,7 +15,6 @@ class Review {
   final String entpName;
   final String itemName;
   final String nickName;
-  final String reasonForTakingPill;
 
 
   Review({
@@ -24,7 +22,6 @@ class Review {
     this.sideEffect,
     this.effectText,
     this.sideEffectText,
-    this.overallText,
     this.favoriteSelected,
     this.starRating,this.noFavorite,
     this.uid,
@@ -33,6 +30,5 @@ class Review {
     this.seqNum,
     this.itemName,
     this.entpName,
-    this.nickName,
-    this.reasonForTakingPill});
+    this.nickName, });
 }

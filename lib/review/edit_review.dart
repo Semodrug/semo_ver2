@@ -26,15 +26,11 @@ class EditReview extends StatefulWidget {
 class _EditReviewState extends State<EditReview> {
   TextEditingController myControllerEffect = TextEditingController();
   TextEditingController myControllerSideEffect = TextEditingController();
-  TextEditingController myControllerOverall = TextEditingController();
-
-  TextEditingController reasonForTakingPillController = TextEditingController();
 
   @override
   void dispose() {
     myControllerEffect.dispose();
     myControllerSideEffect.dispose();
-    myControllerOverall.dispose();
     super.dispose();
   }
 
@@ -43,13 +39,9 @@ class _EditReviewState extends State<EditReview> {
   double starRating = 0;
   String effectText = '';
   String sideEffectText = '';
-  String overallText = '';
   String starRatingText = '';
-  String reasonForTakingPill = '';
-
   bool editSwitch = false;
 
-//  String editOrWrite = 'edit'; // 'write'
 
   String _shortenName(String drugName) {
     String newName;
@@ -76,8 +68,6 @@ class _EditReviewState extends State<EditReview> {
             if (editSwitch == false) {
               myControllerEffect.text = review.effectText;
               myControllerSideEffect.text = review.sideEffectText;
-              myControllerOverall.text = review.overallText;
-              reasonForTakingPillController.text = review.reasonForTakingPill;
               editSwitch = true;
             }
 
@@ -112,10 +102,8 @@ class _EditReviewState extends State<EditReview> {
                     children: <Widget>[
                       ReviewPillInfo(review.seqNum),
                       _rating(review),
-                      _reasonForTakingPill(review),
                       _effect(review),
                       _sideEffect(review),
-                      _overallReview(review),
                       _edit(review),
                     ],
                   ),
@@ -542,35 +530,6 @@ class _EditReviewState extends State<EditReview> {
         ));
   }
 
-  Widget _reasonForTakingPill(Review review) {
-    return Container(
-//          height: 280,
-        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-          width: 0.8,
-          color: Colors.grey[300],
-        ))),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-//              crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text("어디가 아파서 사용하셨나요?",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(color: gray900, fontSize: 16)),
-            _textField("reason", reasonForTakingPillController),
-            // _exclusiveMultiButton(),
-            // writeReason(),
-            Container(
-              height: 45,
-            )
-            // _textField(myControllerEffect)
-          ],
-        ));
-  }
 
   Widget _exclusiveMultiButton() {
     return ButtonTheme(
@@ -606,75 +565,6 @@ class _EditReviewState extends State<EditReview> {
     );
   }
 
-  Widget writeReason() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-      child: TextField(
-        controller: reasonForTakingPillController,
-        cursorColor: primary400_line,
-        decoration: textInputDecoration.copyWith(
-            hintText: '키워드 하나 입력하기   예시)치통',
-            suffixIcon: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-              child: InkWell(
-                child: Container(
-                    height: 20,
-                    width: 60,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: gray200,
-                        ),
-                        borderRadius:
-                            const BorderRadius.all(const Radius.circular(4.0))),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          size: 18,
-                        ),
-                        Center(child: Text("추가")),
-                      ],
-                    )),
-                onTap: () {
-                  reasonForTakingPillController.clear();
-                },
-              ),
-            )
-
-            // Padding(
-            //   // padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-            //   padding: const EdgeInsets.fromLTRB(15,5,15,5),
-            //   child: Container(
-            //     height: 10,
-            //     // width: 40,
-            //     child: RaisedButton(
-            //       onPressed: () {},
-            //       child: Text('확인'),
-            //     ),
-            //   ),
-            // ),
-            ),
-        // suffixIcon: RaisedButton(
-        //   onPressed: () {},
-        //   child: new Row(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: <Widget>[
-        //       new Text('Button with text and icon!'),
-        //       new Icon(Icons.lightbulb_outline),
-        //     ],
-        //   ),
-        // ),
-
-        keyboardType: TextInputType.text,
-        onChanged: (value) {
-          setState(() {});
-        },
-      ),
-    );
-  }
 
   Widget _effect(Review review) {
     return Container(
@@ -961,9 +851,6 @@ class _EditReviewState extends State<EditReview> {
       hintText = "효과에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
     else if (type == "sideEffect")
       hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
-    else if (type == "overall")
-      hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
-    else if (type == "reason") hintText = "키워드 하나를 입력해주세요  예시)치통\n";
     double bottom = 20;
     if (type == "overall") bottom = bottom + 70;
     return Padding(
@@ -979,7 +866,7 @@ class _EditReviewState extends State<EditReview> {
             style: Theme.of(context).textTheme.bodyText2.copyWith(
                   color: gray750_activated,
                 ),
-            maxLength: type == "reason" ? 10 : 500,
+            maxLength: 500,
             decoration: new InputDecoration(
               hintText: hintText,
               hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
@@ -1006,30 +893,6 @@ class _EditReviewState extends State<EditReview> {
     );
   }
 
-  Widget _overallReview(Review review) {
-    return Container(
-        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
-//          height: 300,
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-          width: 0.8,
-          color: Colors.grey[300],
-        ))),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-//              crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text("약에 대한 총평",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(color: gray900, fontSize: 16)),
-            _textField("overall", myControllerOverall),
-//            Padding(padding: EdgeInsets.only(top: 25)),
-          ],
-        ));
-  }
 
   Widget _edit(Review review) {
     String _warning = '';
@@ -1046,19 +909,11 @@ class _EditReviewState extends State<EditReview> {
             else if (sideEffect ==
                 "yes") if (myControllerSideEffect.text.length < 10)
               _warning = "부작용에 대한 리뷰를 10자 이상 \n작성해주세요";
-            if (myControllerOverall.text.length < 10 &&
-                myControllerOverall.text.length > 0)
-              _warning = "총평 리뷰를 10자 이상 작성해주세요";
             if (myControllerEffect.text.length < 10)
               _warning = "효과에 대한 리뷰를 10자 이상 작성해주세요";
-            if (reasonForTakingPillController.text.length < 1)
-              _warning = "어디가 아파서 사용하셨는지 작성해주세요";
-            if (myControllerOverall.text.length < 10 &&
-                    myControllerOverall.text.length > 0 ||
-                (myControllerSideEffect.text.length < 10 &&
+            if ((myControllerSideEffect.text.length < 10 &&
                     sideEffect == "yes") ||
-                myControllerEffect.text.length < 10 ||
-                reasonForTakingPillController.text.length < 1)
+                myControllerEffect.text.length < 10)
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
                     _warning,
@@ -1075,10 +930,8 @@ class _EditReviewState extends State<EditReview> {
                       sideEffect /*?? review.sideEffect*/,
                       myControllerEffect.text /*?? review.effectText*/,
                       myControllerSideEffect.text /*?? review.sideEffectText*/,
-                      myControllerOverall.text /*?? review.overallText*/,
                       starRating == 0 ? review.starRating : starRating,
-                      /*?? value.starRating*/
-                      reasonForTakingPillController.text);
+                      /*?? value.starRating*/ );
               Navigator.pop(context);
               editSwitch = true;
               IYMYGotoSeeOrCheckDialog(review.seqNum);

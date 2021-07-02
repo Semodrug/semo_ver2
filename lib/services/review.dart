@@ -11,15 +11,13 @@ class ReviewService {
   final CollectionReference reviewCollection = FirebaseFirestore.instance.collection('Reviews');
   final CollectionReference reportReviewCollection = FirebaseFirestore.instance.collection('ReportReview');
 
-  Future<void> updateReviewData(String effect, String sideEffect, String effectText, String sideEffectText, String overallText, num starRating, String reasonForTakingPill) async {
+  Future<void> updateReviewData(String effect, String sideEffect, String effectText, String sideEffectText, num starRating) async {
     return await reviewCollection.doc(documentId).update({
       'effect': effect,
       'sideEffect': sideEffect,
       'effectText': effectText,
       'sideEffectText': sideEffectText,
-      'overallText': overallText,
       'starRating': starRating,
-      'reasonForTakingPill' : reasonForTakingPill
     });
   }
 
@@ -64,7 +62,6 @@ class ReviewService {
         sideEffect: doc.data()['sideEffect'] ?? '',
         effectText: doc.data()['effectText'] ?? '',
         sideEffectText: doc.data()['sideEffectText'] ?? '',
-        overallText: doc.data()['overallText'] ?? '',
         //List<String> favoriteSelected = List<String>();
         favoriteSelected: doc.data()['favoriteSelected'] ?? '',
         starRating: doc.data()['starRating'] ?? 0,
@@ -76,7 +73,6 @@ class ReviewService {
         itemName: doc.data()['itemName'],
         seqNum: doc.data()['seqNum'],
         nickName: doc.data()['nickName'],
-        reasonForTakingPill: doc.data()['reasonForTakingPill'],
 
       );
     }).toList();
@@ -134,7 +130,6 @@ class ReviewService {
         sideEffect: doc.data()['sideEffect'] ?? '',
         effectText: doc.data()['effectText'] ?? '',
         sideEffectText: doc.data()['sideEffectText'] ?? '',
-        overallText: doc.data()['overallText'] ?? '',
         //List<String> favoriteSelected = List<String>();
         favoriteSelected: doc.data()['favoriteSelected'] ?? '',
         starRating: doc.data()['starRating'] ?? 0,
@@ -146,7 +141,6 @@ class ReviewService {
         itemName: doc.data()['itemName'],
         seqNum: doc.data()['seqNum'],
         nickName: doc.data()['nickName'],
-        reasonForTakingPill: doc.data()['reasonForTakingPill'],
 
       );
     });
@@ -195,7 +189,6 @@ class ReviewService {
       'reportContent': FieldValue.arrayUnion([reportContent]),
       'effectText': review.effectText,
       'sideEffectText': review.sideEffectText,
-      'overallText': review.overallText,
       'itemName': review.itemName,
       'reporterUid': FieldValue.arrayUnion([reporterUid]),
     });
@@ -233,7 +226,6 @@ class ReviewService {
         reportContent: doc.data()['reportContent'] ?? '',
         effectText: doc.data()['effectText'] ?? '',
         sideEffectText: doc.data()['sideEffectText'] ?? '',
-        overallText: doc.data()['overallText'] ?? '',
         itemName: doc.data()['itemName'],
         reporterUid: doc.data()['reporterUid'] ?? '',
 

@@ -25,14 +25,11 @@ class _WriteReviewState extends State<WriteReview> {
 
   final myControllerEffect = TextEditingController();
   final myControllerSideEffect = TextEditingController();
-  final myControllerOverall = TextEditingController();
-  TextEditingController reasonForTakingPillController = TextEditingController();
 
   @override
   void dispose() {
     myControllerEffect.dispose();
     myControllerSideEffect.dispose();
-    myControllerOverall.dispose();
     super.dispose();
   }
 
@@ -41,16 +38,14 @@ class _WriteReviewState extends State<WriteReview> {
   String id = '';
   String effect = '';
   String sideEffect = '';
-  double starRating = 0;
   String effectText = '';
+  double starRating = 0;
   String sideEffectText = '';
-  String overallText = '';
   List<String> favoriteSelected = [];
   var noFavorite = 0;
   DateTime regDate = DateTime.now();
   String _entpName = ''; //약 제조사
   String _itemName = ''; //약 이름
-  String reasonForTakingPill = '';
 
   String starRatingText = '';
 
@@ -80,17 +75,12 @@ class _WriteReviewState extends State<WriteReview> {
       "starRating": starRating,
       "effectText": effectText,
       "sideEffectText": sideEffectText,
-      "overallText": overallText,
-      // "effectText" : myControllerEffect.text,
-      // "sideEffectText": myControllerSideEffect.text,
-      // "overallText": myControllerOverall.text,
       "favoriteSelected": favoriteSelected,
       "noFavorite": noFavorite,
       "registrationDate": DateTime.now(),
       "entpName": _entpName,
       "itemName": _itemName,
       "nickName": nickName,
-      "reasonForTakingPill": reasonForTakingPill
     });
   }
 
@@ -129,10 +119,8 @@ class _WriteReviewState extends State<WriteReview> {
                 children: <Widget>[
                   ReviewPillInfo(widget.drugItemSeq),
                   _rating(),
-                  _reasonForTakingPill(),
                   _effect(),
                   _sideEffect(),
-                  _overallReview(),
                   _write(),
                 ],
               ),
@@ -297,28 +285,7 @@ class _WriteReviewState extends State<WriteReview> {
         ));
   }
 
-  Widget _reasonForTakingPill() {
-    return Container(
-        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-          width: 0.8,
-          color: Colors.grey[300],
-        ))),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-//              crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text("어디가 아파서 사용하셨나요?",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(color: gray900, fontSize: 16)),
-            _textField("reason", reasonForTakingPillController),
-          ],
-        ));
-  }
+
 
   Widget _effect() {
     return Container(
@@ -498,17 +465,14 @@ class _WriteReviewState extends State<WriteReview> {
       hintText = "효과에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
     else if (type == "sideEffect")
       hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
-    else if (type == "overall")
-      hintText = "전체적인 만족도에 대한 후기를 남겨주세요(선택)\n";
-    else if (type == "reason") hintText = "키워드 하나를 입력해주세요  예시)치통\n";
     double bottom = 20;
-    if (type == "overall") bottom += 70;
+    // if (type == "overall") bottom += 70;
     return Padding(
       // padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
       padding: EdgeInsets.fromLTRB(0, 20, 0, bottom),
       child: Container(
           child: TextField(
-              maxLength: type == "reason" ? 10 : 500,
+              maxLength: 500,
               controller: txtController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
@@ -645,31 +609,6 @@ class _WriteReviewState extends State<WriteReview> {
         ));
   }
 
-  Widget _overallReview() {
-    return Container(
-        padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
-//          height: 300,
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-          width: 0.8,
-          color: Colors.grey[300],
-        ))),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-//              crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text("약에 대한 총평",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(color: gray900, fontSize: 16)),
-            _textField("overall", myControllerOverall),
-            // ReviewTextField(type: "overall", txtController: myControllerOverall),
-            Padding(padding: EdgeInsets.only(top: 25)),
-          ],
-        ));
-  }
 
   Widget _write() {
     TheUser user = Provider.of<TheUser>(context);
@@ -682,13 +621,7 @@ class _WriteReviewState extends State<WriteReview> {
           isDone: true,
           textString: '완료',
           onPressed: () async {
-            effectText = myControllerEffect.text;
             sideEffectText = myControllerSideEffect.text;
-            overallText = myControllerOverall.text;
-            reasonForTakingPill = reasonForTakingPillController.text;
-
-            if (overallText.length < 10 && overallText.length > 0)
-              _warning = "총평 리뷰를 10자 이상 작성해주세요";
             if (sideEffectText.length < 10 && sideEffect == "yes")
               _warning = "부작용에 대한 리뷰를 10자 이상 작성해주세요";
             if (sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
@@ -696,8 +629,7 @@ class _WriteReviewState extends State<WriteReview> {
             if (effect.isEmpty) _warning = "효과 별점을 등록해주세요";
             if (starRatingText.isEmpty) _warning = "별점을 등록해주세요";
 
-            if (overallText.length < 10 && overallText.length > 0 ||
-                (sideEffectText.length < 10 && sideEffect == "yes") ||
+            if ((sideEffectText.length < 10 && sideEffect == "yes") ||
                 effectText.length < 10 ||
                 sideEffect.isEmpty ||
                 effect.isEmpty ||
