@@ -56,7 +56,6 @@ Future<String> _downloadURLExample(String itemSeq) async {
     }
   }
 }
-
 /*
 //cahched image 쓴거 써도 크게 이미지 업로드 속도에 크게 차이가 없음 추후 알아보기!!
 import 'package:flutter/material.dart';
@@ -116,10 +115,9 @@ Future<String> _downloadURLExample(String itemSeq) async {
   } //on firebase_storage.FirebaseException
   catch (e) {
     if (e.code == 'object-not-found') {
-      // String downloadURL = await firebase_storage.FirebaseStorage.instance
-      //     .ref('null.png')
-      //     // .ref('Image/195900043.png')
-      //     .getDownloadURL();
+       // String downloadURL = await firebase_storage.FirebaseStorage.instance
+       //     .ref('null.png')
+       //     .getDownloadURL();
 
       return 'null';
     }
