@@ -18,10 +18,9 @@ class RankingTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   // print('미디어쿼리 값 ==> ');
+    // print('미디어쿼리 값 ==> ');
     double mw = MediaQuery.of(context).size.width;
-   // print(mw.toString());
-
+    // print(mw.toString());
 
     //이름 길었을 때 필요한 부분만 짤라서 보여주려고 하는 거였는데 모든 조건들이 적용 되지는 않음
     String _checkLongName(String data) {
@@ -40,26 +39,30 @@ class RankingTile extends StatelessWidget {
 
     //디자이너님이 그냥 숫자로만
     Widget _upToThree(index) {
-        return Center(
-          child: Text(index.toString(),
-              style: Theme.of(context)
-                  .textTheme
-                  .overline
-                  .copyWith(fontSize: 10, color: gray750_activated)),
-        );
+      return Center(
+        child: Text(index.toString(),
+            style: Theme.of(context)
+                .textTheme
+                .overline
+                .copyWith(fontSize: 10, color: gray750_activated)),
+      );
     }
 
-    return GestureDetector(
+    //return GestureDetector(
+    return ListTile(
+      minVerticalPadding: 0.5,
+      contentPadding: EdgeInsets.zero,
       onTap: () => {
         Navigator.pop(context),
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ReviewPage(drug.itemSeq, filter: filter, type: category),
+            builder: (context) =>
+                ReviewPage(drug.itemSeq, filter: filter, type: category),
           ),
         ),
       },
-      child: StreamBuilder<Drug>(
+      title: StreamBuilder<Drug>(
           stream: DatabaseService(itemSeq: drug.itemSeq).drugData,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -108,7 +111,7 @@ class RankingTile extends StatelessWidget {
                                               color: gray300_inactivated)),
                                 ),
                                 Container(
-                                  width:  mw - 160,
+                                  width: mw - 160,
                                   child: Text(
                                       //_checkLongName(drugStreamData.itemName),
                                       drugStreamData.itemName,
@@ -142,7 +145,9 @@ class RankingTile extends StatelessWidget {
                                 Expanded(
                                     child: Row(
                                   children: [
-                                    CategoryButton(str: drugStreamData.category, forRanking: 'ranking')
+                                    CategoryButton(
+                                        str: drugStreamData.category,
+                                        forRanking: 'ranking')
                                   ],
                                 )),
                               ],

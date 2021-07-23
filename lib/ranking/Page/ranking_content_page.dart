@@ -24,7 +24,7 @@ class _RankingContentPageState extends State<RankingContentPage> {
 
   String _checkCategoryName(String data) {
     String newName = '';
-
+    //실제 카테고리 이름이 무엇인지 알기 위함
     newName = data.substring(7, (data.length));
     return newName;
   }
