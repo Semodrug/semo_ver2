@@ -53,7 +53,7 @@ class RankingTile extends StatelessWidget {
       minVerticalPadding: 0.5,
       contentPadding: EdgeInsets.zero,
       onTap: () => {
-        Navigator.pop(context),
+        //Navigator.pop(context),
         Navigator.push(
           context,
           MaterialPageRoute(
