@@ -622,6 +622,7 @@ class _WriteReviewState extends State<WriteReview> {
           textString: '완료',
           onPressed: () async {
             sideEffectText = myControllerSideEffect.text;
+            effectText=myControllerEffect.text;
             if (sideEffectText.length < 10 && sideEffect == "yes")
               _warning = "부작용에 대한 리뷰를 10자 이상 작성해주세요";
             if (sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";
