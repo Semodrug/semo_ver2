@@ -9,19 +9,13 @@ class FirebaseApi {
       }) async {
 
 
-//    final refUsers = FirebaseFirestore.instance.collection('Drugs');
-//        .where('PRDUCT_TYPE', isEqualTo: getCategory) //;
-//        .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
-//        .orderBy('ITEM_NAME', descending: false)
-//        .limit(limit);
-
-    Query refUsers = FirebaseFirestore.instance.collection('Drugs');
+    Query refDrugs = FirebaseFirestore.instance.collection('Drugs');
 
     switch (_filterOrSort) {
 
       case "별점순":
         if(getCategory == '[00000]전체'){
-          refUsers = refUsers
+          refDrugs = refDrugs
               //.where('PRDUCT_TYPE', isEqualTo: getCategory) //;
               .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
               .orderBy('totalRating', descending: true)
@@ -29,7 +23,7 @@ class FirebaseApi {
               .limit(limit);
         }
         else {
-          refUsers = refUsers
+          refDrugs = refDrugs
               .where('PRDUCT_TYPE', isEqualTo: getCategory) //;
               .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
               .orderBy('totalRating', descending: true)
@@ -41,7 +35,7 @@ class FirebaseApi {
 
       case "리뷰 많은 순":
         if(getCategory == '[00000]전체'){
-          refUsers = refUsers
+          refDrugs = refDrugs
           //.where('PRDUCT_TYPE', isEqualTo: getCategory) //;
               .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
               .orderBy('numOfReviews', descending: true)
@@ -49,7 +43,7 @@ class FirebaseApi {
               .limit(limit);
         }
         else{
-          refUsers = refUsers
+          refDrugs = refDrugs
               .where('PRDUCT_TYPE', isEqualTo: getCategory) //;
               .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
               .orderBy('numOfReviews', descending: true)
@@ -59,9 +53,9 @@ class FirebaseApi {
     }
 
     if (startAfter == null) { //그 다음 user가 없다면 null
-      return refUsers.get();
-    } else {//그 다음 user가 존재한다면 그 다음 user부터 시작해라
-      return refUsers.startAfterDocument(startAfter).get();
+      return refDrugs.get();
+    } else {//그 다음 drug가 존재한다면 그 다음 drug부터 시작해라
+      return refDrugs.startAfterDocument(startAfter).get();
     }
   }
 }
