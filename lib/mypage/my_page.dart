@@ -9,6 +9,7 @@ import 'package:semo_ver2/mypage/4_inquiry.dart';
 import 'package:semo_ver2/mypage/5_policy_terms.dart';
 import 'package:semo_ver2/mypage/6_policy_privacy.dart';
 import 'package:semo_ver2/mypage/7_others.dart';
+import 'package:semo_ver2/mypage/case_recognition_list.dart';
 import 'package:semo_ver2/mypage/my_reviews.dart';
 import 'package:semo_ver2/mypage/my_favorites.dart';
 
@@ -82,6 +83,11 @@ class _MyPageState extends State<MyPage> {
                         Container(
                           color: gray50,
                           height: 10,
+                        ),
+                        _myPageMenu('케이스 인식 지원 의약품 목록', context, CaseRecognitionList()),
+                        Container(
+                          color: gray50,
+                          height: 2,
                         ),
                         _myPageMenu('기타', context, Others()),
                         Container(
