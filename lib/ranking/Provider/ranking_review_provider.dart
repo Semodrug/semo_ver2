@@ -29,6 +29,7 @@ class DrugsReviewProvider extends ChangeNotifier {
       totalRating: drug['totalRating'],
       numOfReviews: drug['numOfReviews'],
 
+    rankCategory: drug['RANK_CATEGORY'] //test
     );
   }).toList();
 

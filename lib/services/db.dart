@@ -41,30 +41,7 @@ class DatabaseService {
     return drugsSnapshots;
   }
 
-  Stream<List<Drug>> setForRanking(String _filterOrSort) {
-    switch (_filterOrSort) {
-      case "이름순":
-        drugQuery = drugQuery
-            .where('PRDUCT_TYPE', isEqualTo: categoryName) //;
-            .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
-            .orderBy('ITEM_NAME', descending: true)
-            .limit(10);
 
-        break;
-
-      case "리뷰 많은 순":
-        drugQuery = drugQuery
-            .where('PRDUCT_TYPE', isEqualTo: categoryName) //;
-            .where('ETC_OTC_CODE', isEqualTo: '일반의약품')
-            .orderBy('numOfReviews', descending: true)
-            .limit(10);
-        break;
-    }
-
-    drugsSnapshots = drugQuery.snapshots().map(_drugListFromSnapshot);
-
-    return drugsSnapshots;
-  }
 
   //for search from User drugs
   Stream<List<Drug>> setForSearchFromAllAfterRemainStartAt(
@@ -135,6 +112,9 @@ class DatabaseService {
         totalRating: doc.data()['totalRating'] ?? 0,
         numOfReviews: doc.data()['numOfReviews'] ?? 0,
         searchNameList: doc.data()['searchNameList'] ?? [],
+
+          //test rank category
+        rankCategory: doc.data()['RANK_CATEGORY'] ?? ''
       );
     }).toList();
   }
