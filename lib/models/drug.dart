@@ -38,6 +38,9 @@ class Drug {
   final List searchNameList;
   final List pharmacistTips;
 
+  //test rank category
+  final String rankCategory;
+
   // TODO : category
   final String category;
 
@@ -72,6 +75,8 @@ class Drug {
       this.numOfReviews,
       this.searchNameList,
       this.pharmacistTips
+        //test rank category
+        , this.rankCategory
       });
 }
 
