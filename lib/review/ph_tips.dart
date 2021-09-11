@@ -59,11 +59,11 @@ class _PhTipsListState extends State<PhTipsList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InkWell(
-              child: Icon(
-                Icons.arrow_back,),
-            onTap: addUser,
-          ),
+          // InkWell(
+          //     child: Icon(
+          //       Icons.arrow_back,),
+          //   onTap: addUser,
+          // ),
           RichText(
             text: TextSpan(
               style: Theme.of(context).textTheme.subtitle1.copyWith(color: yellow),

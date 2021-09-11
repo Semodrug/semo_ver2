@@ -78,16 +78,17 @@ class CustomAppBarWithGoToRanking extends StatelessWidget
           color: primary300_main,
           onPressed: () {
             Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      // TestRanking(categoryName: numCategory[index] + categories[index])
-                      RankingContentPage(
-                        categoryName: category,
-                        filter: filter,
-                      )),
-            );
+            //리뷰와 별점순 관련해서 페이지 라우트 좀더 매끄럽게 하기 위해
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //       builder: (context) =>
+            //           // TestRanking(categoryName: numCategory[index] + categories[index])
+            //           RankingContentPage(
+            //             categoryName: category,
+            //             filter: filter,
+            //           )),
+            // );
           },
         ),
       );

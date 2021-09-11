@@ -91,7 +91,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildList(BuildContext context, List<SavedDrug> snapshot) {
-    double mw = MediaQuery.of(context).size.width;
     int count = snapshot.length;
     if (count == 0) {
       return _noDrugPage();
@@ -191,18 +190,6 @@ class _HomePageState extends State<HomePage> {
           newName = splitName[0];
         }
       }
-      return newName;
-    }
-
-    //TODO: 지금 클라우드에 적히지가 않아서 이따 적어야함
-    String _checkCategoryName(String data) {
-      String newName = '';
-
-      if (data.length > 10) {
-        newName = data.substring(0, 9);
-        newName = newName + '...';
-      }
-
       return newName;
     }
 

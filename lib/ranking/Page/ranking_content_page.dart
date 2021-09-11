@@ -22,19 +22,23 @@ class RankingContentPage extends StatefulWidget {
 class _RankingContentPageState extends State<RankingContentPage> {
   //String _filterOrSort = "리뷰 많은 순";
 
-  String _checkCategoryName(String data) {
-    String newName = '';
-
-    newName = data.substring(7, (data.length));
-    return newName;
-  }
+  //원래
+  // String _checkCategoryName(String data) {
+  //   String newName = '';
+  //   //실제 카테고리 이름이 무엇인지 알기 위함
+  //   newName = data.substring(7, (data.length));
+  //   return newName;
+  // }
 
   @override
   Widget build(BuildContext context) {
-    String onlyName = _checkCategoryName(widget.categoryName);
+    //원래
+    //String onlyName = _checkCategoryName(widget.categoryName);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBarWithArrowBackAndSearch(onlyName, 0.5),
+      //원래
+      //appBar: CustomAppBarWithArrowBackAndSearch(onlyName, 0.5),
+      appBar: CustomAppBarWithArrowBackAndSearch(widget.categoryName, 0.5), //test
       body: Column(
         children: [
           _countDropDown(context),
