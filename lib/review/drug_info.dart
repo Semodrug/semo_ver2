@@ -272,7 +272,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         // _pharmacistTip(),
-                                        PhTipsList(widget.drugItemSeq),
+                                        // PhTipsList(widget.drugItemSeq),
 
                                         SizedBox(
                                           width: double.infinity,
