@@ -1081,6 +1081,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: 10),
                   SizedBox(
@@ -1099,6 +1100,21 @@ class _HomePageState extends State<HomePage> {
                             .copyWith(color: gray900),
                         textAlign: TextAlign.center,
                       ),
+                    ),
+                  ),
+                  SizedBox(width: 8,),
+                  Container(
+
+                    height: 20,
+                    width: 55,
+                    child: Center(child: Text("Beta",
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(
+                          color: primary600_bold_text,
+                        fontSize: 13)),),
+
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: gray50,
                     ),
                   )
                 ],
