@@ -1,8 +1,13 @@
+import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:semo_ver2/services/db.dart';
 
 class AuthService {
@@ -103,6 +108,22 @@ class AuthService {
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance
         .signInWithCredential(facebookAuthCredential);
+  }
+
+  Future<UserCredential> signInWithApple() async {
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+
+    final oauthCredential = OAuthProvider("apple.com").credential(
+      idToken: appleCredential.identityToken,
+      accessToken: appleCredential.authorizationCode,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
   }
 
   Future signOut() async {
