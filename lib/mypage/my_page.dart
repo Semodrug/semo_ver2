@@ -144,7 +144,7 @@ class _MyPageState extends State<MyPage> {
                     SizedBox(
                       height: 3,
                     ),
-                    Text(_auth.userEmail,
+                    Text(_auth.userEmail.toString()=='null'? '' : _auth.userEmail,
                         style: Theme.of(context).textTheme.caption)
                   ],
                 ),
