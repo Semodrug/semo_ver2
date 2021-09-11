@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 
 import 'package:semo_ver2/login/register.dart';
@@ -247,7 +248,7 @@ class _SocialSignInSectionState extends State<_SocialSignInSection> {
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             _googleLoginButton(),
             _facebookLoginButton(),
-            // _appleLoginButton(),
+            Platform.isIOS ? _appleLoginButton() : Container()
           ]),
         ),
       ],
@@ -309,7 +310,7 @@ class _SocialSignInSectionState extends State<_SocialSignInSection> {
       padding: EdgeInsets.zero,
       onPressed: () async {
         // setState(() => loading = true);
-        dynamic result = await _auth.signInWithGoogle();
+        dynamic result = await _auth.signInWithApple();
         if (result == null) {
           setState(() {
             // loading = false;

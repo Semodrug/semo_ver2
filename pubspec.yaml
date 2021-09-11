@@ -46,6 +46,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   logger: ^0.9.4  #optional
   flutter_facebook_auth: ^2.0.1
+  sign_in_with_apple: ^2.5.4
 
   #state management
   provider: ^4.3.2+3
@@ -88,8 +89,9 @@ dependencies:
   #imgae
   cached_network_image: ^2.5.1
 
- #scrolling
-  infinite_scroll_pagination: ^3.0.1
+ # scrolling
+  infinite_scroll_pagination: ^3.0.1 # Sumi ^2.3.0
+ # --> VERSION PAGE: https://pub.dev/packages/infinite_scroll_pagination/versions
 
 dev_dependencies:
   flutter_test:
