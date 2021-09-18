@@ -41,8 +41,6 @@ class DatabaseService {
     return drugsSnapshots;
   }
 
-
-
   //for search from User drugs
   Stream<List<Drug>> setForSearchFromAllAfterRemainStartAt(
       String searchVal, int limit) {
@@ -72,50 +70,46 @@ class DatabaseService {
   List<Drug> _drugListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return Drug(
-        barCode: doc.data()['BAR_CODE'] ?? '',
-        // cancelName: doc.data()['CANCEL_NAME'] ?? '',
-        chart: doc.data()['CHART'] ?? '',
-        // cnsgnManuf: doc.data()['CNSGN_MANUF'] ?? '',
-        // ediCode: doc.data()['EDI_CODE'] ?? '',
+          barCode: doc.data()['BAR_CODE'] ?? '',
+          // cancelName: doc.data()['CANCEL_NAME'] ?? '',
+          chart: doc.data()['CHART'] ?? '',
+          // cnsgnManuf: doc.data()['CNSGN_MANUF'] ?? '',
+          // ediCode: doc.data()['EDI_CODE'] ?? '',
 
-        eeDocData: doc.data()['EE_DOC_DATA'] ?? '',
-        // eeDocId: doc.data()['EE_DOC_ID'] ?? '',
-        entpName: doc.data()['ENTP_NAME'] ?? '',
-        entpNo: doc.data()['ENTP_NO'] ?? '',
+          eeDocData: doc.data()['EE_DOC_DATA'] ?? '',
+          // eeDocId: doc.data()['EE_DOC_ID'] ?? '',
+          entpName: doc.data()['ENTP_NAME'] ?? '',
+          entpNo: doc.data()['ENTP_NO'] ?? '',
+          etcOtcCode: doc.data()['ETC_OTC_CODE'] ?? '',
+          // gbnName: doc.data()['GBN_NAME'] ?? '',
+          // indutyType: doc.data()['INDUTY_TYPE'] ?? '',
+          ingrName: doc.data()['INGR_NAME'] ?? '',
+          itemName: doc.data()['ITEM_NAME'] ?? '',
+          // itemPermitDate: doc.data()['ITEM_PERMIT_DATE'] ?? '',
 
-        etcOtcCode: doc.data()['ETC_OTC_CODE'] ?? '',
-        // gbnName: doc.data()['GBN_NAME'] ?? '',
-        // indutyType: doc.data()['INDUTY_TYPE'] ?? '',
-        ingrName: doc.data()['INGR_NAME'] ?? '',
-        itemName: doc.data()['ITEM_NAME'] ?? '',
-        // itemPermitDate: doc.data()['ITEM_PERMIT_DATE'] ?? '',
+          itemSeq: doc.data()['ITEM_SEQ'] ?? '',
+          mainItemIngr: doc.data()['MAIN_ITEM_INGR'] ?? '',
+          materialName: doc.data()['MATERIAL_NAME'] ?? '',
+          nbDocData: doc.data()['NB_DOC_DATA'] ?? '',
+          // nbDocId: doc.data()['NB_DOC_ID'] ?? '',
+          permitKindName: doc.data()['PERMIT_KIND_NAME'] ?? '',
+          storageMethod: doc.data()['STORAGE_METHOD'] ?? '',
+          totalContect: doc.data()['TOTAL_CONTENT'] ?? '',
+          udDocData: doc.data()['UD_DOC_DATA'] ?? '',
+          udDocId: doc.data()['UD_DOC_ID'] ?? '',
+          validTerm: doc.data()['VALID_TERM'] ?? '',
 
-        itemSeq: doc.data()['ITEM_SEQ'] ?? '',
-        mainItemIngr: doc.data()['MAIN_ITEM_INGR'] ?? '',
-        materialName: doc.data()['MATERIAL_NAME'] ?? '',
+          // TODO:
+          category: doc.data()['PRDUCT_TYPE'] ?? '카테고리 없음',
+          // image: doc.data()['image'] ?? '',
+          // review: doc.data()['review'],
 
-        nbDocData: doc.data()['NB_DOC_DATA'] ?? '',
-        // nbDocId: doc.data()['NB_DOC_ID'] ?? '',
-        permitKindName: doc.data()['PERMIT_KIND_NAME'] ?? '',
-        storageMethod: doc.data()['STORAGE_METHOD'] ?? '',
-        totalContect: doc.data()['TOTAL_CONTENT'] ?? '',
-
-        udDocData: doc.data()['UD_DOC_DATA'] ?? '',
-        udDocId: doc.data()['UD_DOC_ID'] ?? '',
-        validTerm: doc.data()['VALID_TERM'] ?? '',
-
-        // TODO:
-        category: doc.data()['PRDUCT_TYPE'] ?? '카테고리 없음',
-        // image: doc.data()['image'] ?? '',
-        // review: doc.data()['review'],
-
-        totalRating: doc.data()['totalRating'] ?? 0,
-        numOfReviews: doc.data()['numOfReviews'] ?? 0,
-        searchNameList: doc.data()['searchNameList'] ?? [],
+          totalRating: doc.data()['totalRating'] ?? 0,
+          numOfReviews: doc.data()['numOfReviews'] ?? 0,
+          searchNameList: doc.data()['searchNameList'] ?? [],
 
           //test rank category
-        rankCategory: doc.data()['RANK_CATEGORY'] ?? ''
-      );
+          rankCategory: doc.data()['RANK_CATEGORY'] ?? '');
     }).toList();
   }
 
@@ -394,7 +388,7 @@ class DatabaseService {
 
   Future<String> itemSeqFromBarcode(barcode) async {
     var result =
-        await drugCollection.where('BAR_CODE', isEqualTo: barcode).get();
+        await drugCollection.where('BAR_CODES', arrayContains: barcode).get();
     var data;
 
     if (result.docs.isEmpty) {
