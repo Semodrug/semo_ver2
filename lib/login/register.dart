@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/login/register_withEmail.dart';
 import 'package:semo_ver2/services/auth.dart';
@@ -48,40 +50,67 @@ class _RegisterPageState extends State<RegisterPage> {
               SizedBox(
                 height: 20,
               ),
-              // Divider(
-              //   color: Colors.grey,
-              //   indent: 16,
-              //   endIndent: 16,
-              // ),
-              // SizedBox(
-              //   height: 20,
-              // ),
-              // FlatButton(
-              //   child: Image.asset('assets/login/with_google.png'),
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //           builder: (context) => RegisterWithEmailPage()),
-              //     );
-              //   },
-              // ),
-              // SizedBox(
-              //   height: 16,
-              // ),
-              // FlatButton(
-              //   child: Image.asset('assets/login/with_facebook.png'),
-              //   onPressed: () async {
-              //     // setState(() => loading = true);
-              //     dynamic result = await _auth.signInWithFacebook();
-              //     if (result == null) {
-              //       setState(() {
-              //         // loading = false;
-              //         String error = 'Could not sign in with those credentials';
-              //       });
-              //     }
-              //   },
-              // ),
+              Divider(
+                color: Colors.grey,
+                indent: 16,
+                endIndent: 16,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              FlatButton(
+                child: Image.asset('assets/login/with_google.png'),
+                onPressed: () async {
+                  // setState(() => loading = true);
+                  dynamic result = await _auth.signInWithGoogle();
+                  Navigator.of(context).pop();
+                  if (result == null) {
+                    // setState(() {
+                    //   // loading = false;
+                    //   // error = 'Could not sign in with those credentials';
+                    print('Could not sign in with those credentials');
+                    //   }
+                    // );
+                  }
+                },
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              FlatButton(
+                child: Image.asset('assets/login/with_facebook.png'),
+                onPressed: () async {
+                  // setState(() => loading = true);
+                  dynamic result = await _auth.signInWithFacebook();
+                  Navigator.of(context).pop();
+                  if (result == null) {
+                    setState(() {
+                      // loading = false;
+                      String error = 'Could not sign in with those credentials';
+                    });
+                  }
+                },
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Platform.isIOS
+                  ? FlatButton(
+                      child: Image.asset('assets/login/with_apple.png'),
+                      onPressed: () async {
+                        // setState(() => loading = true);
+                        dynamic result = await _auth.signInWithApple();
+                        Navigator.of(context).pop();
+                        if (result == null) {
+                          setState(() {
+                            // loading = false;
+                            String error =
+                                'Could not sign in with those credentials';
+                          });
+                        }
+                      },
+                    )
+                  : Container()
             ],
           ),
         ));
