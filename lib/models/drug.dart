@@ -1,5 +1,6 @@
 class Drug {
   final String barCode;
+  final List barCodes;
 
   // final String cancelName;
   final String chart; // 성상 (본품은 백색의 정제다.)
@@ -46,6 +47,7 @@ class Drug {
 
   Drug(
       {this.barCode,
+      this.barCodes,
       // this.cancelName,
       this.chart,
       // this.cnsgnManuf,
@@ -75,9 +77,9 @@ class Drug {
       this.numOfReviews,
       this.searchNameList,
       this.pharmacistTips
-        //test rank category
-        , this.rankCategory
-      });
+      //test rank category
+      ,
+      this.rankCategory});
 }
 
 //
@@ -98,13 +100,12 @@ class SavedDrug {
   final List searchNameList;
   final DateTime savedTime;
 
-  SavedDrug({
-    this.itemName,
-    this.itemSeq,
-    this.category,
-    this.expiration,
-    this.etcOtcCode,
-    this.searchNameList,
-    this.savedTime
-  });
+  SavedDrug(
+      {this.itemName,
+      this.itemSeq,
+      this.category,
+      this.expiration,
+      this.etcOtcCode,
+      this.searchNameList,
+      this.savedTime});
 }

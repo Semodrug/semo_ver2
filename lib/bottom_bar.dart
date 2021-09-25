@@ -201,16 +201,17 @@ class _BottomBarState extends State<BottomBar> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 8,),
+                  SizedBox(
+                    width: 8,
+                  ),
                   Container(
-
-                    height: 20,
-                    width: 55,
-                    child: Center(child: Text("Beta",
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(
-                          color: primary600_bold_text,
-                        fontSize: 13)),),
-
+                    height: 24,
+                    width: 42,
+                    child: Center(
+                      child: Text("BETA",
+                          style: Theme.of(context).textTheme.subtitle2.copyWith(
+                              color: primary600_bold_text, fontSize: 12)),
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       color: gray50,
