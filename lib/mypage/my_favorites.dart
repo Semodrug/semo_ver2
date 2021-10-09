@@ -411,8 +411,9 @@ class _MyFavoritesState extends State<MyFavorites> {
     if (drugName.contains('(')) {
       splitName = drugName.split('(');
       newName = splitName[0];
-    }
 
-    return newName;
+      return newName;
+    } else
+      return drugName;
   }
 }

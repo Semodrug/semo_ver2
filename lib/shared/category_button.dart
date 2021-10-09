@@ -43,14 +43,10 @@ class CategoryButton extends StatelessWidget {
       }
 
       if (forRanking == 'ranking') {
-        if (newName.length > 22) {
-          newName = newName.substring(0, 20);
-          newName = newName + '...';
-        }
         if (newName.length > 15) {
-          if (mw < 350) {
+          if (mw < 380) {
             newName = newName.substring(0, 13);
-            newName = newName + '...';
+            newName = newName + '…';
           }
         }
       }
