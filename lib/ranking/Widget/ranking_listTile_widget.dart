@@ -62,13 +62,8 @@ class RankingTile extends StatelessWidget {
           ),
         ),
       },
-      title: StreamBuilder<Drug>(
-          stream: DatabaseService(itemSeq: drug.itemSeq).drugData,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              Drug drugStreamData = snapshot.data;
-              String drugRating = drugStreamData.totalRating.toStringAsFixed(2);
-              return Container(
+      title:   //String drugRating = drugStreamData.totalRating.toStringAsFixed(2);
+               Container(
                 decoration: BoxDecoration(
                     border:
                         Border(bottom: BorderSide(width: 0.6, color: gray50))),
@@ -92,7 +87,7 @@ class RankingTile extends StatelessWidget {
                               padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
                               child: SizedBox(
                                   child: DrugImage(
-                                      drugItemSeq: drugStreamData.itemSeq))),
+                                      drugItemSeq: drug.itemSeq))),
                         ),
                         Container(
                             margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
@@ -102,7 +97,7 @@ class RankingTile extends StatelessWidget {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 3.0),
-                                  child: Text(drugStreamData.entpName,
+                                  child: Text(drug.entpName,
                                       style: Theme.of(context)
                                           .textTheme
                                           .overline
@@ -114,7 +109,7 @@ class RankingTile extends StatelessWidget {
                                   width: mw - 160,
                                   child: Text(
                                       //_checkLongName(drugStreamData.itemName),
-                                      drugStreamData.itemName,
+                                      drug.itemName,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: Theme.of(context)
@@ -124,16 +119,16 @@ class RankingTile extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    _getRateStar(drugStreamData.totalRating),
+                                    _getRateStar(drug.totalRating),
                                     SizedBox(
                                       width: 8,
                                     ),
-                                    Text(drugRating,
+                                    Text(drug.totalRating.toStringAsFixed(2),
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2
                                             .copyWith(color: gray900)),
-                                    Text(' (${drugStreamData.numOfReviews}개)',
+                                    Text(' (${drug.numOfReviews}개)',
                                         style: Theme.of(context)
                                             .textTheme
                                             .overline
@@ -146,7 +141,7 @@ class RankingTile extends StatelessWidget {
                                     child: Row(
                                   children: [
                                     CategoryButton(
-                                        str: drugStreamData.category,
+                                        str: drug.category,
                                         forRanking: 'ranking')
                                   ],
                                 )),
@@ -154,10 +149,8 @@ class RankingTile extends StatelessWidget {
                             )),
                       ],
                     )),
-              );
-            } else
-              return Container(); //LinearProgressIndicator();
-          }),
+              )
+           ,
     );
   }
 
