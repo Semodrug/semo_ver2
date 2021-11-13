@@ -6,13 +6,13 @@ import 'package:semo_ver2/models/drug.dart';
 
 class DrugsTotalRankingProvider extends ChangeNotifier {
   final _drugsSnapshot = <DocumentSnapshot>[];
-  final filterOrSort;
+  final filter;
   String _errorMessage = '';
-  int documentLimit = 15; //리미트 걸어둔
+  int documentLimit = 20; //리미트 걸어둔
   bool _hasNext = true; //그 다음 user가 존재하는지
   bool _isFetchingDrugs = false;
 
-  DrugsTotalRankingProvider(this.filterOrSort); //fetch 한 애들인지
+  DrugsTotalRankingProvider(this.filter); //fetch 한 애들인지
 
   String get errorMessage => _errorMessage;
 
@@ -40,7 +40,7 @@ class DrugsTotalRankingProvider extends ChangeNotifier {
     _isFetchingDrugs = true;
 
     try { //여기서 user들을 불러온다
-      final snap = await FirebaseApi.getDrugs(documentLimit, filterOrSort,
+      final snap = await FirebaseApi.getDrugs(documentLimit, filter,
         startAfter: _drugsSnapshot.isNotEmpty ? _drugsSnapshot.last : null,
 
       );

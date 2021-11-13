@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
-import 'package:semo_ver2/ranking/Provider/ranking_review_provider.dart';
+import 'package:semo_ver2/ranking/Provider/drugs_controller.dart';
 import 'package:semo_ver2/ranking/Provider/ranking_totalRating_provider.dart';
 import 'package:semo_ver2/ranking/Widget/ranking_listTile_widget.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
-class ListViewReviewWidget extends StatefulWidget {
-  final DrugsReviewProvider drugsProvider;
+class DrugList extends StatefulWidget {
+  final DrugsController drugsProvider;
+  // final String filter;
   final String category;
 
-  const ListViewReviewWidget({
+  const DrugList({
     @required this.drugsProvider,
+    // @required this.filter,
     this.category,
     Key key,
   }) : super(key: key);
@@ -19,7 +21,7 @@ class ListViewReviewWidget extends StatefulWidget {
   _ListViewReviewWidgetState createState() => _ListViewReviewWidgetState();
 }
 
-class _ListViewReviewWidgetState extends State<ListViewReviewWidget> {
+class _ListViewReviewWidgetState extends State<DrugList> {
   //스크롤 컨트롤
    final scrollController = ScrollController();
 

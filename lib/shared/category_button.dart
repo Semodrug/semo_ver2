@@ -27,6 +27,7 @@ class CategoryButton extends StatelessWidget {
         newName = '카테고리 없음';
       else
         newName = data.substring(7, (data.length));
+      // newName = data.toString();
 
       if (fromHome == 'home') {
         if (newName.length > 15) {

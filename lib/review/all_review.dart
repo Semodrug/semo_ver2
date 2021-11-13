@@ -60,84 +60,72 @@ class _AllReveiewState extends State<AllReview> {
       child: Scaffold(
         appBar: CustomAppBarWithGoToBack(_shortenName(widget.itemName), Icon(Icons.arrow_back), 0.5),
           backgroundColor: gray0_white,
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: _myTabbe(context),
-            ),
-          ],
-        ),
+        body: _myTabbe(context)
       ),
     );
   }
 
 
-  Widget _myTab(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+  // Widget _myTab(BuildContext context) {
+  //   // double height = MediaQuery.of(context).size.height;
 
-    return DefaultTabController(
-        length: 3,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0,top: 10.0,right: 16.0, bottom: 10),
-              child: Container(
-                height: 29,
-                decoration: BoxDecoration(
-                    color: gray75,
-                    borderRadius: BorderRadius.all(Radius.circular(4))
-                ),
-                //color: gray75,
-                child: Column(
-                  children: [
+  //   return DefaultTabController(
+  //       length: 3,
+  //       child: Column(
+  //         children: [
+  //           Padding(
+  //             padding: const EdgeInsets.only(left: 16.0,top: 10.0,right: 16.0, bottom: 10),
+  //             child: Container(
+  //               height: 29,
+  //               decoration: BoxDecoration(
+  //                   color: gray75,
+  //                   borderRadius: BorderRadius.all(Radius.circular(4))
+  //               ),
+  //               //color: gray75,
+  //               child: Column(
+  //                 children: [
 
-                    TabBar(
-                        labelStyle: Theme.of(context)
-                            .textTheme
-                            .subtitle2
-                            .copyWith(color: gray750_activated,),
-                        unselectedLabelStyle: Theme.of(context)
-                            .textTheme
-                            .caption
-                            .copyWith( color: gray500),
-                        tabs: [
-                          Tab(
-                              child: Text(
-                                  '전체 검색',
-                                  style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
-                          Tab(
-                              child: Text(
-                                  '나의 약 검색',
-                                  style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
-                          Tab(
-                              child: Text(
-                                  '나의 약 검색',
-                                  style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
-                        ],
+  //                   TabBar(
+  //                       labelStyle: Theme.of(context)
+  //                           .textTheme
+  //                           .subtitle2
+  //                           .copyWith(color: gray750_activated,),
+  //                       unselectedLabelStyle: Theme.of(context)
+  //                           .textTheme
+  //                           .caption
+  //                           .copyWith( color: gray500),
+  //                       tabs: [
+  //                         Tab(
+  //                             child: Text(
+  //                                 '전체 검색',
+  //                                 style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
+  //                         Tab(
+  //                             child: Text(
+  //                                 '나의 약 검색',
+  //                                 style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
+  //                         Tab(
+  //                             child: Text(
+  //                                 '나의 약 검색',
+  //                                 style:  TextStyle(color: gray750_activated, fontFamily: 'NotoSansKR')                        )),
+  //                       ],
 
-                        //indicator: CustomTabIndicator()
-                    ),
-                    CustomScrollView(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: TabBarView(
-                                children: [
-                                  _underTab("none", 1),
-                                  _underTab("effectOnly", 2),
-                                  _underTab("sideEffectOnly", 3),
-                                ],
-                              ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+  //                       //indicator: CustomTabIndicator()
+  //                   ),
+  //                   TabBarView(
+  //                             children: [
+  //                               _underTab("none", 1),
+  //                               _underTab("effectOnly", 2),
+  //                               _underTab("sideEffectOnly", 3),
+  //                             ],
+  //                           )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
 
-          ],
-        ));
-  }
+  //         ],
+  //       ));
+  // }
 
   Widget _myTabbe(BuildContext context) {
     return DefaultTabController(
@@ -188,24 +176,31 @@ class _AllReveiewState extends State<AllReview> {
                 ),
               ),
             ),
-
-            Container(
-              height: 5000,
-              child: TabBarView(
+            Expanded(child: TabBarView(
                 children: [
                   _underTab("none", 1),
                   _underTab("effectOnly", 2),
                   _underTab("sideEffectOnly", 3),
                 ],
-              ),
-            )
+              ),)
+
+            // Container(
+            //   height: 5000,
+            //   child: TabBarView(
+            //     children: [
+            //       _underTab("none", 1),
+            //       _underTab("effectOnly", 2),
+            //       _underTab("sideEffectOnly", 3),
+            //     ],
+            //   ),
+            // )
           ],
         ));
   }
 
   Widget _underTab(String filter, key) {
     return ListView(
-        physics: NeverScrollableScrollPhysics(),
+        // physics: NeverScrollableScrollPhysics(),
       children: [
         Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
