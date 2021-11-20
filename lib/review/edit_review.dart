@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/ranking/Provider/drugs_controller.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
@@ -41,7 +42,7 @@ class _EditReviewState extends State<EditReview> {
   String sideEffectText = '';
   String starRatingText = '';
   bool editSwitch = false;
-
+  DrugsController drugsProvider;
 
   String _shortenName(String drugName) {
     String newName;
@@ -393,7 +394,7 @@ class _EditReviewState extends State<EditReview> {
                                 ),
                                 Container(width: 5),
                                 Text(
-                                  drug.totalRating.toStringAsFixed(2),
+                                  drug.totalRating.toStringAsFixed(1),
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle2
@@ -415,7 +416,7 @@ class _EditReviewState extends State<EditReview> {
                             CategoryButton(str: drug.category)
                           ],
                         );
-                        // Text(drug.totalRating.toStringAsFixed(2)+drug.numOfReviews.toStringAsFixed(0) + "개",
+                        // Text(drug.totalRating.toStringAsFixed(1)+drug.numOfReviews.toStringAsFixed(0) + "개",
                         //   style: TextStyle(
                         //     fontSize: 16.5,
                         //     fontWeight: FontWeight.bold,
@@ -530,7 +531,6 @@ class _EditReviewState extends State<EditReview> {
         ));
   }
 
-
   Widget _exclusiveMultiButton() {
     return ButtonTheme(
       minWidth: 40.0,
@@ -564,7 +564,6 @@ class _EditReviewState extends State<EditReview> {
       ),
     );
   }
-
 
   Widget _effect(Review review) {
     return Container(
@@ -849,8 +848,7 @@ class _EditReviewState extends State<EditReview> {
     String hintText;
     if (type == "effect")
       hintText = "효과에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
-    else if (type == "sideEffect")
-      hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
+    else if (type == "sideEffect") hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
     double bottom = 20;
     if (type == "overall") bottom = bottom + 70;
     return Padding(
@@ -893,7 +891,6 @@ class _EditReviewState extends State<EditReview> {
     );
   }
 
-
   Widget _edit(Review review) {
     String _warning = '';
     return GestureDetector(
@@ -926,12 +923,13 @@ class _EditReviewState extends State<EditReview> {
             else {
               await ReviewService(documentId: widget.review.documentId)
                   .updateReviewData(
-                      effect /*?? review.effect*/,
-                      sideEffect /*?? review.sideEffect*/,
-                      myControllerEffect.text /*?? review.effectText*/,
-                      myControllerSideEffect.text /*?? review.sideEffectText*/,
-                      starRating == 0 ? review.starRating : starRating,
-                      /*?? value.starRating*/ );
+                effect /*?? review.effect*/,
+                sideEffect /*?? review.sideEffect*/,
+                myControllerEffect.text /*?? review.effectText*/,
+                myControllerSideEffect.text /*?? review.sideEffectText*/,
+                starRating == 0 ? review.starRating : starRating,
+                /*?? value.starRating*/
+              );
               Navigator.pop(context);
               editSwitch = true;
               IYMYGotoSeeOrCheckDialog(review.seqNum);
