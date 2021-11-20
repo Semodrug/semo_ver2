@@ -70,6 +70,7 @@ dependencies:
     git:
       url: https://github.com/espresso3389/flutter_datetime_picker
 
+
   #and so on
   flutter_launcher_icons: ^0.8.1
   flutter_native_splash: ^0.1.9
@@ -85,6 +86,9 @@ dependencies:
   #case recognition
   tflite: ^1.0.4
   image_picker: ^0.6.2+3
+  tflite_flutter_helper: ^0.1.2
+  tflite_flutter: ^0.5.0
+  image: ^2.1.4
 
   #imgae
   cached_network_image: ^2.5.1
