@@ -99,7 +99,7 @@ class _GetRatingState extends State<GetRating> {
                                   Row(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text(ratingResult.toStringAsFixed(2),
+                                      Text(ratingResult.toStringAsFixed(1),
                                           style: Theme.of(context).textTheme.headline1.copyWith(
                                               color: gray750_activated,
                                               fontSize: 24
