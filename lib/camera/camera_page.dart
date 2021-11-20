@@ -583,7 +583,7 @@ class _CaseResultState extends State<CaseResult> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Drug drugStreamData = snapshot.data;
-              String drugRating = drugStreamData.totalRating.toStringAsFixed(2);
+              String drugRating = drugStreamData.totalRating.toStringAsFixed(1);
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
