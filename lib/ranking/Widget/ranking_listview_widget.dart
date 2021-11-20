@@ -26,38 +26,32 @@ class DrugList extends StatefulWidget {
 }
 
 class _ListViewReviewWidgetState extends State<DrugList> {
-  //스크롤 컨트롤
+  DrugsController drugsProvider;
   final scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    //계속 스크롤을 지켜보고 있는 것
     scrollController.addListener(scrollListener);
-    //그 다음 약들 끌어오는 것
     widget.drugsProvider.fetchNextDrugs();
   }
 
   @override
   void dispose() {
-    //스크롤컨트롤러 디스포즈 해주기
     scrollController.dispose();
     super.dispose();
   }
 
   void scrollListener() {
-    //전체 스크롤 할 수 있는 범위의 반에 도달하면 미리 그 다음 목록들을 불러오기 위한 과정
     if (scrollController.offset >=
             scrollController.position.maxScrollExtent / 2 &&
         !scrollController.position.outOfRange) {
-      //만약 has next가 있다면 그 다음 것들을 fetch해와라
       if (widget.drugsProvider.hasNext) {
         widget.drugsProvider.fetchNextDrugs(); //user 가 더 있다면 next user를 load 해라
       }
     }
   }
 
-  //FAB를 눌렀을 때 바로 위로 가게 해두는
   void _onTap() {
     scrollController.animateTo(
       0,
@@ -66,7 +60,6 @@ class _ListViewReviewWidgetState extends State<DrugList> {
     );
   }
 
-  //이건 바로 위로 올라가게 하기위한 버튼 보고 있는 지점에서 바로 위로 올라갈 수 있게끔 도와주는
   Widget _FAB() {
     return Container(
       decoration: BoxDecoration(
@@ -107,10 +100,8 @@ class _ListViewReviewWidgetState extends State<DrugList> {
     return newName;
   }
 
-  //디자이너님이 그냥 숫자로만
   Widget _upToThree(index) {
     return Center(
-      // child: Text((int.parse(index) + 1).toString(),
       child: Text('${index + 1}',
           style: Theme.of(context)
               .textTheme
@@ -138,13 +129,9 @@ class _ListViewReviewWidgetState extends State<DrugList> {
   double mw;
   Widget build(BuildContext context) {
     mw = MediaQuery.of(context).size.width;
-    //불러오는 과정에서 엠티일 때 로딩중인 화면 보여기
     if (widget.drugsProvider.drugs.isEmpty) {
       return Center(child: CircularProgressIndicator());
-    }
-    //약에 대한 로딩이 완료 되었거나 엠티가 아니라면, 가져온 목록들을 보여줄 것이다.
-    else
-      //이부분 보기 예제 코드와 달라서 예제 코드를 listview builder로 바꿔서 이 버전에 맞춰서 코드 진행해보았는데 변함 없이 잘 스크롤 됨. 이부분이 문제가 아님
+    } else
       return Scaffold(
         floatingActionButton: _FAB(),
         body: Column(
@@ -154,19 +141,11 @@ class _ListViewReviewWidgetState extends State<DrugList> {
                 controller: scrollController,
                 itemCount: widget.drugsProvider.drugs.length,
                 itemBuilder: (context, index) {
-                  //print('${widget.drugsProvider.drugs[index].itemName}');
-                  //   return RankingTile(
-                  //     drug: widget.drugsProvider.drugs[index],
-                  //     index: (index + 1),
-                  //     filter: '리뷰 많은 순',
-                  //     category : widget.category,
-                  // );
                   var drug = widget.drugsProvider.drugs[index];
                   return ListTile(
                     minVerticalPadding: 0.5,
                     contentPadding: EdgeInsets.zero,
                     onTap: () => {
-                      //Navigator.pop(context),
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -189,7 +168,6 @@ class _ListViewReviewWidgetState extends State<DrugList> {
                                 width: 40,
                                 child: Container(
                                   margin: EdgeInsets.only(left: 16, right: 5),
-                                  //padding: EdgeInsets.only(left: 0, right: 5),
                                   child: _upToThree(index),
                                 ),
                               ),
@@ -224,9 +202,7 @@ class _ListViewReviewWidgetState extends State<DrugList> {
                                       ),
                                       Container(
                                         width: mw - 160,
-                                        child: Text(
-                                            //_checkLongName(drugStreamData.itemName),
-                                            drug.itemName,
+                                        child: Text(drug.itemName,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: Theme.of(context)

@@ -62,95 +62,91 @@ class RankingTile extends StatelessWidget {
           ),
         ),
       },
-      title:   //String drugRating = drugStreamData.totalRating.toStringAsFixed(2);
-               Container(
-                decoration: BoxDecoration(
-                    border:
-                        Border(bottom: BorderSide(width: 0.6, color: gray50))),
-                height: 100.0,
-                child: Material(
-                    color: Colors.white,
-                    child: Row(
+      title: //String drugRating = drugStreamData.totalRating.toStringAsFixed(2);
+          Container(
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(width: 0.6, color: gray50))),
+        height: 100.0,
+        child: Material(
+            color: Colors.white,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 40,
+                  child: Container(
+                    margin: EdgeInsets.only(left: 16, right: 5),
+                    //padding: EdgeInsets.only(left: 0, right: 5),
+                    child: _upToThree(index),
+                  ),
+                ),
+                Container(
+                  width: 88,
+                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  child: Container(
+                      padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
+                      child: SizedBox(
+                          child: DrugImage(drugItemSeq: drug.itemSeq))),
+                ),
+                Container(
+                    margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: 40,
-                          child: Container(
-                            margin: EdgeInsets.only(left: 16, right: 5),
-                            //padding: EdgeInsets.only(left: 0, right: 5),
-                            child: _upToThree(index),
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 3.0),
+                          child: Text(drug.entpName,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .overline
+                                  .copyWith(
+                                      fontSize: 10,
+                                      color: gray300_inactivated)),
                         ),
                         Container(
-                          width: 88,
-                          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                          child: Container(
-                              padding: EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
-                              child: SizedBox(
-                                  child: DrugImage(
-                                      drugItemSeq: drug.itemSeq))),
+                          width: mw - 160,
+                          child: Text(
+                              //_checkLongName(drugStreamData.itemName),
+                              drug.itemName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(color: gray900)),
                         ),
-                        Container(
-                            margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 3.0),
-                                  child: Text(drug.entpName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .overline
-                                          .copyWith(
-                                              fontSize: 10,
-                                              color: gray300_inactivated)),
-                                ),
-                                Container(
-                                  width: mw - 160,
-                                  child: Text(
-                                      //_checkLongName(drugStreamData.itemName),
-                                      drug.itemName,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          .copyWith(color: gray900)),
-                                ),
-                                Row(
-                                  children: [
-                                    _getRateStar(drug.totalRating),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Text(drug.totalRating.toStringAsFixed(2),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2
-                                            .copyWith(color: gray900)),
-                                    Text(' (${drug.numOfReviews}개)',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .overline
-                                            .copyWith(
-                                                fontSize: 10,
-                                                color: gray300_inactivated)),
-                                  ],
-                                ),
-                                Expanded(
-                                    child: Row(
-                                  children: [
-                                    CategoryButton(
-                                        str: drug.category,
-                                        forRanking: 'ranking')
-                                  ],
-                                )),
-                              ],
-                            )),
+                        Row(
+                          children: [
+                            _getRateStar(drug.totalRating),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(drug.totalRating.toStringAsFixed(1),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2
+                                    .copyWith(color: gray900)),
+                            Text(' (${drug.numOfReviews}개)',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .overline
+                                    .copyWith(
+                                        fontSize: 10,
+                                        color: gray300_inactivated)),
+                          ],
+                        ),
+                        Expanded(
+                            child: Row(
+                          children: [
+                            CategoryButton(
+                                str: drug.category, forRanking: 'ranking')
+                          ],
+                        )),
                       ],
                     )),
-              )
-           ,
+              ],
+            )),
+      ),
     );
   }
 
