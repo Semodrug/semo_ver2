@@ -50,6 +50,7 @@ class CustomAppBarWithGoToRanking extends StatelessWidget
   final double elevation;
   final String filter;
   final String category;
+  
 
   CustomAppBarWithGoToRanking(
     this.title,

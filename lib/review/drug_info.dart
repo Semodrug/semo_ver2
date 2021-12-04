@@ -13,6 +13,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/mypage/my_favorites.dart';
+import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
 import 'package:semo_ver2/review/ph_tips.dart';
 import 'package:semo_ver2/review/review_policy_more.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
@@ -29,7 +30,6 @@ import 'package:semo_ver2/review/write_review.dart';
 import 'package:semo_ver2/shared/shortcut_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
 
 List infoEE;
 List infoNB;
@@ -87,7 +87,6 @@ class _ReviewPageState extends State<ReviewPage> {
     super.initState();
   }
 
-
   void _onTapPillInfo() {
     _scrollController.animateTo(_getPillInfoSize(),
         duration: Duration(milliseconds: 400), curve: Curves.easeOut);
@@ -119,7 +118,6 @@ class _ReviewPageState extends State<ReviewPage> {
     return _ifZeroReview;
   }
 
-
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
@@ -136,10 +134,38 @@ class _ReviewPageState extends State<ReviewPage> {
 
     return Scaffold(
         backgroundColor: gray0_white,
-        appBar: check
-            ? CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5,
-                filter: filter, category: rankingCategory)
-            : CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5),
+        appBar: AppBar(
+          title: Text(
+            '약정보',
+            style:
+                Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+          ),
+          elevation: 0.5,
+          titleSpacing: 0,
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: primary300_main,
+            onPressed: () {
+              // Navigator.pop(context);
+              //  getCategory = rank_cateogry[index]; //test
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RankingContentPage(
+                          categoryName: widget.type,
+                          filter: '리뷰 많은 순',
+                        )),
+              );
+            },
+          ),
+        ),
+        // check
+        //     ? CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5,
+        //         filter: filter, category: rankingCategory)
+        //     :
+        // CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.create),
             backgroundColor: Color(0xff00C2AE),
@@ -201,8 +227,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                                                 ? primary500_light_text
                                                                 : gray300_inactivated,
                                                           ))),
-                                              onTap: _onTapPillInfo
-                                              ),
+                                              onTap: _onTapPillInfo),
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width /
@@ -266,25 +291,23 @@ class _ReviewPageState extends State<ReviewPage> {
                                       ),
                                     ],
                                   )),
+                                  SliverToBoxAdapter(
+                                      child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _pharmacistTip(), // UI 참고
+                                      PhTipsList(widget.drugItemSeq), // db 참고
 
-                                    SliverToBoxAdapter(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        _pharmacistTip(), // UI 참고
-                                        PhTipsList(widget.drugItemSeq), // db 참고
-
-                                        SizedBox(
-                                          width: double.infinity,
-                                          height: 10.0,
-                                          child: Container(
-                                            color: gray50,
-                                          ),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        height: 10.0,
+                                        child: Container(
+                                          color: gray50,
                                         ),
-                                      ],
-                                    )
-                                  ),
-
+                                      ),
+                                    ],
+                                  )),
                                   SliverToBoxAdapter(
                                     child: _totalRating(),
                                   ),
@@ -906,7 +929,6 @@ class _ReviewPageState extends State<ReviewPage> {
                 ),
               ),
               Container(width: 5),
-
               InkWell(
                 child: RichText(
                   textAlign: TextAlign.center,
@@ -939,7 +961,6 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /* Review */
   Widget _drugReviews() {
-
     return StreamBuilder<Drug>(
         stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
         builder: (context, snapshot) {
@@ -1033,45 +1054,39 @@ class _ReviewPageState extends State<ReviewPage> {
         children: [
           RichText(
             text: TextSpan(
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                color: yellow
-              ),
+              style:
+                  Theme.of(context).textTheme.subtitle1.copyWith(color: yellow),
               children: <TextSpan>[
                 TextSpan(
-                    text: "약사의 한마디",
-                    style: Theme.of(context).textTheme.subtitle1,),
-                TextSpan(text: '  '+'1'), //TODO: connect with DB
+                  text: "약사의 한마디",
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+                TextSpan(text: '  ' + '1'), //TODO: connect with DB
               ],
             ),
           ),
-
-          Container(
-            height: 15
-          ),
-
+          Container(height: 15),
           CarouselSlider(
             options: CarouselOptions(height: 200.0),
-            items: [1,2,3,4,5].map((i) {
+            items: [1, 2, 3, 4, 5].map((i) {
               return Builder(
                 builder: (BuildContext context) {
                   return Card(
-                    elevation: 10,
+                      elevation: 10,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(
 
-                      decoration: BoxDecoration(
-
-                          // color: Colors.amber
-                      ),
-                      child: Text('text $i', style: TextStyle(fontSize: 16.0),)
-                    )
-
-
-                  );
+                              // color: Colors.amber
+                              ),
+                          child: Text(
+                            'text $i',
+                            style: TextStyle(fontSize: 16.0),
+                          )));
                 },
               );
             }).toList(),
