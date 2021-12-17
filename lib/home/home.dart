@@ -1025,8 +1025,8 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CameraPage(
-                        // camera: firstCamera,
-                        // initial: 0,
+                          camera: firstCamera,
+                          initial: 0,
                         ),
                   ),
                 );
@@ -1072,8 +1072,8 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CameraPage(
-                        // camera: firstCamera,
-                        // initial: 1,
+                        camera: firstCamera,
+                        initial: 1,
                         ),
                   ),
                 );
@@ -1599,103 +1599,6 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-  /*
-  Widget _noDrugPage() {
-    return Column(children: [
-      SearchBar(),
-      Container(
-        height: 45,
-        margin: EdgeInsets.only(left: 16, top: 0, bottom: 8, right: 16),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15.0),
-          child: Container(
-            child: Row(
-              children: <Widget>[
-                Text('나의 약 보관함',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline4
-                        .copyWith(color: gray800)),
-                SizedBox(width: 8),
-                // theme 추가
-                Spacer(),
-                InkWell(
-                  onTap: () {
-                    showModalBottomSheet(
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return _popUpAddDrug(context);
-                        });
-                  },
-                  child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      width: 95,
-                      height: 26,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: primary400_line),
-                        color: primary300_main,
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add, color: gray0_white, size: 16),
-                          Text(
-                            '추가하기',
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1
-                                .copyWith(color: gray0_white),
-                          ),
-                          SizedBox(width: 2)
-                        ],
-                      )),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      Container(
-        margin: EdgeInsets.only(right: 13),
-        padding: EdgeInsets.zero,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            SizedBox(
-                height: 45,
-                child: Image(image: AssetImage('assets/images/msg_box.png'))),
-          ],
-        ),
-      ),
-      SizedBox(
-        height: 70,
-      ),
-      Container(
-        child: Center(
-          child: Column(
-            children: [
-              SizedBox(
-                  height: 150,
-                  child: Image(
-                      image:
-                          AssetImage('assets/images/background_nothing.png'))),
-            ],
-          ),
-        ),
-      ),
-      Spacer(),
-      Container(
-          child: Padding(
-        padding: const EdgeInsets.only(bottom: 18.0),
-        child: SizedBox(
-            height: 45,
-            child:
-                Image(image: AssetImage('assets/images/bottom_msg_box.png'))),
-      )),
-    ]);
-  } */
 }
 
 class SearchBar extends StatelessWidget {
