@@ -298,7 +298,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                     children: [
                                       _pharmacistTip(), // UI 참고
                                       PhTipsList(widget.drugItemSeq), // db 참고
-
                                       SizedBox(
                                         width: double.infinity,
                                         height: 10.0,
