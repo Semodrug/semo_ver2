@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 
 class NoResult extends StatefulWidget {
+  int barcodeOrCase;
+
+  NoResult({this.barcodeOrCase});
+
   @override
   _NoResultState createState() => _NoResultState();
 }
@@ -10,7 +14,7 @@ class _NoResultState extends State<NoResult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ResultAppBarBarcode(type: 1),
+      appBar: ResultAppBarBarcode(type: widget.barcodeOrCase),
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
