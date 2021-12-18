@@ -148,7 +148,7 @@ class _ReviewPageState extends State<ReviewPage> {
             icon: Icon(Icons.arrow_back),
             color: primary300_main,
             onPressed: () {
-              // Navigator.pop(context);
+              Navigator.pop(context);
               //  getCategory = rank_cateogry[index]; //test
               Navigator.push(
                 context,
