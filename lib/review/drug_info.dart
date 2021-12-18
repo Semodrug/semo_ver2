@@ -135,194 +135,199 @@ class _ReviewPageState extends State<ReviewPage> {
 
     //홈에서 약 정보로 가기 누른 건지, 랭킹에서 누른건지 확인하기 위함
     bool checkFromNotReview = widget.fromNotReview;
-    return Scaffold(
-        backgroundColor: gray0_white,
-        appBar: AppBar(
-          title: Text(
-            '약정보',
-            style:
-                Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+    return WillPopScope(
+      onWillPop: () {
+        return Future(() => false);
+      },
+      child: Scaffold(
+          backgroundColor: gray0_white,
+          appBar: AppBar(
+            title: Text(
+              '약정보',
+              style:
+                  Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+            ),
+            elevation: 0.5,
+            titleSpacing: 0,
+            backgroundColor: Colors.white,
+            automaticallyImplyLeading: false,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              color: primary300_main,
+              onPressed: () {
+                checkFromNotReview != false ?
+                 Navigator.pop(context) :
+                //pop하고 다시 그리기
+                _out(context , widget.type, filter);
+              },
+            ),
           ),
-          elevation: 0.5,
-          titleSpacing: 0,
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            color: primary300_main,
-            onPressed: () {
-              checkFromNotReview != false ?
-               Navigator.pop(context) :
-              //pop하고 다시 그리기
-              _out(context , widget.type, filter);
-            },
-          ),
-        ),
-        // check
-        //     ? CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5,
-        //         filter: filter, category: rankingCategory)
-        //     :
-        // CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5),
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.create),
-            backgroundColor: Color(0xff00C2AE),
-            elevation: 6.0,
-            onPressed: () async {
-              if (await ReviewService()
-                      .findUserWroteReview(widget.drugItemSeq, user.uid) ==
-                  false)
-                IYMYGotoSeeOrCheckDialog();
-              else
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            WriteReview(drugItemSeq: widget.drugItemSeq)));
-            }),
-        body: StreamProvider<List<Review>>.value(
-          value: ReviewService().getReviews(widget.drugItemSeq),
-          child: StreamBuilder<Drug>(
-              stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  Drug drug = snapshot.data;
-                  return StreamBuilder<UserData>(
-                      stream: DatabaseService(uid: user.uid).userData,
-                      builder: (context, snapshot2) {
-                        if (snapshot2.hasData) {
-                          UserData userData = snapshot2.data;
-                          return GestureDetector(
-                            onTap: () {
-                              FocusScope.of(context).unfocus();
-                            },
-                            child:
-                                NotificationListener<ScrollUpdateNotification>(
-                              child: CustomScrollView(
-                                controller: _scrollController,
-                                slivers: <Widget>[
-                                  SliverToBoxAdapter(
-                                    child:
-                                        _topInfo(context, drug, user, userData),
-                                  ),
-                                  SliverAppBar(
-                                    elevation: 0,
-                                    flexibleSpace: Row(
-                                      key: _key2,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Container(
-                                          child: InkWell(
+          // check
+          //     ? CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5,
+          //         filter: filter, category: rankingCategory)
+          //     :
+          // CustomAppBarWithGoToRanking('약 정보', Icon(Icons.arrow_back), 0.5),
+          floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.create),
+              backgroundColor: Color(0xff00C2AE),
+              elevation: 6.0,
+              onPressed: () async {
+                if (await ReviewService()
+                        .findUserWroteReview(widget.drugItemSeq, user.uid) ==
+                    false)
+                  IYMYGotoSeeOrCheckDialog();
+                else
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              WriteReview(drugItemSeq: widget.drugItemSeq)));
+              }),
+          body: StreamProvider<List<Review>>.value(
+            value: ReviewService().getReviews(widget.drugItemSeq),
+            child: StreamBuilder<Drug>(
+                stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    Drug drug = snapshot.data;
+                    return StreamBuilder<UserData>(
+                        stream: DatabaseService(uid: user.uid).userData,
+                        builder: (context, snapshot2) {
+                          if (snapshot2.hasData) {
+                            UserData userData = snapshot2.data;
+                            return GestureDetector(
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                              },
+                              child:
+                                  NotificationListener<ScrollUpdateNotification>(
+                                child: CustomScrollView(
+                                  controller: _scrollController,
+                                  slivers: <Widget>[
+                                    SliverToBoxAdapter(
+                                      child:
+                                          _topInfo(context, drug, user, userData),
+                                    ),
+                                    SliverAppBar(
+                                      elevation: 0,
+                                      flexibleSpace: Row(
+                                        key: _key2,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Container(
+                                            child: InkWell(
+                                                child: Center(
+                                                    child: Text("약정보",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subtitle1
+                                                            .copyWith(
+                                                              color: pillInfoTab ==
+                                                                      true
+                                                                  ? primary500_light_text
+                                                                  : gray300_inactivated,
+                                                            ))),
+                                                onTap: _onTapPillInfo),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2,
+                                            decoration: BoxDecoration(
+                                                border: Border(
+                                                    bottom: BorderSide(
+                                                        color: pillInfoTab == true
+                                                            ? primary400_line
+                                                            : gray100,
+                                                        width: pillInfoTab == true
+                                                            ? 2.0
+                                                            : 1.0))),
+                                          ),
+                                          Container(
+                                            child: InkWell(
                                               child: Center(
-                                                  child: Text("약정보",
+                                                  child: Text("리뷰",
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .subtitle1
                                                           .copyWith(
                                                             color: pillInfoTab ==
                                                                     true
-                                                                ? primary500_light_text
-                                                                : gray300_inactivated,
+                                                                ? gray300_inactivated
+                                                                : primary500_light_text,
                                                           ))),
-                                              onTap: _onTapPillInfo),
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2,
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      color: pillInfoTab == true
-                                                          ? primary400_line
-                                                          : gray100,
-                                                      width: pillInfoTab == true
-                                                          ? 2.0
-                                                          : 1.0))),
-                                        ),
-                                        Container(
-                                          child: InkWell(
-                                            child: Center(
-                                                child: Text("리뷰",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .subtitle1
-                                                        .copyWith(
-                                                          color: pillInfoTab ==
-                                                                  true
-                                                              ? gray300_inactivated
-                                                              : primary500_light_text,
-                                                        ))),
-                                            onTap: _onTapReview,
-                                          ),
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2,
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      color: pillInfoTab == true
-                                                          ? gray100
-                                                          : primary400_line,
-                                                      width: pillInfoTab == true
-                                                          ? 1.0
-                                                          : 2.0))),
-                                        )
-                                      ],
+                                              onTap: _onTapReview,
+                                            ),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2,
+                                            decoration: BoxDecoration(
+                                                border: Border(
+                                                    bottom: BorderSide(
+                                                        color: pillInfoTab == true
+                                                            ? gray100
+                                                            : primary400_line,
+                                                        width: pillInfoTab == true
+                                                            ? 1.0
+                                                            : 2.0))),
+                                          )
+                                        ],
+                                      ),
+                                      leading: Container(),
+                                      pinned: true,
+                                      backgroundColor: Colors.white,
                                     ),
-                                    leading: Container(),
-                                    pinned: true,
-                                    backgroundColor: Colors.white,
-                                  ),
-                                  SliverToBoxAdapter(
-                                      child: Column(
-                                    children: [
-                                      SizedBox(height: 10),
-                                      _underInfo(context, drug, userData),
-                                      SizedBox(
-                                        width: double.infinity,
-                                        height: 10.0,
-                                        child: Container(
-                                          color: gray50,
+                                    SliverToBoxAdapter(
+                                        child: Column(
+                                      children: [
+                                        SizedBox(height: 10),
+                                        _underInfo(context, drug, userData),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 10.0,
+                                          child: Container(
+                                            color: gray50,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )),
-                                  SliverToBoxAdapter(
-                                      child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      _pharmacistTip(), // UI 참고
-                                      PhTipsList(widget.drugItemSeq), // db 참고
-                                      SizedBox(
-                                        width: double.infinity,
-                                        height: 10.0,
-                                        child: Container(
-                                          color: gray50,
+                                      ],
+                                    )),
+                                    SliverToBoxAdapter(
+                                        child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        _pharmacistTip(), // UI 참고
+                                        PhTipsList(widget.drugItemSeq), // db 참고
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 10.0,
+                                          child: Container(
+                                            color: gray50,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )),
-                                  SliverToBoxAdapter(
-                                    child: _totalRating(),
-                                  ),
-                                  SliverToBoxAdapter(
-                                    child: _drugReviews(),
-                                  )
-                                ],
+                                      ],
+                                    )),
+                                    SliverToBoxAdapter(
+                                      child: _totalRating(),
+                                    ),
+                                    SliverToBoxAdapter(
+                                      child: _drugReviews(),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        } else {
-                          return Container();
-                        }
-                      });
-                } else {
-                  return Loading();
-                }
-              }),
-        ));
+                            );
+                          } else {
+                            return Container();
+                          }
+                        });
+                  } else {
+                    return Loading();
+                  }
+                }),
+          )),
+    );
   }
 
   void _out (BuildContext context, String type , String filter){
