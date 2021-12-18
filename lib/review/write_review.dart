@@ -66,7 +66,25 @@ class _WriteReviewState extends State<WriteReview> {
       return drugName;
   }
 
-  void _registerReview(nickName) {
+  // void _registerReview(nickName) {
+  //   FirebaseFirestore.instance.collection("Reviews").add({
+  //     "seqNum": widget.drugItemSeq,
+  //     "uid": auth.currentUser.uid,
+  //     "effect": effect,
+  //     "sideEffect": sideEffect,
+  //     "starRating": starRating,
+  //     "effectText": effectText,
+  //     "sideEffectText": sideEffectText,
+  //     "favoriteSelected": favoriteSelected,
+  //     "noFavorite": noFavorite,
+  //     "registrationDate": DateTime.now(),
+  //     "entpName": _entpName,
+  //     "itemName": _itemName,
+  //     "nickName": nickName,
+  //   });
+  // }
+
+  Future<void> _registerReview(nickName) async {
     FirebaseFirestore.instance.collection("Reviews").add({
       "seqNum": widget.drugItemSeq,
       "uid": auth.currentUser.uid,
@@ -82,6 +100,28 @@ class _WriteReviewState extends State<WriteReview> {
       "itemName": _itemName,
       "nickName": nickName,
     });
+
+    var numOfReviews = 0.0;
+    var totalRating = 0.0;
+    var collection = FirebaseFirestore.instance.collection('Drugs');
+    var docSnapshot = await collection.doc(widget.drugItemSeq).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic> data = docSnapshot.data();
+      numOfReviews = data['numOfReviews'] * 1.0;
+      totalRating = data['totalRating'] * 1.0;
+    }
+
+    //numofReviews랑 totalRating가져오기
+    //numOfReviews+=1
+    //totalRating+=현재 별점
+    FirebaseFirestore.instance
+        .collection("Drugs")
+        .doc(widget.drugItemSeq)
+        .update({
+      "numOfReviews": numOfReviews + 1,
+      "totalRating":
+          (totalRating * numOfReviews + starRating) / (numOfReviews + 1),
+    });
   }
 
   @override
@@ -89,7 +129,6 @@ class _WriteReviewState extends State<WriteReview> {
     TheUser user = Provider.of<TheUser>(context);
     return Scaffold(
         backgroundColor: gray0_white,
-        // appBar: CustomAppBarWithGoToBack('리뷰 쓰기', Icon(Icons.close), 3),
         appBar: AppBar(
           title: Text(
             "리뷰 쓰기",
@@ -285,8 +324,6 @@ class _WriteReviewState extends State<WriteReview> {
         ));
   }
 
-
-
   Widget _effect() {
     return Container(
 //          height: 280,
@@ -463,8 +500,7 @@ class _WriteReviewState extends State<WriteReview> {
     String hintText;
     if (type == "effect")
       hintText = "효과에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
-    else if (type == "sideEffect")
-      hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
+    else if (type == "sideEffect") hintText = "부작용에 대한 후기를 남겨주세요 (최소 10자 이상)\n";
     double bottom = 20;
     // if (type == "overall") bottom += 70;
     return Padding(
@@ -609,7 +645,6 @@ class _WriteReviewState extends State<WriteReview> {
         ));
   }
 
-
   Widget _write() {
     TheUser user = Provider.of<TheUser>(context);
     String _warning = '';
@@ -622,7 +657,7 @@ class _WriteReviewState extends State<WriteReview> {
           textString: '완료',
           onPressed: () async {
             sideEffectText = myControllerSideEffect.text;
-            effectText=myControllerEffect.text;
+            effectText = myControllerEffect.text;
             if (sideEffectText.length < 10 && sideEffect == "yes")
               _warning = "부작용에 대한 리뷰를 10자 이상 작성해주세요";
             if (sideEffect.isEmpty) _warning = "부작용 별점을 등록해주세요";

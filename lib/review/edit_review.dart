@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -115,118 +116,6 @@ class _EditReviewState extends State<EditReview> {
         });
   }
 
-  Future<void> _IYMYCheckDialog() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 16),
-              /* BODY */
-              Text("저장하지 않고 나가시겠어요?",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      .copyWith(color: gray700)),
-              SizedBox(height: 28),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  /* LEFT ACTION BUTTON */
-                  ElevatedButton(
-                    child: Text(
-                      "취소",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(color: primary400_line),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(120, 40),
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        elevation: 0,
-                        primary: gray50,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            side: BorderSide(color: gray75))),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  SizedBox(width: 16),
-                  /* RIGHT ACTION BUTTON */
-                  ElevatedButton(
-                      child: Text(
-                        "확인",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5
-                            .copyWith(color: gray0_white),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          minimumSize: Size(120, 40),
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          elevation: 0,
-                          primary: primary300_main,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              side: BorderSide(color: primary400_line))),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      })
-                ],
-              )
-            ],
-          ),
-        );
-      },
-    );
-
-//     return showDialog<void>(
-//       context: context,
-//       barrierDismissible: false, // user must tap button!
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-// //          title: Center(child: Text('AlertDialog Title')),
-//           content: SingleChildScrollView(
-//             child: ListBody(
-//               children: <Widget>[
-//                 Center(child: Text('정말 삭제하시겠습니까?', style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold))),
-//                 SizedBox(height: 20),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                   children: [
-//                     TextButton(
-//                       child: Text('취소', style: TextStyle(color: Colors.black38, fontSize: 17, fontWeight: FontWeight.bold)),
-//                       onPressed: () {
-//                         Navigator.of(context).pop();
-//                       },
-//                     ),
-//                     TextButton(
-//                       child: Text('삭제',style: TextStyle(color: Colors.teal[00], fontSize: 17, fontWeight: FontWeight.bold)),
-//                       onPressed: () async {
-//                         Navigator.of(context).pop();
-//                         await ReviewService(documentId: record.documentId).deleteReviewData();
-//                       },
-//                     ),
-//                   ],
-//                 )
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
-  }
-
   Widget IYMYGotoSeeOrCheckDialog(drugItemSeq) {
     showDialog(
       context: context,
@@ -318,121 +207,8 @@ class _EditReviewState extends State<EditReview> {
     );
   }
 
-  Widget _pillInfo(review) {
-    //TODO: Bring pill information
-    return Container(
-        padding: EdgeInsets.fromLTRB(20, 30, 20, 15),
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-          width: 12,
-          color: gray50,
-        ))),
-        child: Row(
-          children: <Widget>[
-//            Container(
-//              width: 100, height: 100,
-//              color: Colors.teal[100],
-//            ),
-            SizedBox(
-              child: DrugImage(drugItemSeq: review.seqNum),
-              width: 88.0,
-            ),
-            Padding(padding: EdgeInsets.only(left: 15)),
-
-            // Text(widget.review.effectText),
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                StreamBuilder<Drug>(
-                    stream:
-                        DatabaseService(itemSeq: widget.review.seqNum).drugData,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        Drug drug = snapshot.data;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(drug.entpName,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .overline
-                                    .copyWith(
-                                        color: gray300_inactivated,
-                                        fontSize: 10)),
-                            Container(
-                              width: MediaQuery.of(context).size.width - 155,
-                              padding: new EdgeInsets.only(right: 10.0),
-                              child: Text(_shortenName(drug.itemName),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline6
-                                      .copyWith(color: gray900)),
-                            ),
-                            Container(
-                              height: 2,
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                RatingBar.builder(
-                                  itemSize: 16,
-                                  initialRating: drug.totalRating,
-                                  minRating: 0,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  unratedColor: gray75,
-                                  itemPadding:
-                                      EdgeInsets.symmetric(horizontal: 0.0),
-                                  itemBuilder: (context, _) => ImageIcon(
-                                    AssetImage('assets/icons/star.png'),
-                                    color: yellow,
-                                  ),
-                                ),
-                                Container(width: 5),
-                                Text(
-                                  drug.totalRating.toStringAsFixed(1),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle2
-                                      .copyWith(color: gray900, fontSize: 12),
-                                ),
-                                Container(width: 3),
-                                Text(
-                                    "(" +
-                                        drug.numOfReviews.toStringAsFixed(0) +
-                                        "개)",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .overline
-                                        .copyWith(
-                                            color: gray300_inactivated,
-                                            fontSize: 10)),
-                              ],
-                            ),
-                            CategoryButton(str: drug.category)
-                          ],
-                        );
-                        // Text(drug.totalRating.toStringAsFixed(1)+drug.numOfReviews.toStringAsFixed(0) + "개",
-                        //   style: TextStyle(
-                        //     fontSize: 16.5,
-                        //     fontWeight: FontWeight.bold,
-                        //   ));
-                      } else
-                        return Container();
-                    }),
-              ],
-            )
-          ],
-        ));
-  }
-
   Widget _rating(Review review) {
     return Container(
-//          height: 150,
         padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
         decoration: BoxDecoration(
             border: Border(
@@ -442,7 +218,6 @@ class _EditReviewState extends State<EditReview> {
         ))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-//              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("약을 사용해보셨나요?",
                 style: Theme.of(context)
@@ -525,43 +300,8 @@ class _EditReviewState extends State<EditReview> {
         ));
   }
 
-  Widget _exclusiveMultiButton() {
-    return ButtonTheme(
-      minWidth: 40.0,
-      child: FlatButton(
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6.0),
-            side: BorderSide(color: primary300_main)),
-        color: Colors.white,
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-        onPressed: () {
-          setState(() {});
-        },
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("buttonName",
-                style: Theme.of(context).textTheme.headline6.copyWith(
-                      color: primary500_light_text,
-                    )),
-            Container(
-              width: 1,
-            ),
-            Icon(
-              Icons.cancel,
-              color: gray200,
-              size: 20,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _effect(Review review) {
     return Container(
-//          height: 280,
         padding: EdgeInsets.fromLTRB(20, 25, 20, 15),
         decoration: BoxDecoration(
             border: Border(
@@ -571,7 +311,6 @@ class _EditReviewState extends State<EditReview> {
         ))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-//              crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("약의 효과는 어땠나요?",
                 style: Theme.of(context)
@@ -924,6 +663,30 @@ class _EditReviewState extends State<EditReview> {
                 starRating == 0 ? review.starRating : starRating,
                 /*?? value.starRating*/
               );
+
+              ///
+              var numOfReviews = 0.0;
+              var totalRating = 0.0;
+              var collection = FirebaseFirestore.instance.collection('Drugs');
+              var docSnapshot = await collection.doc(review.seqNum).get();
+              if (docSnapshot.exists) {
+                Map<String, dynamic> data = docSnapshot.data();
+                numOfReviews = data['numOfReviews'] * 1.0;
+                totalRating = data['totalRating'] * 1.0;
+              }
+
+              FirebaseFirestore.instance
+                  .collection("Drugs")
+                  .doc(review.seqNum)
+                  .update({
+                "totalRating": (totalRating * numOfReviews -
+                        review.starRating +
+                        starRating) /
+                    numOfReviews,
+              });
+
+              ///
+
               Navigator.pop(context);
               editSwitch = true;
               IYMYGotoSeeOrCheckDialog(review.seqNum);

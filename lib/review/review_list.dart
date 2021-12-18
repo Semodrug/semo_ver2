@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/review.dart';
@@ -102,8 +103,7 @@ class _ReviewListState extends State<ReviewList> {
             glow: false,
             itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
             unratedColor: gray75,
-            itemBuilder: (context, _) =>
-                ImageIcon(
+            itemBuilder: (context, _) => ImageIcon(
               AssetImage('assets/icons/star.png'),
               color: yellow,
             ),
@@ -462,6 +462,34 @@ class _ReviewListState extends State<ReviewList> {
                       onPressed: () async {
                         await ReviewService(documentId: record.documentId)
                             .deleteReviewData();
+
+                        ///
+                        var numOfReviews = 0.0;
+                        var totalRating = 0.0;
+                        var collection =
+                            FirebaseFirestore.instance.collection('Drugs');
+                        var docSnapshot =
+                            await collection.doc(record.seqNum).get();
+                        if (docSnapshot.exists) {
+                          Map<String, dynamic> data = docSnapshot.data();
+                          numOfReviews = data['numOfReviews'] * 1.0;
+                          totalRating = data['totalRating'] * 1.0;
+                        }
+
+                        FirebaseFirestore.instance
+                            .collection("Drugs")
+                            .doc(record.seqNum)
+                            .update({
+                          "totalRating": numOfReviews - 1 <= 0.0
+                              ? 0.0
+                              : (totalRating * numOfReviews -
+                                      record.starRating) /
+                                  (numOfReviews - 1),
+                          "numOfReviews":
+                              numOfReviews - 1 <= 0.0 ? 0.0 : numOfReviews - 1,
+                        });
+
+                        ///
                         Navigator.of(context).pop();
                         if (widget.type == "mine") Navigator.of(context).pop();
 
@@ -527,7 +555,6 @@ class _ReviewListState extends State<ReviewList> {
         );
       },
     );
-
   }
 
   Future<void> _IYMYCancleConfirmReportDialog(
@@ -629,7 +656,6 @@ class _ReviewListState extends State<ReviewList> {
         );
       },
     );
-
   }
 
   Widget IYMYGotoSeeOrCheckDialog(alertContent) {
@@ -741,11 +767,9 @@ class _ReviewListState extends State<ReviewList> {
             ),
             Container(height: 4),
             Text(
-              type == "effect"
-                  ? review.effectText
-                  : type == "sideEffect",
-                      // ? review.sideEffectText
-                      // : "",
+              type == "effect" ? review.effectText : type == "sideEffect",
+              // ? review.sideEffectText
+              // : "",
               style: Theme.of(context)
                   .textTheme
                   .subtitle2

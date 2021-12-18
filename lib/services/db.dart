@@ -155,7 +155,6 @@ class DatabaseService {
       // review: snapshot.data()['review'],
 
       totalRating: snapshot.data()['totalRating'] ?? 0,
-
       numOfReviews: snapshot.data()['numOfReviews'] ?? 0,
     );
   }
