@@ -40,10 +40,11 @@ String entpName;
 class ReviewPage extends StatefulWidget {
   final String drugItemSeq;
   String fromRankingTile = '';
-  final String filter;
+  bool fromNotReview = true;
+  String filter;
   final String type;
 
-  ReviewPage(this.drugItemSeq, {this.fromRankingTile, this.filter, this.type});
+  ReviewPage(this.drugItemSeq, {this.fromRankingTile, this.fromNotReview, this.filter, this.type});
 
   @override
   _ReviewPageState createState() => _ReviewPageState();
@@ -132,6 +133,8 @@ class _ReviewPageState extends State<ReviewPage> {
       rankingCategory = widget.type;
     }
 
+    //홈에서 약 정보로 가기 누른 건지, 랭킹에서 누른건지 확인하기 위함
+    bool checkFromNotReview = widget.fromNotReview;
     return Scaffold(
         backgroundColor: gray0_white,
         appBar: AppBar(
@@ -148,16 +151,10 @@ class _ReviewPageState extends State<ReviewPage> {
             icon: Icon(Icons.arrow_back),
             color: primary300_main,
             onPressed: () {
-              // Navigator.pop(context);
-              //  getCategory = rank_cateogry[index]; //test
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => RankingContentPage(
-                          categoryName: widget.type,
-                          filter: '리뷰 많은 순',
-                        )),
-              );
+              checkFromNotReview != false ?
+               Navigator.pop(context) :
+              //pop하고 다시 그리기
+              _out(context , widget.type, filter);
             },
           ),
         ),
@@ -326,6 +323,18 @@ class _ReviewPageState extends State<ReviewPage> {
                 }
               }),
         ));
+  }
+
+  void _out (BuildContext context, String type , String filter){
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => RankingContentPage(
+            categoryName: type,
+            filter: filter,
+          )),
+    );
   }
 
   /* Top Information */
