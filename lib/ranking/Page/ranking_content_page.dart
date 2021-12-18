@@ -5,6 +5,7 @@ import 'package:semo_ver2/ranking/Provider/ranking_totalRating_provider.dart';
 import 'package:semo_ver2/ranking/Widget/ranking_listview_widget.dart';
 
 import 'package:semo_ver2/home/search_screen.dart';
+import 'package:semo_ver2/ranking/ranking.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -24,7 +25,43 @@ class _RankingContentPageState extends State<RankingContentPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar:
-          CustomAppBarWithArrowBackAndSearch(widget.categoryName, 0.5), //test
+
+          ///ranking
+          AppBar(
+        title: Text(
+          widget.categoryName,
+          style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+        ),
+        elevation: 0.5,
+        titleSpacing: 0,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: IconButton(
+              icon: Icon(
+                Icons.search,
+                color: primary300_main,
+              ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RankingPage()),
+              ),
+            ),
+          ),
+          //for test home
+        ],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: primary300_main,
+          onPressed: () {
+            // Navigator.pop(context);
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          },
+        ),
+      ),
+      // CustomAppBarWithArrowBackAndSearch(widget.categoryName, 0.5), //test
       body: Column(
         children: [
           _countDropDown(context),
