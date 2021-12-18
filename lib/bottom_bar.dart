@@ -126,8 +126,8 @@ class _BottomBarState extends State<BottomBar> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CameraPage(
-                        // camera: firstCamera,
-                        // initial: 0,
+                        camera: firstCamera,
+                        initial: 0,
                         ),
                   ),
                 );
@@ -173,8 +173,8 @@ class _BottomBarState extends State<BottomBar> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CameraPage(
-                        // camera: firstCamera,
-                        // initial: 1,
+                        camera: firstCamera,
+                        initial: 1,
                         ),
                   ),
                 );
