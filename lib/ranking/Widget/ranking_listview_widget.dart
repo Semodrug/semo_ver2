@@ -150,7 +150,7 @@ class _ListViewReviewWidgetState extends State<DrugList> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ReviewPage(drug.itemSeq,
-                              filter: '리뷰 많은 순', type: widget.category),
+                              filter: '리뷰 많은 순', type: widget.category, fromNotReview: false),
                         ),
                       ),
                     },
@@ -334,7 +334,35 @@ class _ListViewTotalRankingWidgetState
     );
   }
 
+  Widget _upToThree(index) {
+    return Center(
+      child: Text('${index + 1}',
+          style: Theme.of(context)
+              .textTheme
+              .overline
+              .copyWith(fontSize: 10, color: gray750_activated)),
+    );
+  }
+
+  Widget _getRateStar(RatingResult) {
+    return RatingBarIndicator(
+      rating: RatingResult * 1.0,
+      //ignoreGestures: true,
+      direction: Axis.horizontal,
+      itemCount: 5,
+      itemSize: 14,
+      itemPadding: EdgeInsets.symmetric(horizontal: 0),
+      unratedColor: gray75,
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: yellow,
+      ),
+    );
+  }
+
+  double mw;
   Widget build(BuildContext context) {
+    mw = MediaQuery.of(context).size.width;
     if (widget.drugsProvider.drugs.isEmpty) {
       return Center(child: CircularProgressIndicator());
     } else
@@ -347,12 +375,111 @@ class _ListViewTotalRankingWidgetState
                 controller: scrollController,
                 itemCount: widget.drugsProvider.drugs.length,
                 itemBuilder: (context, index) {
-                  //print('${widget.drugsProvider.drugs[index].itemName}');
-                  return RankingTile(
-                    drug: widget.drugsProvider.drugs[index],
-                    index: (index + 1),
-                    filter: '별점순',
-                    category: widget.category,
+                  var drug = widget.drugsProvider.drugs[index];
+                  return ListTile(
+                    minVerticalPadding: 0.5,
+                    contentPadding: EdgeInsets.zero,
+                    onTap: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ReviewPage(drug.itemSeq,
+                              filter: '별점순', type: widget.category, fromNotReview: false),
+                        ),
+                      ),
+                    },
+                    title: //String drugRating = drugStreamData.totalRating.toStringAsFixed(1);
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(width: 0.6, color: gray50))),
+                      height: 100.0,
+                      child: Material(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 40,
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 16, right: 5),
+                                  child: _upToThree(index),
+                                ),
+                              ),
+                              Container(
+                                width: 88,
+                                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                child: Container(
+                                    padding:
+                                    EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
+                                    child: SizedBox(
+                                        child: DrugImage(
+                                            drugItemSeq: drug.itemSeq))),
+                              ),
+                              Container(
+                                  margin: EdgeInsets.fromLTRB(10, 8, 10, 8),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                        const EdgeInsets.only(bottom: 3.0),
+                                        child: Text(drug.entpName,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .overline
+                                                .copyWith(
+                                                fontSize: 10,
+                                                color:
+                                                gray300_inactivated)),
+                                      ),
+                                      Container(
+                                        width: mw - 160,
+                                        child: Text(drug.itemName,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(color: gray900)),
+                                      ),
+                                      Row(
+                                        children: [
+                                          _getRateStar(drug.totalRating),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(
+                                              drug.totalRating
+                                                  .toStringAsFixed(1),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2
+                                                  .copyWith(color: gray900)),
+                                          Text(' (${drug.numOfReviews}개)',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .overline
+                                                  .copyWith(
+                                                  fontSize: 10,
+                                                  color:
+                                                  gray300_inactivated)),
+                                        ],
+                                      ),
+                                      Expanded(
+                                          child: Row(
+                                            children: [
+                                              CategoryButton(
+                                                  str: drug.category,
+                                                  forRanking: 'ranking')
+                                            ],
+                                          )),
+                                    ],
+                                  )),
+                            ],
+                          )),
+                    ),
                   );
                 },
               ),
@@ -362,3 +489,4 @@ class _ListViewTotalRankingWidgetState
       );
   }
 }
+
