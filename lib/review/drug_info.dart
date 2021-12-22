@@ -46,7 +46,8 @@ class ReviewPage extends StatefulWidget {
   String filter;
   final String type;
 
-  ReviewPage(this.drugItemSeq, {this.fromRankingTile, this.fromNotReview, this.filter, this.type});
+  ReviewPage(this.drugItemSeq,
+      {this.fromRankingTile, this.fromNotReview, this.filter, this.type});
 
   @override
   _ReviewPageState createState() => _ReviewPageState();
@@ -146,8 +147,10 @@ class _ReviewPageState extends State<ReviewPage> {
           appBar: AppBar(
             title: Text(
               '약정보',
-              style:
-                  Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(color: gray800),
             ),
             elevation: 0.5,
             titleSpacing: 0,
@@ -157,10 +160,11 @@ class _ReviewPageState extends State<ReviewPage> {
               icon: Icon(Icons.arrow_back),
               color: primary300_main,
               onPressed: () {
-                checkFromNotReview != false ?
-                 Navigator.pop(context) :
-                //pop하고 다시 그리기
-                _out(context , widget.type, filter);
+                checkFromNotReview != false
+                    ? Navigator.pop(context)
+                    :
+                    //pop하고 다시 그리기
+                    _out(context, widget.type, filter);
               },
             ),
           ),
@@ -174,17 +178,30 @@ class _ReviewPageState extends State<ReviewPage> {
               backgroundColor: Color(0xff00C2AE),
               elevation: 6.0,
               onPressed: () async {
-                if (await ReviewService()
-                        .findUserWroteReview(widget.drugItemSeq, user.uid) ==
-                    false)
-                  IYMYGotoSeeOrCheckDialog();
-                else
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              WriteReview(drugItemSeq: widget.drugItemSeq)));
+                bool isPharmacist = await DatabaseService(uid: user.uid)
+                    .getIsPharmacist(user.uid);
 
+                /* 일반 회원의 경우 */
+                if (isPharmacist == false) {
+                  if (await ReviewService()
+                          .findUserWroteReview(widget.drugItemSeq, user.uid) ==
+                      false)
+                    IYMYGotoSeeOrCheckDialog(isPharmacist);
+
+                  /* 약사 회원의 경우 */
+                  else {
+                    if (await TipService().findPharmacistWroteTip(
+                            widget.drugItemSeq, user.uid) ==
+                        false)
+                      IYMYGotoSeeOrCheckDialog(isPharmacist);
+                    else
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  WriteTip(drugItemSeq: widget.drugItemSeq)));
+                  }
+                }
               }),
           body: StreamProvider<List<Review>>.value(
             value: ReviewService().getReviews(widget.drugItemSeq),
@@ -202,14 +219,14 @@ class _ReviewPageState extends State<ReviewPage> {
                               onTap: () {
                                 FocusScope.of(context).unfocus();
                               },
-                              child:
-                                  NotificationListener<ScrollUpdateNotification>(
+                              child: NotificationListener<
+                                  ScrollUpdateNotification>(
                                 child: CustomScrollView(
                                   controller: _scrollController,
                                   slivers: <Widget>[
                                     SliverToBoxAdapter(
-                                      child:
-                                          _topInfo(context, drug, user, userData),
+                                      child: _topInfo(
+                                          context, drug, user, userData),
                                     ),
                                     SliverAppBar(
                                       elevation: 0,
@@ -239,12 +256,14 @@ class _ReviewPageState extends State<ReviewPage> {
                                             decoration: BoxDecoration(
                                                 border: Border(
                                                     bottom: BorderSide(
-                                                        color: pillInfoTab == true
+                                                        color: pillInfoTab ==
+                                                                true
                                                             ? primary400_line
                                                             : gray100,
-                                                        width: pillInfoTab == true
-                                                            ? 2.0
-                                                            : 1.0))),
+                                                        width:
+                                                            pillInfoTab == true
+                                                                ? 2.0
+                                                                : 1.0))),
                                           ),
                                           Container(
                                             child: InkWell(
@@ -259,7 +278,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                                                 ? gray300_inactivated
                                                                 : primary500_light_text,
                                                           ))),
-
                                               onTap: _onTapReview,
                                             ),
                                             width: MediaQuery.of(context)
@@ -269,12 +287,14 @@ class _ReviewPageState extends State<ReviewPage> {
                                             decoration: BoxDecoration(
                                                 border: Border(
                                                     bottom: BorderSide(
-                                                        color: pillInfoTab == true
+                                                        color: pillInfoTab ==
+                                                                true
                                                             ? gray100
                                                             : primary400_line,
-                                                        width: pillInfoTab == true
-                                                            ? 1.0
-                                                            : 2.0))),
+                                                        width:
+                                                            pillInfoTab == true
+                                                                ? 1.0
+                                                                : 2.0))),
                                           )
                                         ],
                                       ),
@@ -289,9 +309,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                         _underInfo(context, drug, userData),
                                         SizedBox(
                                           width: double.infinity,
-                                          height: 10.0,
+                                          height: 2.0,
                                           child: Container(
-                                            color: gray50,
+                                            color: gray75,
                                           ),
                                         ),
                                       ],
@@ -301,13 +321,13 @@ class _ReviewPageState extends State<ReviewPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        _pharmacistTip(), // UI 참고
+                                        // _pharmacistTip(), // UI 참고
                                         PhTipsList(widget.drugItemSeq), // db 참고
                                         SizedBox(
                                           width: double.infinity,
-                                          height: 10.0,
+                                          height: 2.0,
                                           child: Container(
-                                            color: gray50,
+                                            color: gray75,
                                           ),
                                         ),
                                       ],
@@ -334,15 +354,15 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  void _out (BuildContext context, String type , String filter){
+  void _out(BuildContext context, String type, String filter) {
     Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => RankingContentPage(
-            categoryName: type,
-            filter: filter,
-          )),
+                categoryName: type,
+                filter: filter,
+              )),
     );
   }
 
@@ -1063,56 +1083,6 @@ class _ReviewPageState extends State<ReviewPage> {
         });
   }
 
-  Widget _pharmacistTip() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RichText(
-            text: TextSpan(
-              style:
-                  Theme.of(context).textTheme.subtitle1.copyWith(color: yellow),
-              children: <TextSpan>[
-                TextSpan(
-                  text: "약사의 한마디",
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-                TextSpan(text: '  ' + '1'), //TODO: connect with DB
-              ],
-            ),
-          ),
-          Container(height: 15),
-          CarouselSlider(
-            options: CarouselOptions(height: 200.0),
-            items: [1, 2, 3, 4, 5].map((i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Card(
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.symmetric(horizontal: 5.0),
-                          decoration: BoxDecoration(
-
-                              // color: Colors.amber
-                              ),
-                          child: Text(
-                            'text $i',
-                            style: TextStyle(fontSize: 16.0),
-                          )));
-                },
-              );
-            }).toList(),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _searchBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1220,8 +1190,6 @@ class _ReviewPageState extends State<ReviewPage> {
                   ),
                   onTap: () async {
                     Navigator.pop(context);
-
-                    // print(isPharmacist);
                     isPharmacist
                         ? Navigator.push(
                             context,
