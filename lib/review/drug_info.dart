@@ -17,8 +17,10 @@ import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
 import 'package:semo_ver2/review/ph_tips.dart';
 import 'package:semo_ver2/review/review_policy_more.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
+import 'package:semo_ver2/review/write_tip.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/tip_service.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/image.dart';
@@ -182,6 +184,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       MaterialPageRoute(
                           builder: (context) =>
                               WriteReview(drugItemSeq: widget.drugItemSeq)));
+
               }),
           body: StreamProvider<List<Review>>.value(
             value: ReviewService().getReviews(widget.drugItemSeq),
@@ -256,6 +259,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                                                 ? gray300_inactivated
                                                                 : primary500_light_text,
                                                           ))),
+
                                               onTap: _onTapReview,
                                             ),
                                             width: MediaQuery.of(context)
@@ -1159,7 +1163,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget IYMYGotoSeeOrCheckDialog() {
+  Widget IYMYGotoSeeOrCheckDialog(bool isPharmacist) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1214,13 +1218,21 @@ class _ReviewPageState extends State<ReviewPage> {
                       ],
                     ),
                   ),
-                  onTap: () {
+                  onTap: () async {
                     Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                SeeMyReview(widget.drugItemSeq)));
+
+                    // print(isPharmacist);
+                    isPharmacist
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SeeMyTip(widget.drugItemSeq)))
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SeeMyReview(widget.drugItemSeq)));
                   }),
               SizedBox(width: 16),
               /* RIGHT ACTION BUTTON */

@@ -185,7 +185,9 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
         isDone: _isGenderFilled && _isBirthYearFilled && _isNicknameFilled,
         textString: '저장하기',
         onPressed: () async {
+          /* 입력을 모두 완료 한 경우 */
           if (_isGenderFilled && _isBirthYearFilled && _isNicknameFilled) {
+            // 닉네임 검사: 10자 이하
             if (_nicknameController.text.length >= 10) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
@@ -196,18 +198,23 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.black.withOpacity(0.87)));
-            } else if (2020 < int.parse(_birthYearController.text) ||
+            }
+            // 출생년도 검사: 1900보다 크고 2021 보다 작아야
+            else if (2021 < int.parse(_birthYearController.text) ||
                 int.parse(_birthYearController.text) <= 1900) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
-                    '생년월일을 올바르게 입력해주세요',
+                    '출생년도를 올바르게 입력해주세요',
                     textAlign: TextAlign.center,
                   ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8))),
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.black.withOpacity(0.87)));
-            } else {
+            }
+            /* 닉네임, 출생년도 모두 올바르게 입력한 경우 */
+            else {
+              // 닉네임 중복 검사
               var result =
                   await DatabaseService().isUnique(_nicknameController.text);
               if (_nicknameController.text == widget.userData.nickname)
@@ -222,18 +229,23 @@ class _EditPrivacyPageState extends State<EditPrivacyPage> {
                         borderRadius: BorderRadius.all(Radius.circular(8))),
                     behavior: SnackBarBehavior.floating,
                     backgroundColor: Colors.black.withOpacity(0.87)));
-              } else {
+              }
+
+              /* 닉네임 중복 검사 완료, 유저 정보 업데이트 */
+              else {
                 await DatabaseService(uid: user.uid).updateUserPrivacy(
                   _nicknameController.text,
                   _birthYearController.text,
                   _isSelected[0] ? 'male' : 'female',
                 );
 
+                //TODO: 리뷰에서 닉네임도 변경 되어야 함
                 // await ReviewService().updateNickname(
                 //   user.uid,
                 //   _nicknameController.text,
                 // );
 
+                /* update 완료 후 */
                 IYMYOkDialog(
                   context: context,
                   dialogIcon: Icon(Icons.check, color: primary300_main),

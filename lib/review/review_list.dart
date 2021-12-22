@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:semo_ver2/models/tip.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/tip_service.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/review/review_box.dart';
 import 'package:semo_ver2/theme/colors.dart';
@@ -102,8 +104,7 @@ class _ReviewListState extends State<ReviewList> {
             glow: false,
             itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
             unratedColor: gray75,
-            itemBuilder: (context, _) =>
-                ImageIcon(
+            itemBuilder: (context, _) => ImageIcon(
               AssetImage('assets/icons/star.png'),
               color: yellow,
             ),
@@ -527,7 +528,6 @@ class _ReviewListState extends State<ReviewList> {
         );
       },
     );
-
   }
 
   Future<void> _IYMYCancleConfirmReportDialog(
@@ -629,7 +629,6 @@ class _ReviewListState extends State<ReviewList> {
         );
       },
     );
-
   }
 
   Widget IYMYGotoSeeOrCheckDialog(alertContent) {
@@ -741,11 +740,9 @@ class _ReviewListState extends State<ReviewList> {
             ),
             Container(height: 4),
             Text(
-              type == "effect"
-                  ? review.effectText
-                  : type == "sideEffect",
-                      // ? review.sideEffectText
-                      // : "",
+              type == "effect" ? review.effectText : type == "sideEffect",
+              // ? review.sideEffectText
+              // : "",
               style: Theme.of(context)
                   .textTheme
                   .subtitle2
@@ -920,5 +917,258 @@ class _ReviewListState extends State<ReviewList> {
             )
           ],
         ));
+  }
+}
+
+class TipList extends StatefulWidget {
+  String searchText;
+  String filter;
+  String drugItemSeq;
+  String type;
+  Tip tip;
+  TipList(this.searchText, this.filter, this.drugItemSeq,
+      {this.type, this.tip});
+
+  @override
+  _TipListState createState() => _TipListState();
+}
+
+class _TipListState extends State<TipList> {
+  @override
+  Widget build(BuildContext context) {
+    TheUser user = Provider.of<TheUser>(context);
+
+    return widget.type == "mine"
+        ? ListView.builder(
+            physics: const ClampingScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: 1,
+            itemBuilder: (context, index) {
+              return _buildListItemTips(context, widget.tip);
+            },
+          )
+        : StreamBuilder<List<Tip>>(
+            stream: TipService().getTips(widget.drugItemSeq),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<Tip> tips = snapshot.data;
+                List<Tip> searchResults = [];
+                for (Tip tip in tips) {
+                  //if (tip.effectText.contains(widget.searchText) ||
+                  //  tip.sideEffectText.contains(widget.searchText)) {
+                  searchResults.add(tip);
+                  //}
+                }
+                return ListView.builder(
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: searchResults.length,
+                  itemBuilder: (context, index) {
+                    return _buildListItemTips(context, searchResults[index]);
+                  },
+                );
+              } else
+                return Loading();
+            },
+          );
+  }
+
+  Widget _buildListItemTips(BuildContext context, Tip tip) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    List<String> names = List.from(tip.favoriteSelected);
+
+    return Container(
+        padding: EdgeInsets.fromLTRB(0, 10, 0, 21.5),
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(width: 0.6, color: gray75))),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          _IdAndMore(tip, context, auth),
+          _tip(tip),
+          Container(height: 11.5),
+          _dateAndFavorite(
+              DateFormat('yyyy.MM.dd').format(tip.registrationDate.toDate()),
+              names,
+              auth,
+              tip)
+        ]));
+  }
+
+  Widget _IdAndMore(tip, context, auth) {
+    TheUser user = Provider.of<TheUser>(context);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, 0, 5, 0),
+      child: Row(
+        children: <Widget>[
+          SizedBox(width: 10),
+          Text(tip.pharmacistName,
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  .copyWith(color: gray500, fontSize: 12)),
+          Expanded(child: Container()),
+        ],
+      ),
+    );
+  }
+
+  Widget IYMYGotoSeeOrCheckDialog(alertContent) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          insetPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.all(16),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10),
+              Icon(Icons.check, color: primary300_main),
+              SizedBox(height: 13),
+              RichText(
+                text: TextSpan(
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: gray700),
+                  children: <TextSpan>[
+                    TextSpan(text: alertContent),
+                  ],
+                ),
+              ),
+              SizedBox(height: 3),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '주말, 공휴일에는 확인이 지연될 수 있습니다',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: gray300_inactivated),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 16),
+              /* RIGHT ACTION BUTTON */
+              ElevatedButton(
+                child: Text(
+                  "확인",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: primary400_line),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(260, 40),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    elevation: 0,
+                    primary: gray50,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(color: gray75))),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _tip(tip) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(height: 6),
+//
+//           //effect
+//           widget.filter == "sideEffectOnly"
+//               ? Container()
+//           // : _reviewBox(review, "effect"),
+//               : ReviewBox(context: context, review: review, type: "effect"),
+//           Container(height: 6),
+//
+//           //side effect
+//           widget.filter == "effectOnly"
+//               ? Container()
+//           // : _reviewBox(review, "sideEffect"),
+//               : ReviewBox(context: context, review: review, type: "sideEffect"),
+//           Container(height: 6),
+//
+// /*          //overall
+//           widget.filter == "sideEffectOnly" || widget.filter == "effectOnly"
+//               ? Container()
+//               // : _reviewBox(review, "overall"),
+//               : review.overallText == ""
+//                   ? Container()
+//                   : ReviewBox(
+//                       context: context, review: review, type: ""),
+//           review.overallText == "" ? Container() : Container(height: 6),*/
+        ],
+      ),
+    );
+  }
+
+  Widget _dateAndFavorite(regDate, names, auth, review) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, 0, 5, 0),
+      child: Row(
+        children: <Widget>[
+          Text(regDate,
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  .copyWith(color: gray500, fontSize: 12)),
+//        Padding(padding: EdgeInsets.all(18)),
+          Expanded(child: Container()),
+          Container(
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                new GestureDetector(
+                    child: new Icon(
+                      names.contains(auth.currentUser.uid)
+                          ? Icons.thumb_up_alt
+                          : Icons.thumb_up_alt,
+                      color: names.contains(auth.currentUser.uid)
+                          ? primary400_line
+                          : Color(0xffDADADA),
+                      size: 20,
+                    ),
+                    onTap: () async {
+                      if (names.contains(auth.currentUser.uid)) {
+                        await ReviewService(documentId: review.documentId)
+                            .decreaseFavorite(
+                                review.documentId, auth.currentUser.uid);
+                      } else {
+                        await ReviewService(documentId: review.documentId)
+                            .increaseFavorite(
+                                review.documentId, auth.currentUser.uid);
+                      }
+                    })
+              ],
+            ),
+          ),
+          Container(width: 3),
+          Text((review.noFavorite).toString(),
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  .copyWith(color: gray400, fontSize: 12)),
+          SizedBox(width: 15)
+        ],
+      ),
+    );
   }
 }

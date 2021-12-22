@@ -183,6 +183,9 @@ class DatabaseService {
       selfKeywordList: snapshot.data()['selfKeywordList'] ?? [],
       favoriteList: snapshot.data()['favoriteList'] ?? [],
       searchList: snapshot.data()['searchList'] ?? [],
+      isPharmacist: snapshot.data()['isPharmacist'] ?? false,
+      pharmacistName: snapshot.data()['pharmacistName'] ?? '',
+      pharmacistDate: snapshot.data()['pharmacistDate'] ?? '',
     );
   }
 
@@ -232,6 +235,29 @@ class DatabaseService {
   Future<List> getKeywordList() async {
     DocumentSnapshot ds = await userCollection.doc(uid).get();
     return ds.data()['keywordList'];
+  }
+
+  Future<void> setPharmacistInfo(isPharmacist, name, date) async {
+    return await userCollection.doc(uid).update({
+      'isPharmacist': isPharmacist ?? false,
+      'pharmacistName': name ?? '',
+      'pharmacistDate': date ?? '',
+    });
+  }
+
+  Future<bool> getIsPharmacist(uid) async {
+    DocumentSnapshot snap = await userCollection.doc(uid).get();
+    return snap.data()["isPharmacist"] ?? false;
+  }
+
+  Future<String> getPharmacistName(uid) async {
+    DocumentSnapshot snap = await userCollection.doc(uid).get();
+    return snap.data()["pharmacistName"] ?? '';
+  }
+
+  Future<String> getPharmacistDate(uid) async {
+    DocumentSnapshot snap = await userCollection.doc(uid).get();
+    return snap.data()["pharmacistDate"] ?? '';
   }
 
   /* Saved List */
