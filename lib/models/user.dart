@@ -19,9 +19,14 @@ class UserData {
   final List favoriteList;
   final List searchList;
 
+  final bool isPharmacist;
+  final String pharmacistName;
+  final String pharmacistDate;
+
   UserData(
       {this.uid,
       this.agreeDate,
+      this.isPharmacist,
       this.sex,
       this.nickname,
       this.birthYear,
@@ -29,7 +34,9 @@ class UserData {
       this.keywordList,
       this.selfKeywordList,
       this.favoriteList,
-      this.searchList});
+      this.searchList,
+      this.pharmacistName,
+      this.pharmacistDate});
 }
 
 class Lists {
