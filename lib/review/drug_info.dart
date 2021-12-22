@@ -16,8 +16,10 @@ import 'package:semo_ver2/mypage/my_favorites.dart';
 import 'package:semo_ver2/review/ph_tips.dart';
 import 'package:semo_ver2/review/review_policy_more.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
+import 'package:semo_ver2/review/write_tip.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/tip_service.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/image.dart';
@@ -29,7 +31,6 @@ import 'package:semo_ver2/review/write_review.dart';
 import 'package:semo_ver2/shared/shortcut_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
 
 List infoEE;
 List infoNB;
@@ -87,7 +88,6 @@ class _ReviewPageState extends State<ReviewPage> {
     super.initState();
   }
 
-
   void _onTapPillInfo() {
     _scrollController.animateTo(_getPillInfoSize(),
         duration: Duration(milliseconds: 400), curve: Curves.easeOut);
@@ -119,7 +119,6 @@ class _ReviewPageState extends State<ReviewPage> {
     return _ifZeroReview;
   }
 
-
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
@@ -145,16 +144,36 @@ class _ReviewPageState extends State<ReviewPage> {
             backgroundColor: Color(0xff00C2AE),
             elevation: 6.0,
             onPressed: () async {
-              if (await ReviewService()
-                      .findUserWroteReview(widget.drugItemSeq, user.uid) ==
-                  false)
-                IYMYGotoSeeOrCheckDialog();
-              else
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            WriteReview(drugItemSeq: widget.drugItemSeq)));
+              bool isPharmacist = await DatabaseService(uid: user.uid)
+                  .getIsPharmacist(user.uid);
+
+              /* 일반 회원의 경우 */
+              if (isPharmacist == false) {
+                if (await ReviewService()
+                        .findUserWroteReview(widget.drugItemSeq, user.uid) ==
+                    false)
+                  IYMYGotoSeeOrCheckDialog(isPharmacist);
+                else
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              WriteReview(drugItemSeq: widget.drugItemSeq)));
+              }
+
+              /* 약사 회원의 경우 */
+              else {
+                if (await TipService()
+                        .findPharmacistWroteTip(widget.drugItemSeq, user.uid) ==
+                    false)
+                  IYMYGotoSeeOrCheckDialog(isPharmacist);
+                else
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              WriteTip(drugItemSeq: widget.drugItemSeq)));
+              }
             }),
         body: StreamProvider<List<Review>>.value(
           value: ReviewService().getReviews(widget.drugItemSeq),
@@ -201,8 +220,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                                                 ? primary500_light_text
                                                                 : gray300_inactivated,
                                                           ))),
-                                              onTap: _onTapPillInfo
-                                              ),
+                                              onTap: _onTapPillInfo),
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width /
@@ -259,32 +277,30 @@ class _ReviewPageState extends State<ReviewPage> {
                                       _underInfo(context, drug, userData),
                                       SizedBox(
                                         width: double.infinity,
-                                        height: 10.0,
+                                        height: 2.0,
                                         child: Container(
-                                          color: gray50,
+                                          color: gray75,
                                         ),
                                       ),
                                     ],
                                   )),
+                                  SliverToBoxAdapter(
+                                      child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      //_pharmacistTip(), // UI 참고
+                                      PhTipsList(widget.drugItemSeq), // db 참고
 
-                                    SliverToBoxAdapter(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        _pharmacistTip(), // UI 참고
-                                        PhTipsList(widget.drugItemSeq), // db 참고
-
-                                        SizedBox(
-                                          width: double.infinity,
-                                          height: 10.0,
-                                          child: Container(
-                                            color: gray50,
-                                          ),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        height: 2.0,
+                                        child: Container(
+                                          color: gray75,
                                         ),
-                                      ],
-                                    )
-                                  ),
-
+                                      ),
+                                    ],
+                                  )),
                                   SliverToBoxAdapter(
                                     child: _totalRating(),
                                   ),
@@ -906,7 +922,6 @@ class _ReviewPageState extends State<ReviewPage> {
                 ),
               ),
               Container(width: 5),
-
               InkWell(
                 child: RichText(
                   textAlign: TextAlign.center,
@@ -939,7 +954,6 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /* Review */
   Widget _drugReviews() {
-
     return StreamBuilder<Drug>(
         stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
         builder: (context, snapshot) {
@@ -1025,61 +1039,61 @@ class _ReviewPageState extends State<ReviewPage> {
         });
   }
 
-  Widget _pharmacistTip() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RichText(
-            text: TextSpan(
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                color: yellow
-              ),
-              children: <TextSpan>[
-                TextSpan(
-                    text: "약사의 한마디",
-                    style: Theme.of(context).textTheme.subtitle1,),
-                TextSpan(text: '  '+'1'), //TODO: connect with DB
-              ],
-            ),
-          ),
-
-          Container(
-            height: 15
-          ),
-
-          CarouselSlider(
-            options: CarouselOptions(height: 200.0),
-            items: [1,2,3,4,5].map((i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Card(
-                    elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
-
-                      decoration: BoxDecoration(
-
-                          // color: Colors.amber
-                      ),
-                      child: Text('text $i', style: TextStyle(fontSize: 16.0),)
-                    )
-
-
-                  );
-                },
-              );
-            }).toList(),
-          )
-        ],
-      ),
-    );
-  }
+  // // TODO: 갯수에 따라 다르게 보여야 함
+  // Widget _pharmacistTip() {
+  //   return Container(
+  //     color: gray50,
+  //     child: Padding(
+  //       padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           RichText(
+  //             text: TextSpan(
+  //               style: Theme.of(context)
+  //                   .textTheme
+  //                   .subtitle1
+  //                   .copyWith(color: yellow),
+  //               children: <TextSpan>[
+  //                 TextSpan(
+  //                   text: "약사의 한마디",
+  //                   style: Theme.of(context).textTheme.subtitle1,
+  //                 ),
+  //                 TextSpan(text: '  ' + '1'), //TODO: connect with DB
+  //               ],
+  //             ),
+  //           ),
+  //           Container(height: 15),
+  //           CarouselSlider(
+  //             options: CarouselOptions(height: 200.0),
+  //             items: [1, 2, 3, 4, 5].map((i) {
+  //               return Builder(
+  //                 builder: (BuildContext context) {
+  //                   return Card(
+  //                       elevation: 10,
+  //                       shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(8.0),
+  //                       ),
+  //                       child: Container(
+  //                           width: MediaQuery.of(context).size.width,
+  //                           margin: EdgeInsets.symmetric(horizontal: 5.0),
+  //                           decoration: BoxDecoration(
+  //
+  //                               // color: Colors.amber
+  //                               ),
+  //                           child: Text(
+  //                             'text $i',
+  //                             style: TextStyle(fontSize: 16.0),
+  //                           )));
+  //                 },
+  //               );
+  //             }).toList(),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _searchBar() {
     return Padding(
@@ -1131,7 +1145,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Widget IYMYGotoSeeOrCheckDialog() {
+  Widget IYMYGotoSeeOrCheckDialog(bool isPharmacist) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1186,13 +1200,21 @@ class _ReviewPageState extends State<ReviewPage> {
                       ],
                     ),
                   ),
-                  onTap: () {
+                  onTap: () async {
                     Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                SeeMyReview(widget.drugItemSeq)));
+
+                    // print(isPharmacist);
+                    isPharmacist
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SeeMyTip(widget.drugItemSeq)))
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SeeMyReview(widget.drugItemSeq)));
                   }),
               SizedBox(width: 16),
               /* RIGHT ACTION BUTTON */
