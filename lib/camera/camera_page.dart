@@ -40,6 +40,8 @@ class _CameraPageState extends State<CameraPage> {
   void initState() {
     super.initState();
     _selectedIndex = widget.initial;
+    print("%%%% 체크하기위함 $_selectedIndex");
+
 
     _cameraController = CameraController(
         // 이용 가능한 카메라 목록에서 특정 카메라를 가져옵니다.
@@ -225,9 +227,7 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
         alignment: AlignmentDirectional.center,
         children: [
           Positioned(
-              //top: 160,
               top: MediaQuery.of(context).size.height * 0.15,
-              // width: MediaQuery.of(context).size.height * 0.8,
               height: MediaQuery.of(context).size.height * 0.25,
               child: Image.asset('assets/camera/case_area.png')),
           Positioned(
@@ -408,6 +408,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                   .copyWith(color: gray0_white)),
                         ),
                         onPressed: () async {
+                          print('~~~~~ 사진사용에서 나타나는 select INDEX $_selectedIndex');
                           if (_selectedIndex == 0) {
                             FirebaseVisionImage visionImage =
                                 FirebaseVisionImage.fromFile(
@@ -432,6 +433,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                             }
 
                             barcodeDetector.close();
+                            print('???? 바코드 번호 == $barcodeNum');
 
                             if (barcodeNum == null) {
                               IYMYDialog(
@@ -464,10 +466,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => NoResult()));
+                                        builder: (context) => NoResult(barcodeOrCase: 1,)));
                               }
                             }
-                          } else {
+                          }
+                          else {
                             List _outputs;
                             File _image;
                             bool _loading = false;
@@ -505,10 +508,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
                             if (_outputs.isEmpty) {
                               Navigator.pop(context);
+                              Navigator.pop(context);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => NoResult()));
+                                      builder: (context) => NoResult(barcodeOrCase: 0)));
                               return Container();
                             } else {
                               String resultSequence =
@@ -710,10 +714,7 @@ class _CaseResultState extends State<CaseResult> {
                         ),
                         style: OutlinedButton.styleFrom(
                             backgroundColor: gray0_white,
-                            // minimumSize: Size(12, 23),
                             padding: EdgeInsets.zero,
-                            // elevation: 0,
-                            // primary: gray0_white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
@@ -751,9 +752,13 @@ class _CaseResultState extends State<CaseResult> {
                             Navigator.pop(context);
                           },
                         ),
-                      ],
+                        SizedBox(height: 15),
+
+                        _warningMessage(context)
+
+            ],
                     ),
-                  )
+                  ),
                 ],
               );
             } else
@@ -761,4 +766,37 @@ class _CaseResultState extends State<CaseResult> {
           }),
     );
   }
+
+  Widget _warningMessage(context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+      decoration: BoxDecoration(
+        color: gray50,
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+              width: 18,
+              height: 18,
+              child: Image.asset('assets/icons/warning_icon.png')),
+          Padding(
+            padding: const EdgeInsets.only(left:8.0),
+            child: Container(
+                child: Text(
+                 '케이스 인식은 베타 버전으로 제공됩니다.',
+                    style: Theme.of(context)
+                            .textTheme
+                            .subtitle2
+                            .copyWith(color: gray600, fontSize: 12),
+                ),
+
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
 }

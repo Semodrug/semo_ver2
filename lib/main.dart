@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
             '/ranking': (context) => RankingPage(),
             '/bottom_bar': (context) => BottomBar(),
             '/search': (context) => SearchScreen(),
+            
           },
           theme: _IYMYTheme),
     );

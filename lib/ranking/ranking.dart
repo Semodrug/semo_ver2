@@ -32,20 +32,11 @@ class RankingPage extends StatelessWidget {
                             .copyWith(color: gray900),
                       )),
                   onTap: () {
-                    //원래
-                    //getCategory = numCategory[index] + categories[index];
                     getCategory = rank_cateogry[index]; //test
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              //원래 코드
-                              // RankingContentPage(
-                              //   categoryName:
-                              //       numCategory[index] + categories[index],
-                              //   filter: '리뷰 많은 순',
-                              // )),
-                          //test
                           RankingContentPage(
                             categoryName: rank_cateogry[index],
                             filter: '리뷰 많은 순',

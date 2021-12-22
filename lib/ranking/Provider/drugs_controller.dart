@@ -18,30 +18,30 @@ class DrugsController extends ChangeNotifier {
   bool get hasNext => _hasNext;
 
   List<Drug> get drugs => _drugsSnapshot.map((snap) {
-    final drug = snap.data();
+        final drug = snap.data();
+        return Drug(
+            entpName: drug['ENTP_NAME'],
+            etcOtcCode: drug['ETC_OTC_CODE'],
+            itemName: drug['ITEM_NAME'],
+            itemSeq: drug['ITEM_SEQ'],
+            category: drug['PRDUCT_TYPE'],
+            totalRating: drug['totalRating'],
+            numOfReviews: drug['numOfReviews'],
+            rankCategory: drug['RANK_CATEGORY'] //test
+            );
+      }).toList();
 
-    return Drug(
-      entpName: drug['ENTP_NAME'],
-      etcOtcCode: drug['ETC_OTC_CODE'],
-      itemName: drug['ITEM_NAME'],
-      itemSeq: drug['ITEM_SEQ'],
-      category: drug['PRDUCT_TYPE'],
-      totalRating: drug['totalRating'],
-      numOfReviews: drug['numOfReviews'],
-    rankCategory: drug['RANK_CATEGORY'] //test
-    );
-  }).toList();
-
-  Future fetchNextDrugs( ) async {
+  Future fetchNextDrugs() async {
     if (_isFetchingDrugs) return;
 
     _errorMessage = '';
     _isFetchingDrugs = true;
 
     try {
-      final snap = await FirebaseApi.getDrugs(documentLimit, filter,
+      final snap = await FirebaseApi.getDrugs(
+        documentLimit,
+        filter,
         startAfter: _drugsSnapshot.isNotEmpty ? _drugsSnapshot.last : null,
-
       );
       _drugsSnapshot.addAll(snap.docs);
 

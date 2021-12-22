@@ -51,8 +51,7 @@ class _ReviewPillInfoState extends State<ReviewPillInfo> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 StreamBuilder<Drug>(
-                    stream:
-                        DatabaseService(itemSeq: widget.seqNum).drugData,
+                    stream: DatabaseService(itemSeq: widget.seqNum).drugData,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         Drug drug = snapshot.data;
@@ -98,7 +97,7 @@ class _ReviewPillInfoState extends State<ReviewPillInfo> {
                                 ),
                                 Container(width: 5),
                                 Text(
-                                  drug.totalRating.toStringAsFixed(2),
+                                  drug.totalRating.toStringAsFixed(1),
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle2
