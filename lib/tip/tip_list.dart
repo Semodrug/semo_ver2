@@ -1,33 +1,31 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:semo_ver2/models/review.dart';
+import 'package:semo_ver2/models/tip.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/services/review_service.dart';
+import 'package:semo_ver2/tip/edit_tip.dart';
+import 'package:semo_ver2/services/tip_service.dart';
 import 'package:semo_ver2/shared/loading.dart';
-import 'package:semo_ver2/review/review_box.dart';
 import 'package:semo_ver2/theme/colors.dart';
-import 'edit_review.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class ReviewList extends StatefulWidget {
+class TipList extends StatefulWidget {
   String searchText;
   String filter;
   String drugItemSeq;
   String type;
-  Review review;
-  ReviewList(this.searchText, this.filter, this.drugItemSeq,
-      {this.type, this.review});
+  Tip tip;
+  TipList(this.searchText, this.filter, this.drugItemSeq,
+      {this.type, this.tip});
 
   @override
-  _ReviewListState createState() => _ReviewListState();
+  _TipListState createState() => _TipListState();
 }
 
-class _ReviewListState extends State<ReviewList> {
+class _TipListState extends State<TipList> {
   @override
   Widget build(BuildContext context) {
     TheUser user = Provider.of<TheUser>(context);
@@ -38,27 +36,27 @@ class _ReviewListState extends State<ReviewList> {
             shrinkWrap: true,
             itemCount: 1,
             itemBuilder: (context, index) {
-              return _buildListItem(context, widget.review);
+              return _buildListItemTips(context, widget.tip);
             },
           )
-        : StreamBuilder<List<Review>>(
-            stream: ReviewService().getReviews(widget.drugItemSeq),
+        : StreamBuilder<List<Tip>>(
+            stream: TipService().getTips(widget.drugItemSeq),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                List<Review> reviews = snapshot.data;
-                List<Review> searchResults = [];
-                for (Review review in reviews) {
-                  if (review.effectText.contains(widget.searchText) ||
-                      review.sideEffectText.contains(widget.searchText)) {
-                    searchResults.add(review);
-                  }
+                List<Tip> tips = snapshot.data;
+                List<Tip> searchResults = [];
+                for (Tip tip in tips) {
+                  //if (tip.effectText.contains(widget.searchText) ||
+                  //  tip.sideEffectText.contains(widget.searchText)) {
+                  searchResults.add(tip);
+                  //}
                 }
                 return ListView.builder(
                   physics: const ClampingScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: searchResults.length,
                   itemBuilder: (context, index) {
-                    return _buildListItem(context, searchResults[index]);
+                    return _buildListItemTips(context, searchResults[index]);
                   },
                 );
               } else
@@ -67,49 +65,105 @@ class _ReviewListState extends State<ReviewList> {
           );
   }
 
-  Widget _buildListItem(BuildContext context, Review review) {
+  Widget _buildListItemTips(BuildContext context, Tip tip) {
     FirebaseAuth auth = FirebaseAuth.instance;
-    List<String> names = List.from(review.favoriteSelected);
+    List<String> names = List.from(tip.favoriteSelected);
 
     return Container(
         padding: EdgeInsets.fromLTRB(0, 10, 0, 21.5),
         decoration: BoxDecoration(
             border: Border(bottom: BorderSide(width: 0.6, color: gray75))),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          _starAndIdAndMore(review, context, auth),
-          _review(review),
+          _dateAndMenu(context, auth, tip),
+          _tip(tip),
           Container(height: 11.5),
-          _dateAndFavorite(
-              DateFormat('yyyy.MM.dd').format(review.registrationDate.toDate()),
-              names,
-              auth,
-              review)
         ]));
   }
 
-  Widget _starAndIdAndMore(review, context, auth) {
+  Widget IYMYGotoSeeOrCheckDialog(alertContent) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          insetPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.all(16),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10),
+              Icon(Icons.check, color: primary300_main),
+              SizedBox(height: 13),
+              RichText(
+                text: TextSpan(
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: gray700),
+                  children: <TextSpan>[
+                    TextSpan(text: alertContent),
+                  ],
+                ),
+              ),
+              SizedBox(height: 3),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '주말, 공휴일에는 확인이 지연될 수 있습니다',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: gray300_inactivated),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 16),
+              /* RIGHT ACTION BUTTON */
+              ElevatedButton(
+                child: Text(
+                  "확인",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(color: primary400_line),
+                ),
+                style: ElevatedButton.styleFrom(
+                    minimumSize: Size(260, 40),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    elevation: 0,
+                    primary: gray50,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(color: gray75))),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _dateAndMenu(context, auth, Tip tip) {
     TheUser user = Provider.of<TheUser>(context);
+
+    String _regDate =
+        DateFormat('yyyy.MM.dd').format(tip.registrationDate.toDate());
+
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 0, 5, 0),
       child: Row(
-        children: <Widget>[
-          RatingBar.builder(
-            initialRating: review.starRating * 1.0,
-            minRating: 1,
-            direction: Axis.horizontal,
-            allowHalfRating: false,
-            itemCount: 5,
-            itemSize: 16,
-            glow: false,
-            itemPadding: EdgeInsets.symmetric(horizontal: 0.2),
-            unratedColor: gray75,
-            itemBuilder: (context, _) => ImageIcon(
-              AssetImage('assets/icons/star.png'),
-              color: yellow,
-            ),
-          ),
-          SizedBox(width: 10),
-          Text(review.nickName,
+        children: [
+          Text(_regDate,
               style: Theme.of(context)
                   .textTheme
                   .caption
@@ -119,19 +173,19 @@ class _ReviewListState extends State<ReviewList> {
             padding: EdgeInsets.only(right: 0),
             icon: Icon(Icons.more_horiz, color: gray500, size: 19),
             onPressed: () {
-              if (user.uid == review.uid) {
+              if (user.uid == tip.uid) {
                 showModalBottomSheet(
                     backgroundColor: Colors.transparent,
                     context: context,
                     builder: (BuildContext context) {
-                      return _popUpMenu(review);
+                      return _popUpMenu(tip);
                     });
-              } else if (auth.currentUser.uid != review.uid) {
+              } else if (auth.currentUser.uid != tip.uid) {
                 showModalBottomSheet(
                     backgroundColor: Colors.transparent,
                     context: context,
                     builder: (context) {
-                      return _popUpMenuAnonymous(review, user);
+                      return _popUpMenuAnonymous(tip, user);
                     });
               }
             },
@@ -141,7 +195,31 @@ class _ReviewListState extends State<ReviewList> {
     );
   }
 
-  Widget _popUpMenu(review) {
+  Widget _tip(tip) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          // Container(height: 6),
+          TipBox(context: context, tip: tip),
+          // Container(height: 6),
+
+/*          //overall
+          widget.filter == "sideEffectOnly" || widget.filter == "effectOnly"
+              ? Container()
+              // : _reviewBox(review, "overall"),
+              : review.overallText == ""
+                  ? Container()
+                  : ReviewBox(
+                      context: context, review: review, type: ""),
+          review.overallText == "" ? Container() : Container(height: 6),*/
+        ],
+      ),
+    );
+  }
+
+  Widget _popUpMenu(tip) {
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -159,7 +237,7 @@ class _ReviewListState extends State<ReviewList> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => EditReview(review, "edit")));
+                            builder: (context) => EditTip(tip, "edit")));
                   },
                   child: Center(
                       child: Text(
@@ -177,7 +255,7 @@ class _ReviewListState extends State<ReviewList> {
                   onPressed: () {
                     Navigator.of(context).pop();
                     _IYMYCancleConfirmDeleteDialog(
-                      review,
+                      tip,
                     );
                   },
                   child: Center(
@@ -216,7 +294,65 @@ class _ReviewListState extends State<ReviewList> {
         ));
   }
 
-  Widget _reportReviewPopup(
+  Widget _popUpMenuAnonymous(tip, user) {
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: new BorderRadius.only(
+              topLeft: const Radius.circular(12.0),
+              topRight: const Radius.circular(12.0),
+            )),
+        child: Wrap(
+          children: <Widget>[
+            Padding(
+              // padding: const EdgeInsets.only(top: 4.0),
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    showModalBottomSheet(
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (context) {
+                          return _reportTipPopup(tip /*, user*/);
+                        });
+                  },
+                  child: Center(
+                      child: Text(
+                    "신고하기",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: gray900),
+                  ))),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                      // bottom: BorderSide(color: Theme.of(context).hintColor),
+                      top: BorderSide(color: gray100)),
+                ),
+                child: MaterialButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Center(
+                        child: Text(
+                      "취소",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: gray300_inactivated),
+                    ))),
+              ),
+            )
+          ],
+        ));
+  }
+
+  Widget _reportTipPopup(
     review,
   ) {
     var mqWidth = MediaQuery.of(context).size.width;
@@ -231,7 +367,7 @@ class _ReviewListState extends State<ReviewList> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-              child: Text("리뷰 신고하기",
+              child: Text("약사의 한마디 신고하기",
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1
@@ -411,7 +547,7 @@ class _ReviewListState extends State<ReviewList> {
             children: [
               SizedBox(height: 16),
               /* BODY */
-              Text("선택한 리뷰를 삭제하시겠어요?",
+              Text("선택한 약사의 한마디를 삭제하시겠어요?",
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1
@@ -460,151 +596,8 @@ class _ReviewListState extends State<ReviewList> {
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
-                        // var reviewCollection =
-                        //     FirebaseFirestore.instance.collection('Reviews');
-                        // var reviewDocSnapshot =
-                        //     await reviewCollection.doc(record.documentId).get();
-                        // if (reviewDocSnapshot.exists) {
-                        //   Map<String, dynamic> data = reviewDocSnapshot.data();
-                        //   var effect = data['effect'];
-                        //   var sideEffect = data['sideEffect'];
-                        //   var starRating = data['starRating'] * 1.0;
-                        //   var seqNum = data['seqNum'];
-                        //
-                        //   print('*********1**********');
-                        //   var drugCollection = FirebaseFirestore.instance
-                        //       .collection('TestDrugs');
-                        //   var docSnapshot =
-                        //       await drugCollection.doc(record.documentId).get();
-                        //   if (docSnapshot.exists) {
-                        //     Map<String, dynamic> drugData = docSnapshot.data();
-                        //     var numOfReviews = drugData['numOfReviews'] * 1.0;
-                        //     var totalRating = drugData['totalRating'] * 1.0;
-                        //     var numOfEffectBad =
-                        //         drugData['numOfEffectBad'] * 1.0;
-                        //     var numOfEffectSoSo =
-                        //         drugData['numOfEffectSoSo'] * 1.0;
-                        //     var numOfEffectGood =
-                        //         drugData['numOfEffectGood'] * 1.0;
-                        //     var numOfSideEffectYes =
-                        //         drugData['numOfSideEffectYes'] * 1.0;
-                        //     var numOfSideEffectNo =
-                        //         drugData['numOfSideEffectNo'] * 1.0;
-                        //     print('*********2**********');
-                        //     FirebaseFirestore.instance
-                        //         .collection("TestDrugs")
-                        //         .doc(seqNum)
-                        //         .update({
-                        //       "totalRating": numOfReviews - 1 <= 0.0
-                        //           ? 0.0
-                        //           : (totalRating * numOfReviews -
-                        //                   record.starRating) /
-                        //               (numOfReviews - 1),
-                        //       "numOfReviews": numOfReviews - 1 <= 0.0
-                        //           ? 0.0
-                        //           : numOfReviews - 1,
-                        //       'numOfEffectBad': effect == 'bad'
-                        //           ? numOfEffectBad - 1
-                        //           : numOfEffectBad,
-                        //       'numOfEffectSoSo': effect == 'soso'
-                        //           ? numOfEffectSoSo - 1
-                        //           : numOfEffectSoSo,
-                        //       'numOfEffectGood': effect == 'good'
-                        //           ? numOfEffectGood - 1
-                        //           : numOfEffectGood,
-                        //       'numOfSideEffectYes': sideEffect == 'yes'
-                        //           ? numOfSideEffectYes - 1
-                        //           : numOfSideEffectYes,
-                        //       'numOfSideEffectNo': sideEffect == 'no'
-                        //           ? numOfSideEffectNo - 1
-                        //           : numOfSideEffectNo,
-                        //     });
-                        //   }
-                        // }
-                        // print('*********3**********');
-                        //
-                        // print('###########4###########');
-
-                        ///
-                        //리뷰 삭제
-
-                        print('*******review_list********');
-                        var effect = '';
-                        var sideEffect = '';
-                        var starRating = 0.0;
-                        var seqNum = '';
-                        var reviewCollection =
-                            FirebaseFirestore.instance.collection('Reviews');
-                        var reviewDocSnapshot =
-                            await reviewCollection.doc(record.documentId).get();
-                        if (reviewDocSnapshot.exists) {
-                          Map<String, dynamic> data = reviewDocSnapshot.data();
-                          effect = data['effect'];
-                          sideEffect = data['sideEffect'];
-                          starRating = data['starRating'] * 1.0;
-                          seqNum = data['seqNum'];
-                        }
-
-                        var numOfReviews = 0.0;
-                        var totalRating = 0.0;
-                        var numOfEffectBad = 0.0;
-                        var numOfEffectSoSo = 0.0;
-                        var numOfEffectGood = 0.0;
-                        var numOfSideEffectYes = 0.0;
-                        var numOfSideEffectNo = 0.0;
-                        var drugCollection =
-                            // FirebaseFirestore.instance.collection('TestDrugs');
-                            FirebaseFirestore.instance.collection('Drugs');
-                        var drugDocSnapshot =
-                            await drugCollection.doc(record.seqNum).get();
-                        if (drugDocSnapshot.exists) {
-                          Map<String, dynamic> drugData =
-                              drugDocSnapshot.data();
-                          numOfReviews = drugData['numOfReviews'] * 1.0;
-                          totalRating = drugData['totalRating'] * 1.0;
-
-                          numOfEffectBad = drugData['numOfEffectBad'] * 1.0;
-                          numOfEffectSoSo = drugData['numOfEffectSoSo'] * 1.0;
-                          numOfEffectGood = drugData['numOfEffectGood'] * 1.0;
-                          numOfSideEffectYes =
-                              drugData['numOfSideEffectYes'] * 1.0;
-                          numOfSideEffectNo =
-                              drugData['numOfSideEffectNo'] * 1.0;
-                        }
-
-                        FirebaseFirestore.instance
-                            // .collection("TestDrugs")
-                            .collection("Drugs")
-                            .doc(record.seqNum)
-                            .update({
-                          "totalRating": numOfReviews - 1 <= 0.0
-                              ? 0.0
-                              : (totalRating * numOfReviews -
-                                      record.starRating) /
-                                  (numOfReviews - 1),
-                          "numOfReviews":
-                              numOfReviews - 1 <= 0.0 ? 0.0 : numOfReviews - 1,
-                          'numOfEffectBad': effect == 'bad'
-                              ? numOfEffectBad - 1
-                              : numOfEffectBad,
-                          'numOfEffectSoSo': effect == 'soso'
-                              ? numOfEffectSoSo - 1
-                              : numOfEffectSoSo,
-                          'numOfEffectGood': effect == 'good'
-                              ? numOfEffectGood - 1
-                              : numOfEffectGood,
-                          'numOfSideEffectYes': sideEffect == 'yes'
-                              ? numOfSideEffectYes - 1
-                              : numOfSideEffectYes,
-                          'numOfSideEffectNo': sideEffect == 'no'
-                              ? numOfSideEffectNo - 1
-                              : numOfSideEffectNo,
-                        });
-
-                        ///
-
-                        await ReviewService(documentId: record.documentId)
-                            .deleteReviewData();
+                        await TipService(documentId: record.documentId)
+                            .deleteTipData();
                         Navigator.of(context).pop();
                         if (widget.type == "mine") Navigator.of(context).pop();
 
@@ -628,7 +621,7 @@ class _ReviewListState extends State<ReviewList> {
                                   SizedBox(height: 16),
                                   /* BODY */
                                   Text(
-                                    "리뷰가 삭제되었습니다",
+                                    "약사의 한마디가 삭제되었습니다",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyText1
@@ -673,7 +666,7 @@ class _ReviewListState extends State<ReviewList> {
   }
 
   Future<void> _IYMYCancleConfirmReportDialog(
-    review,
+    tip,
     report,
     /*user*/
   ) async {
@@ -744,8 +737,8 @@ class _ReviewListState extends State<ReviewList> {
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
-                        await ReviewService(documentId: review.documentId)
-                            .reportReview(review, report, user.uid);
+                        await TipService(documentId: tip.documentId)
+                            .reportTip(tip, report, user.uid);
                         Navigator.pop(context);
                         Navigator.pop(context);
                         IYMYGotoSeeOrCheckDialog("이약모약 운영진에게\n신고가 접수되었어요");
@@ -772,292 +765,124 @@ class _ReviewListState extends State<ReviewList> {
       },
     );
   }
+}
 
-  Widget IYMYGotoSeeOrCheckDialog(alertContent) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          insetPadding: EdgeInsets.zero,
-          contentPadding: EdgeInsets.all(16),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 10),
-              Icon(Icons.check, color: primary300_main),
-              SizedBox(height: 13),
-              RichText(
-                text: TextSpan(
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5
-                      .copyWith(color: gray700),
-                  children: <TextSpan>[
-                    TextSpan(text: alertContent),
-                  ],
-                ),
+class TipBox extends StatelessWidget {
+  final BuildContext context;
+  final Tip tip;
+
+  const TipBox({
+    Key key,
+    // this.context,
+    @required this.context,
+    @required this.tip,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    return
+        //Card();
+
+        Card(
+            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            elevation: 5,
+            shadowColor: Color(0xFF000000).withOpacity(0.04),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8), // if you need this
+              side: BorderSide(
+                color: Color(0xFFE4E5E5),
+                width: 1,
               ),
-              SizedBox(height: 3),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '주말, 공휴일에는 확인이 지연될 수 있습니다',
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(color: gray300_inactivated),
-                    ),
+                    Text(tip.content,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2
+                            .copyWith(color: gray700),
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis),
+                    SizedBox(height: 12),
+                    _likeButton(tip, auth)
                   ],
-                ),
-              ),
-              SizedBox(width: 16),
-              /* RIGHT ACTION BUTTON */
-              ElevatedButton(
-                child: Text(
-                  "확인",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5
-                      .copyWith(color: primary400_line),
-                ),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: Size(260, 40),
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    elevation: 0,
-                    primary: gray50,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        side: BorderSide(color: gray75))),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          ),
-        );
-      },
-    );
+                )));
   }
 
-  Widget _reviewBox(review, type) {
+  Widget _likeButton(Tip tip, FirebaseAuth auth) {
+    bool isFavorite =
+        List.from(tip.favoriteSelected).contains(auth.currentUser.uid);
     return Container(
-        padding: EdgeInsets.all(9.5),
-        decoration: BoxDecoration(
-            color: gray50,
-            border: Border.all(color: gray50),
-            borderRadius: BorderRadius.all(Radius.circular(4.0))),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      height: 28,
+      child: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: 13),
+            side: BorderSide(
+                width: 1.0,
+                color: isFavorite ? Color(0xFF00C2AE) : Color(0xFFE4E5E5))),
+        icon: Icon(
+          Icons.thumb_up_alt,
+          size: 18,
+          color: isFavorite ? primary300_main : gray300_inactivated,
+        ),
+        label: Row(
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  type == "effect"
-                      ? "효과"
-                      : type == "sideEffect"
-                          ? "부작용"
-                          : "총평",
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(color: gray900, fontSize: 12),
-                ),
-                Container(width: 3),
-                _face(
-                  type == "effect"
-                      ? review.effect
-                      : type == "sideEffect"
-                          ? review.sideEffect
-                          : "",
-                ),
-              ],
-            ),
-            Container(height: 4),
+            Text("도움이 됐어요", style: Theme.of(context).textTheme.caption),
+            SizedBox(width: 4),
             Text(
-              type == "effect" ? review.effectText : type == "sideEffect",
-              // ? review.sideEffectText
-              // : "",
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle2
-                  .copyWith(color: gray600, fontSize: 14),
+              tip.favoriteCount.toString(),
+              style: Theme.of(context).textTheme.subtitle2,
             ),
           ],
-        ));
-  }
-
-  Widget _face(face) {
-    if (face == "good" || face == "no")
-      return Icon(
-        Icons.sentiment_satisfied_rounded,
-        color: primary300_main,
-        size: 16,
-      );
-    if (face == "soso")
-      return Icon(
-        Icons.sentiment_neutral_rounded,
-        color: yellow_line,
-        size: 16,
-      );
-    if (face == "bad" || face == "yes")
-      return Icon(
-        Icons.sentiment_very_dissatisfied_rounded,
-        color: warning,
-        size: 16,
-      );
-  }
-
-  Widget _review(review) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(height: 6),
-
-          //effect
-          widget.filter == "sideEffectOnly"
-              ? Container()
-              // : _reviewBox(review, "effect"),
-              : ReviewBox(context: context, review: review, type: "effect"),
-          Container(height: 6),
-
-          //side effect
-          widget.filter == "effectOnly"
-              ? Container()
-              // : _reviewBox(review, "sideEffect"),
-              : ReviewBox(context: context, review: review, type: "sideEffect"),
-          Container(height: 6),
-
-/*          //overall
-          widget.filter == "sideEffectOnly" || widget.filter == "effectOnly"
-              ? Container()
-              // : _reviewBox(review, "overall"),
-              : review.overallText == ""
-                  ? Container()
-                  : ReviewBox(
-                      context: context, review: review, type: ""),
-          review.overallText == "" ? Container() : Container(height: 6),*/
-        ],
+        ),
+        onPressed: () async {
+          if (isFavorite) {
+            /* 이미 like 눌렀을 때 > dislike로 */
+            await TipService(documentId: tip.documentId)
+                .decreaseFavorite(tip.documentId, auth.currentUser.uid);
+          } else {
+            /* like로 */
+            await TipService(documentId: tip.documentId)
+                .increaseFavorite(tip.documentId, auth.currentUser.uid);
+          }
+        },
       ),
     );
-  }
 
-  Widget _dateAndFavorite(regDate, names, auth, review) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(20, 0, 5, 0),
-      child: Row(
-        children: <Widget>[
-          Text(regDate,
-              style: Theme.of(context)
-                  .textTheme
-                  .caption
-                  .copyWith(color: gray500, fontSize: 12)),
-//        Padding(padding: EdgeInsets.all(18)),
-          Expanded(child: Container()),
-          Container(
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                new GestureDetector(
-                    child: new Icon(
-                      names.contains(auth.currentUser.uid)
-                          ? Icons.thumb_up_alt
-                          : Icons.thumb_up_alt,
-                      color: names.contains(auth.currentUser.uid)
-                          ? primary400_line
-                          : Color(0xffDADADA),
-                      size: 20,
-                    ),
-                    onTap: () async {
-                      if (names.contains(auth.currentUser.uid)) {
-                        await ReviewService(documentId: review.documentId)
-                            .decreaseFavorite(
-                                review.documentId, auth.currentUser.uid);
-                      } else {
-                        await ReviewService(documentId: review.documentId)
-                            .increaseFavorite(
-                                review.documentId, auth.currentUser.uid);
-                      }
-                    })
-              ],
-            ),
-          ),
-          Container(width: 3),
-          Text((review.noFavorite).toString(),
-              style: Theme.of(context)
-                  .textTheme
-                  .caption
-                  .copyWith(color: gray400, fontSize: 12)),
-          SizedBox(width: 15)
-        ],
-      ),
-    );
-  }
-
-  Widget _popUpMenuAnonymous(review, user) {
-    return Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: new BorderRadius.only(
-              topLeft: const Radius.circular(12.0),
-              topRight: const Radius.circular(12.0),
-            )),
-        child: Wrap(
-          children: <Widget>[
-            Padding(
-              // padding: const EdgeInsets.only(top: 4.0),
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child: MaterialButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    showModalBottomSheet(
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (context) {
-                          return _reportReviewPopup(review /*, user*/);
-                        });
-                  },
-                  child: Center(
-                      child: Text(
-                    "신고하기",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        .copyWith(color: gray900),
-                  ))),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                      // bottom: BorderSide(color: Theme.of(context).hintColor),
-                      top: BorderSide(color: gray100)),
-                ),
-                child: MaterialButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Center(
-                        child: Text(
-                      "취소",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(color: gray300_inactivated),
-                    ))),
-              ),
-            )
-          ],
-        ));
+    // return Container(
+    //   child: new Row(
+    //     mainAxisAlignment: MainAxisAlignment.start,
+    //     children: <Widget>[
+    //       new GestureDetector(
+    //           child: new Icon(
+    //             // names.contains(auth.currentUser.uid)
+    //             true ? Icons.thumb_up_alt : Icons.thumb_up_alt,
+    //             color: true
+    //                 //names.contains(auth.currentUser.uid)
+    //                 ? primary400_line
+    //                 : Color(0xffDADADA),
+    //             size: 20,
+    //           ),
+    //           onTap: () async {
+    //             // if (names.contains(auth.currentUser.uid)) {
+    //             //   await ReviewService(documentId: review.documentId)
+    //             //       .decreaseFavorite(
+    //             //           review.documentId, auth.currentUser.uid);
+    //             // } else {
+    //             //   await ReviewService(documentId: review.documentId)
+    //             //       .increaseFavorite(
+    //             //           review.documentId, auth.currentUser.uid);
+    //             // }
+    //           })
+    //     ],
+    //   ),
+    // );
   }
 }

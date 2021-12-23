@@ -6,7 +6,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/review/review_list.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/theme/colors.dart';
 
@@ -58,13 +58,12 @@ class _AllReveiewState extends State<AllReview> {
     return StreamProvider<List<Review>>.value(
       value: ReviewService().getReviews(widget.drugItemSeq),
       child: Scaffold(
-        appBar: CustomAppBarWithGoToBack(_shortenName(widget.itemName), Icon(Icons.arrow_back), 0.5),
+          appBar: CustomAppBarWithGoToBack(
+              _shortenName(widget.itemName), Icon(Icons.arrow_back), 0.5),
           backgroundColor: gray0_white,
-        body: _myTabbe(context)
-      ),
+          body: _myTabbe(context)),
     );
   }
-
 
   // Widget _myTab(BuildContext context) {
   //   // double height = MediaQuery.of(context).size.height;
@@ -133,56 +132,71 @@ class _AllReveiewState extends State<AllReview> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16,15,16,5),
+              padding: const EdgeInsets.fromLTRB(16, 15, 16, 5),
               child: Container(
                 height: 35,
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: primary300_main
-                  ),
+                    border: Border.all(color: primary300_main),
                     color: gray0_white,
-                  borderRadius: BorderRadius.all(Radius.circular(4))
-                ),
+                    borderRadius: BorderRadius.all(Radius.circular(4))),
                 child: TabBar(
                   unselectedLabelColor: gray500,
                   labelColor: gray0_white,
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicator: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [gradient_button_long_end, Color(0xffA7E5DC)]),
+                      gradient: LinearGradient(colors: [
+                        gradient_button_long_end,
+                        Color(0xffA7E5DC)
+                      ]),
                       borderRadius: BorderRadius.circular(4),
                       color: Colors.redAccent),
-                    controller: _tabController,
-                  labelStyle: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(color: gray750_activated,),
+                  controller: _tabController,
+                  labelStyle: Theme.of(context).textTheme.subtitle2.copyWith(
+                        color: gray750_activated,
+                      ),
                   unselectedLabelStyle: Theme.of(context)
                       .textTheme
                       .caption
-                      .copyWith( color: gray500),
+                      .copyWith(color: gray500),
                   tabs: [
-                    Tab(child: Text('전체리뷰',
-                      style: TextStyle(fontSize: MediaQuery.of(context).size.width<=320 ? 11: 12),
+                    Tab(
+                        child: Text(
+                      '전체리뷰',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width <= 320
+                              ? 11
+                              : 12),
                     )),
-                    Tab(child: Text('효과리뷰만',
-                      style: TextStyle(fontSize: MediaQuery.of(context).size.width<=320 ? 11: 12),
+                    Tab(
+                        child: Text(
+                      '효과리뷰만',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width <= 320
+                              ? 11
+                              : 12),
                     )),
-                    Tab(child: Text('부작용리뷰만',
-                      style: TextStyle(fontSize: MediaQuery.of(context).size.width<=320 ? 11: 12),
+                    Tab(
+                        child: Text(
+                      '부작용리뷰만',
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width <= 320
+                              ? 11
+                              : 12),
                     )),
                   ],
-                    // indicator: CustomTabIndicator()
+                  // indicator: CustomTabIndicator()
                 ),
               ),
             ),
-            Expanded(child: TabBarView(
+            Expanded(
+              child: TabBarView(
                 children: [
                   _underTab("none", 1),
                   _underTab("effectOnly", 2),
                   _underTab("sideEffectOnly", 3),
                 ],
-              ),)
+              ),
+            )
 
             // Container(
             //   height: 5000,
@@ -200,7 +214,7 @@ class _AllReveiewState extends State<AllReview> {
 
   Widget _underTab(String filter, key) {
     return ListView(
-        // physics: NeverScrollableScrollPhysics(),
+      // physics: NeverScrollableScrollPhysics(),
       children: [
         Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -208,15 +222,18 @@ class _AllReveiewState extends State<AllReview> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 StreamBuilder<Drug>(
-                    stream: DatabaseService(itemSeq: widget.drugItemSeq)
-                        .drugData,
+                    stream:
+                        DatabaseService(itemSeq: widget.drugItemSeq).drugData,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         Drug drug = snapshot.data;
                         return Text(
                             "리뷰 " + drug.numOfReviews.toStringAsFixed(0) + "개",
-                            style: Theme.of(context).textTheme.headline5.copyWith(color: gray750_activated,fontSize: 14)
-                        );
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    color: gray750_activated, fontSize: 14));
                       } else
                         return Container();
                     }),
@@ -245,18 +262,18 @@ class _AllReveiewState extends State<AllReview> {
                   decoration: InputDecoration(
                       fillColor: gray50,
                       filled: true,
-                      prefixIcon:  SizedBox(
+                      prefixIcon: SizedBox(
                         height: 10,
                         width: 10,
                         child: Padding(
-                          padding: const EdgeInsets.only(top:4.0, bottom: 4),
+                          padding: const EdgeInsets.only(top: 4.0, bottom: 4),
                           child: Image.asset('assets/icons/search_grey.png'),
                         ),
                       ),
                       hintText: '어떤 리뷰를 찾고계세요?',
                       hintStyle: Theme.of(context).textTheme.bodyText2.copyWith(
-                        color: gray300_inactivated,
-                      ),
+                            color: gray300_inactivated,
+                          ),
                       contentPadding: EdgeInsets.zero,
                       labelStyle: TextStyle(color: Colors.grey),
                       focusedBorder: OutlineInputBorder(
@@ -277,5 +294,4 @@ class _AllReveiewState extends State<AllReview> {
       ),
     );
   }
-
 }

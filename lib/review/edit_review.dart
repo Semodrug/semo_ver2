@@ -6,7 +6,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/ranking/Provider/drugs_controller.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
-import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/review/review_pill_info.dart';
 import 'package:semo_ver2/shared/submit_button.dart';

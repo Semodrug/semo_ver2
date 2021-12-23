@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:semo_ver2/models/tip.dart';
 import 'package:semo_ver2/services/tip_service.dart';
-import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
@@ -26,20 +26,6 @@ class PhTipsList extends StatefulWidget {
 class _PhTipsListState extends State<PhTipsList> {
   CollectionReference users =
       FirebaseFirestore.instance.collection('PharmacistTips');
-
-  Future<void> addUser() {
-    return users
-        .add({
-          'content':
-              "매일 계속 사용하는것보다 3일 정도 사용하면 하루 쯤 쉬었다가 사용하는게 더 나아요 참고하세요", // John Doe
-          'name': "세모", // Stokes and Sons
-          'regDate': DateTime.now(),
-          'seqNum': "200209700",
-          //
-        })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,20 +202,21 @@ class _PhTipsListState extends State<PhTipsList> {
   }
 
   Widget _term(String pharmacistDate) {
-    var term = 3;
+    /* 현재 pharmacistDate 는 YYYY.MM.DD 형식이라서 .을 제외하고 새로 변수 선언 */
+    String _pharDate = pharmacistDate.substring(0, 4) +
+        pharmacistDate.substring(5, 7) +
+        pharmacistDate.substring(8, 10);
+    var _toDay = DateTime.now();
 
-    // return Container(
-    //   width: 41,
-    //   height: 20,
-    //   color: gray50,
-    //   child: Center(
-    //     child: Text(term.toString() + '년차',
-    //         style: Theme.of(context)
-    //             .textTheme
-    //             .subtitle2
-    //             .copyWith(color: primary600_bold_text)),
-    //   ),
-    // );
+    /* 면허 날짜를 시간 타입으로 바꿔주고 현재시간과 뺄셈을 날짜로 계산 */
+    int difference = int.parse(
+        _toDay.difference(DateTime.parse(_pharDate)).inDays.toString());
+
+    /* 연차 계산: 날짜 기준으로, [(오늘날짜 - 면허날짜) / 365] + 1 년차로 계산 */
+    int term = difference ~/ 365 + 1;
+
+    //print('difference is' + difference.toString());
+    //print('term is' + term.toString());
 
     return TextButton(
       child: Text(term.toString() + '년차',
