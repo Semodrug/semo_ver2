@@ -17,6 +17,7 @@ import 'package:semo_ver2/ranking/Page/ranking_content_page.dart';
 import 'package:semo_ver2/review/ph_tips.dart';
 import 'package:semo_ver2/review/review_policy_more.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
+import 'package:semo_ver2/review/see_my_tip.dart';
 import 'package:semo_ver2/review/write_tip.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
@@ -187,20 +188,26 @@ class _ReviewPageState extends State<ReviewPage> {
                           .findUserWroteReview(widget.drugItemSeq, user.uid) ==
                       false)
                     IYMYGotoSeeOrCheckDialog(isPharmacist);
+                  else
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                WriteReview(drugItemSeq: widget.drugItemSeq)));
+                }
 
-                  /* 약사 회원의 경우 */
-                  else {
-                    if (await TipService().findPharmacistWroteTip(
-                            widget.drugItemSeq, user.uid) ==
-                        false)
-                      IYMYGotoSeeOrCheckDialog(isPharmacist);
-                    else
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  WriteTip(drugItemSeq: widget.drugItemSeq)));
-                  }
+                /* 약사 회원의 경우 */
+                else {
+                  if (await TipService().findPharmacistWroteTip(
+                          widget.drugItemSeq, user.uid) ==
+                      false)
+                    IYMYGotoSeeOrCheckDialog(isPharmacist);
+                  else
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                WriteTip(drugItemSeq: widget.drugItemSeq)));
                 }
               }),
           body: StreamProvider<List<Review>>.value(
@@ -1152,6 +1159,7 @@ class _ReviewPageState extends State<ReviewPage> {
               SizedBox(height: 13),
               /* BODY */
               RichText(
+                textAlign: TextAlign.center,
                 text: TextSpan(
                   style: Theme.of(context)
                       .textTheme
@@ -1162,7 +1170,10 @@ class _ReviewPageState extends State<ReviewPage> {
                     //     text: boldBodyString,
                     //     style: Theme.of(context).textTheme.headline4.copyWith(
                     //         color: gray700, fontWeight: FontWeight.w700)),
-                    TextSpan(text: "해당 약에 대한 리뷰를\n이미 작성하셨습니다"),
+
+                    isPharmacist /* 약사이면 한마디, 일반인이면 리뷰 */
+                        ? TextSpan(text: "해당 약에 대한 약사의 한마디를\n이미 작성하셨습니다")
+                        : TextSpan(text: "해당 약에 대한 리뷰를\n이미 작성하셨습니다"),
                   ],
                 ),
               ),
@@ -1174,7 +1185,9 @@ class _ReviewPageState extends State<ReviewPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "내가 작성한 리뷰 보러가기",
+                          isPharmacist
+                              ? "내가 작성한 약사의 한마디 보러가기"
+                              : "내가 작성한 리뷰 보러가기",
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
@@ -1190,7 +1203,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   ),
                   onTap: () async {
                     Navigator.pop(context);
-                    isPharmacist
+                    isPharmacist /* 약사이면 tip 보는 page, 아니면 review 보는 page*/
                         ? Navigator.push(
                             context,
                             MaterialPageRoute(
