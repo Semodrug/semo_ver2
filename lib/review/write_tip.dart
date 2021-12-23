@@ -32,7 +32,7 @@ class _WriteTipState extends State<WriteTip> {
   final firestoreInstance = Firestore.instance;
 
   String content = '';
-  List favoriteSelected;
+  List favoriteSelected = [];
   int favoriteCount = 0;
   DateTime regDate = DateTime.now();
   String _entpName = ''; //약 제조사
@@ -232,7 +232,7 @@ class _WriteTipState extends State<WriteTip> {
                     //     text: boldBodyString,
                     //     style: Theme.of(context).textTheme.headline4.copyWith(
                     //         color: gray700, fontWeight: FontWeight.w700)),
-                    TextSpan(text: "리뷰 작성이 완료되었습니다"),
+                    TextSpan(text: "약사의 한마디 작성이 완료되었습니다"),
                   ],
                 ),
               ),
@@ -244,7 +244,7 @@ class _WriteTipState extends State<WriteTip> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "내가 작성한 리뷰 보러가기",
+                          "내가 작성한 약사의 한마디 보러가기",
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1
