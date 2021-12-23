@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/mypage/pharmacist_auth.dart';
 import 'package:semo_ver2/models/review.dart';
 
 import 'package:semo_ver2/mypage/1_edit_privacy.dart';
@@ -43,6 +44,7 @@ class _MyPageState extends State<MyPage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   UserData userData = snapshot.data;
+                  // print(userData.isPharmacist); // 약사인지 디버깅 출력
                   return SingleChildScrollView(
                     child: Column(
                       children: [
@@ -84,7 +86,16 @@ class _MyPageState extends State<MyPage> {
                           color: gray50,
                           height: 10,
                         ),
-                        _myPageMenu('케이스 인식 지원 의약품 목록', context, CaseRecognitionList()),
+                        _myPageMenu(
+                            '케이스 인식 지원 의약품 목록', context, CaseRecognitionList()),
+                        Container(
+                          color: gray50,
+                          height: 2,
+                        ),
+                        userData.isPharmacist
+                            ? Container()
+                            : _myPageMenu(
+                                '약사회원 인증', context, PharmacistAuthPage()),
                         Container(
                           color: gray50,
                           height: 2,
@@ -129,14 +140,18 @@ class _MyPageState extends State<MyPage> {
                             .copyWith(color: gray900),
                         children: <TextSpan>[
                           TextSpan(
-                            text: '${userData.nickname}',
+                            text: userData.isPharmacist
+                                ? '${userData.pharmacistName}'
+                                : '${userData.nickname}',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline2
                                 .copyWith(color: gray900),
                           ),
                           TextSpan(
-                            text: '님, \n오늘도 건강하세요!',
+                            text: userData.isPharmacist
+                                ? ' 약사님, \n오늘도 건강하세요!'
+                                : '님, \n오늘도 건강하세요!',
                           ),
                         ],
                       ),
@@ -144,7 +159,10 @@ class _MyPageState extends State<MyPage> {
                     SizedBox(
                       height: 3,
                     ),
-                    Text(_auth.userEmail.toString()=='null'? '' : _auth.userEmail,
+                    Text(
+                        _auth.userEmail.toString() == 'null'
+                            ? ''
+                            : _auth.userEmail,
                         style: Theme.of(context).textTheme.caption)
                   ],
                 ),
