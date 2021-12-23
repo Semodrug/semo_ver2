@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/review/tip_list.dart';
+import 'package:semo_ver2/tip/tip_list.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/review/review_pill_info.dart';
 import 'package:semo_ver2/theme/colors.dart';

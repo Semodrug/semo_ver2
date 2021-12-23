@@ -6,7 +6,7 @@ import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/drug_info.dart';
 import 'package:semo_ver2/review/edit_review.dart';
-import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/dialog.dart';
 import 'package:semo_ver2/shared/image.dart';

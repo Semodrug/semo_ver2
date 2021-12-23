@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/review/review_box.dart';
 import 'package:semo_ver2/theme/colors.dart';

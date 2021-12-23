@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/review_pill_info.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
-import 'package:semo_ver2/review/tip.dart';
+import 'package:semo_ver2/tip/tip.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';

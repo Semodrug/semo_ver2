@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:semo_ver2/models/tip.dart';
 import 'package:semo_ver2/services/tip_service.dart';
-import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';

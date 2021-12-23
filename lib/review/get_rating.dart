@@ -2,7 +2,7 @@ import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

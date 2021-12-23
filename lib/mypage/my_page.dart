@@ -17,7 +17,7 @@ import 'package:semo_ver2/mypage/my_favorites.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
-import 'package:semo_ver2/services/review.dart';
+import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
