@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -241,7 +242,8 @@ class _MyReviewsState extends State<MyReviews> {
                   Container(height: 6),
                   ReviewBox(context: context, review: review, type: "effect"),
                   Container(height: 6),
-                  ReviewBox(context: context, review: review, type: "sideEffect"),
+                  ReviewBox(
+                      context: context, review: review, type: "sideEffect"),
                 ],
               ),
             ),
@@ -381,7 +383,7 @@ class _MyReviewsState extends State<MyReviews> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                             side: BorderSide(color: gray75))),
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.pop(context);
                     },
                   ),
@@ -404,8 +406,105 @@ class _MyReviewsState extends State<MyReviews> {
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
+                        var reviewCollection =
+                            FirebaseFirestore.instance.collection('Reviews');
+                        var reviewDocSnapshot =
+                            await reviewCollection.doc(record.documentId).get();
+                        if (reviewDocSnapshot.exists) {
+                          Map<String, dynamic> data = reviewDocSnapshot.data();
+                          var effect = data['effect'];
+                          var sideEffect = data['sideEffect'];
+                          var starRating = data['starRating'] * 1.0;
+
+                          var drugCollection = FirebaseFirestore.instance
+                              // .collection('TestDrugs');
+                              .collection('Drugs');
+                          var docSnapshot =
+                              await drugCollection.doc(record.documentId).get();
+                          if (docSnapshot.exists) {
+                            Map<String, dynamic> drugData = docSnapshot.data();
+                            var numOfReviews = drugData['numOfReviews'] * 1.0;
+                            var totalRating = drugData['totalRating'] * 1.0;
+                            var numOfEffectBad =
+                                drugData['numOfEffectBad'] * 1.0;
+                            var numOfEffectSoSo =
+                                drugData['numOfEffectSoSo'] * 1.0;
+                            var numOfEffectGood =
+                                drugData['numOfEffectGood'] * 1.0;
+                            var numOfSideEffectYes =
+                                drugData['numOfSideEffectYes'] * 1.0;
+                            var numOfSideEffectNo =
+                                drugData['numOfSideEffectNo'] * 1.0;
+
+                            FirebaseFirestore.instance
+                                // .collection("TestDrugs")
+                                .collection("Drugs")
+                                .doc(record.seqNum)
+                                .update({
+                              "totalRating": numOfReviews - 1 <= 0.0
+                                  ? 0.0
+                                  : (totalRating * numOfReviews -
+                                          record.starRating) /
+                                      (numOfReviews - 1),
+                              "numOfReviews": numOfReviews - 1 <= 0.0
+                                  ? 0.0
+                                  : numOfReviews - 1,
+                              'numOfEffectBad': effect == 'bad'
+                                  ? numOfEffectBad - 1
+                                  : numOfEffectBad,
+                              'numOfEffectSoSo': effect == 'soso'
+                                  ? numOfEffectSoSo - 1
+                                  : numOfEffectSoSo,
+                              'numOfEffectGood': effect == 'good'
+                                  ? numOfEffectGood - 1
+                                  : numOfEffectGood,
+                              'numOfSideEffectYes': sideEffect == 'yes'
+                                  ? numOfSideEffectYes - 1
+                                  : numOfSideEffectYes,
+                              'numOfSideEffectNo': sideEffect == 'no'
+                                  ? numOfSideEffectNo - 1
+                                  : numOfSideEffectNo,
+                            });
+                          }
+                        }
+
+                        // var collection =
+                        //     FirebaseFirestore.instance.collection('Reviews');
+                        // var reviewDocSnapshot =
+                        //     await collection.doc(record.documentId).get();
+                        // if (reviewDocSnapshot.exists) {
+                        //   Map<String, dynamic> data = reviewDocSnapshot.data();
+                        //   var effect = data['effect'];
+                        //   var sideEffect = data['sideEffect'];
+                        //   var starRating = data['starRating'] * 1.0;
+                        //
+                        //   var collection =
+                        //       FirebaseFirestore.instance.collection('TestDrugs');
+                        //   var docSnapshot =
+                        //       await collection.doc(record.documentId).get();
+                        //   if (docSnapshot.exists) {
+                        //     var numOfReviews = data['numOfReviews'] * 1.0;
+                        //     var totalRating = data['totalRating'] * 1.0;
+                        //
+                        //     FirebaseFirestore.instance
+                        //         .collection("TestDrugs")
+                        //         .doc(record.seqNum)
+                        //         .update({
+                        //       "totalRating": numOfReviews - 1 <= 0.0
+                        //           ? 0.0
+                        //           : (totalRating * numOfReviews -
+                        //                   record.starRating) /
+                        //               (numOfReviews - 1),
+                        //       "numOfReviews": numOfReviews - 1 <= 0.0
+                        //           ? 0.0
+                        //           : numOfReviews - 1,
+                        //     });
+                        //   }
+                        // }
+
                         await ReviewService(documentId: record.documentId)
                             .deleteReviewData();
+
                         Navigator.of(context).pop();
 
                         //OK Dialog

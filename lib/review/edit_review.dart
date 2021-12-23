@@ -3,16 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/ranking/Provider/drugs_controller.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
-import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review.dart';
-import 'package:semo_ver2/shared/category_button.dart';
-import 'package:semo_ver2/shared/constants.dart';
 import 'package:semo_ver2/shared/loading.dart';
-import 'package:semo_ver2/shared/image.dart';
 import 'package:semo_ver2/review/review_pill_info.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
 import 'package:semo_ver2/theme/colors.dart';
@@ -38,6 +33,8 @@ class _EditReviewState extends State<EditReview> {
 
   String effect = '';
   String sideEffect = '';
+  String originEffect = '';
+  String originSideEffect = '';
   double starRating = 0;
   String effectText = '';
   String sideEffectText = '';
@@ -45,17 +42,17 @@ class _EditReviewState extends State<EditReview> {
   bool editSwitch = false;
   DrugsController drugsProvider;
 
-  String _shortenName(String drugName) {
-    String newName;
-    List splitName = [];
+  var isEffectBad = 0.0;
+  var isEffectSoSo = 0.0;
+  var isEffectGood = 0.0;
+  var isSideEffectYes = 0.0;
+  var isSideEffectNo = 0.0;
 
-    if (drugName.contains('(')) {
-      splitName = drugName.split('(');
-      newName = splitName[0];
-      return newName;
-    } else
-      return drugName;
-  }
+  var isOriginEffectBad = 0.0;
+  var isOriginEffectSoSo = 0.0;
+  var isOriginEffectGood = 0.0;
+  var isOriginSideEffectYes = 0.0;
+  var isOriginSideEffectNo = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +62,43 @@ class _EditReviewState extends State<EditReview> {
           if (snapshot.hasData) {
             Review review = snapshot.data;
 
-            if (effect == '') effect = review.effect;
-            if (sideEffect == '') sideEffect = review.sideEffect;
+            // starRating = review.starRating;
+
+            if (effect == '') {
+              effect = review.effect;
+              originEffect = review.effect;
+
+              if (effect == 'bad') {
+                isOriginEffectBad = 1.0;
+                isEffectBad = 1.0;
+                // isOriginEffectSoSo = 0.0;
+                //  isOriginEffectGood = 0.0;
+              } else if (effect == 'soso') {
+                // isOriginEffectBad = 0.0;
+                isOriginEffectSoSo = 1.0;
+                isEffectSoSo = 1.0;
+                // isOriginEffectGood = 0.0;
+              } else if (effect == 'good') {
+                // isOriginEffectBad = 0.0;
+                // isOriginEffectSoSo = 0.0;
+                isOriginEffectGood = 1.0;
+                isEffectGood = 1.0;
+              }
+            }
+            if (sideEffect == '') {
+              sideEffect = review.sideEffect;
+              originSideEffect = review.sideEffect;
+
+              if (sideEffect == 'yes') {
+                isOriginSideEffectYes = 1.0;
+                isSideEffectYes = 1.0;
+                // isOriginSideEffectNo = 0.0;
+              } else if (sideEffect == 'no') {
+                // isOriginSideEffectYes = 0.0;
+                isOriginSideEffectNo = 1.0;
+                isSideEffectNo = 1.0;
+              }
+            }
             if (editSwitch == false) {
               myControllerEffect.text = review.effectText;
               myControllerSideEffect.text = review.sideEffectText;
@@ -242,8 +274,10 @@ class _EditReviewState extends State<EditReview> {
                 height: 28,
               ),
               onRatingUpdate: (rating) {
-                starRating = rating;
                 setState(() {
+                  starRating = rating;
+                  print('starRating!!!!!!!!!!!!!!!!');
+                  print(starRating);
                   // if(starRating == 0)
                   //   starRatingText = "선택하세요.";
                   if (starRating == 1) starRatingText = "1점 (별로에요)";
@@ -340,6 +374,10 @@ class _EditReviewState extends State<EditReview> {
                         onTap: () {
                           setState(() {
                             effect = "bad";
+
+                            isEffectBad = 1.0;
+                            isEffectSoSo = 0.0;
+                            isEffectGood = 0.0;
                           });
                         }),
                     Padding(padding: EdgeInsets.only(top: 10)),
@@ -375,6 +413,10 @@ class _EditReviewState extends State<EditReview> {
                         onTap: () {
                           setState(() {
                             effect = "soso";
+
+                            isEffectBad = 0.0;
+                            isEffectSoSo = 1.0;
+                            isEffectGood = 0.0;
                           });
                         }),
                     Padding(padding: EdgeInsets.only(top: 10)),
@@ -410,6 +452,10 @@ class _EditReviewState extends State<EditReview> {
                         onTap: () {
                           setState(() {
                             effect = "good";
+
+                            isEffectBad = 0.0;
+                            isEffectSoSo = 0.0;
+                            isEffectGood = 1.0;
                           });
                         }),
                     Padding(padding: EdgeInsets.only(top: 10)),
@@ -515,6 +561,8 @@ class _EditReviewState extends State<EditReview> {
                         onTap: () {
                           setState(() {
                             sideEffect = "yes";
+                            isSideEffectYes = 1.0;
+                            isSideEffectNo = 0.0;
                           });
                         }),
                     Padding(padding: EdgeInsets.only(top: 10)),
@@ -554,6 +602,8 @@ class _EditReviewState extends State<EditReview> {
                         onTap: () {
                           setState(() {
                             sideEffect = "no";
+                            isSideEffectYes = 0.0;
+                            isSideEffectNo = 1.0;
                           });
                         }),
                     Padding(padding: EdgeInsets.only(top: 10)),
@@ -667,29 +717,57 @@ class _EditReviewState extends State<EditReview> {
               ///
               var numOfReviews = 0.0;
               var totalRating = 0.0;
-              var collection = FirebaseFirestore.instance.collection('Drugs');
+
+              var numOfEffectBad = 0.0;
+              var numOfEffectSoSo = 0.0;
+              var numOfEffectGood = 0.0;
+              var numOfSideEffectYes = 0.0;
+              var numOfSideEffectNo = 0.0;
+              var collection =
+                  // FirebaseFirestore.instance.collection('TestDrugs');
+                  FirebaseFirestore.instance.collection('Drugs');
               var docSnapshot = await collection.doc(review.seqNum).get();
               if (docSnapshot.exists) {
                 Map<String, dynamic> data = docSnapshot.data();
                 numOfReviews = data['numOfReviews'] * 1.0;
                 totalRating = data['totalRating'] * 1.0;
-              }
 
-              FirebaseFirestore.instance
-                  .collection("Drugs")
-                  .doc(review.seqNum)
-                  .update({
-                "totalRating": (totalRating * numOfReviews -
-                        review.starRating +
-                        starRating) /
-                    numOfReviews,
-              });
+                numOfEffectBad = data['numOfEffectBad'] * 1.0;
+                numOfEffectSoSo = data['numOfEffectSoSo'] * 1.0;
+                numOfEffectGood = data['numOfEffectGood'] * 1.0;
+                numOfSideEffectYes = data['numOfSideEffectYes'] * 1.0;
+                numOfSideEffectNo = data['numOfSideEffectNo'] * 1.0;
+
+                FirebaseFirestore.instance
+                    // .collection("TestDrugs")
+                    .collection("Drugs")
+                    .doc(review.seqNum)
+                    .update({
+                  "totalRating": starRating == 0
+                      ? review.starRating
+                      : (totalRating * numOfReviews -
+                              review.starRating +
+                              starRating) /
+                          numOfReviews,
+                  "numOfEffectBad":
+                      numOfEffectBad - isOriginEffectBad + isEffectBad,
+                  "numOfEffectSoSo":
+                      numOfEffectSoSo - isOriginEffectSoSo + isEffectSoSo,
+                  "numOfEffectGood":
+                      numOfEffectGood - isOriginEffectGood + isEffectGood,
+                  "numOfSideEffectYes": numOfSideEffectYes -
+                      isOriginSideEffectYes +
+                      isSideEffectYes,
+                  "numOfSideEffectNo":
+                      numOfSideEffectNo - isOriginSideEffectNo + isSideEffectNo,
+                });
+              }
 
               ///
 
               Navigator.pop(context);
               editSwitch = true;
-              IYMYGotoSeeOrCheckDialog(review.seqNum);
+              // IYMYGotoSeeOrCheckDialog(review.seqNum);
             }
           },
         ),
