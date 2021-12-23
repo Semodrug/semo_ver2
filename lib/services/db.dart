@@ -155,8 +155,13 @@ class DatabaseService {
       // review: snapshot.data()['review'],
 
       totalRating: snapshot.data()['totalRating'] ?? 0,
-
       numOfReviews: snapshot.data()['numOfReviews'] ?? 0,
+
+      numOfEffectBad: snapshot.data()['numOfEffectBad'] ?? 0.0,
+      numOfEffectSoSo: snapshot.data()['numOfEffectSoSo'] ?? 0.0,
+      numOfEffectGood: snapshot.data()['numOfEffectGood'] ?? 0.0,
+      numOfSideEffectNo: snapshot.data()['numOfSideEffectNo'] ?? 0.0,
+      numOfSideEffectYes: snapshot.data()['numOfSideEffectYes'] ?? 0.0,
     );
   }
 

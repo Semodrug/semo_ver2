@@ -36,6 +36,12 @@ class Drug {
   final String validTerm;
   final num totalRating;
   final num numOfReviews;
+  final num numOfEffectBad;
+  final num numOfEffectSoSo;
+  final num numOfEffectGood;
+  final num numOfSideEffectNo;
+  final num numOfSideEffectYes;
+
   final List searchNameList;
   final List pharmacistTips;
 
@@ -45,41 +51,47 @@ class Drug {
   // TODO : category
   final String category;
 
-  Drug(
-      {this.barCode,
-      this.barCodes,
-      // this.cancelName,
-      this.chart,
-      // this.cnsgnManuf,
-      // this.ediCode,
-      this.eeDocData,
-      // this.eeDocId,
-      this.entpName,
-      this.entpNo,
-      this.etcOtcCode,
-      // this.indutyType,
-      this.ingrName,
-      this.itemName,
-      // this.itemPermitDate,
-      this.itemSeq,
-      this.mainItemIngr,
-      this.materialName,
-      this.nbDocData,
-      // this.nbDocId,
-      this.permitKindName,
-      this.storageMethod,
-      this.totalContect,
-      this.udDocData,
-      this.udDocId,
-      this.validTerm,
-      this.category,
-      this.totalRating,
-      this.numOfReviews,
-      this.searchNameList,
-      this.pharmacistTips
-      //test rank category
-      ,
-      this.rankCategory});
+  Drug({
+    this.barCode,
+    this.barCodes,
+    // this.cancelName,
+    this.chart,
+    // this.cnsgnManuf,
+    // this.ediCode,
+    this.eeDocData,
+    // this.eeDocId,
+    this.entpName,
+    this.entpNo,
+    this.etcOtcCode,
+    // this.indutyType,
+    this.ingrName,
+    this.itemName,
+    // this.itemPermitDate,
+    this.itemSeq,
+    this.mainItemIngr,
+    this.materialName,
+    this.nbDocData,
+    // this.nbDocId,
+    this.permitKindName,
+    this.storageMethod,
+    this.totalContect,
+    this.udDocData,
+    this.udDocId,
+    this.validTerm,
+    this.category,
+    this.totalRating,
+    this.numOfReviews,
+    this.searchNameList,
+    this.pharmacistTips
+    //test rank category
+    ,
+    this.rankCategory,
+    this.numOfEffectBad,
+    this.numOfEffectGood,
+    this.numOfEffectSoSo,
+    this.numOfSideEffectNo,
+    this.numOfSideEffectYes,
+  });
 }
 
 //

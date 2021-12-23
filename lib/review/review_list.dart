@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:semo_ver2/models/tip.dart';
@@ -461,6 +462,149 @@ class _ReviewListState extends State<ReviewList> {
                               borderRadius: BorderRadius.circular(8.0),
                               side: BorderSide(color: primary400_line))),
                       onPressed: () async {
+                        // var reviewCollection =
+                        //     FirebaseFirestore.instance.collection('Reviews');
+                        // var reviewDocSnapshot =
+                        //     await reviewCollection.doc(record.documentId).get();
+                        // if (reviewDocSnapshot.exists) {
+                        //   Map<String, dynamic> data = reviewDocSnapshot.data();
+                        //   var effect = data['effect'];
+                        //   var sideEffect = data['sideEffect'];
+                        //   var starRating = data['starRating'] * 1.0;
+                        //   var seqNum = data['seqNum'];
+                        //
+                        //   print('*********1**********');
+                        //   var drugCollection = FirebaseFirestore.instance
+                        //       .collection('TestDrugs');
+                        //   var docSnapshot =
+                        //       await drugCollection.doc(record.documentId).get();
+                        //   if (docSnapshot.exists) {
+                        //     Map<String, dynamic> drugData = docSnapshot.data();
+                        //     var numOfReviews = drugData['numOfReviews'] * 1.0;
+                        //     var totalRating = drugData['totalRating'] * 1.0;
+                        //     var numOfEffectBad =
+                        //         drugData['numOfEffectBad'] * 1.0;
+                        //     var numOfEffectSoSo =
+                        //         drugData['numOfEffectSoSo'] * 1.0;
+                        //     var numOfEffectGood =
+                        //         drugData['numOfEffectGood'] * 1.0;
+                        //     var numOfSideEffectYes =
+                        //         drugData['numOfSideEffectYes'] * 1.0;
+                        //     var numOfSideEffectNo =
+                        //         drugData['numOfSideEffectNo'] * 1.0;
+                        //     print('*********2**********');
+                        //     FirebaseFirestore.instance
+                        //         .collection("TestDrugs")
+                        //         .doc(seqNum)
+                        //         .update({
+                        //       "totalRating": numOfReviews - 1 <= 0.0
+                        //           ? 0.0
+                        //           : (totalRating * numOfReviews -
+                        //                   record.starRating) /
+                        //               (numOfReviews - 1),
+                        //       "numOfReviews": numOfReviews - 1 <= 0.0
+                        //           ? 0.0
+                        //           : numOfReviews - 1,
+                        //       'numOfEffectBad': effect == 'bad'
+                        //           ? numOfEffectBad - 1
+                        //           : numOfEffectBad,
+                        //       'numOfEffectSoSo': effect == 'soso'
+                        //           ? numOfEffectSoSo - 1
+                        //           : numOfEffectSoSo,
+                        //       'numOfEffectGood': effect == 'good'
+                        //           ? numOfEffectGood - 1
+                        //           : numOfEffectGood,
+                        //       'numOfSideEffectYes': sideEffect == 'yes'
+                        //           ? numOfSideEffectYes - 1
+                        //           : numOfSideEffectYes,
+                        //       'numOfSideEffectNo': sideEffect == 'no'
+                        //           ? numOfSideEffectNo - 1
+                        //           : numOfSideEffectNo,
+                        //     });
+                        //   }
+                        // }
+                        // print('*********3**********');
+                        //
+                        // print('###########4###########');
+
+                        ///
+                        //리뷰 삭제
+
+                        print('*******review_list********');
+                        var effect = '';
+                        var sideEffect = '';
+                        var starRating = 0.0;
+                        var seqNum = '';
+                        var reviewCollection =
+                            FirebaseFirestore.instance.collection('Reviews');
+                        var reviewDocSnapshot =
+                            await reviewCollection.doc(record.documentId).get();
+                        if (reviewDocSnapshot.exists) {
+                          Map<String, dynamic> data = reviewDocSnapshot.data();
+                          effect = data['effect'];
+                          sideEffect = data['sideEffect'];
+                          starRating = data['starRating'] * 1.0;
+                          seqNum = data['seqNum'];
+                        }
+
+                        var numOfReviews = 0.0;
+                        var totalRating = 0.0;
+                        var numOfEffectBad = 0.0;
+                        var numOfEffectSoSo = 0.0;
+                        var numOfEffectGood = 0.0;
+                        var numOfSideEffectYes = 0.0;
+                        var numOfSideEffectNo = 0.0;
+                        var drugCollection =
+                            // FirebaseFirestore.instance.collection('TestDrugs');
+                            FirebaseFirestore.instance.collection('Drugs');
+                        var drugDocSnapshot =
+                            await drugCollection.doc(record.seqNum).get();
+                        if (drugDocSnapshot.exists) {
+                          Map<String, dynamic> drugData =
+                              drugDocSnapshot.data();
+                          numOfReviews = drugData['numOfReviews'] * 1.0;
+                          totalRating = drugData['totalRating'] * 1.0;
+
+                          numOfEffectBad = drugData['numOfEffectBad'] * 1.0;
+                          numOfEffectSoSo = drugData['numOfEffectSoSo'] * 1.0;
+                          numOfEffectGood = drugData['numOfEffectGood'] * 1.0;
+                          numOfSideEffectYes =
+                              drugData['numOfSideEffectYes'] * 1.0;
+                          numOfSideEffectNo =
+                              drugData['numOfSideEffectNo'] * 1.0;
+                        }
+
+                        FirebaseFirestore.instance
+                            // .collection("TestDrugs")
+                            .collection("Drugs")
+                            .doc(record.seqNum)
+                            .update({
+                          "totalRating": numOfReviews - 1 <= 0.0
+                              ? 0.0
+                              : (totalRating * numOfReviews -
+                                      record.starRating) /
+                                  (numOfReviews - 1),
+                          "numOfReviews":
+                              numOfReviews - 1 <= 0.0 ? 0.0 : numOfReviews - 1,
+                          'numOfEffectBad': effect == 'bad'
+                              ? numOfEffectBad - 1
+                              : numOfEffectBad,
+                          'numOfEffectSoSo': effect == 'soso'
+                              ? numOfEffectSoSo - 1
+                              : numOfEffectSoSo,
+                          'numOfEffectGood': effect == 'good'
+                              ? numOfEffectGood - 1
+                              : numOfEffectGood,
+                          'numOfSideEffectYes': sideEffect == 'yes'
+                              ? numOfSideEffectYes - 1
+                              : numOfSideEffectYes,
+                          'numOfSideEffectNo': sideEffect == 'no'
+                              ? numOfSideEffectNo - 1
+                              : numOfSideEffectNo,
+                        });
+
+                        ///
+
                         await ReviewService(documentId: record.documentId)
                             .deleteReviewData();
                         Navigator.of(context).pop();
