@@ -510,20 +510,44 @@ class DatabaseService {
     return snap.data()["askTipList"] ?? [];
   }
 
-  // Future<void> createAskTip(drugName, drugItemSeq, uid) async {
-  //   // return await askTipCollection.add({
-  //   //   'drugName': drugName,
-  //   //   'drugItemSeq': drugItemSeq,
-  //   //   'uid': uid,
-  //   // });
-  //
-  //   return askTipCollection
-  //       .doc(drugItemSeq)
-  //       .set({
-  //     'full_name': "Mary Jane",
-  //     'age': 18
-  //   })
-  //       .then((value) => print("User Added"))
-  //       .catchError((error) => print("Failed to add user: $error"));
-  // }
+  Future<void> createAskTip(drugName, drugItemSeq, uid) async {
+    return askTipCollection
+        .doc(drugItemSeq)
+        .set({
+          'drugName': drugName,
+          'drugItemSeq': drugItemSeq,
+          'askTipList': FieldValue.arrayUnion([uid]),
+        })
+        .then((value) => print("Create Done for add"))
+        .catchError((error) => print("Failed to create document: $error"));
+  }
+
+  Future<void> updateAskTipForRemove(drugItemSeq, uid) async {
+    return askTipCollection
+        .doc(drugItemSeq)
+        .update({
+          'askTipList': FieldValue.arrayRemove([uid]),
+        })
+        .then((value) => print("Update Done for remove"))
+        .catchError((error) => print("Failed to update for remove: $error"));
+  }
+
+  Future<void> updateAskTipForAdd(drugItemSeq, uid) async {
+    return askTipCollection
+        .doc(drugItemSeq)
+        .update({
+          'askTipList': FieldValue.arrayUnion([uid]),
+        })
+        .then((value) => print("Update Done for add"))
+        .catchError((error) => print("Failed to update for add: $error"));
+  }
+
+  Future<bool> checkIfAskTipDocExists(String docId) async {
+    try {
+      var doc = await askTipCollection.doc(docId).get();
+      return doc.exists;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

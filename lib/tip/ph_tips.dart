@@ -36,14 +36,15 @@ class _PhTipsListState extends State<PhTipsList> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Tip> phTips = snapshot.data;
-          return _pharmacistTip(phTips, widget.drugItemSeq);
+          return _pharmacistTip(context, phTips, widget.drugItemSeq);
         } else
           return Container();
       },
     );
   }
 
-  Widget _pharmacistTip(List<Tip> phTips, String drugItemSeq) {
+  Widget _pharmacistTip(
+      BuildContext context, List<Tip> phTips, String drugItemSeq) {
     TheUser user = Provider.of<TheUser>(context);
 
     // print('Check user uid: ' + user.uid);
@@ -75,9 +76,7 @@ class _PhTipsListState extends State<PhTipsList> {
                 ),
               ),
               Expanded(child: Container()),
-              phTips.length == 0
-                  ? _askTip(context, drugItemSeq, user.uid)
-                  : Container()
+              phTips.length == 0 ? _askTip(drugItemSeq, user.uid) : Container()
             ],
           ),
 
@@ -279,38 +278,9 @@ class _PhTipsListState extends State<PhTipsList> {
         },
       ),
     );
-
-    // return Container(
-    //   child: new Row(
-    //     mainAxisAlignment: MainAxisAlignment.start,
-    //     children: <Widget>[
-    //       new GestureDetector(
-    //           child: new Icon(
-    //             // names.contains(auth.currentUser.uid)
-    //             true ? Icons.thumb_up_alt : Icons.thumb_up_alt,
-    //             color: true
-    //                 //names.contains(auth.currentUser.uid)
-    //                 ? primary400_line
-    //                 : Color(0xffDADADA),
-    //             size: 20,
-    //           ),
-    //           onTap: () async {
-    //             // if (names.contains(auth.currentUser.uid)) {
-    //             //   await ReviewService(documentId: review.documentId)
-    //             //       .decreaseFavorite(
-    //             //           review.documentId, auth.currentUser.uid);
-    //             // } else {
-    //             //   await ReviewService(documentId: review.documentId)
-    //             //       .increaseFavorite(
-    //             //           review.documentId, auth.currentUser.uid);
-    //             // }
-    //           })
-    //     ],
-    //   ),
-    // );
   }
 
-  Widget _askTip(BuildContext context, String drugItemSeq, String uid) {
+  Widget _askTip(String drugItemSeq, String uid) {
     /* drugItemSeq으로 drug doc에 접근하여 askTipList에 이미 uid가 있는지 확인 */
 
     return StreamBuilder<Drug>(
@@ -318,7 +288,7 @@ class _PhTipsListState extends State<PhTipsList> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Drug drug = snapshot.data;
-            // print(drugItemSeq);
+            print(drugItemSeq);
             // print(drug.askTipList);
             // print(uid);
             bool isAsked = List.from(drug.askTipList).contains(uid);
@@ -347,31 +317,38 @@ class _PhTipsListState extends State<PhTipsList> {
                   ],
                 ),
                 onPressed: () async {
+                  bool isExist = await DatabaseService(itemSeq: drugItemSeq)
+                      .checkIfAskTipDocExists(drugItemSeq);
+                  print('isExist' + isExist.toString());
                   if (isAsked) {
                     /* 이미 like 눌렀을 때 > dislike로 */
                     await DatabaseService(itemSeq: drugItemSeq)
                         .removeFromAskTipList(drugItemSeq, uid);
+                    /* DB: AskTips Collection update */
+                    await DatabaseService()
+                        .updateAskTipForRemove(drugItemSeq, uid);
                   } else {
                     /* like로 */
                     await DatabaseService(itemSeq: drugItemSeq)
                         .addToAskTipList(drugItemSeq, uid);
-                    //TODO: DB 하나 더 만들어서, 우리가 알 수 있게 해야 함
-                    // await DatabaseService().createAskTip(
-                    //     drug.itemName,
-                    //     drugItemSeq,
-                    //     uid
-                    //     _emailController.text);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    IYMYOkDialog(
-                      context: context,
-                      dialogIcon: Icon(Icons.check, color: primary300_main),
-                      bodyString: '요청이 완료되었습니다',
-                      buttonName: '확인',
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ).showWarning();
+                    isExist
+                        /* DB: AskTips Collection에 itemSeq Doc이 있으면 update */
+                        ? await DatabaseService()
+                            .updateAskTipForAdd(drugItemSeq, uid)
+                        /* DB: AskTips Collection에 itemSeq Doc이 없으면 새로 만들기 */
+                        : await DatabaseService()
+                            .createAskTip(drug.itemName, drugItemSeq, uid);
+                    // Navigator.pop(context);
+                    // Navigator.pop(context);
+                    // IYMYOkDialog(
+                    //   context: context,
+                    //   dialogIcon: Icon(Icons.check, color: primary300_main),
+                    //   bodyString: '요청이 완료되었습니다',
+                    //   buttonName: '확인',
+                    //   onPressed: () {
+                    //     Navigator.pop(context);
+                    //   },
+                    // ).showWarning();
                   }
                 },
               ),
