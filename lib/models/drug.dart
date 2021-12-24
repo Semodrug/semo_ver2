@@ -43,6 +43,7 @@ class Drug {
   final num numOfSideEffectYes;
 
   final List searchNameList;
+  final List askTipList; // 약사의 한마디 요청
   final List pharmacistTips;
 
   //test rank category
@@ -91,6 +92,7 @@ class Drug {
     this.numOfEffectSoSo,
     this.numOfSideEffectNo,
     this.numOfSideEffectYes,
+    this.askTipList,
   });
 }
 

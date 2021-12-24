@@ -107,6 +107,7 @@ class DatabaseService {
           totalRating: doc.data()['totalRating'] ?? 0,
           numOfReviews: doc.data()['numOfReviews'] ?? 0,
           searchNameList: doc.data()['searchNameList'] ?? [],
+          askTipList: doc.data()['askTipList'] ?? [],
 
           //test rank category
           rankCategory: doc.data()['RANK_CATEGORY'] ?? '');
@@ -162,6 +163,8 @@ class DatabaseService {
       numOfEffectGood: snapshot.data()['numOfEffectGood'] ?? 0.0,
       numOfSideEffectNo: snapshot.data()['numOfSideEffectNo'] ?? 0.0,
       numOfSideEffectYes: snapshot.data()['numOfSideEffectYes'] ?? 0.0,
+
+      askTipList: snapshot.data()['askTipList'] ?? [],
     );
   }
 
@@ -462,6 +465,8 @@ class DatabaseService {
 
   final CollectionReference inquiryCollection =
       FirebaseFirestore.instance.collection('Inquiry');
+  final CollectionReference askTipCollection =
+      FirebaseFirestore.instance.collection('AskTip');
 
   Future<void> createInquiry(index, title, body, from) async {
     String type;
@@ -487,4 +492,38 @@ class DatabaseService {
       'from': from,
     });
   }
+
+  Future<void> removeFromAskTipList(String drugItemSeq, String uid) async {
+    return await drugCollection.doc(drugItemSeq).update({
+      'askTipList': FieldValue.arrayRemove([uid]),
+    });
+  }
+
+  Future<void> addToAskTipList(String drugItemSeq, String uid) async {
+    return await drugCollection.doc(drugItemSeq).update({
+      'askTipList': FieldValue.arrayUnion([uid]),
+    });
+  }
+
+  Future<List> getAskTipList(drugItemSeq) async {
+    DocumentSnapshot snap = await drugCollection.doc(drugItemSeq).get();
+    return snap.data()["askTipList"] ?? [];
+  }
+
+  // Future<void> createAskTip(drugName, drugItemSeq, uid) async {
+  //   // return await askTipCollection.add({
+  //   //   'drugName': drugName,
+  //   //   'drugItemSeq': drugItemSeq,
+  //   //   'uid': uid,
+  //   // });
+  //
+  //   return askTipCollection
+  //       .doc(drugItemSeq)
+  //       .set({
+  //     'full_name': "Mary Jane",
+  //     'age': 18
+  //   })
+  //       .then((value) => print("User Added"))
+  //       .catchError((error) => print("Failed to add user: $error"));
+  // }
 }
