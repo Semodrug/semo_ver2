@@ -2,11 +2,16 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/tip.dart';
+import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/tip_service.dart';
 import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/shared/category_button.dart';
 import 'package:semo_ver2/shared/loading.dart';
+import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -24,9 +29,6 @@ class PhTipsList extends StatefulWidget {
 }
 
 class _PhTipsListState extends State<PhTipsList> {
-  CollectionReference users =
-      FirebaseFirestore.instance.collection('PharmacistTips');
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Tip>>(
@@ -34,16 +36,17 @@ class _PhTipsListState extends State<PhTipsList> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Tip> phTips = snapshot.data;
-          return _pharmacistTip(phTips);
+          return _pharmacistTip(phTips, widget.drugItemSeq);
         } else
           return Container();
       },
     );
   }
 
-  Widget _pharmacistTip(List<Tip> phTips) {
-    // var width = MediaQuery.of(context).size.width;
+  Widget _pharmacistTip(List<Tip> phTips, String drugItemSeq) {
+    TheUser user = Provider.of<TheUser>(context);
 
+    // print('Check user uid: ' + user.uid);
     return Container(
       // height: 300,
       color: gray50,
@@ -52,27 +55,30 @@ class _PhTipsListState extends State<PhTipsList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // InkWell(
-          //     child: Icon(
-          //       Icons.arrow_back,),
-          //   onTap: addUser,
-          // ),
-          RichText(
-            text: TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: "약사의 한마디",
-                  style: Theme.of(context).textTheme.headline5,
+          Row(
+            children: [
+              RichText(
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: "약사의 한마디",
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    TextSpan(
+                      text: '  ' + phTips.length.toString(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: yellow),
+                    ),
+                  ],
                 ),
-                TextSpan(
-                  text: '  ' + phTips.length.toString(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5
-                      .copyWith(color: yellow),
-                ), // TODO: connect with DB
-              ],
-            ),
+              ),
+              Expanded(child: Container()),
+              phTips.length == 0
+                  ? _askTip(context, drugItemSeq, user.uid)
+                  : Container()
+            ],
           ),
 
           // SizedBox(height: 20),
@@ -302,5 +308,84 @@ class _PhTipsListState extends State<PhTipsList> {
     //     ],
     //   ),
     // );
+  }
+
+  Widget _askTip(BuildContext context, String drugItemSeq, String uid) {
+    /* drugItemSeq으로 drug doc에 접근하여 askTipList에 이미 uid가 있는지 확인 */
+
+    return StreamBuilder<Drug>(
+        stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Drug drug = snapshot.data;
+            // print(drugItemSeq);
+            // print(drug.askTipList);
+            // print(uid);
+            bool isAsked = List.from(drug.askTipList).contains(uid);
+            return Container(
+              height: 28,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 13),
+                    side: BorderSide(
+                        width: 1.0,
+                        color:
+                            isAsked ? Color(0xFF00C2AE) : Color(0xFFE4E5E5))),
+                icon: Icon(
+                  isAsked ? Icons.check : Icons.priority_high_rounded,
+                  size: 16,
+                  color: isAsked ? primary300_main : gray300_inactivated,
+                ),
+                label: Row(
+                  children: [
+                    Text("요청하기", style: Theme.of(context).textTheme.caption),
+                    SizedBox(width: 4),
+                    Text(
+                      snapshot.data.askTipList.length.toString(),
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                  ],
+                ),
+                onPressed: () async {
+                  if (isAsked) {
+                    /* 이미 like 눌렀을 때 > dislike로 */
+                    await DatabaseService(itemSeq: drugItemSeq)
+                        .removeFromAskTipList(drugItemSeq, uid);
+                  } else {
+                    /* like로 */
+                    await DatabaseService(itemSeq: drugItemSeq)
+                        .addToAskTipList(drugItemSeq, uid);
+                    //TODO: DB 하나 더 만들어서, 우리가 알 수 있게 해야 함
+                    // await DatabaseService().createAskTip(
+                    //     drug.itemName,
+                    //     drugItemSeq,
+                    //     uid
+                    //     _emailController.text);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    IYMYOkDialog(
+                      context: context,
+                      dialogIcon: Icon(Icons.check, color: primary300_main),
+                      bodyString: '요청이 완료되었습니다',
+                      buttonName: '확인',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ).showWarning();
+                  }
+                },
+              ),
+            );
+          } else {
+            return GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: SingleChildScrollView(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        });
   }
 }
