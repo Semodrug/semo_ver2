@@ -46,7 +46,7 @@ class _RankingContentPageState extends State<RankingContentPage> {
               ),
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RankingPage()),
+                MaterialPageRoute(builder: (context) => SearchScreen()),
               ),
             ),
           ),
