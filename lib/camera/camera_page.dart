@@ -701,6 +701,8 @@ class _CaseResultState extends State<CaseResult> {
                                     color: primary300_main,
                                   ),
                                   onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
