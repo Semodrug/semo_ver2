@@ -188,6 +188,7 @@ class ReviewService {
       'sideEffectText': review.sideEffectText,
       'itemName': review.itemName,
       'reporterUid': FieldValue.arrayUnion([reporterUid]),
+      "registrationDate": DateTime.now(),
     });
   }
 

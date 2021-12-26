@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/review_pill_info.dart';
-import 'package:semo_ver2/review/see_my_review.dart';
+import 'package:semo_ver2/tip/see_my_tip.dart';
 import 'package:semo_ver2/tip/tip.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/shared/submit_button.dart';
@@ -267,7 +267,7 @@ class _WriteTipState extends State<WriteTip> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                SeeMyReview(widget.drugItemSeq)));
+                                SeeMyTip(widget.drugItemSeq)));
                   }),
               SizedBox(width: 16),
               /* RIGHT ACTION BUTTON */
