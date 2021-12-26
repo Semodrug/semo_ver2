@@ -87,19 +87,6 @@ class TipService {
     return tipsSnapshots;
   }
 
-  //
-  //
-  //
-  // static Future<QuerySnapshot> getReviewData(int limit, {DocumentSnapshot startAfter,}) async {
-  //   final refReviews = FirebaseFirestore.instance.collection('Reviews').orderBy('registrationDate').limit(limit);
-  //
-  //   if (startAfter == null) {
-  //     return refReviews.get();
-  //   } else {
-  //     return refReviews.startAfterDocument(startAfter).get();
-  //   }
-  // }
-
   Stream<Tip> getSingleTip(String documentId) {
     return tipCollection.doc(documentId).snapshots().map((doc) {
       return Tip(
@@ -142,6 +129,7 @@ class TipService {
       'content': tip.content,
       'itemName': tip.itemName,
       'reporterUid': FieldValue.arrayUnion([reporterUid]),
+      "registrationDate": DateTime.now(),
     });
   }
 

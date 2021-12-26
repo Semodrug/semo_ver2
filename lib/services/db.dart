@@ -517,6 +517,7 @@ class DatabaseService {
           'drugName': drugName,
           'drugItemSeq': drugItemSeq,
           'askTipList': FieldValue.arrayUnion([uid]),
+          "registrationDate": DateTime.now(),
         })
         .then((value) => print("Create Done for add"))
         .catchError((error) => print("Failed to create document: $error"));
@@ -537,6 +538,7 @@ class DatabaseService {
         .doc(drugItemSeq)
         .update({
           'askTipList': FieldValue.arrayUnion([uid]),
+          "registrationDate": DateTime.now(),
         })
         .then((value) => print("Update Done for add"))
         .catchError((error) => print("Failed to update for add: $error"));
