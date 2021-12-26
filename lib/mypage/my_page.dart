@@ -20,7 +20,10 @@ import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
+import 'package:semo_ver2/shared/ok_dialog.dart';
 import 'package:semo_ver2/theme/colors.dart';
+
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class MyPage extends StatefulWidget {
   @override
@@ -71,7 +74,8 @@ class _MyPageState extends State<MyPage> {
                           color: gray50,
                           height: 2,
                         ),
-                        _myPageMenu('1:1 문의', context, InquiryPage()),
+                        //_myPageMenu('1:1 문의', context, InquiryPage()),
+                        _myPageForEmil('1:1 문의', context),
                         Container(
                           color: gray50,
                           height: 2,
@@ -287,3 +291,77 @@ Widget _myPageMenu(String name, BuildContext context, var nextPage) {
         );
       });
 }
+
+Widget _myPageForEmil(String name, BuildContext context) {
+  Future<String> _getEmailBody() async {
+
+    String body = "";
+
+    body += "아래 항목에서 골라서 문의 제목에 적어주세요!\n";
+    body += "==============\n";
+    body += '1 의약품 정보 문의 및 요청\n';
+    body += '2 서비스 불편 오류 제보 \n';
+    body += '3 사용 방법, 기타문의 \n';
+    body += '4 의견 제안, 칭찬 \n';
+    body += '5 제휴 문의\n';
+    body += "==============\n";
+
+    return body;
+  }
+  void _sendEmail() async {
+    String body = await _getEmailBody();
+
+    final Email email = Email(
+      body: body,
+      subject: '[이약모약 문의]',
+      recipients: ['iymy.dev@gmail.com'],
+      cc: [],
+      bcc: [],
+      attachmentPaths: [],
+      isHTML: false,
+    );
+
+    try {
+      await FlutterEmailSender.send(email);
+    } catch (error) {
+      String title = "기본 메일 앱을 사용할 수 없기 때문에\n 앱에서 바로 문의를 전송하기 어려운 상황입니다.\n\n아래 이메일로 연락주시면\n  감사하겠습니다 :)\n\niymy.dev@gmail.com";
+      String message = "";
+      //_showErrorAlert(title: title, message: message);
+      IYMYOkDialog(
+        context: context,
+        dialogIcon: Icon(Icons.check, color: primary300_main),
+        bodyString: title,
+        buttonName: '확인',
+        onPressed: () {
+          Navigator.pop(context);
+          //Navigator.pop(context);
+        },
+      ).showWarning();
+    }
+  }
+
+  return InkWell(
+      child: Container(
+        height: 48,
+        padding: EdgeInsets.fromLTRB(20.0, 0, 12.0, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(name,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .copyWith(color: gray900, fontWeight: FontWeight.normal)),
+            Icon(
+              Icons.navigate_next,
+              color: gray100,
+            ),
+          ],
+        ),
+      ),
+      onTap: () {
+        _sendEmail();
+      });
+
+}
+
