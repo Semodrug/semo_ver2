@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/tip.dart';
 import 'package:semo_ver2/models/user.dart';
+import 'package:semo_ver2/review/all_pharmacists_tip.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/tip_service.dart';
 import 'package:semo_ver2/services/review_service.dart';
@@ -29,6 +30,7 @@ class PhTipsList extends StatefulWidget {
 }
 
 class _PhTipsListState extends State<PhTipsList> {
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Tip>>(
@@ -76,7 +78,7 @@ class _PhTipsListState extends State<PhTipsList> {
                 ),
               ),
               Expanded(child: Container()),
-              phTips.length == 0 ? _askTip(drugItemSeq, user.uid) : Container()
+              phTips.length == 0 ? _askTip(drugItemSeq, user.uid) : _seeAll(phTips)
             ],
           ),
 
@@ -203,6 +205,49 @@ class _PhTipsListState extends State<PhTipsList> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _seeAll(List<Tip> phTips) {
+    return Row(
+      children: [
+        TextButton(
+            onPressed: () async {
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          AllPharMacistsTipScreen(
+                            phTips: phTips
+                              // infoEE: infoEE,
+                              // infoNB: infoNB,
+                              // infoUD: infoUD,
+                              // storage: storage,
+                              // entp_name: entpName
+                              )));
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => DetailInfo(
+              //               drugItemSeq: drug.itemSeq,
+              //             )));
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text('전체보기',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(color: gray500, fontSize: 12)),
+                Icon(
+                  Icons.keyboard_arrow_right,
+                  color: gray500,
+                  size: 20,
+                )
+              ],
+            )),
+      ],
     );
   }
 
