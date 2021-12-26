@@ -38,12 +38,15 @@ class _WriteTipState extends State<WriteTip> {
   String _entpName = ''; //약 제조사
   String _itemName = ''; //약
 
-  void setItemNames(itemName, entpName) {
-    _itemName = itemName;
-    _entpName = entpName;
-  }
+  void _registerTip(pharmacistName, pharmacistDate) async {
+    var drugCollection = FirebaseFirestore.instance.collection('Drugs');
+    var drugDocSnapshot = await drugCollection.doc(widget.drugItemSeq).get();
+    if (drugDocSnapshot.exists) {
+      Map<String, dynamic> data = drugDocSnapshot.data();
+      _entpName = data['ENTP_NAME'];
+      _itemName = data['ITEM_NAME'];
+    }
 
-  void _registerTip(pharmacistName, pharmacistDate) {
     FirebaseFirestore.instance.collection("TestTips").add({
       "content": content,
       "uid": auth.currentUser.uid,
