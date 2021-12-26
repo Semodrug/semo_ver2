@@ -25,8 +25,7 @@ class _SeeMyReviewState extends State<SeeMyReview> {
     TheUser user = Provider.of<TheUser>(context);
 
     return Scaffold(
-        appBar:
-            CustomAppBarWithGoToBack("약사의 한마디", Icon(Icons.arrow_back), 0.5),
+        appBar: CustomAppBarWithGoToBack("리뷰", Icon(Icons.arrow_back), 0.5),
         backgroundColor: gray0_white,
         body: StreamBuilder<List<Review>>(
             stream:

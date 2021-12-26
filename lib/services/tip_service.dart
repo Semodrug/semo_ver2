@@ -54,7 +54,13 @@ class TipService {
   Stream<List<Tip>> getTips(String seqNum) {
     return tipCollection
         .where("seqNum", isEqualTo: seqNum)
-        //todo: DELETE???
+        .snapshots()
+        .map(_tipListFromSnapshot);
+  }
+
+  Stream<List<Tip>> getPharmacistTips(String uid) {
+    return tipCollection
+        .where("uid", isEqualTo: uid)
         .snapshots()
         .map(_tipListFromSnapshot);
   }

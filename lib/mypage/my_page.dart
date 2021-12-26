@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/models/tip.dart';
 import 'package:semo_ver2/mypage/pharmacist_auth.dart';
 import 'package:semo_ver2/models/review.dart';
 
@@ -18,9 +19,11 @@ import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/services/auth.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review_service.dart';
+import 'package:semo_ver2/services/tip_service.dart';
 import 'package:semo_ver2/shared/customAppBar.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/theme/colors.dart';
+import 'package:semo_ver2/tip/my_tips.dart';
 
 class MyPage extends StatefulWidget {
   @override
@@ -184,19 +187,31 @@ class _MyPageState extends State<MyPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // TODO: 리뷰 갯수뷰
                   StreamBuilder<List<Review>>(
                     stream: ReviewService().getUserReviews(user.uid.toString()),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List<Review> reviews = snapshot.data;
-                        return Row(
-                          children: [
-                            _myMenu('리뷰', reviews.length.toString(), context,
-                                MyReviews()),
-                            SizedBox(width: 10)
-                          ],
-                        );
+                        return StreamBuilder<List<Tip>>(
+                            stream: TipService()
+                                .getPharmacistTips(user.uid.toString()),
+                            builder: (context, snapshot2) {
+                              List<Tip> tips = snapshot2.data;
+
+                              return Row(
+                                children: [
+                                  userData.isPharmacist
+                                      ? _myMenu(
+                                          '약사의 한마디',
+                                          tips.length.toString(),
+                                          context,
+                                          MyTips())
+                                      : _myMenu('리뷰', reviews.length.toString(),
+                                          context, MyReviews()),
+                                  SizedBox(width: 10)
+                                ],
+                              );
+                            });
                       } else
                         return CircularProgressIndicator();
                     },
