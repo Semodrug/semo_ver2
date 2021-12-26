@@ -338,17 +338,16 @@ class _PhTipsListState extends State<PhTipsList> {
                         /* DB: AskTips Collection에 itemSeq Doc이 없으면 새로 만들기 */
                         : await DatabaseService()
                             .createAskTip(drug.itemName, drugItemSeq, uid);
-                    // Navigator.pop(context);
-                    // Navigator.pop(context);
-                    // IYMYOkDialog(
-                    //   context: context,
-                    //   dialogIcon: Icon(Icons.check, color: primary300_main),
-                    //   bodyString: '요청이 완료되었습니다',
-                    //   buttonName: '확인',
-                    //   onPressed: () {
-                    //     Navigator.pop(context);
-                    //   },
-                    // ).showWarning();
+
+                    IYMYOkDialog(
+                      context: context,
+                      dialogIcon: Icon(Icons.check, color: primary300_main),
+                      bodyString: '요청이 완료되었습니다',
+                      buttonName: '확인',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ).showWarning();
                   }
                 },
               ),
