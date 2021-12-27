@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/review.dart';
 import 'package:semo_ver2/ranking/Provider/drugs_controller.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
+import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/review_service.dart';
 import 'package:semo_ver2/shared/loading.dart';
 import 'package:semo_ver2/review/review_pill_info.dart';
@@ -132,14 +134,16 @@ class _EditReviewState extends State<EditReview> {
                   onTap: () {
                     FocusScope.of(context).unfocus();
                   },
-                  child: ListView(
-                    children: <Widget>[
-                      ReviewPillInfo(review.seqNum),
-                      _rating(review),
-                      _effect(review),
-                      _sideEffect(review),
-                      _edit(review),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        ReviewPillInfo(review.seqNum),
+                        _rating(review),
+                        _effect(review),
+                        _sideEffect(review),
+                        _edit(review),
+                      ],
+                    ),
                   ),
                 ));
           } else {
@@ -723,6 +727,58 @@ class _EditReviewState extends State<EditReview> {
               var numOfEffectGood = 0.0;
               var numOfSideEffectYes = 0.0;
               var numOfSideEffectNo = 0.0;
+
+              // StreamBuilder<Drug>(
+              //     stream: DatabaseService(itemSeq: review.seqNum).drugData,
+              //     builder: (context, snpashot) {
+              //       if (snpashot.hasData) {
+              //         Drug drug = snpashot.data;
+
+              //         numOfReviews = drug.numOfReviews * 1.0;
+              //         totalRating = drug.totalRating * 1.0;
+
+              //         numOfEffectBad = drug.numOfEffectBad * 1.0;
+              //         numOfEffectSoSo = drug.numOfEffectSoSo * 1.0;
+              //         numOfEffectGood = drug.numOfEffectGood * 1.0;
+              //         numOfSideEffectYes = drug.numOfSideEffectYes * 1.0;
+              //         numOfSideEffectNo = drug.numOfSideEffectNo * 1.0;
+              //         if (numOfEffectBad == null) {
+              //           numOfEffectBad = 0.0;
+              //           numOfEffectSoSo = 0.0;
+              //           numOfEffectGood = 0.0;
+              //           numOfSideEffectYes = 0.0;
+              //           numOfSideEffectNo = 0.0;
+              //         }
+              //         FirebaseFirestore.instance
+              //             // .collection("TestDrugs")
+              //             .collection("Drugs")
+              //             .doc(review.seqNum)
+              //             .update({
+              //           "totalRating": starRating == 0
+              //               ? review.starRating
+              //               : (totalRating * numOfReviews -
+              //                       review.starRating +
+              //                       starRating) /
+              //                   numOfReviews,
+              //           "numOfEffectBad":
+              //               numOfEffectBad - isOriginEffectBad + isEffectBad,
+              //           "numOfEffectSoSo":
+              //               numOfEffectSoSo - isOriginEffectSoSo + isEffectSoSo,
+              //           "numOfEffectGood":
+              //               numOfEffectGood - isOriginEffectGood + isEffectGood,
+              //           "numOfSideEffectYes": numOfSideEffectYes -
+              //               isOriginSideEffectYes +
+              //               isSideEffectYes,
+              //           "numOfSideEffectNo": numOfSideEffectNo -
+              //               isOriginSideEffectNo +
+              //               isSideEffectNo,
+              //         });
+              //         return Container();
+              //       } else {
+              //         return Container();
+              //       }
+              //     });
+
               var collection =
                   // FirebaseFirestore.instance.collection('TestDrugs');
                   FirebaseFirestore.instance.collection('Drugs');
@@ -738,7 +794,7 @@ class _EditReviewState extends State<EditReview> {
                 numOfSideEffectYes = data['numOfSideEffectYes'] * 1.0;
                 numOfSideEffectNo = data['numOfSideEffectNo'] * 1.0;
 
-                FirebaseFirestore.instance
+                await FirebaseFirestore.instance
                     // .collection("TestDrugs")
                     .collection("Drugs")
                     .doc(review.seqNum)
