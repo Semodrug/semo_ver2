@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/tip.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/review/all_pharmacists_tip.dart';
+import 'package:semo_ver2/tip/all_pharmacists_tip.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/tip_service.dart';
 import 'package:semo_ver2/services/review_service.dart';
@@ -30,7 +30,6 @@ class PhTipsList extends StatefulWidget {
 }
 
 class _PhTipsListState extends State<PhTipsList> {
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Tip>>(
@@ -78,7 +77,9 @@ class _PhTipsListState extends State<PhTipsList> {
                 ),
               ),
               Expanded(child: Container()),
-              phTips.length == 0 ? _askTip(drugItemSeq, user.uid) : _seeAll(phTips)
+              phTips.length == 0
+                  ? _askTip(drugItemSeq, user.uid)
+                  : _seeAll(phTips)
             ],
           ),
 
@@ -114,16 +115,41 @@ class _PhTipsListState extends State<PhTipsList> {
                           child: Container(
                               width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                              child: Stack(
+                                alignment: Alignment.topRight,
                                 children: [
-                                  // SizedBox(height:width*0.02),
-                                  Row(
+                                  IconButton(
+                                    alignment: Alignment.topRight,
+                                    padding: EdgeInsets.zero,
+                                    icon: Icon(Icons.more_horiz,
+                                        color: gray500, size: 19),
+                                    onPressed: () {
+                                      if (user.uid == tip.uid) {
+                                        showModalBottomSheet(
+                                            backgroundColor: Colors.transparent,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return _popUpMenu(tip);
+                                            });
+                                      } else if (auth.currentUser.uid !=
+                                          tip.uid) {
+                                        showModalBottomSheet(
+                                            backgroundColor: Colors.transparent,
+                                            context: context,
+                                            builder: (context) {
+                                              return _popUpMenuAnonymous(
+                                                  tip, user);
+                                            });
+                                      }
+                                    },
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
+                                      // SizedBox(height:width*0.02),
                                       Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -199,45 +225,18 @@ class _PhTipsListState extends State<PhTipsList> {
                                           )
                                         ],
                                       ),
-                                      IconButton(
-                                        padding: EdgeInsets.only(right: 0),
-                                        icon: Icon(Icons.more_horiz,
-                                            color: gray500, size: 19),
-                                        onPressed: () {
-                                          if (user.uid == tip.uid) {
-                                            showModalBottomSheet(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return _popUpMenu(tip);
-                                                });
-                                          } else if (auth.currentUser.uid !=
-                                              tip.uid) {
-                                            showModalBottomSheet(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                context: context,
-                                                builder: (context) {
-                                                  return _popUpMenuAnonymous(
-                                                      tip, user);
-                                                });
-                                          }
-                                        },
-                                      )
+                                      SizedBox(height: 16),
+                                      Text(tip.content,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .copyWith(color: gray700),
+                                          maxLines: 4,
+                                          overflow: TextOverflow.ellipsis),
+                                      Spacer(),
+                                      _likeButton(tip, auth)
                                     ],
                                   ),
-                                  SizedBox(height: 16),
-                                  Text(tip.content,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText2
-                                          .copyWith(color: gray700),
-                                      maxLines: 4,
-                                      overflow: TextOverflow.ellipsis),
-                                  Spacer(),
-                                  _likeButton(tip, auth)
                                 ],
                               )));
                 },
@@ -258,8 +257,7 @@ class _PhTipsListState extends State<PhTipsList> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          AllPharMacistsTipScreen(
-                            phTips: phTips
+                          AllPharMacistsTipScreen(phTips: phTips
                               // infoEE: infoEE,
                               // infoNB: infoNB,
                               // infoUD: infoUD,

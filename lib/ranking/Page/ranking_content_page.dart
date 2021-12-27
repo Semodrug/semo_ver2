@@ -22,54 +22,59 @@ class RankingContentPage extends StatefulWidget {
 class _RankingContentPageState extends State<RankingContentPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar:
-
-          ///ranking
-          AppBar(
-        title: Text(
-          widget.categoryName,
-          style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
-        ),
-        elevation: 0.5,
-        titleSpacing: 0,
-        automaticallyImplyLeading: false,
+    return WillPopScope(
+      onWillPop: () {
+        return Future(() => false);
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: IconButton(
-              icon: Icon(
-                Icons.search,
-                color: primary300_main,
-              ),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SearchScreen()),
+        appBar:
+
+            ///ranking
+            AppBar(
+          title: Text(
+            widget.categoryName,
+            style: Theme.of(context).textTheme.headline5.copyWith(color: gray800),
+          ),
+          elevation: 0.5,
+          titleSpacing: 0,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.search,
+                  color: primary300_main,
+                ),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchScreen()),
+                ),
               ),
             ),
+            //for test home
+          ],
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: primary300_main,
+            onPressed: () {
+              // Navigator.pop(context);
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
           ),
-          //for test home
-        ],
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          color: primary300_main,
-          onPressed: () {
-            // Navigator.pop(context);
-            Navigator.of(context).popUntil((route) => route.isFirst);
-          },
         ),
-      ),
-      // CustomAppBarWithArrowBackAndSearch(widget.categoryName, 0.5), //test
-      body: Column(
-        children: [
-          _countDropDown(context),
-          if (widget.filter == '리뷰 많은 순')
-            sortByNumOfReview(context)
-          else if (widget.filter == '별점순')
-            sortByRating(context)
-        ],
+        // CustomAppBarWithArrowBackAndSearch(widget.categoryName, 0.5), //test
+        body: Column(
+          children: [
+            _countDropDown(context),
+            if (widget.filter == '리뷰 많은 순')
+              sortByNumOfReview(context)
+            else if (widget.filter == '별점순')
+              sortByRating(context)
+          ],
+        ),
       ),
     );
   }
