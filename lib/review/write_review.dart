@@ -66,101 +66,6 @@ class _WriteReviewState extends State<WriteReview> {
       return drugName;
   }
 
-  // void _registerReview(nickName) {
-  //   FirebaseFirestore.instance.collection("Reviews").add({
-  //     "seqNum": widget.drugItemSeq,
-  //     "uid": auth.currentUser.uid,
-  //     "effect": effect,
-  //     "sideEffect": sideEffect,
-  //     "starRating": starRating,
-  //     "effectText": effectText,
-  //     "sideEffectText": sideEffectText,
-  //     "favoriteSelected": favoriteSelected,
-  //     "noFavorite": noFavorite,
-  //     "registrationDate": DateTime.now(),
-  //     "entpName": _entpName,
-  //     "itemName": _itemName,
-  //     "nickName": nickName,
-  //   });
-  // }
-
-  // Future<void> _registerReview(nickName) async {
-  //   var drugCollection = FirebaseFirestore.instance.collection('TestDrugs');
-  //   // var collection = FirebaseFirestore.instance.collection('Drugs');
-  //   var drugDocSnapshot = await drugCollection.doc(widget.drugItemSeq).get();
-  //   if (drugDocSnapshot.exists) {
-  //     Map<String, dynamic> data = drugDocSnapshot.data();
-  //     _entpName = data['entpName'] * 1.0;
-  //     _itemName = data['itemName'] * 1.0;
-  //   }
-  //
-  //   FirebaseFirestore.instance.collection("Reviews").add({
-  //     "seqNum": widget.drugItemSeq,
-  //     "uid": auth.currentUser.uid,
-  //     "effect": effect,
-  //     "sideEffect": sideEffect,
-  //     "starRating": starRating,
-  //     "effectText": effectText,
-  //     "sideEffectText": sideEffectText,
-  //     "favoriteSelected": favoriteSelected,
-  //     "noFavorite": noFavorite,
-  //     "registrationDate": DateTime.now(),
-  //     "entpName": _entpName,
-  //     "itemName": _itemName,
-  //     "nickName": nickName,
-  //   });
-  //
-  //
-  //   var numOfReviews = 0.0;
-  //   var totalRating = 0.0;
-  //   var numOfEffectBad = 0.0;
-  //   var numOfEffectSoSo = 0.0;
-  //   var numOfEffectGood = 0.0;
-  //   var numOfSideEffectYes = 0.0;
-  //   var numOfSideEffectNo = 0.0;
-  //
-  //   if (drugDocSnapshot.exists) {
-  //     Map<String, dynamic> data = drugDocSnapshot.data();
-  //     numOfReviews = data['numOfReviews'] * 1.0;
-  //     totalRating = data['totalRating'] * 1.0;
-  //
-  //     //Drug collection 문서에 아래 5개 필드가 없으면
-  //     var tempNumOfEffectBad = data['numOfEffectBad'];
-  //     if (tempNumOfEffectBad == null) {
-  //       numOfEffectBad = 0.0;
-  //       numOfEffectSoSo = 0.0;
-  //       numOfEffectGood = 0.0;
-  //       numOfSideEffectYes = 0.0;
-  //       numOfSideEffectNo = 0.0;
-  //     }
-  //     //field가 있으면 db에서 가져오기
-  //     else {
-  //       numOfEffectBad = data['numOfEffectBad'] * 1.0;
-  //       numOfEffectSoSo = data['numOfEffectSoSo'] * 1.0;
-  //       numOfEffectGood = data['numOfEffectGood'] * 1.0;
-  //       numOfSideEffectYes = data['numOfSideEffectYes'] * 1.0;
-  //       numOfSideEffectNo = data['numOfSideEffectNo'] * 1.0;
-  //     }
-  //
-  //     // if (tempNumOfEffectBad == null) {
-  //     FirebaseFirestore.instance
-  //         .collection("TestDrugs")
-  //     // .collection("Drugs")
-  //         .doc(widget.drugItemSeq)
-  //         .update({
-  //       "numOfReviews": numOfReviews + 1,
-  //       "totalRating":
-  //       (totalRating * numOfReviews + starRating) / (numOfReviews + 1),
-  //       "numOfEffectBad": effect == 'bad' ? numOfEffectBad + 1 : 0,
-  //       "numOfEffectSoSo": effect == 'soso' ? numOfEffectSoSo + 1 : 0,
-  //       "numOfEffectGood": effect == 'good' ? numOfEffectGood + 1 : 0,
-  //       "numOfSideEffectYes": sideEffect == 'yes' ? numOfSideEffectYes + 1 : 0,
-  //       "numOfSideEffectNo": sideEffect == 'no' ? numOfSideEffectNo + 1 : 0,
-  //     });
-  //     // }
-  //   }
-  // }
-
   Future<void> _registerReview(nickName) async {
     // var drugCollection = FirebaseFirestore.instance.collection('TestDrugs');
     var drugCollection = FirebaseFirestore.instance.collection('Drugs');
@@ -271,14 +176,16 @@ class _WriteReviewState extends State<WriteReview> {
               onTap: () {
                 FocusScope.of(context).unfocus();
               },
-              child: ListView(
-                children: <Widget>[
-                  ReviewPillInfo(widget.drugItemSeq),
-                  _rating(),
-                  _effect(),
-                  _sideEffect(),
-                  _write(),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    ReviewPillInfo(widget.drugItemSeq),
+                    _rating(),
+                    _effect(),
+                    _sideEffect(),
+                    _write(),
+                  ],
+                ),
               ),
             )));
   }
@@ -351,7 +258,8 @@ class _WriteReviewState extends State<WriteReview> {
                         Navigator.pop(context);
                       })
                 ],
-              )
+              ),
+             
             ],
           ),
         );

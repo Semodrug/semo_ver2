@@ -132,14 +132,16 @@ class _EditReviewState extends State<EditReview> {
                   onTap: () {
                     FocusScope.of(context).unfocus();
                   },
-                  child: ListView(
-                    children: <Widget>[
-                      ReviewPillInfo(review.seqNum),
-                      _rating(review),
-                      _effect(review),
-                      _sideEffect(review),
-                      _edit(review),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        ReviewPillInfo(review.seqNum),
+                        _rating(review),
+                        _effect(review),
+                        _sideEffect(review),
+                        _edit(review),
+                      ],
+                    ),
                   ),
                 ));
           } else {
