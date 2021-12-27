@@ -345,6 +345,11 @@ class _ReviewPageState extends State<ReviewPage> {
                                     ),
                                     SliverToBoxAdapter(
                                       child: _drugReviews(),
+                                    ),
+                                    SliverToBoxAdapter(
+                                      child : Container(
+                                        height: 60
+                                      )
                                     )
                                   ],
                                 ),
