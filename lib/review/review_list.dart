@@ -572,7 +572,7 @@ class _ReviewListState extends State<ReviewList> {
                               drugData['numOfSideEffectNo'] * 1.0;
                         }
 
-                        FirebaseFirestore.instance
+                        await FirebaseFirestore.instance
                             // .collection("TestDrugs")
                             .collection("Drugs")
                             .doc(record.seqNum)

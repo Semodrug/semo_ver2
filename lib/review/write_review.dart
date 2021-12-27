@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/user.dart';
 import 'package:semo_ver2/review/see_my_review.dart';
 import 'package:semo_ver2/services/db.dart';
@@ -101,7 +102,57 @@ class _WriteReviewState extends State<WriteReview> {
     var numOfSideEffectYes = 0.0;
     var numOfSideEffectNo = 0.0;
 
+    // StreamBuilder<Drug>(
+    //     stream: DatabaseService(itemSeq: widget.drugItemSeq).drugData,
+    //     builder: (context, snpashot) {
+    //       if (snpashot.hasData) {
+    //         Drug drug = snpashot.data;
+
+    //         numOfReviews = drug.numOfReviews * 1.0;
+    //         totalRating = drug.totalRating * 1.0;
+
+    //         //Drug collection 문서에 아래 5개 필드가 없으면
+    //         var tempNumOfEffectBad = drug.numOfEffectBad;
+    //         if (tempNumOfEffectBad == null) {
+    //           numOfEffectBad = 0.0;
+    //           numOfEffectSoSo = 0.0;
+    //           numOfEffectGood = 0.0;
+    //           numOfSideEffectYes = 0.0;
+    //           numOfSideEffectNo = 0.0;
+    //         }
+    //         //field가 있으면 db에서 가져오기
+    //         else {
+    //           numOfEffectBad = drug.numOfEffectBad * 1.0;
+    //           numOfEffectSoSo = drug.numOfEffectSoSo * 1.0;
+    //           numOfEffectGood = drug.numOfEffectGood * 1.0;
+    //           numOfSideEffectYes = drug.numOfSideEffectYes * 1.0;
+    //           numOfSideEffectNo = drug.numOfSideEffectNo * 1.0;
+    //         }
+
+    //         FirebaseFirestore.instance
+    //             // .collection("TestDrugs")
+    //             .collection("Drugs")
+    //             .doc(widget.drugItemSeq)
+    //             .update({
+    //           "numOfReviews": numOfReviews + 1,
+    //           "totalRating": (totalRating * numOfReviews + starRating) /
+    //               (numOfReviews + 1),
+    //           "numOfEffectBad": effect == 'bad' ? numOfEffectBad + 1 : 0,
+    //           "numOfEffectSoSo": effect == 'soso' ? numOfEffectSoSo + 1 : 0,
+    //           "numOfEffectGood": effect == 'good' ? numOfEffectGood + 1 : 0,
+    //           "numOfSideEffectYes":
+    //               sideEffect == 'yes' ? numOfSideEffectYes + 1 : 0,
+    //           "numOfSideEffectNo":
+    //               sideEffect == 'no' ? numOfSideEffectNo + 1 : 0,
+    //         });
+    //         return Container();
+    //       } else {
+    //         return Container();
+    //       }
+    //     });
+
     // var collection = FirebaseFirestore.instance.collection('TestDrugs');
+
     var collection = FirebaseFirestore.instance.collection('Drugs');
     var docSnapshot = await collection.doc(widget.drugItemSeq).get();
     if (docSnapshot.exists) {
@@ -127,8 +178,7 @@ class _WriteReviewState extends State<WriteReview> {
         numOfSideEffectNo = data['numOfSideEffectNo'] * 1.0;
       }
 
-      // if (tempNumOfEffectBad == null) {
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           // .collection("TestDrugs")
           .collection("Drugs")
           .doc(widget.drugItemSeq)
@@ -136,13 +186,12 @@ class _WriteReviewState extends State<WriteReview> {
         "numOfReviews": numOfReviews + 1,
         "totalRating":
             (totalRating * numOfReviews + starRating) / (numOfReviews + 1),
-        "numOfEffectBad": effect == 'bad' ? numOfEffectBad + 1 : 0,
-        "numOfEffectSoSo": effect == 'soso' ? numOfEffectSoSo + 1 : 0,
-        "numOfEffectGood": effect == 'good' ? numOfEffectGood + 1 : 0,
-        "numOfSideEffectYes": sideEffect == 'yes' ? numOfSideEffectYes + 1 : 0,
-        "numOfSideEffectNo": sideEffect == 'no' ? numOfSideEffectNo + 1 : 0,
+        "numOfEffectBad": effect == 'bad' ? numOfEffectBad + 1 : numOfEffectBad,
+        "numOfEffectSoSo": effect == 'soso' ? numOfEffectSoSo + 1 : numOfEffectSoSo,
+        "numOfEffectGood": effect == 'good' ? numOfEffectGood + 1 : numOfEffectGood,
+        "numOfSideEffectYes": sideEffect == 'yes' ? numOfSideEffectYes + 1 : numOfSideEffectYes,
+        "numOfSideEffectNo": sideEffect == 'no' ? numOfSideEffectNo + 1 : numOfSideEffectNo,
       });
-      // }
     }
   }
 
@@ -259,7 +308,6 @@ class _WriteReviewState extends State<WriteReview> {
                       })
                 ],
               ),
-             
             ],
           ),
         );
