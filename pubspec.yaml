@@ -89,8 +89,6 @@ dependencies:
   #case recognition
   tflite: ^1.0.4
   image_picker: ^0.6.2+3
-  tflite_flutter_helper: ^0.1.2
-  tflite_flutter: ^0.5.0
   image: ^2.1.4
 
   #imgae
