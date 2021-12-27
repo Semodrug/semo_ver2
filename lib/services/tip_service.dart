@@ -54,6 +54,8 @@ class TipService {
   Stream<List<Tip>> getTips(String seqNum) {
     return tipCollection
         .where("seqNum", isEqualTo: seqNum)
+        .orderBy('favoriteCount', descending: true)
+        .orderBy('registrationDate', descending: true)
         .snapshots()
         .map(_tipListFromSnapshot);
   }
@@ -149,8 +151,9 @@ class TipService {
 
   Stream<List<ReportTip>> getTip(String documentId) {
     return tipCollection
-        // .orderBy('registrationDate', descending: true)
         .where("reviewDocumentId", isEqualTo: documentId)
+        .orderBy('favoriteCount', descending: true)
+        .orderBy('registrationDate', descending: true)
         .snapshots()
         .map(_reportListFromSnapshot);
   }

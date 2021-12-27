@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:semo_ver2/models/drug.dart';
 import 'package:semo_ver2/models/tip.dart';
 import 'package:semo_ver2/models/user.dart';
-import 'package:semo_ver2/review/all_pharmacists_tip.dart';
+import 'package:semo_ver2/tip/all_pharmacists_tip.dart';
 import 'package:semo_ver2/services/db.dart';
 import 'package:semo_ver2/services/tip_service.dart';
 import 'package:semo_ver2/services/review_service.dart';
