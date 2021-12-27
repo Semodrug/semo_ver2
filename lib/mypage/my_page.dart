@@ -201,20 +201,25 @@ class _MyPageState extends State<MyPage> {
                                 .getPharmacistTips(user.uid.toString()),
                             builder: (context, snapshot2) {
                               List<Tip> tips = snapshot2.data;
-
-                              return Row(
-                                children: [
-                                  userData.isPharmacist
-                                      ? _myMenu(
-                                          '약사의 한마디',
-                                          tips.length.toString(),
-                                          context,
-                                          MyTips())
-                                      : _myMenu('리뷰', reviews.length.toString(),
-                                          context, MyReviews()),
-                                  SizedBox(width: 10)
-                                ],
-                              );
+                              if (snapshot2.hasData) {
+                                return Row(
+                                  children: [
+                                    userData.isPharmacist
+                                        ? _myMenu(
+                                            '약사의 한마디',
+                                            tips.length.toString(),
+                                            context,
+                                            MyTips())
+                                        : _myMenu(
+                                            '리뷰',
+                                            reviews.length.toString(),
+                                            context,
+                                            MyReviews()),
+                                    SizedBox(width: 10)
+                                  ],
+                                );
+                              } else
+                                return CircularProgressIndicator();
                             });
                       } else
                         return CircularProgressIndicator();
@@ -309,7 +314,6 @@ Widget _myPageMenu(String name, BuildContext context, var nextPage) {
 
 Widget _myPageForEmil(String name, BuildContext context) {
   Future<String> _getEmailBody() async {
-
     String body = "";
 
     body += "아래 항목에서 골라서 문의 제목에 적어주세요!\n";
@@ -323,6 +327,7 @@ Widget _myPageForEmil(String name, BuildContext context) {
 
     return body;
   }
+
   void _sendEmail() async {
     String body = await _getEmailBody();
 
@@ -339,7 +344,7 @@ Widget _myPageForEmil(String name, BuildContext context) {
     try {
       await FlutterEmailSender.send(email);
     } catch (error) {
-      String title = "기본 메일 앱을 사용할 수 없어 앱에서 바로 문의를 전송하기 어려운 상황입니다.\n아래의 이메일로 연락주시면 친절하게 답변을 드리도록 하겠습니다.\niymy.dev@gmail.com";
+      String title = "기본 메일 앱이 설치되어있지 않아 앱에서 바로 문의를 전송할 수 없습니다.\n아래의 이메일로 연락주시면 친절하게 답변을 드리도록 하겠습니다.\niymy.dev@gmail.com";
       String message = "";
       //_showErrorAlert(title: title, message: message);
       IYMYOkDialog(
@@ -377,6 +382,4 @@ Widget _myPageForEmil(String name, BuildContext context) {
       onTap: () {
         _sendEmail();
       });
-
 }
-
