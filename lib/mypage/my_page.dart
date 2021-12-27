@@ -344,8 +344,7 @@ Widget _myPageForEmil(String name, BuildContext context) {
     try {
       await FlutterEmailSender.send(email);
     } catch (error) {
-      String title =
-          "기본 메일 앱을 사용할 수 없기 때문에\n 앱에서 바로 문의를 전송하기 어려운 상황입니다.\n\n아래 이메일로 연락주시면\n  감사하겠습니다 :)\n\niymy.dev@gmail.com";
+      String title = "기본 메일 앱이 설치되어있지 않아 앱에서 바로 문의를 전송할 수 없습니다.\n아래의 이메일로 연락주시면 친절하게 답변을 드리도록 하겠습니다.\niymy.dev@gmail.com";
       String message = "";
       //_showErrorAlert(title: title, message: message);
       IYMYOkDialog(

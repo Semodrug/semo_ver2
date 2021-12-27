@@ -487,150 +487,86 @@ class _GetRatingState extends State<GetRating> {
                               ],
                             ),
                             Container(width: 8),
+
+                            //effect
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 //effect
-                                drug.numOfEffectBad > drug.numOfEffectSoSo &&
-                                        drug.numOfEffectBad >
-                                            drug.numOfEffectGood
-                                    ? RichText(
-                                        textAlign: TextAlign.center,
-                                        text: TextSpan(
+                                RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .subtitle1
+                                        .copyWith(color: gray300_inactivated),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                          text: drug.numOfEffectBad == 0 &&
+                                                  drug.numOfEffectSoSo == 0 &&
+                                                  drug.numOfEffectGood == 0
+                                              ? ""
+                                              : (drug.numOfEffectGood >=
+                                                          drug
+                                                              .numOfEffectSoSo) &&
+                                                      (drug.numOfEffectGood >=
+                                                          drug.numOfEffectBad)
+                                                  ? "좋아요  "
+                                                  : (drug.numOfEffectSoSo >=
+                                                              drug
+                                                                  .numOfEffectGood) &&
+                                                          (drug.numOfEffectSoSo >=
+                                                              drug
+                                                                  .numOfEffectBad)
+                                                      ? "보통이에요  "
+                                                      : "별로에요  ",
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle1
                                               .copyWith(
-                                                  color: gray300_inactivated),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text: drug.numOfEffectBad ==
-                                                            0 &&
-                                                        drug.numOfEffectSoSo ==
-                                                            0 &&
-                                                        drug.numOfEffectGood ==
-                                                            0
-                                                    ? ""
-                                                    : "별로에요  ",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle1
-                                                    .copyWith(
-                                                      color: gray600,
-                                                    )),
-                                            TextSpan(
-                                                text: drug.numOfEffectBad ==
-                                                            0 &&
-                                                        drug.numOfEffectSoSo ==
-                                                            0 &&
-                                                        drug.numOfEffectGood ==
-                                                            0
-                                                    ? ""
-                                                    : (drug.numOfEffectBad /
-                                                                (drug.numOfEffectBad +
-                                                                    drug
-                                                                        .numOfEffectSoSo +
-                                                                    drug
-                                                                        .numOfEffectGood) *
-                                                                100)
-                                                            .toStringAsFixed(
-                                                                0) +
-                                                        "%"),
-                                          ],
-                                        ),
-                                      )
-                                    : drug.numOfEffectSoSo >
-                                                drug.numOfEffectGood &&
-                                            drug.numOfEffectSoSo >
-                                                drug.numOfEffectBad
-                                        ? RichText(
-                                            textAlign: TextAlign.center,
-                                            text: TextSpan(
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .subtitle1
-                                                  .copyWith(
-                                                      color:
-                                                          gray300_inactivated),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text: drug.numOfEffectBad == 0 &&
-                                                            drug.numOfEffectSoSo ==
-                                                                0 &&
-                                                            drug.numOfEffectGood ==
-                                                                0
-                                                        ? ""
-                                                        : "보통이에요  ",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .subtitle1
-                                                        .copyWith(
-                                                          color: gray600,
-                                                        )),
-                                                TextSpan(
-                                                    text: drug.numOfEffectBad == 0 &&
-                                                            drug.numOfEffectSoSo ==
-                                                                0 &&
-                                                            drug.numOfEffectGood ==
-                                                                0
-                                                        ? ""
-                                                        : (drug.numOfEffectSoSo /
-                                                                    (drug.numOfEffectBad +
-                                                                        drug
-                                                                            .numOfEffectSoSo +
-                                                                        drug
-                                                                            .numOfEffectGood) *
-                                                                    100)
-                                                                .toStringAsFixed(
-                                                                    0) +
-                                                            "%"),
-                                              ],
-                                            ),
-                                          )
-                                        : RichText(
-                                            textAlign: TextAlign.center,
-                                            text: TextSpan(
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .subtitle1
-                                                  .copyWith(
-                                                      color:
-                                                          gray300_inactivated),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text: drug.numOfEffectBad == 0 &&
-                                                            drug.numOfEffectSoSo ==
-                                                                0 &&
-                                                            drug.numOfEffectGood ==
-                                                                0
-                                                        ? ""
-                                                        : "좋아요  ",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .subtitle1
-                                                        .copyWith(
-                                                          color: gray600,
-                                                        )),
-                                                TextSpan(
-                                                    text: drug.numOfEffectBad == 0 &&
-                                                            drug.numOfEffectSoSo ==
-                                                                0 &&
-                                                            drug.numOfEffectGood ==
-                                                                0
-                                                        ? ""
-                                                        : (drug.numOfEffectGood /
-                                                                    (drug.numOfEffectBad +
-                                                                        drug
-                                                                            .numOfEffectSoSo +
-                                                                        drug
-                                                                            .numOfEffectGood) *
-                                                                    100)
-                                                                .toStringAsFixed(
-                                                                    0) +
-                                                            "%"),
-                                              ],
-                                            ),
+                                                color: gray600,
+                                              )),
+                                      TextSpan(
+                                          text: drug.numOfEffectBad == 0 &&
+                                                  drug.numOfEffectSoSo == 0 &&
+                                                  drug.numOfEffectGood == 0
+                                              ? ""
+                                              : (drug.numOfEffectGood >= drug.numOfEffectSoSo) &&
+                                                      (drug.numOfEffectGood >=
+                                                          drug.numOfEffectBad)
+                                                  ? (drug.numOfEffectGood /
+                                                              (drug.numOfEffectBad +
+                                                                  drug
+                                                                      .numOfEffectSoSo +
+                                                                  drug
+                                                                      .numOfEffectGood) *
+                                                              100)
+                                                          .toStringAsFixed(0) +
+                                                      "%"
+                                                  : (drug.numOfEffectSoSo >= drug.numOfEffectGood) &&
+                                                          (drug.numOfEffectSoSo >=
+                                                              drug
+                                                                  .numOfEffectBad)
+                                                      ? (drug.numOfEffectSoSo / (drug.numOfEffectBad + drug.numOfEffectSoSo + drug.numOfEffectGood) * 100).toStringAsFixed(0) +
+                                                          "%"
+                                                      : (drug.numOfEffectBad /
+                                                                  (drug.numOfEffectBad +
+                                                                      drug.numOfEffectSoSo +
+                                                                      drug.numOfEffectGood) *
+                                                                  100)
+                                                              .toStringAsFixed(0) +
+                                                          "%"
+                                          // (drug.numOfEffectBad /
+                                          //             (drug.numOfEffectBad +
+                                          //                 drug.numOfEffectSoSo +
+                                          //                 drug.numOfEffectGood) *
+                                          //             100)
+                                          //         .toStringAsFixed(0) +
+                                          //     "%"
                                           ),
+                                    ],
+                                  ),
+                                ),
                                 Container(height: 6),
 
                                 //side effect
