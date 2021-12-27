@@ -54,7 +54,13 @@ class TipService {
   Stream<List<Tip>> getTips(String seqNum) {
     return tipCollection
         .where("seqNum", isEqualTo: seqNum)
-        //todo: DELETE???
+        .snapshots()
+        .map(_tipListFromSnapshot);
+  }
+
+  Stream<List<Tip>> getPharmacistTips(String uid) {
+    return tipCollection
+        .where("uid", isEqualTo: uid)
         .snapshots()
         .map(_tipListFromSnapshot);
   }
@@ -80,19 +86,6 @@ class TipService {
     tipsSnapshots = tipQuery.snapshots().map(_tipListFromSnapshot);
     return tipsSnapshots;
   }
-
-  //
-  //
-  //
-  // static Future<QuerySnapshot> getReviewData(int limit, {DocumentSnapshot startAfter,}) async {
-  //   final refReviews = FirebaseFirestore.instance.collection('Reviews').orderBy('registrationDate').limit(limit);
-  //
-  //   if (startAfter == null) {
-  //     return refReviews.get();
-  //   } else {
-  //     return refReviews.startAfterDocument(startAfter).get();
-  //   }
-  // }
 
   Stream<Tip> getSingleTip(String documentId) {
     return tipCollection.doc(documentId).snapshots().map((doc) {
@@ -136,6 +129,7 @@ class TipService {
       'content': tip.content,
       'itemName': tip.itemName,
       'reporterUid': FieldValue.arrayUnion([reporterUid]),
+      "registrationDate": DateTime.now(),
     });
   }
 
