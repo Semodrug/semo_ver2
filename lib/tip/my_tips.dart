@@ -56,68 +56,75 @@ class _MyTipsState extends State<MyTips> {
                     return StreamBuilder<List<Tip>>(
                         stream:
                             TipService().getPharmacistTips(user.uid.toString()),
-                        builder: (context, snapshot) {
-                          List<Tip> tips = snapshot.data;
-                          // print(tips.length);
-                          // print(reviews.length);
-                          int count = tips.length + reviews.length;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(16, 14, 16, 14),
-                                child: Text(
-                                    "약사의 한마디 & 리뷰 " + count.toString() + "개"),
-                              ),
-                              Divider(
-                                color: gray75,
-                                height: 1,
-                              ),
-                              (reviews.length == 0 && tips.length == 0)
-                                  ? Container(
-                                      height: 310,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Column(
+                        builder: (context, snapshot2) {
+                          if (snapshot2.hasData) {
+                            List<Tip> tips = snapshot2.data;
+                            // print(tips.length);
+                            // print(reviews.length);
+                            int count = tips.length + reviews.length;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16, 14, 16, 14),
+                                  child: Text(
+                                      "약사의 한마디 & 리뷰 " + count.toString() + "개"),
+                                ),
+                                Divider(
+                                  color: gray75,
+                                  height: 1,
+                                ),
+                                (reviews.length == 0 && tips.length == 0)
+                                    ? Container(
+                                        height: 310,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              height: 30,
+                                            ),
+                                            Image.asset(
+                                              'assets/images/no_review.png',
+                                            ),
+                                            Container(
+                                              height: 10,
+                                            ),
+                                            Text("아직 작성된 리뷰가 없어요")
+                                          ],
+                                        ))
+                                    : // ReviewList(_searchText, "all", widget.drugItemSeq),
+                                    Column(
                                         children: [
-                                          Container(
-                                            height: 30,
-                                          ),
-                                          Image.asset(
-                                            'assets/images/no_review.png',
-                                          ),
-                                          Container(
-                                            height: 10,
-                                          ),
-                                          Text("아직 작성된 리뷰가 없어요")
+                                          ListView.builder(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const ClampingScrollPhysics(),
+                                              itemCount: tips.length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return _tip(
+                                                    context, tips[index]);
+                                              }),
+                                          ListView.builder(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const ClampingScrollPhysics(),
+                                              itemCount: reviews.length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return _review(
+                                                    context, reviews[index]);
+                                              }),
                                         ],
-                                      ))
-                                  : // ReviewList(_searchText, "all", widget.drugItemSeq),
-                                  Column(
-                                      children: [
-                                        ListView.builder(
-                                            shrinkWrap: true,
-                                            physics:
-                                                const ClampingScrollPhysics(),
-                                            itemCount: tips.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return _tip(context, tips[index]);
-                                            }),
-                                        ListView.builder(
-                                            shrinkWrap: true,
-                                            physics:
-                                                const ClampingScrollPhysics(),
-                                            itemCount: reviews.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return _review(
-                                                  context, reviews[index]);
-                                            }),
-                                      ],
-                                    ),
-                            ],
-                          );
+                                      ),
+                              ],
+                            );
+                          } else
+                            return Loading();
                         });
                   } else
                     return Loading();
