@@ -65,7 +65,7 @@ class _BottomBarState extends State<BottomBar> {
         child: FloatingActionButton(
           backgroundColor: primary400_line,
           elevation: 0,
-          child: Image.asset('assets/icons/bottom_camera.png'),
+          child: Image.asset('assets/icons/bottom_camera_withText.png'),
           onPressed: () async {
             showModalBottomSheet(
                 backgroundColor: Colors.transparent,
@@ -126,9 +126,9 @@ class _BottomBarState extends State<BottomBar> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CameraPage(
-                        camera: firstCamera,
-                        initial: 0,
-                        ),
+                      camera: firstCamera,
+                      initial: 0,
+                    ),
                   ),
                 );
               },
@@ -173,9 +173,9 @@ class _BottomBarState extends State<BottomBar> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CameraPage(
-                        camera: firstCamera,
-                        initial: 1,
-                        ),
+                      camera: firstCamera,
+                      initial: 1,
+                    ),
                   ),
                 );
               },
