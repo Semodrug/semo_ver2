@@ -368,7 +368,13 @@ class _SearchScreenState extends State<SearchScreen> {
           return _streamOfSearch(context);
         }
         if (!stream.hasData) {
-          return Center(child: CircularProgressIndicator());
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(height: 30,),
+              Center(child: CircularProgressIndicator()),
+            ],
+          );
         }
         // else
         else if (stream.data.isEmpty) {
@@ -380,7 +386,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   .setForSearchFromAllStartAtSearch(searchVal, 30),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(height: 30,),
+                      Center(child: CircularProgressIndicator()),
+                    ],
+                  );
                 } else {
                   var streamFromMatchStart = snapshot.data;
                   return StreamBuilder<List<SavedDrug>>(
@@ -389,7 +401,13 @@ class _SearchScreenState extends State<SearchScreen> {
                           .setForSearchFromUser(searchVal, 30),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(height: 30,),
+                              Center(child: CircularProgressIndicator()),
+                            ],
+                          );
                         } else
                           return CustomScrollView(
                             slivers: [
@@ -582,7 +600,13 @@ class _SearchScreenState extends State<SearchScreen> {
           .setForSearchFromUser(searchVal, 10),
       builder: (context, stream) {
         if (!stream.hasData) {
-          return Center(child: CircularProgressIndicator());
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(height: 30,),
+              Center(child: CircularProgressIndicator()),
+            ],
+          );
         }
         if (searchVal == '' || searchVal.length < 2) {
           return _streamOfSearch(context);
