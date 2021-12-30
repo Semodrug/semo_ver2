@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
     return StreamProvider<TheUser>(
       create: (_) => AuthService().user,
       child: MaterialApp(
-          title: '이약모약 ver2',
+          title: '이약모약',
           home: Wrapper(),
           debugShowCheckedModeBanner: false,
           routes: {
@@ -40,7 +40,6 @@ class MyApp extends StatelessWidget {
             '/ranking': (context) => RankingPage(),
             '/bottom_bar': (context) => BottomBar(),
             '/search': (context) => SearchScreen(),
-            
           },
           theme: _IYMYTheme),
     );
