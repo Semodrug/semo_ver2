@@ -183,6 +183,60 @@ class _PharmacistGetInfoFormState extends State<PharmacistGetInfoForm> {
     );
   }
 
+  Widget afterSumitButton(BuildContext context){
+    /* update 완료 후 */
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          insetPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.all(16),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10),
+              Icon(Icons.check, color: primary300_main),
+              SizedBox(height: 16),
+              /* BODY */
+              Text(
+                '약사 인증이 완료되었습니다',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: gray700),
+              ),
+              SizedBox(height: 16),
+              /* BUTTON */
+              ElevatedButton(
+                  child: Text(
+                  '확인',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        .copyWith(color: primary400_line),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: Size(260, 40),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      elevation: 0,
+                      primary: gray50,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          side: BorderSide(color: gray75))),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  })
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget submitField(context) {
     TheUser user = Provider.of<TheUser>(context);
 
@@ -225,19 +279,8 @@ class _PharmacistGetInfoFormState extends State<PharmacistGetInfoForm> {
               //   user.uid,
               //   _nicknameController.text,
               // );
-
-              /* update 완료 후 */
-              IYMYOkDialog(
-                context: context,
-                dialogIcon: Icon(Icons.check, color: primary300_main),
-                bodyString: '약사 인증이 완료되었습니다',
-                buttonName: '확인',
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => BottomBar()));
-                },
-              ).showWarning();
+              Navigator.pop(context);
+              afterSumitButton(context);
             }
           }
         });

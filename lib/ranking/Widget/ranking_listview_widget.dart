@@ -150,9 +150,7 @@ class _ListViewReviewWidgetState extends State<DrugList> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ReviewPage(drug.itemSeq,
-                              filter: '리뷰 많은 순',
-                              type: widget.category,
-                              fromNotReview: false),
+                              filter: '리뷰 많은 순', type: widget.category, fromNotReview: false),
                         ),
                       ),
                     },
@@ -225,8 +223,7 @@ class _ListViewReviewWidgetState extends State<DrugList> {
                                                   .textTheme
                                                   .subtitle2
                                                   .copyWith(color: gray900)),
-                                          Text(
-                                              ' (${drug.numOfReviews.toStringAsFixed(0)}개)',
+                                          Text(' (${drug.numOfReviews.toStringAsFixed(0)}개)',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .overline
@@ -387,14 +384,12 @@ class _ListViewTotalRankingWidgetState
                         context,
                         MaterialPageRoute(
                           builder: (context) => ReviewPage(drug.itemSeq,
-                              filter: '별점순',
-                              type: widget.category,
-                              fromNotReview: false),
+                              filter: '별점순', type: widget.category, fromNotReview: false),
                         ),
                       ),
                     },
                     title: //String drugRating = drugStreamData.totalRating.toStringAsFixed(1);
-                        Container(
+                    Container(
                       decoration: BoxDecoration(
                           border: Border(
                               bottom: BorderSide(width: 0.6, color: gray50))),
@@ -415,7 +410,7 @@ class _ListViewTotalRankingWidgetState
                                 padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                                 child: Container(
                                     padding:
-                                        EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
+                                    EdgeInsets.zero, //fromLTRB(5, 0, 5, 5),
                                     child: SizedBox(
                                         child: DrugImage(
                                             drugItemSeq: drug.itemSeq))),
@@ -425,19 +420,19 @@ class _ListViewTotalRankingWidgetState
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Padding(
                                         padding:
-                                            const EdgeInsets.only(bottom: 3.0),
+                                        const EdgeInsets.only(bottom: 3.0),
                                         child: Text(drug.entpName,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .overline
                                                 .copyWith(
-                                                    fontSize: 10,
-                                                    color:
-                                                        gray300_inactivated)),
+                                                fontSize: 10,
+                                                color:
+                                                gray300_inactivated)),
                                       ),
                                       Container(
                                         width: mw - 160,
@@ -467,19 +462,19 @@ class _ListViewTotalRankingWidgetState
                                                   .textTheme
                                                   .overline
                                                   .copyWith(
-                                                      fontSize: 10,
-                                                      color:
-                                                          gray300_inactivated)),
+                                                  fontSize: 10,
+                                                  color:
+                                                  gray300_inactivated)),
                                         ],
                                       ),
                                       Expanded(
                                           child: Row(
-                                        children: [
-                                          CategoryButton(
-                                              str: drug.category,
-                                              forRanking: 'ranking')
-                                        ],
-                                      )),
+                                            children: [
+                                              CategoryButton(
+                                                  str: drug.category,
+                                                  forRanking: 'ranking')
+                                            ],
+                                          )),
                                     ],
                                   )),
                             ],
@@ -494,3 +489,4 @@ class _ListViewTotalRankingWidgetState
       );
   }
 }
+
