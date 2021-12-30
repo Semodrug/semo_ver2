@@ -22,8 +22,9 @@ import 'package:semo_ver2/tip/edit_tip.dart';
 class PhTipsList extends StatefulWidget {
   final String drugItemSeq;
   String type;
+  String drugName;
 
-  PhTipsList(this.drugItemSeq, this.type);
+  PhTipsList(this.drugItemSeq, this.type, this.drugName);
 
   @override
   _PhTipsListState createState() => _PhTipsListState();
@@ -263,7 +264,7 @@ class _PhTipsListState extends State<PhTipsList> {
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
                           AllPharMacistsTipScreen(
-                              widget.drugItemSeq, widget.type
+                              widget.drugItemSeq, widget.type, widget.drugName
                               //phTips: phTips
                               // infoEE: infoEE,
                               // infoNB: infoNB,

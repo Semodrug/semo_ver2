@@ -13,8 +13,9 @@ import 'package:semo_ver2/tip/edit_tip.dart';
 class AllPharMacistsTipScreen extends StatefulWidget {
   final String drugItemSeq;
   String type;
+  String itemName;
 
-  AllPharMacistsTipScreen(this.drugItemSeq, this.type);
+  AllPharMacistsTipScreen(this.drugItemSeq, this.type, this.itemName);
   @override
   _AllPharMacistsTipScreenState createState() =>
       _AllPharMacistsTipScreenState();
@@ -22,12 +23,27 @@ class AllPharMacistsTipScreen extends StatefulWidget {
 
 class _AllPharMacistsTipScreenState extends State<AllPharMacistsTipScreen> {
   final TextEditingController _filter = TextEditingController();
+  String _shortenName(String data) {
+    String newName = data;
+    List splitName = [];
+
+    if (data.contains('(수출')) {
+      splitName = newName.split('(수출');
+      newName = splitName[0];
+    }
+
+    if (data.contains('(군납')) {
+      splitName = newName.split('(군납');
+      newName = splitName[0];
+    }
+    return newName;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBarWithGoToBack(
-            '약사의 한마디 전체보기', Icon(Icons.arrow_back), 0.5),
+            _shortenName(widget.itemName), Icon(Icons.arrow_back), 0.5),
         backgroundColor: Colors.white,
         body: StreamBuilder<List<Tip>>(
             stream: TipService().getTips(widget.drugItemSeq),
