@@ -47,7 +47,7 @@ class _WriteTipState extends State<WriteTip> {
       _itemName = data['ITEM_NAME'];
     }
 
-    FirebaseFirestore.instance.collection("TestTips").add({
+    FirebaseFirestore.instance.collection("PharmacistTips").add({
       "content": content,
       "uid": auth.currentUser.uid,
       "pharmacistName": pharmacistName,
