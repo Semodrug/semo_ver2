@@ -6,13 +6,12 @@ class TipService {
   final String documentId;
   TipService({this.documentId});
 
-  final CollectionReference tipCollection = FirebaseFirestore.instance
-      .collection('TestTips'); // TODO: Edit name after test
+  final CollectionReference tipCollection =
+      FirebaseFirestore.instance.collection('PharmacistTips');
   final CollectionReference reportTipCollection =
       FirebaseFirestore.instance.collection('ReportTip');
 
-  Query tipQuery = FirebaseFirestore.instance
-      .collection('TestTips'); // TODO: Edit name after test
+  Query tipQuery = FirebaseFirestore.instance.collection('PharmacistTips');
   Stream<List<Tip>> tipsSnapshots;
 
   List<Tip> _tipListFromSnapshot(QuerySnapshot snapshot) {
