@@ -223,7 +223,7 @@ class _ListViewReviewWidgetState extends State<DrugList> {
                                                   .textTheme
                                                   .subtitle2
                                                   .copyWith(color: gray900)),
-                                          Text(' (${drug.numOfReviews}개)',
+                                          Text(' (${drug.numOfReviews.toStringAsFixed(0)}개)',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .overline
