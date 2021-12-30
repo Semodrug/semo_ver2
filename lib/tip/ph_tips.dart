@@ -118,31 +118,36 @@ class _PhTipsListState extends State<PhTipsList> {
                               child: Stack(
                                 alignment: Alignment.topRight,
                                 children: [
-                                  IconButton(
-                                    alignment: Alignment.topRight,
-                                    padding: EdgeInsets.zero,
-                                    icon: Icon(Icons.more_horiz,
-                                        color: gray500, size: 19),
-                                    onPressed: () {
-                                      if (user.uid == tip.uid) {
-                                        showModalBottomSheet(
-                                            backgroundColor: Colors.transparent,
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return _popUpMenu(tip);
-                                            });
-                                      } else if (auth.currentUser.uid !=
-                                          tip.uid) {
-                                        showModalBottomSheet(
-                                            backgroundColor: Colors.transparent,
-                                            context: context,
-                                            builder: (context) {
-                                              return _popUpMenuAnonymous(
-                                                  tip, user);
-                                            });
-                                      }
-                                    },
-                                  ),
+                                  user.uid == tip.uid
+                                      ? IconButton(
+                                          alignment: Alignment.topRight,
+                                          padding: EdgeInsets.zero,
+                                          icon: Icon(Icons.more_horiz,
+                                              color: gray500, size: 19),
+                                          onPressed: () {
+                                            if (user.uid == tip.uid) {
+                                              showModalBottomSheet(
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return _popUpMenu(tip);
+                                                  });
+                                            }
+                                            // else if (auth.currentUser.uid !=
+                                            //     tip.uid) {
+                                            //   showModalBottomSheet(
+                                            //       backgroundColor: Colors.transparent,
+                                            //       context: context,
+                                            //       builder: (context) {
+                                            //         return _popUpMenuAnonymous(
+                                            //             tip, user);
+                                            //       });
+                                            // }
+                                          },
+                                        )
+                                      : Container(),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
