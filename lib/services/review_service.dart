@@ -87,8 +87,8 @@ class ReviewService {
     return reviewCollection
         // .orderBy('registrationDate', descending: true)
         .where("seqNum", isEqualTo: seqNum)
-        .orderBy('registrationDate', descending: true)
         .orderBy('noFavorite', descending: true)
+        .orderBy('registrationDate', descending: true)
         .snapshots()
         .map(_reviewListFromSnapshot);
   }
