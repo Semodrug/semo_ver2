@@ -346,7 +346,7 @@ class _PhTipsListState extends State<PhTipsList> {
             Text(
               tip.favoriteCount.toString(),
               style: Theme.of(context).textTheme.subtitle2,
-            ),
+            )
           ],
         ),
         onPressed: () async {
@@ -828,7 +828,7 @@ class _PhTipsListState extends State<PhTipsList> {
                       onPressed: () async {
                         await TipService(documentId: record.documentId)
                             .deleteTipData();
-                        Navigator.of(context).pop();
+
                         if (widget.type == "mine") Navigator.of(context).pop();
 
                         //OK Dialog
