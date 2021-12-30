@@ -79,7 +79,7 @@ class _PhTipsListState extends State<PhTipsList> {
               Expanded(child: Container()),
               phTips.length == 0
                   ? _askTip(drugItemSeq, user.uid)
-                  : _seeAll(phTips)
+                  : _seeAll(drugItemSeq, phTips)
             ],
           ),
 
@@ -253,7 +253,7 @@ class _PhTipsListState extends State<PhTipsList> {
     );
   }
 
-  Widget _seeAll(List<Tip> phTips) {
+  Widget _seeAll(String drugItemSeq, List<Tip> phTips) {
     return Row(
       children: [
         TextButton(
@@ -262,7 +262,9 @@ class _PhTipsListState extends State<PhTipsList> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          AllPharMacistsTipScreen(phTips: phTips
+                          AllPharMacistsTipScreen(
+                              widget.drugItemSeq, widget.type
+                              //phTips: phTips
                               // infoEE: infoEE,
                               // infoNB: infoNB,
                               // infoUD: infoUD,
