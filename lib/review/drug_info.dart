@@ -329,8 +329,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         // _pharmacistTip(), // UI 참고
-                                        PhTipsList(widget.drugItemSeq,
-                                            'mine'), // db 참고
+                                        PhTipsList(widget.drugItemSeq, 'mine',
+                                            drug.itemName), // db 참고
                                         SizedBox(
                                           width: double.infinity,
                                           height: 2.0,
