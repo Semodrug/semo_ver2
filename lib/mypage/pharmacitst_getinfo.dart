@@ -183,7 +183,7 @@ class _PharmacistGetInfoFormState extends State<PharmacistGetInfoForm> {
     );
   }
 
-  Widget afterSumitButton(BuildContext context){
+  Widget afterSumitButton(BuildContext context) {
     /* update 완료 후 */
     showDialog(
       context: context,
@@ -192,7 +192,7 @@ class _PharmacistGetInfoFormState extends State<PharmacistGetInfoForm> {
           insetPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.all(16),
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -213,7 +213,7 @@ class _PharmacistGetInfoFormState extends State<PharmacistGetInfoForm> {
               /* BUTTON */
               ElevatedButton(
                   child: Text(
-                  '확인',
+                    '확인',
                     style: Theme.of(context)
                         .textTheme
                         .headline5
@@ -279,6 +279,7 @@ class _PharmacistGetInfoFormState extends State<PharmacistGetInfoForm> {
               //   user.uid,
               //   _nicknameController.text,
               // );
+              Navigator.pop(context);
               Navigator.pop(context);
               afterSumitButton(context);
             }
