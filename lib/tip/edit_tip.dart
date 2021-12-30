@@ -255,10 +255,10 @@ class _EditTipState extends State<EditTip> {
           onPressed: () async {
             content = myControllerTip.text;
 
-            if (content.length < 10)
+            if (content.length < 100)
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(
-                    "약사의 한마디를 10자 이상 작성해주세요",
+                    "약사의 한마디를 100자 이상 작성해주세요",
                     textAlign: TextAlign.center,
                   ),
                   shape: RoundedRectangleBorder(

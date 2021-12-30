@@ -42,7 +42,6 @@ class _CameraPageState extends State<CameraPage> {
     _selectedIndex = widget.initial;
     print("%%%% 체크하기위함 $_selectedIndex");
 
-
     _cameraController = CameraController(
         // 이용 가능한 카메라 목록에서 특정 카메라를 가져옵니다.
         widget.camera,
@@ -408,7 +407,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                   .copyWith(color: gray0_white)),
                         ),
                         onPressed: () async {
-                          print('~~~~~ 사진사용에서 나타나는 select INDEX $_selectedIndex');
+                          print(
+                              '~~~~~ 사진사용에서 나타나는 select INDEX $_selectedIndex');
                           if (_selectedIndex == 0) {
                             FirebaseVisionImage visionImage =
                                 FirebaseVisionImage.fromFile(
@@ -466,11 +466,12 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => NoResult(barcodeOrCase: 1,)));
+                                        builder: (context) => NoResult(
+                                              barcodeOrCase: 1,
+                                            )));
                               }
                             }
-                          }
-                          else {
+                          } else {
                             List _outputs;
                             File _image;
                             bool _loading = false;
@@ -512,7 +513,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => NoResult(barcodeOrCase: 0)));
+                                      builder: (context) =>
+                                          NoResult(barcodeOrCase: 0)));
                               return Container();
                             } else {
                               String resultSequence =
@@ -757,10 +759,8 @@ class _CaseResultState extends State<CaseResult> {
                           },
                         ),
                         SizedBox(height: 15),
-
                         _warningMessage(context)
-
-            ],
+                      ],
                     ),
                   ),
                 ],
@@ -786,21 +786,19 @@ class _CaseResultState extends State<CaseResult> {
               height: 18,
               child: Image.asset('assets/icons/warning_icon.png')),
           Padding(
-            padding: const EdgeInsets.only(left:8.0),
+            padding: const EdgeInsets.only(left: 8.0),
             child: Container(
-                child: Text(
-                 '케이스 인식은 베타 버전으로 제공됩니다.',
-                    style: Theme.of(context)
-                            .textTheme
-                            .subtitle2
-                            .copyWith(color: gray600, fontSize: 12),
-                ),
-
+              child: Text(
+                '케이스 인식은 베타 버전으로 제공됩니다.',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    .copyWith(color: gray600, fontSize: 12),
+              ),
             ),
           )
         ],
       ),
     );
   }
-
 }

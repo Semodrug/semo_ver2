@@ -347,10 +347,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                       child: _drugReviews(),
                                     ),
                                     SliverToBoxAdapter(
-                                      child : Container(
-                                        height: 60
-                                      )
-                                    )
+                                        child: Container(height: 60))
                                   ],
                                 ),
                               ),
@@ -369,14 +366,34 @@ class _ReviewPageState extends State<ReviewPage> {
 
   void _out(BuildContext context, String type, String filter) {
     Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => RankingContentPage(
-                categoryName: type,
-                filter: filter,
-              )),
+    PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          RankingContentPage(
+        categoryName: type,
+        filter: filter,
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //       builder: (context) => RankingContentPage(
+    //             categoryName: type,
+    //             filter: filter,
+    //           )),
+    // );
   }
 
   /* Top Information */
@@ -427,13 +444,18 @@ class _ReviewPageState extends State<ReviewPage> {
                                   .copyWith(
                                     color: gray300_inactivated,
                                   )),
-                          Text(drug.entpName,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  .copyWith(
-                                    color: gray300_inactivated,
-                                  )),
+                          Flexible(
+                            child: Container(
+                              child: Text(drug.entpName,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .copyWith(
+                                        color: gray300_inactivated,
+                                      )),
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 4),

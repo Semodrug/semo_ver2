@@ -173,7 +173,7 @@ class _PharmacistAuthFormState extends State<PharmacistAuthForm> {
               buttonName: '확인',
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pop(context);
+                // Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PharmacistGetInfo()),
