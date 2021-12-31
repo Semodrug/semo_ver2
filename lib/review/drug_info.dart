@@ -366,26 +366,28 @@ class _ReviewPageState extends State<ReviewPage> {
 
   void _out(BuildContext context, String type, String filter) {
     Navigator.pop(context);
-    PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          RankingContentPage(
-        categoryName: type,
-        filter: filter,
-      ),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0.0, 1.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
+    Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              RankingContentPage(
+            categoryName: type,
+            filter: filter,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.ease;
 
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ));
     // Navigator.push(
     //   context,
     //   MaterialPageRoute(
