@@ -728,57 +728,6 @@ class _EditReviewState extends State<EditReview> {
               var numOfSideEffectYes = 0.0;
               var numOfSideEffectNo = 0.0;
 
-              // StreamBuilder<Drug>(
-              //     stream: DatabaseService(itemSeq: review.seqNum).drugData,
-              //     builder: (context, snpashot) {
-              //       if (snpashot.hasData) {
-              //         Drug drug = snpashot.data;
-
-              //         numOfReviews = drug.numOfReviews * 1.0;
-              //         totalRating = drug.totalRating * 1.0;
-
-              //         numOfEffectBad = drug.numOfEffectBad * 1.0;
-              //         numOfEffectSoSo = drug.numOfEffectSoSo * 1.0;
-              //         numOfEffectGood = drug.numOfEffectGood * 1.0;
-              //         numOfSideEffectYes = drug.numOfSideEffectYes * 1.0;
-              //         numOfSideEffectNo = drug.numOfSideEffectNo * 1.0;
-              //         if (numOfEffectBad == null) {
-              //           numOfEffectBad = 0.0;
-              //           numOfEffectSoSo = 0.0;
-              //           numOfEffectGood = 0.0;
-              //           numOfSideEffectYes = 0.0;
-              //           numOfSideEffectNo = 0.0;
-              //         }
-              //         FirebaseFirestore.instance
-              //             // .collection("TestDrugs")
-              //             .collection("Drugs")
-              //             .doc(review.seqNum)
-              //             .update({
-              //           "totalRating": starRating == 0
-              //               ? review.starRating
-              //               : (totalRating * numOfReviews -
-              //                       review.starRating +
-              //                       starRating) /
-              //                   numOfReviews,
-              //           "numOfEffectBad":
-              //               numOfEffectBad - isOriginEffectBad + isEffectBad,
-              //           "numOfEffectSoSo":
-              //               numOfEffectSoSo - isOriginEffectSoSo + isEffectSoSo,
-              //           "numOfEffectGood":
-              //               numOfEffectGood - isOriginEffectGood + isEffectGood,
-              //           "numOfSideEffectYes": numOfSideEffectYes -
-              //               isOriginSideEffectYes +
-              //               isSideEffectYes,
-              //           "numOfSideEffectNo": numOfSideEffectNo -
-              //               isOriginSideEffectNo +
-              //               isSideEffectNo,
-              //         });
-              //         return Container();
-              //       } else {
-              //         return Container();
-              //       }
-              //     });
-
               var collection =
                   // FirebaseFirestore.instance.collection('TestDrugs');
                   FirebaseFirestore.instance.collection('Drugs');
