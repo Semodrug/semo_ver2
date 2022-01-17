@@ -1025,9 +1025,9 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CameraPage(
-                          camera: firstCamera,
-                          initial: 0,
-                        ),
+                      camera: firstCamera,
+                      initial: 0,
+                    ),
                   ),
                 );
               },
@@ -1072,9 +1072,9 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CameraPage(
-                        camera: firstCamera,
-                        initial: 1,
-                        ),
+                      camera: firstCamera,
+                      initial: 1,
+                    ),
                   ),
                 );
               },
@@ -1107,7 +1107,7 @@ class _HomePageState extends State<HomePage> {
                     height: 20,
                     width: 55,
                     child: Center(
-                      child: Text("Beta",
+                      child: Text("체험판",
                           style: Theme.of(context).textTheme.bodyText1.copyWith(
                               color: primary600_bold_text, fontSize: 13)),
                     ),

@@ -53,14 +53,14 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                     height: 24,
                   ),
                   nickname(),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  birthYear(),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  sex(),
+                  // SizedBox(
+                  //   height: 20.0,
+                  // ),
+                  // birthYear(),
+                  // SizedBox(
+                  //   height: 20.0,
+                  // ),
+                  // sex(),
                   SizedBox(height: 50.0),
                   submit(context),
                 ],
@@ -173,23 +173,26 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
 
     return IYMYSubmitButton(
       context: context,
-      isDone: _isNicknameFilled && _isBirthYearFilled && _isGenderFilled,
+      isDone: _isNicknameFilled,
+      // && _isBirthYearFilled && _isGenderFilled,
       textString: '다음',
       onPressed: () async {
-        if (_isNicknameFilled && _isBirthYearFilled && _isGenderFilled) {
+        if (_isNicknameFilled /*&& _isBirthYearFilled && _isGenderFilled*/) {
           // validation check
-          if (birthYearMaskFormatter.getUnmaskedText().length != 4) {
-            print(birthYearMaskFormatter.getUnmaskedText().length);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                  '입력하신 항목을 다시 확인해주세요',
-                  textAlign: TextAlign.center,
-                ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8))),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.black.withOpacity(0.87)));
-          } else if (_nicknameController.text.length >= 10) {
+          // if (birthYearMaskFormatter.getUnmaskedText().length != 4) {
+          //   print(birthYearMaskFormatter.getUnmaskedText().length);
+          //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //       content: Text(
+          //         '입력하신 항목을 다시 확인해주세요',
+          //         textAlign: TextAlign.center,
+          //       ),
+          //       shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.all(Radius.circular(8))),
+          //       behavior: SnackBarBehavior.floating,
+          //       backgroundColor: Colors.black.withOpacity(0.87)));
+          // } else
+
+          if (_nicknameController.text.length >= 10) {
             print(_nicknameController.text);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(
@@ -200,18 +203,20 @@ class _GetPrivacyPageState extends State<GetPrivacyPage> {
                     borderRadius: BorderRadius.all(Radius.circular(8))),
                 behavior: SnackBarBehavior.floating,
                 backgroundColor: Colors.black.withOpacity(0.87)));
-          } else if (2020 < int.parse(_birthYearController.text) ||
-              int.parse(_birthYearController.text) <= 1900) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                  '생년월일을 올바르게 입력해주세요',
-                  textAlign: TextAlign.center,
-                ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8))),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.black.withOpacity(0.87)));
-          } else {
+          }
+          //   else if (2020 < int.parse(_birthYearController.text) ||
+          //     int.parse(_birthYearController.text) <= 1900) {
+          //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //       content: Text(
+          //         '생년월일을 올바르게 입력해주세요',
+          //         textAlign: TextAlign.center,
+          //       ),
+          //       shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.all(Radius.circular(8))),
+          //       behavior: SnackBarBehavior.floating,
+          //       backgroundColor: Colors.black.withOpacity(0.87)));
+          // }
+          else {
             var result =
                 await DatabaseService().isUnique(_nicknameController.text);
             // if (_nicknameController.text == widget.userData.nickname)

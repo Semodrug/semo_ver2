@@ -208,7 +208,7 @@ class _BottomBarState extends State<BottomBar> {
                     height: 24,
                     width: 42,
                     child: Center(
-                      child: Text("BETA",
+                      child: Text("체험판",
                           style: Theme.of(context).textTheme.subtitle2.copyWith(
                               color: primary600_bold_text, fontSize: 12)),
                     ),
